@@ -28,7 +28,7 @@
 	WORD_LENGTH = WORD_BYTES * BYTE_LENGTH ;
 
 
-/* 
+/*
  *  Datatypes
  */
 
@@ -190,28 +190,42 @@ function get_decimal_value ( possible_value )
         return ret ;
 }
 
+
+//
+// decimal2binary(number: integer, size_to_fit: integer ) ->
+//    [
+//       num_base2,
+//       number of bits extra of missing for num_base2,
+//       minimum number of bits to represent num_base2
+//    ]
+//
+
 function decimal2binary ( number, size )
 {
-	var num_bits = number.toString(2) ;
-	if (num_bits.length > WORD_LENGTH) {
-	    return [num_bits, size-num_bits.length] ;
+	var num_base2        = number.toString(2) ;
+        var num_base2_length = num_base2.length ;
+
+	if (num_base2_length > WORD_LENGTH) {
+	    return [num_base2, size-num_base2_length, num_base2_length] ;
         }
 
-	num_bits = (number >>> 0).toString(2) ;
+	num_base2        = (number >>> 0).toString(2) ;
+        num_base2_length = num_base2.length ;
 	if (number >= 0) {
-            return [num_bits, size-num_bits.length] ;
+            return [num_base2, size-num_base2_length, num_base2_length] ;
         }
 
-	num_bits = "1" + num_bits.replace(/^[1]+/g, "") ;
-	if (num_bits.length > size) {
-	    return [num_bits, size-num_bits.length] ;
+	num_base2        = "1" + num_base2.replace(/^[1]+/g, "") ;
+        num_base2_length = num_base2.length ;
+	if (num_base2_length > size) {
+	    return [num_base2, size-num_base2_length, num_base2_length] ;
         }
 
-	num_bits = "1".repeat(size - num_bits.length) + num_bits ;
-	return [num_bits, size-num_bits.length] ;
+	num_base2 = "1".repeat(size - num_base2.length) + num_base2 ;
+	return [num_base2, size-num_base2.length, num_base2_length] ;
 }
 
-function get_inm_value ( value )
+function get_imm_value ( value )
 {
         var ret1 = { } ;
         var ret  = {

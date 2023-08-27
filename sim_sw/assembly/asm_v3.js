@@ -267,14 +267,14 @@ function read_data_v3  ( context, ret )
 												"'" + tag + "'") ;
 			}
 			// Check for repeated tags
-			if (ret.labels2[tag]) {
+			if (ret.labels_asm[tag]) {
 				return asm_langError(context,
 									i18n_get_TagFor('compiler', 'REPEATED TAG') +
 												"'" + tag + "'") ;
 			}
 
 			// Store tag
-			ret.labels2[tag] = "0x" + (gen.seg_ptr+gen.byteWord).toString(16);
+			ret.labels_asm[tag] = "0x" + (gen.seg_ptr+gen.byteWord).toString(16);
 
 			// .<datatype> | tagX+1
 			asm_nextToken(context) ;
@@ -313,7 +313,7 @@ function read_data_v3  ( context, ret )
 				var label_found = false;
 
 				// Get value
-				var ret1 = get_inm_value(possible_value) ;
+				var ret1 = get_imm_value(possible_value) ;
 				var number = ret1.number ;
 				if ( (ret1.isDecimal == false) && (ret1.isFloat == false) )
 				{
@@ -372,7 +372,7 @@ function read_data_v3  ( context, ret )
 
 				// Store tag
 				if ("" != possible_tag) {
-					ret.labels2[possible_tag.substring(0, possible_tag.length-1)] = "0x" + (gen.seg_ptr+gen.byteWord).toString(16) ;
+					ret.labels_asm[possible_tag.substring(0, possible_tag.length-1)] = "0x" + (gen.seg_ptr+gen.byteWord).toString(16) ;
 					possible_tag = "" ;
 				}
 
@@ -671,14 +671,14 @@ function read_text_v3  ( context, datosCU, ret )
 										i18n_get_TagFor('compiler', 'TAG OR INSTRUCTION') +
 														"'" + tag + "'") ;
 			}
-			if (ret.labels2[tag]) {
+			if (ret.labels_asm[tag]) {
 				return asm_langError(context,
 										i18n_get_TagFor('compiler', 'REPEATED TAG') +
 														"'" + tag + "'") ;
 			}
 
 			// store tag
-			ret.labels2[tag] = "0x" + seg_ptr.toString(16);
+			ret.labels_asm[tag] = "0x" + seg_ptr.toString(16);
 
 			asm_nextToken(context);
 		}
@@ -770,7 +770,7 @@ function read_text_v3  ( context, datosCU, ret )
 					case "inm":
 					case "imm":
 						// Get value
-						var ret1 = get_inm_value(value) ;
+						var ret1 = get_imm_value(value) ;
 						converted = ret1.number ;
 						// Check numeric datatype
 						if ( (ret1.isDecimal == false) && (ret1.isFloat == false) )
@@ -1167,8 +1167,8 @@ function simlang_compile_pass1 ( context, datosCU, text )
 	  ret.seg        = sim_segments ;
           ret.mp         = {} ;
 	  ret.labels     = {} ; // [addr] = {name, addr, startbit, stopbit, bits}
-          ret.labels2    = {} ;
-          ret.hash_labels2_rev = {} ;
+          ret.labels_asm    = {} ;
+          ret.hash_labels_asm_rev = {} ;
           ret.hash_seg_rev     = [] ;
 	  ret.data_found = false;
 	  ret.text_found = false;
@@ -1226,7 +1226,7 @@ function simlang_compile_pass3 ( context, ret )
          for (var i in ret.labels)
          {
 		// Get label value (address number)
-		var value = ret.labels2[ret.labels[i].name];
+		var value = ret.labels_asm[ret.labels[i].name];
 
 		// Check if the label exists
 		if (typeof value === "undefined") {
@@ -1324,17 +1324,17 @@ function simlang_compile_pass3 ( context, ret )
 	 // check if main or kmain in assembly code
 	 if (ret.text_found)
          {
-	       if ( (typeof ret.labels2["main"] === "undefined" ) &&
-                    (typeof ret.labels2["kmain"] === "undefined" ) )
+	       if ( (typeof ret.labels_asm["main"] === "undefined" ) &&
+                    (typeof ret.labels_asm["kmain"] === "undefined" ) )
                {
 	  	     return asm_langError(context,
 		                          i18n_get_TagFor('compiler', 'NO MAIN OR KMAIN')) ;
                }
 	 }
 
-         // reverse labels (hash labels2 -> key)
-         for (var key in ret.labels2) {
-              ret.hash_labels2_rev[ret.labels2[key]] = key ;
+         // reverse labels (hash labels_asm -> key)
+         for (var key in ret.labels_asm) {
+              ret.hash_labels_asm_rev[ret.labels_asm[key]] = key ;
          }
 
          // reverse segments (hash segname -> properties)

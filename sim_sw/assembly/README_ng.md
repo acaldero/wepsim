@@ -36,21 +36,14 @@
 
 The TODO list includes:
 
- 1. Review all pending labels (back and forth referenced + relative and absolute encoded).
-     Example:
-    ```
-    li $1 lab1               <- small address as immediate
-    loop1: beq $t0 $t1 end1  <- relative end1
-           ...
-           b loop1           <- relative/absolute loop1
-     end1: ...
-    ```
- 2. Replace pseudo-instruction with the associated instructions(s).
-     Example:
-    ```
-    li reg 0x12345678 <- lui reg 0x1234
-                      <- add reg reg 0x5678
-    ```
+ 1. Check that asm_ng works initially like asm_v1:
+    * Review all pending labels: relative/absolute address, forth/back labels, etc.
+    * Review the algorithm to find the instruction/pseudoinstruction that better fits the values.
+    * Review that .align follows (and it is OK):
+      https://stackoverflow.com/questions/19608845/understanding-assembly-mips-align-and-memory-addressing
+
+ 2. Add support for firmware v2.
+
 
 ## 3) Organization
 
@@ -88,26 +81,30 @@ sequenceDiagram
     * Compile assembly to JSON object
   * Auxiliary functions are:
        * wsasm_src2obj_helper ( context, ret )
-          * wsasm_src2obj_data(context, ret) 
-          * wsasm_src2obj_text(context, ret)
-             * wsasm_encode_instruction(context, ret, elto)
-             * wsasm_src2obj_text_instr_op(context, ret, elto)
-             * wsasm_src2obj_text_candidates(context, ret, elto)
+          * wsasm_src2obj_data ( context, ret )
+          * wsasm_src2obj_text ( context, ret )
+            ...
        * wsasm_resolve_pseudo ( context, ret )
-       * wsasm_resolve_labels ( context, ret )    
-
+       * wsasm_resolve_labels ( context, ret )
+        * wsasm_compute_labels  ( context, ret, start_at_obj_i )
+        * wsasm_get_label_value ( context, ret, label )
 
   + Compile assembly to JSON object in three main steps:
-     + pass 1: compile assembly (PENDING ~10%)
+     + pass 1: compile assembly
        * **wsasm_compile_src2obj(context, ret)**: read several .data/.kdata/.text/... segments and build the JSON object.
          * **wsasm_src2obj_data(context, ret)**: read the .data segment and build the associated JSON object fragment.
          * **wsasm_src2obj_text(context, ret)**: read the .text segment and build the associated JSON object fragment.
-           * **wsasm_src2obj_text_instr_op(context, ret, elto)**: read instructions' fields
-           * **wsasm_src2obj_text_candidates(context, ret, elto)**: find in firmware the first definition that matches the read instruction
-           * **wsasm_encode_instruction(context, ret, elto)**: encode in binary (string) an instruction.
-     + pass 2: replace pseudo-instructions (PENDING ~100%)
+           * wsasm_src2obj_text_elto_fields  ( context, ret, elto, pseudo_context )
+             * **wsasm_src2obj_text_instr_op_match (context, ret, elto)**: read instructions' fields
+             * wsasm_src2obj_text_ops_getAtom ( context, pseudo_context )
+           * wsasm_find_candidate_and_encode ( context, ret, elto )
+             * **wsasm_encode_instruction(context, ret, elto, candidate)**: encode in binary (string) an instruction.
+               * wsasm_encode_field ( arr_encoded, value, start_bit, stop_bit )
+               * **wsasm_find_instr_candidates(context, ret, elto)**: find in firmware the first definition that matches the read instruction
+                 * wsasm_src2obj_text_getDistance ( elto_firm_reference_i, elto_value )
+     + pass 2: replace pseudo-instructions
        * **wsasm_resolve_pseudo(context, ret)**: replace pseudo-instructions
-     + pass 3: check that all used labels are defined in the text (PENDING ~50%)
+     + pass 3: check that all used labels are defined in the text
        * **wsasm_resolve_labels(context, ret)**: check that all used labels are defined in the text
 
 
