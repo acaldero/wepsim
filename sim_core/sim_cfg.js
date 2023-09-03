@@ -39,15 +39,18 @@
         // update_cfg = set_cfg + ga + save_cfg
         function update_cfg ( field, value )
         {
+             if (WSCFG[field].value != value)
+             {
+                 simcore_ga('config',
+                            'config.' + WSCFG.version.value,
+                            'config.' + WSCFG.version.value + '.' + field + '.' + value) ;
+             }
+
              WSCFG[field].value = value ;
 
              // add if recording
              simcore_record_append_new('Set configuration option ' + field + ' to ' + value,
                                        'update_cfg("' + field + '","' + value + '");\n') ;
-
-             simcore_ga('config',
-                        'config.' + WSCFG.version.value,
-                        'config.' + WSCFG.version.value + '.' + field + '.' + value) ;
 
              save_cfg() ;
         }
@@ -169,6 +172,11 @@
                 }
             }
 
+            // quick fix to force to upgrade to 2.3.x options for ws_skin_users...
+            if (WSCFG["ws_skin_user"].value.startsWith("only_asm:")) {
+                WSCFG["ws_skin_user"] = { upgrade:false,  type:"string", value:'extra_mcode:extra_morecfg:extra_share' } ;
+            }
+
             // update secondary fields
             set_secondary_cfg() ;
 
@@ -207,7 +215,7 @@
              var wscfg = {
                    /* version */
                    "version":               { upgrade:false, type:"string",    value:"2.3.0" },
-                   "build":                 { upgrade:true,  type:"string",    value:"2.3.0.20230701A" },
+                   "build":                 { upgrade:true,  type:"string",    value:"2.3.0.20230901A" },
 
 	           /* simulation screen: SVG */
                    "color_data_active":     { upgrade:false, type:"string",    value:"#0066FF" },
@@ -254,7 +262,7 @@
                    "ws_idiom":              { upgrade:false, type:"string",    value:'en' },
                    "use_voice":             { upgrade:false, type:"boolean",   value:false },
                    "ws_skin_ui":            { upgrade:false, type:"string",    value:'classic' },
-                   "ws_skin_user":          { upgrade:false, type:"string",    value:'only_asm:of:only_frequent:of' },
+                   "ws_skin_user":          { upgrade:true,  type:"string",    value:'extra_mcode:extra_morecfg:extra_share' },
                    "ws_skin_dark_mode":     { upgrade:false, type:"boolean",   value:false },
 
 	           /* micro/assembly screen: editor */
@@ -271,7 +279,6 @@
                    "max_json_size":         { upgrade:true,  type:"int",       value:1*1024*1024 },
                    "verbal_verbose":        { upgrade:false, type:"string",    value:'math' },
                    "extended_ui":           { upgrade:false, type:"boolean",   value:false },
-                   "beta_features":         { upgrade:false, type:"boolean",   value:false },
                    "use_ga":                { upgrade:false, type:"boolean",   value:true }
              } ;
 
