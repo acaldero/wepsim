@@ -55,10 +55,13 @@ function firm_instruction_check_oc ( context, instruccionAux, xr_info, all_ones_
 function firm_instruction_check_eoc ( context, instruccionAux, xr_info )
 {
 	// semantic check: valid value
-	if (instruccionAux.eoc.match("[01]*")[0] != instruccionAux.eoc ||
-	    (instruccionAux.eoc.length !== xr_info.ir.default_eltos.eoc.length &&
-	    instruccionAux.eoc.length !== xr_info.ir.default_eltos.eoc.lengths[0] &&
-	    instruccionAux.eoc.length !== xr_info.ir.default_eltos.eoc.lengths[1])) {
+	if (
+             (instruccionAux.eoc.match("[01]*")[0] != instruccionAux.eoc) ||
+	     (instruccionAux.eoc.length !== xr_info.ir.default_eltos.eoc.length     &&
+	      instruccionAux.eoc.length !== xr_info.ir.default_eltos.eoc.lengths[0] &&
+	      instruccionAux.eoc.length !== xr_info.ir.default_eltos.eoc.lengths[1])
+           )
+        {
 	    return frm_langError(context,
 			         i18n_get_TagFor('compiler', 'INCORRECT EOC BIN.') +
 			         "'" + instruccionAux.eoc + "'") ;
@@ -150,7 +153,7 @@ function firm_instruction_keystring_read ( context, instruccionAux )
 function firm_instruction_field_read_v2 ( context, instruccionAux )
 {
         var tmp_fields = {} ;
-	var field_list = ["oc", "eoc", "reg", "imm", "address-rel", "address-abs"] ;
+	var field_list = ["oc", "eoc", "reg", "imm", "inm", "address-rel", "address-abs"] ;
 	var complex_field_list = ["eoc", "address-rel", "address-abs"] ;
 
         // ...
@@ -344,19 +347,6 @@ function firm_instruction_field_read_v2 ( context, instruccionAux )
 			     total_bits += bits[i][0] - bits[i][1] + 1;
 			}
 
-			// relative addresses (S and B-type instructions) are 12 or 20 bits long
-			if (tmp_fields.address_type === "rel" && total_bits != 12 && total_bits != 20) {
-				return frm_langError(context,
-							i18n_get_TagFor('compiler', 'ADDRESS-REL MUST BE 12 OR 20 BITS') +
-							"'" + frm_getToken(context) + "'") ;
-			}
-			// absolute addresses (J-type instructions) are 20 bits long
-			if (tmp_fields.address_type === "abs" && total_bits != 20) {
-				return frm_langError(context,
-							i18n_get_TagFor('compiler', 'ADDRESS-ABS MUST BE 20 BITS') +
-							"'" + frm_getToken(context) + "'") ;
-			}
-
 			tmp_fields.bits = bits ;
 			tmp_fields.bits_start = bits_start ;
 			tmp_fields.bits_stop  = bits_stop ;
@@ -478,7 +468,7 @@ function firm_instruction_read_fields_v2 ( context, instruccionAux, xr_info, all
 		   }
 
                    instruccionAux.eoc = ret.value ;
-				   instruccionAux.fields_eoc.push(ret.value) ;
+		   instruccionAux.fields_eoc.push(ret.value) ;
 
                    ret = firm_instruction_check_eoc(context, instruccionAux, xr_info) ;
 		   if (typeof ret.error != "undefined") {
@@ -534,6 +524,7 @@ function firm_instruction_read_fields_v2 ( context, instruccionAux, xr_info, all
 		   instruccionAux.signatureUser = firmaUsuario;
 		   firmaGlobal = firma.replace("address","num");
 		   firmaGlobal = firmaGlobal.replace("imm" , "num");
+		   firmaGlobal = firmaGlobal.replace("inm" , "num"); // TODO: temporal fix
 		   instruccionAux.signatureGlobal = firmaGlobal;
 
 		   camposInsertados++;
@@ -560,9 +551,9 @@ function firm_instruction_read_fields_v2 ( context, instruccionAux, xr_info, all
        // semantic check: valid pending value (eoc.length if native.false)
        if ( (instruccionAux["is_native"] === false) &&
 	    (typeof instruccionAux.eoc   !== 'undefined') &&
-	    (instruccionAux.eoc.length   !== xr_info.ir.default_eltos.eoc.length) &&
+	    (instruccionAux.eoc.length   !== xr_info.ir.default_eltos.eoc.length)     &&
 	    (instruccionAux.eoc.length   !== xr_info.ir.default_eltos.eoc.lengths[0]) &&
-	    (instruccionAux.eoc.length   !== xr_info.ir.default_eltos.eoc.lengths[1]))
+	    (instruccionAux.eoc.length   !== xr_info.ir.default_eltos.eoc.lengths[1]) )
        {
 	    return frm_langError(context,
 			         i18n_get_TagFor('compiler', 'BAD EOC BIN. LEN.') +
