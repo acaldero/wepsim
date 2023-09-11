@@ -198,17 +198,24 @@
 	function assembly2html ( mp, labels, seg )
 	{
 		var l = "" ;
+                var an = 0 ;
+                var as = "" ;
 
-                // prepare hashtable...
+                // prepare hashtable for address to labels...
                 var a2l = {} ;
                 for (l in labels)
 		{
-                     if (typeof a2l[labels[l]] == "undefined") {
-                         a2l[labels[l]] = [] ;
+                     an = parseInt(labels[l]) ;
+                     an = an - (an % WORD_BYTES) ;
+                     as = "0x" + an.toString(16) ;
+
+                     if (typeof a2l[as] == "undefined") {
+                         a2l[as] = [] ;
 		     }
-                     a2l[labels[l]].push(l);
+                     a2l[as].push(l);
                 }
 
+                // prepare hashtable for address to segments...
                 var a2s = {} ;
                 for (l in seg)
 		{
@@ -277,7 +284,7 @@
 		     if (typeof a2l[p] != "undefined")
 		     {
 			 for (var i=0; i<a2l[p].length; i++) {
-			      s_label = s_label + "<span class='badge bg-info'>" + a2l[p][i] + "</span>" ;
+			      s_label = s_label + "<span class='badge bg-info mx-1'>" + a2l[p][i] + "</span>" ;
 			 }
 		     }
 
@@ -461,6 +468,86 @@
              return o ;
         }
 
+	function instruction_oceoc2html ( firm_reference )
+	{
+	   var u_oc_eoc = '' ;
+
+	   if (typeof firm_reference.co !== 'undefined')
+	   { // firmware v1
+	       u_oc_eoc += firm_reference.co ;
+	   }
+	   else if (typeof firm_reference.oc !== 'undefined')
+	   {
+	       if (typeof firm_reference.oc.value !== 'undefined')
+	            u_oc_eoc += firm_reference.oc.value ; // firmware v2
+	       else u_oc_eoc += firm_reference.oc ;       // firmware v1
+	   }
+	   else if (typeof firm_reference.op !== 'undefined') {
+	       u_oc_eoc += firm_reference.op ;
+	   }
+
+	   if (typeof firm_reference.cop !== 'undefined')
+	   {
+	       if (firm_reference.cop !== '')
+	           u_oc_eoc += '+' + firm_reference.cop ;
+	   }
+	   else if (typeof firm_reference.eoc !== 'undefined')
+	   {
+	       if (typeof firm_reference.eoc.value !== 'undefined') {
+	           if (firm_reference.eoc.value !== '')
+	               u_oc_eoc += '+' + firm_reference.eoc.value ; // firmware v2
+               }
+               else {
+	           if (firm_reference.eoc !== '')
+	               u_oc_eoc += '+' + firm_reference.eoc ;       // firmware v1
+               }
+	   }
+
+	   return ' <li>' + firm_reference.name + ': <b>' + u_oc_eoc + '</b></li>\n' ;
+        }
+
+	function instruction_fields2html ( firm_reference )
+	{
+           var o = '' ;
+
+	   var fields = firm_reference.fields ;
+           if (0 == fields.length) {
+               return o ;
+           }
+
+	   if (typeof fields[0].asm_start_bit !== 'undefined')
+	   { // firmware v2 - assembler-ng
+	       for (var f=0; f<fields.length; f++)
+               {
+	            o += ' <li>' + fields[f].name                     + ': bits <b>' +
+                                   fields[f].asm_stop_bit.toString()  + '</b> to <b>' +
+                                   fields[f].asm_start_bit.toString() + '</b></li>\n' ;
+	       }
+           }
+
+	   else if (typeof fields[0].bits_start !== 'undefined')
+	   { // firmware v2 - assembler-v1
+	       for (var f=0; f<fields.length; f++)
+               {
+	            o += ' <li>' + fields[f].name                  + ': bits <b>' +
+                                   fields[f].bits_stop.toString()  + '</b> to <b>' +
+                                   fields[f].bits_start.toString() + '</b></li>\n' ;
+	       }
+           }
+
+           else
+	   { // firmware v1
+	       for (var f=0; f<fields.length; f++)
+               {
+	            o += ' <li>' + fields[f].name     + ': bits <b>' +
+                                   fields[f].stopbit  + '</b> to <b>' +
+                                   fields[f].startbit + '</b></li>\n' ;
+	       }
+           }
+
+           return o ;
+        }
+
 	function instruction2tooltip ( mp, l )
 	{
     	   var wsi = get_cfg('ws_idiom') ;
@@ -491,21 +578,13 @@
 		    '<b>' + ins_bin + '</b>\n' +
 		    '</div>' ;
 
-	   // details: co, cop & fields
-	   var u = '' ;
-	   if (typeof    firm_reference.cop !== 'undefined') {
-	       u = '+' + firm_reference.cop ;
-	   }
-
+	   // details: co+cop & fields
 	   o +=	'<div class=\"text-start px-2 my-1\">\n' +
 	       	'<span class=\"square\">Format:</span>\n' +
 	        '<ul class=\"mb-0\">\n' +
-		' <li>' + firm_reference.name + ': <b>' + firm_reference.co + u + '</b></li>\n' ;
-	   var fields = firm_reference.fields ;
-	   for (var f=0; f<fields.length; f++) {
-	        o += ' <li>' + fields[f].name + ': bits <b>' + fields[f].stopbit + '</b> to <b>' + fields[f].startbit + '</b></li>\n' ;
-	   }
-	   o += '</ul>\n' ;
+	        instruction_oceoc2html(firm_reference) +
+	        instruction_fields2html(firm_reference) +
+	        '</ul>\n' ;
 
 	   // details: microcode
 	   o += '<span class=\"wsx_microcode\">' + '<span class=\"square\">Microcode:</span>\n' +
