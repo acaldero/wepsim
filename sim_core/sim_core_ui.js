@@ -25,6 +25,40 @@
 
         // numbers
 
+	//
+	// decimal2binary(number: integer, size_to_fit: integer ) ->
+	//    [
+	//       num_base2,
+	//       number of bits extra of missing for num_base2,
+	//       minimum number of bits to represent num_base2
+	//    ]
+	//
+
+	function decimal2binary ( number, size )
+	{
+		var num_base2        = number.toString(2) ;
+		var num_base2_length = num_base2.length ;
+
+		if (num_base2_length > WORD_LENGTH) {
+		    return [num_base2, size-num_base2_length, num_base2_length] ;
+		}
+
+		num_base2        = (number >>> 0).toString(2) ;
+		num_base2_length = num_base2.length ;
+		if (number >= 0) {
+		    return [num_base2, size-num_base2_length, num_base2_length] ;
+		}
+
+		num_base2        = "1" + num_base2.replace(/^[1]+/g, "") ;
+		num_base2_length = num_base2.length ;
+		if (num_base2_length > size) {
+		    return [num_base2, size-num_base2_length, num_base2_length] ;
+		}
+
+		num_base2 = "1".repeat(size - num_base2.length) + num_base2 ;
+		return [num_base2, size-num_base2.length, num_base2_length] ;
+	}
+
 	function float2binary ( f, size )
 	{
 		var buf   = new ArrayBuffer(8) ;
@@ -296,8 +330,16 @@
 
         function refresh()
         {
-	    for (var key in simhw_sim_signals()) {
-		 update_draw(simhw_sim_signals()[key], simhw_sim_signals()[key].value) ;
+	    var all_signals = simhw_sim_signals() ;
+            var one_signals = {} ;
+
+	    for (var key in all_signals) {
+                 if (all_signals[key].value == 0)
+		      update_draw(all_signals[key], all_signals[key].value) ;
+                 else one_signals[key] = 1 ;
+	    }
+	    for (var key in one_signals) {
+		 update_draw(all_signals[key], all_signals[key].value) ;
 	    }
 
 	    show_dbg_ir(get_value(simhw_sim_state('REG_IR_DECO'))) ;
