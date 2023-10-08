@@ -29,14 +29,14 @@
 function wsasm_new_objElto ( base_elto )
 {
         var elto = {
-		       comments:     [], // need_in_memory as comments: array of string
+		       comments:     [],  // need_in_memory as comments: array of string
 		       labels:       [],
-		       track_source: [], // need_in_memory as source_tracking: array of string
+		       track_source: [],  // need_in_memory as source_tracking: array of string
 
                        seg_name:     '',
-                       datatype:     '', // datatype
-                       byte_size:    0,  // size(datatype) in bytes
-                       value:        0,
+                       datatype:     '',  // datatype
+                       byte_size:     0,  // size(datatype) in bytes
+                       value:        '0',
                        format:       '',
 
                        binary:               '',
@@ -1566,8 +1566,8 @@ function wsasm_resolve_pseudo ( context, ret )
               }
               if (null == ret.obj[i].firm_reference)
               {
-                   // skip empty pseudoinstructions:
-                   //        pseudo
+                   // skip empty pseudoinstructions, example:
+                   //        "pseudo"
                    // label:         <- empty line with label, former pseudo
                    continue ;
               }
@@ -1609,6 +1609,7 @@ function wsasm_resolve_pseudo ( context, ret )
 	         elto.value.fields             = [] ;
 	         elto.value.signature_type_arr = [ possible_inst ] ;
 		 elto.value.signature_size_arr = [] ;
+                 elto.associated_context       = pseudo_elto.associated_context ;
 
                  // Match fields of the pseudoinstruction...
                  ret1 = wsasm_src2obj_text_elto_fields(context, ret, elto, pseudo_context) ;
@@ -1630,7 +1631,8 @@ function wsasm_resolve_pseudo ( context, ret )
 		 }
 
                  if (0 == eltos.length) {
-                     elto.labels = pseudo_elto.labels ;
+                     elto.labels   = pseudo_elto.labels ;
+		     elto.comments = pseudo_elto.comments.slice() ;
 		 }
 
                  // add elto to some temporal array
