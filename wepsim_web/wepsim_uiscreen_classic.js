@@ -40,7 +40,8 @@
 	            super.render() ;
 
                     // render current element
-                    this.extended_ui = true ;
+                    this.extended_ui = false ; // 2.2.2
+                    this.extended_ui = true  ; // 2.3.0
 		    this.render_skel() ;
 		    this.render_populate() ;
 
@@ -125,7 +126,7 @@
 			 '<div class="w-100 d-block d-sm-none"></div>' +
 			 '' +
 			 '<div id="slider_cpucu" ' +
-                         '     class="col-sm p-0 collapse show multi-collapse-2 user_microcode">' +
+                         '     class="col-sm p-0 collapse show multi-collapse-2 wsx_microcode">' +
 			 '<ws-toolbar components="slider_cpucu"></ws-toolbar>' +
 			 '</div>' +
 			 '' +

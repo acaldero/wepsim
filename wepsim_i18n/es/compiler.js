@@ -39,9 +39,11 @@
 		'NO MAIN OR KMAIN':		'Tags \'main\' o \'kmain\' no están definidos en el segmento de texto (s). Es obligatorio para definir al menos una de esas etiquetas con el fin de ejecutar un programa',
 		'UNKNOWN 1':			'Se produjo un error desconocido (1)',
 		'UNKNOWN 2':			'Error inesperado (2)',
+		'REMEMBER FORMAT USED':		'El formato de instrucción usado para ',
 		'REMEMBER I. FORMAT':		'Recuerde que el formato de instrucción se ha definido como: ',
 		'SEVERAL CANDIDATES':		'Instrucción y campos coincide con más de una instrucción posible. Por favor, compruebe el microcódigo. En la actualidad, el formato de la instrucción puede ser: ',
-		'NOT MATCH MICRO':		'Instrucción y campos no coinciden con el formato de instrucción definido',
+		'NOT MATCH FORMAT':		'Instrucción y campos no coinciden con el/los formato(s) de instrucción definido(s) ',
+		'NOT MATCH MICRO':		'Instrucción y campos no coinciden con el formato de instrucción definido. ',
 		'CHECK MICROCODE':		'Por favor, compruebe el microcódigo. Probablemente se olvidó de agregar un campo, un número no encaja en su rango, o simplemente usa una instrucción equivocada',
                 "LABEL NOT DEFINED":    "Label used but not defined in the assembly code: ",
 		'INS. MISSING FIELD':		'Falta un campo en la instrucción',
@@ -104,6 +106,19 @@
            "EXPECTED VALUE":         "Valor se esperaba que quepa en un '",
            "BUT INSERTED":           "pero insertado ",
            "INSTEAD":                "en su lugar",
+
+           "ADDRESS-ABS MUST BE 20 BITS":		"Address-abs debe ser de 20 bits",
+           "ADDRESS-REL MUST BE 12 OR 20 BITS":		"Address-rel must be 12 or 20 bits",
+           "BAD EOC BIN. LEN.":				"número incorrecto de bits para el campo eoc",
+           "BIT OoR":					"bit OoR",
+           "COLON NOT FOUND":				"falta ':'",
+           "COLON OR PIPE NOT FOUND":			"falta ':' o '|'",
+           "INCORRECT EOC BIN.":			"binario incorrecto para eoc",
+           "INCORRECT OC BIN.":				"binario incorrecto para oc",
+           "NO FIELD":					"falta campo",
+           "NO OC FIELD":				"falta campo oc",
+           "OC ALREADY USED":				"campo oc ya usado",
+           "OC+EOC ALREADY USED":			"oc+eoc ya usados",
 
 	   '_last_':		     '_last_'
 

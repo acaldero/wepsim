@@ -39,9 +39,11 @@
 		'NO MAIN OR KMAIN':		'de principal »ou « kmain » ne sont pas définis dans le segment de texte Tags (s). Il est obligatoire de définir au moins un de ces balises afin d\'exécuter un programme',
 		'UNKNOWN 1':			'Une erreur inconnue est survenue (1) pour le type de terrain:',
 		'UNKNOWN 2':			'Erreur inattendue (2)',
+		'REMEMBER FORMAT USED':		'Le format d\'instruction utilisé pour ',
 		'REMEMBER I. FORMAT':		'Rappelez-vous que le format d\'instruction a été définie comme suit:',
 		'SEVERAL CANDIDATES':		'Instruction et champs correspondent à plus d\'un microprogrammes. S\'il vous plaît vérifier le microcode. À l\'heure actuelle, le format d\'instruction peut être:',
-		'NOT MATCH MICRO':		'Instruction et les champs ne correspondent pas aux microprogrammes.',
+		'NOT MATCH FORMAT':		'Les instructions et les champs ne correspondent pas au(x) format(s) défini(s) ',
+		'NOT MATCH MICRO':		'Instruction et les champs ne correspondent pas aux microprogrammes. ',
 		'CHECK MICROCODE':		'S\'il vous plaît vérifier le microcode. Probablement vous avez oublié d\'ajouter un champ, un certain nombre est hors de portée, ou vous venez d\'utiliser une instruction erronée',
 		'LABEL NOT DEFINED':		'Étiquette utilisée mais non définie dans le code de montage:',
 		'INS. MISSING FIELD':		'Champ manquant dans l\'instruction',
@@ -104,6 +106,19 @@
 		'EXPECTED VALUE':		'Valeur attendue qui correspond à un \'',
 		'BUT INSERTED':			'mais inséré',
 		'INSTEAD':			'au lieu',
+
+           	"ADDRESS-ABS MUST BE 20 BITS":		'L\'adresse-abs doit être de 20 bits',
+           	"ADDRESS-REL MUST BE 12 OR 20 BITS":	"Address-rel must be 12 or 20 bits",
+           	"BAD EOC BIN. LEN.":			"nombre de bits incorrect pour le champ eoc",
+           	"BIT OoR":				"bit OoR",
+           	"COLON NOT FOUND":			": pas trouvé",
+           	"COLON OR PIPE NOT FOUND":		": ou | pas trouvé",
+           	"INCORRECT EOC BIN.":			"binaire eoc incorrect",
+           	"INCORRECT OC BIN.":			"binaire  oc incorrect",
+           	"NO FIELD":				"No field",
+           	"NO OC FIELD":				"No oc field",
+           	"OC ALREADY USED":			"oc déjà utilisé",
+           	"OC+EOC ALREADY USED":			"oc+eoc déjà utilisé",
 
 		'_last_':		'_last_'
 

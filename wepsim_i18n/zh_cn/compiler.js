@@ -39,8 +39,10 @@
 		'NO MAIN OR KMAIN':		'标签“主”或“kmain”在文本段（一个或多个）不限定。它是强制性的定义，以执行程序的标记中的至少一个',
 		'UNKNOWN 1':			'对于场类型发生未知错误（1）：',
 		'UNKNOWN 2':			'意外的错误（2）',
+		'REMEMBER FORMAT USED':		'使用的指令格式',
 		'REMEMBER I. FORMAT':		'请记住，指令格式已经被定义为：',
 		'SEVERAL CANDIDATES':		'指令和字段匹配多个微。请检查微代码。目前，指令格式可以是：',
+		'NOT MATCH FORMAT':		'指令和字段與定義的格式不匹配 ',
 		'NOT MATCH MICRO':		'指令字段不匹配与微。',
 		'CHECK MICROCODE':		'请检查微代码。也许你忘了添加一个字段，一些不适合它的空间，或者你只是使用了错误指令',
 		'LABEL NOT DEFINED':		'使用的标记，但不是在汇编代码中定义：',
@@ -104,6 +106,19 @@
 		'EXPECTED VALUE':		'预期值，在一个千篇一律“',
 		'BUT INSERTED':			'但插入',
 		'INSTEAD':			'代替',
+
+           	"ADDRESS-ABS MUST BE 20 BITS":		"地址绝对值必须是 20 位",
+           	"ADDRESS-REL MUST BE 12 OR 20 BITS":	"Address-rel must be 12 or 20 bits",
+           	"BAD EOC BIN. LEN.":			"eoc 字段的位數不正確",
+           	"BIT OoR":				"Bit OoR",
+           	"COLON NOT FOUND":			"： 未找到",
+           	"COLON OR PIPE NOT FOUND":		": 或 |未找到",
+           	"INCORRECT EOC BIN.":			"eoc 二進製文件不正確",
+           	"INCORRECT OC BIN.":			" oc 二進製文件不正確",
+           	"NO FIELD":				"No field",
+           	"NO OC FIELD":				"No oc field",
+           	"OC ALREADY USED":			"oc已经使用了",
+           	"OC+EOC ALREADY USED":			"oc+eoc 已使用",
 
 		'_last_':			'_last_'
 

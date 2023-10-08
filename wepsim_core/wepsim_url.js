@@ -80,6 +80,9 @@
     function wepsim_file_loadFrom ( fileToLoad, functionOnLoad )
     {
         // checks
+        if (typeof fileToLoad === "undefined") {
+            return false ;
+        }
         var fileReader = new FileReader();
         if (fileReader === null) {
             return false ;
@@ -130,6 +133,9 @@
 
     function getURLTimeStamp ( )
     {
+                return Date.now() ;
+
+/*
 		var dateObj = new Date();
 		var year    = dateObj.getUTCFullYear();
 		var month   = dateObj.getUTCMonth() + 1;
@@ -138,6 +144,7 @@
 		var minutes = dateObj.getUTCMinutes();
 
 		return year + month + day + hour + minutes ;
+*/
     }
 
     function fetchURL ( f_url )

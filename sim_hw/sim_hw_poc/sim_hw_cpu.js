@@ -163,7 +163,8 @@
 		                     default_eltos: {
 					    		"co":	{ "begin":  0, "end":  5, "length": 6 },
 							"cop":	{ "begin": 27, "end": 31, "length": 5 },
-							"oc":	{ "begin":  0, "end":  6, "length": 7 },
+							"oc":	{ "begin":  0, "end":  5, "length": 6 },
+							"eoc":	{ "begin": 27, "end": 31, "length": 5 },
 						    },
 		                     is_pointer: false
 	                          } ;
@@ -1226,12 +1227,12 @@
 						   var result = a + b ;
 						   set_value(sim.poc.states[s_expr[1]], result >>> 0) ;
 
-						   sim.poc.internal_states.alu_flags.flag_n = (result < 0) ? 1 : 0 ;
+						   sim.poc.internal_states.alu_flags.flag_n = (result  < 0) ? 1 : 0 ;
 						   sim.poc.internal_states.alu_flags.flag_z = (result == 0) ? 1 : 0 ;
 						   sim.poc.internal_states.alu_flags.flag_c = (a >>> 31) && (b >>> 31) ;
 
 						   sim.poc.internal_states.alu_flags.flag_v = 0 ;
-						   if ( (result < 0) && (a >= 0) && (b >= 0) )
+						   if ( (result  < 0) && (a >= 0) && (b >= 0) )
 							sim.poc.internal_states.alu_flags.flag_v = 1 ;
 						   if ( (result >= 0) && (a <  0) && (b <  0) )
 							sim.poc.internal_states.alu_flags.flag_v = 1 ;
@@ -1259,12 +1260,12 @@
 						   var result = a - b ;
 						   set_value(sim.poc.states[s_expr[1]], result >>> 0) ;
 
-						   sim.poc.internal_states.alu_flags.flag_n = (result < 0) ? 1 : 0 ;
+						   sim.poc.internal_states.alu_flags.flag_n = (result  < 0) ? 1 : 0 ;
 						   sim.poc.internal_states.alu_flags.flag_z = (result == 0) ? 1 : 0 ;
 						   sim.poc.internal_states.alu_flags.flag_c = (a >>> 31) && (b >>> 31) ;
 
 						   sim.poc.internal_states.alu_flags.flag_v = 0 ;
-						   if ( (result < 0) && (a >= 0) && (b >= 0) )
+						   if ( (result  < 0) && (a >= 0) && (b >= 0) )
 							sim.poc.internal_states.alu_flags.flag_v = 1 ;
 						   if ( (result >= 0) && (a <  0) && (b <  0) )
 							sim.poc.internal_states.alu_flags.flag_v = 1 ;
@@ -1292,12 +1293,12 @@
 						   var result = a * b ;
 						   set_value(sim.poc.states[s_expr[1]], result >>> 0) ;
 
-						   sim.poc.internal_states.alu_flags.flag_n = (result < 0) ? 1 : 0 ;
+						   sim.poc.internal_states.alu_flags.flag_n = (result  < 0) ? 1 : 0 ;
 						   sim.poc.internal_states.alu_flags.flag_z = (result == 0) ? 1 : 0 ;
 						   sim.poc.internal_states.alu_flags.flag_c = 0 ;
 
 						   sim.poc.internal_states.alu_flags.flag_v = 0 ;
-						   if ( (result < 0) && (a >= 0) && (b >= 0) )
+						   if ( (result  < 0) && (a >= 0) && (b >= 0) )
 							sim.poc.internal_states.alu_flags.flag_v = 1 ;
 						   if ( (result >= 0) && (a <  0) && (b <  0) )
 							sim.poc.internal_states.alu_flags.flag_v = 1 ;
@@ -1432,15 +1433,16 @@
 				     operation: function(s_expr)
 		                                {
 						   var a = get_value(sim.poc.states[s_expr[2]]) << 0 ;
-						   var result = a + 4 ;
+                                                   var b = 4 ;
+						   var result = a + b ;
 						   set_value(sim.poc.states[s_expr[1]], result >>> 0) ;
 
-						   sim.poc.internal_states.alu_flags.flag_n = (result < 0) ? 1 : 0 ;
+						   sim.poc.internal_states.alu_flags.flag_n = (result  < 0) ? 1 : 0 ;
 						   sim.poc.internal_states.alu_flags.flag_z = (result == 0) ? 1 : 0 ;
 						   sim.poc.internal_states.alu_flags.flag_c = (a >>> 31) && (b >>> 31) ;
 
 						   sim.poc.internal_states.alu_flags.flag_v = 0 ;
-						   if ( (result < 0) && (a >= 0) && (b >= 0) )
+						   if ( (result  < 0) && (a >= 0) && (b >= 0) )
 							sim.poc.internal_states.alu_flags.flag_v = 1 ;
 						   if ( (result >= 0) && (a <  0) && (b <  0) )
 							sim.poc.internal_states.alu_flags.flag_v = 1 ;
@@ -1458,15 +1460,16 @@
 				     operation: function(s_expr)
 		                                {
 						   var a = get_value(sim.poc.states[s_expr[2]]) << 0 ;
-						   var result = a + 1 ;
+                                                   var b = 1 ;
+						   var result = a + b ;
 						   set_value(sim.poc.states[s_expr[1]], result >>> 0) ;
 
-						   sim.poc.internal_states.alu_flags.flag_n = (result < 0) ? 1 : 0 ;
+						   sim.poc.internal_states.alu_flags.flag_n = (result  < 0) ? 1 : 0 ;
 						   sim.poc.internal_states.alu_flags.flag_z = (result == 0) ? 1 : 0 ;
 						   sim.poc.internal_states.alu_flags.flag_c = (a >>> 31) && (b >>> 31) ;
 
 						   sim.poc.internal_states.alu_flags.flag_v = 0 ;
-						   if ( (result < 0) && (a >= 0) && (b >= 0) )
+						   if ( (result  < 0) && (a >= 0) && (b >= 0) )
 							sim.poc.internal_states.alu_flags.flag_v = 1 ;
 						   if ( (result >= 0) && (a <  0) && (b <  0) )
 							sim.poc.internal_states.alu_flags.flag_v = 1 ;
@@ -1484,15 +1487,16 @@
 				     operation: function(s_expr)
 		                                {
 						   var a = get_value(sim.poc.states[s_expr[2]]) << 0 ;
-						   var result = a - 4 ;
+                                                   var b = 4 ;
+						   var result = a - b ;
 						   set_value(sim.poc.states[s_expr[1]], result >>> 0) ;
 
-						   sim.poc.internal_states.alu_flags.flag_n = (result < 0) ? 1 : 0 ;
+						   sim.poc.internal_states.alu_flags.flag_n = (result  < 0) ? 1 : 0 ;
 						   sim.poc.internal_states.alu_flags.flag_z = (result == 0) ? 1 : 0 ;
 						   sim.poc.internal_states.alu_flags.flag_c = (a >>> 31) && (b >>> 31) ;
 
 						   sim.poc.internal_states.alu_flags.flag_v = 0 ;
-						   if ( (result < 0) && (a >= 0) && (b >= 0) )
+						   if ( (result  < 0) && (a >= 0) && (b >= 0) )
 							sim.poc.internal_states.alu_flags.flag_v = 1 ;
 						   if ( (result >= 0) && (a <  0) && (b <  0) )
 							sim.poc.internal_states.alu_flags.flag_v = 1 ;
@@ -1510,15 +1514,16 @@
 				     operation: function(s_expr)
 		                                {
 						   var a = get_value(sim.poc.states[s_expr[2]]) << 0 ;
-						   var result = a - 1 ;
+                                                   var b = 1 ;
+						   var result = a - b ;
 						   set_value(sim.poc.states[s_expr[1]], result >>> 0) ;
 
-						   sim.poc.internal_states.alu_flags.flag_n = (result < 0) ? 1 : 0 ;
+						   sim.poc.internal_states.alu_flags.flag_n = (result  < 0) ? 1 : 0 ;
 						   sim.poc.internal_states.alu_flags.flag_z = (result == 0) ? 1 : 0 ;
 						   sim.poc.internal_states.alu_flags.flag_c = (a >>> 31) && (b >>> 31) ;
 
 						   sim.poc.internal_states.alu_flags.flag_v = 0 ;
-						   if ( (result < 0) && (a >= 0) && (b >= 0) )
+						   if ( (result  < 0) && (a >= 0) && (b >= 0) )
 							sim.poc.internal_states.alu_flags.flag_v = 1 ;
 						   if ( (result >= 0) && (a <  0) && (b <  0) )
 							sim.poc.internal_states.alu_flags.flag_v = 1 ;
@@ -1546,7 +1551,7 @@
 						   sim.poc.internal_states.alu_flags.flag_c = 0 ;
 
 						   sim.poc.internal_states.alu_flags.flag_v = 0 ;
-						   if ( (result < 0.0) && (a >= 0.0) && (b >= 0.0) )
+						   if ( (result  < 0.0) && (a >= 0.0) && (b >= 0.0) )
 							sim.poc.internal_states.alu_flags.flag_v = 1 ;
 						   if ( (result >= 0.0) && (a <  0.0) && (b <  0.0) )
 							sim.poc.internal_states.alu_flags.flag_v = 1 ;
@@ -1574,7 +1579,7 @@
 						   sim.poc.internal_states.alu_flags.flag_c = 0 ;
 
 						   sim.poc.internal_states.alu_flags.flag_v = 0 ;
-						   if ( (result < 0) && (a >= 0) && (b >= 0) )
+						   if ( (result  < 0) && (a >= 0) && (b >= 0) )
 							sim.poc.internal_states.alu_flags.flag_v = 1 ;
 						   if ( (result >= 0) && (a <  0) && (b <  0) )
 							sim.poc.internal_states.alu_flags.flag_v = 1 ;
@@ -1602,7 +1607,7 @@
 						   sim.poc.internal_states.alu_flags.flag_c = 0 ;
 
 						   sim.poc.internal_states.alu_flags.flag_v = 0 ;
-						   if ( (result < 0) && (a >= 0) && (b >= 0) )
+						   if ( (result  < 0) && (a >= 0) && (b >= 0) )
 							sim.poc.internal_states.alu_flags.flag_v = 1 ;
 						   if ( (result >= 0) && (a <  0) && (b <  0) )
 							sim.poc.internal_states.alu_flags.flag_v = 1 ;

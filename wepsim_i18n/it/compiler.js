@@ -39,9 +39,11 @@
 		'NO MAIN OR KMAIN':		'Tag \'principale\' o \'kmain\' non sono definiti nel segmento di testo (s). E \'obbligatorio definire almeno uno di questi tag al fine di eseguire un programma',
 		'UNKNOWN 1':			'Si è verificato un errore sconosciuto (1) per il tipo di campo: ',
 		'UNKNOWN 2':			'Errore imprevisto (2)',
+		'REMEMBER FORMAT USED':		'Il formato delle istruzioni utilizzato per ',
 		'REMEMBER I. FORMAT':		'Ricordare che il formato di istruzioni è stato definito come: ',
 		'SEVERAL CANDIDATES':		'Istruzione e campi corrispondono con più di un microprogramma. Si prega di verificare il microcodice. Attualmente, il formato delle istruzioni può essere: ',
-		'NOT MATCH MICRO':		'Istruzione e campi non corrispondono con microprogramma.',
+		'NOT MATCH FORMAT':		'Le istruzioni e i campi non corrispondono ai formati definiti ',
+		'NOT MATCH MICRO':		'Istruzione e campi non corrispondono con microprogramma. ',
 		'CHECK MICROCODE':		'Si prega di verificare il microcodice. Probabilmente si è dimenticato di aggiungere un campo, un numero non rientra nel suo spazio, o semplicemente utilizzato un\'istruzione sbagliata',
 		'INS. MISSING FIELD':		'Campo mancante nell\'istruzione',
 		'UNEXPECTED (REG)':		'Registro previsto ma trovato registro tra parentesi.',
@@ -104,6 +106,19 @@
 		'EXPECTED VALUE':		'Valore atteso che si inserisce in un \'',
 		'BUT INSERTED':			'ma inserito',
 		'INSTEAD':			'anziché',
+
+           	"ADDRESS-ABS MUST BE 20 BITS":		'L\'indirizzo abs deve essere di 20 bit',
+           	"ADDRESS-REL MUST BE 12 OR 20 BITS":	"Address-rel must be 12 or 20 bits",
+           	"BAD EOC BIN. LEN.":			"numero errato di bit per il campo eoc",
+           	"BIT OoR":				"bit OoR",
+           	"COLON NOT FOUND":			": non trovato",
+           	"COLON OR PIPE NOT FOUND":		": o | non trovato",
+           	"INCORRECT EOC BIN.":			"binario eoc errato",
+           	"INCORRECT OC BIN.":			"binario  oc errato",
+           	"NO FIELD":				"No field",
+           	"NO OC FIELD":				"No oc field",
+           	"OC ALREADY USED":			"oc già utilizzato",
+           	"OC+EOC ALREADY USED":			"oc+eoc già utilizzato",
 
 		'_last_':			'_last_'
 

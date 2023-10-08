@@ -39,8 +39,10 @@
 		'NO MAIN OR KMAIN':		'タグ「主」または「kmain」はテキスト・セグメント（単数または複数）で定義されていません。プログラムを実行するために、これらのタグのうちの少なくとも一つを定義することが義務付けられています',
 		'UNKNOWN 1':			'不明なエラーがフィールドタイプのために（1）発生しました：',
 		'UNKNOWN 2':			'予期しないエラー（2）',
+		'REMEMBER FORMAT USED':		'使用される命令フォーマット',
 		'REMEMBER I. FORMAT':		'命令フォーマットは次のように定義されていることに注意してください：',
 		'SEVERAL CANDIDATES':		'命令とフィールドは、複数のマイクロプログラムで一致します。マイクロコードを確認してください。現在、命令フォーマットを指定できます。',
+		'NOT MATCH FORMAT':		'命令とフィールドが定義された形式と一致しません',
 		'NOT MATCH MICRO':		'命令とフィールドはマイクロプログラムと一致しません。',
 		'CHECK MICROCODE':		'マイクロコードを確認してください。おそらくあなたは、フィールドを追加するのを忘れ、番号が範囲外である、またはあなただけの間違った命令を使用します',
 		'LABEL NOT DEFINED':		'ラベルは使用されるが、アセンブリコードで定義されていません。',
@@ -104,6 +106,19 @@
 		'EXPECTED VALUE':		'そのAに収まる "期待値',
 		'BUT INSERTED':			'しかし挿入',
 		'INSTEAD':			'その代わり',
+
+           	"ADDRESS-ABS MUST BE 20 BITS":		"Address-abs は 20 ビットである必要があります",
+           	"ADDRESS-REL MUST BE 12 OR 20 BITS":	"Address-rel must be 12 or 20 bits",
+           	"BAD EOC BIN. LEN.":			"eoc フィールドのビット数が正しくありません",
+           	"BIT OoR":				"Bit OoR",
+           	"COLON NOT FOUND":			"： 見つかりません",
+           	"COLON OR PIPE NOT FOUND":		": または |見つかりません",
+           	"INCORRECT EOC BIN.":			"不正な eoc バイナリ",
+           	"INCORRECT OC BIN.":			"不正な  oc バイナリ",
+           	"NO FIELD":				"No field",
+           	"NO OC FIELD":				"No oc field",
+           	"OC ALREADY USED":			"ocはすでに使用されています",
+           	"OC+EOC ALREADY USED":			"oc+eocはすでに使用されています",
 
 		'_last_':			'_last_'
 

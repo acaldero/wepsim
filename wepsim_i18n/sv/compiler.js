@@ -39,9 +39,11 @@
 		'NO MAIN OR KMAIN':		'Tags \'viktigaste\' eller \'kmain\' definieras inte i textsegmentet (s). Det är obligatoriskt att definiera åtminstone en av dessa taggar för att köra ett program',
 		'UNKNOWN 1':			'Ett okänt fel inträffade (1) för fälttypen:',
 		'UNKNOWN 2':			'Oväntat fel (2)',
+		'REMEMBER FORMAT USED':		'Instruktionsformatet som används för ',
 		'REMEMBER I. FORMAT':		'Kom ihåg att instruktionsformatet har definierats som:',
 		'SEVERAL CANDIDATES':		'Instruktion och fält matcha med mer än en mikro. Kontrollera mikrokoden. För närvarande kan instruktionen format vara',
-		'NOT MATCH MICRO':		'Instruktion och fält matchar inte med mikro.',
+		'NOT MATCH FORMAT':		'Instruktioner och fält matchar inte definierade format(er) ',
+		'NOT MATCH MICRO':		'Instruktion och fält matchar inte med mikro. ',
 		'CHECK MICROCODE':		'Kontrollera mikrokoden. Förmodligen du har glömt att lägga till ett fält, är ett antal utanför intervallet, eller om du bara använt en felaktig instruktion',
 		'LABEL NOT DEFINED':		'Märkning som används men inte definieras i assemblerkod:',
 		'INS. MISSING FIELD':		'Saknade fält i instruktionen',
@@ -104,6 +106,19 @@
 		'EXPECTED VALUE':		'Förväntat värde som passar i en "',
 		'BUT INSERTED':			'men införd',
 		'INSTEAD':			'istället',
+
+           	"ADDRESS-ABS MUST BE 20 BITS":		"Address-abs måste vara 20 bitar",
+           	"ADDRESS-REL MUST BE 12 OR 20 BITS":	"Address-rel must be 12 or 20 bits",
+           	"BAD EOC BIN. LEN.":			"felaktigt antal bitar för eoc-fält",
+           	"BIT OoR":				"bit OoR",
+           	"COLON NOT FOUND":			": hittades inte",
+           	"COLON OR PIPE NOT FOUND":		": eller | hittades inte",
+           	"INCORRECT EOC BIN.":			"Felaktig eoc binär",
+           	"INCORRECT OC BIN.":			"Felaktig  oc binär",
+           	"NO FIELD":				"No field",
+           	"NO OC FIELD":				"No oc field",
+           	"OC ALREADY USED":			"oc redan använt",
+           	"OC+EOC ALREADY USED":			"oc+eoc används redan",
 
 		'_last_':			'_last_'
 
