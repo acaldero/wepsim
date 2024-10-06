@@ -1,5 +1,5 @@
 /*
- *  Copyright 2015-2024 Felix Garcia Carballeira, Alejandro Calderon Mateos, Javier Prieto Cepeda, Saul Alonso Monsalve
+ *  Copyright 2015-2025 Felix Garcia Carballeira, Alejandro Calderon Mateos, Javier Prieto Cepeda, Saul Alonso Monsalve
  *
  *  This file is part of WepSIM.
  *
@@ -177,10 +177,10 @@
 			"\n",
 			"if ws['assembly'] != '' and ws['firmware'] != '':\n",
 			"   !npm install  terser jq jshint yargs clear inquirer >& /dev/null\n",
-			"   !wget https://github.com/acaldero/wepsim/releases/download/v2.3.2/wepsim-2.3.2.zip >& /dev/null\n",
-			"   !unzip -o wepsim-2.3.2.zip  >& /dev/null\n",
-			"   !rm -fr   wepsim-2.3.2.zip\n",
-			"   !./wepsim-2.3.2/wepsim.sh -a stepbystep -m ep -f /base.mc -s /base.asm > ./result.csv\n",
+			"   !wget https://github.com/acaldero/wepsim/releases/download/v2.3.3/wepsim-2.3.3.zip >& /dev/null\n",
+			"   !unzip -o wepsim-2.3.3.zip  >& /dev/null\n",
+			"   !rm -fr   wepsim-2.3.3.zip\n",
+			"   !./wepsim-2.3.3/wepsim.sh -a stepbystep -m ep -f /base.mc -s /base.asm > ./result.csv\n",
 			"\n",
 			"df = None\n",
 			"if ws['assembly'] != '' and ws['firmware'] != '':\n",
@@ -283,10 +283,12 @@
 	 var elements = {} ;
 
          // check params
-         if (typeof nbObj.cells === "undefined")
+         if (typeof nbObj.cells === "undefined") {
              return elements ;
-         if (typeof nbObj.cells.length === "undefined")
+         }
+         if (typeof nbObj.cells.length === "undefined") {
              return elements ;
+         }
 
          // convert NB -> Obj
 	 var key   = "" ;
@@ -302,7 +304,7 @@
               type  = nbObj.cells[i].metadata.type ;
               value = nbObj.cells[i].source ;
 
-              if (type !== "string") {
+              if (["string", "code"].includes(type) == false) {
                   value = JSON.parse(value) ;
               }
 

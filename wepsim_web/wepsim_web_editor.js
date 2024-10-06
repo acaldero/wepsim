@@ -1,5 +1,5 @@
 /*
- *  Copyright 2015-2024 Felix Garcia Carballeira, Alejandro Calderon Mateos, Javier Prieto Cepeda, Saul Alonso Monsalve
+ *  Copyright 2015-2025 Felix Garcia Carballeira, Alejandro Calderon Mateos, Javier Prieto Cepeda, Saul Alonso Monsalve
  *
  *  This file is part of WepSIM.
  *
@@ -123,13 +123,13 @@
 	    var editor_obj = CodeMirror.fromTextArea(document.getElementById(editor_id), editor_cfg) ;
 
             // default values
-	    editor_obj.setValue("\n\n\n\n\n\n\n\n\n\n");
+	    editor_obj.setValue("\n\n\n\n\n\n\n\n\n\n") ;
 
             sim_cfg_editor_theme(editor_obj) ;
             sim_cfg_editor_mode(editor_obj) ;
 
-            editor_obj.setSize("auto","auto");
-            editor_obj.refresh();
+            editor_obj.setSize("auto", "75vh") ;
+            editor_obj.refresh() ;
 
             // event onChange -> update is_* attributes
 	    editor_obj.is_modified  = true ;
@@ -183,7 +183,11 @@
             }
 
             wepsim_notify_error('<strong>ERROR</strong>',
-                                errorMsg + '<br>' + '<center>' + lineMsg +
+		                '<div class="container-fluid p-1" style="overflow:auto; -webkit-overflow-scrolling:touch; max-height:70vh; max-width:75vw;">' +
+                                errorMsg + '<br>' +
+		                '</div>' +
+		                '<center>' +
+		                lineMsg +
                                 '<button type="button" class="btn btn-danger" ' +
                                 '        onclick="wepsim_notify_close();"><span data-langkey="Close">Close</span></button>' +
                                 '</center>') ;

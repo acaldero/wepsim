@@ -1,5 +1,5 @@
 /*     
- *  Copyright 2015-2024 Felix Garcia Carballeira, Alejandro Calderon Mateos, Javier Prieto Cepeda, Saul Alonso Monsalve, Javier Lopez Gomez
+ *  Copyright 2015-2025 Felix Garcia Carballeira, Alejandro Calderon Mateos, Javier Prieto Cepeda, Saul Alonso Monsalve, Javier Lopez Gomez
  *
  *  This file is part of WepSIM.
  *
@@ -146,9 +146,9 @@ function io_l3d_base_register ( sim_p )
                                                           set_value(sim_p.states[s_expr[2]], iodr);
 						      }
                                                       if (bus_ab == L3DSR_ID) {
-                                                          var x = (iodr & 0xFF000000) >> 24 ;
-                                                          var y = (iodr & 0x00FF0000) >> 16 ;
-                                                          var z = (iodr & 0x0000FF00) >>  8 ;
+                                                          var x = (iodr & 0xFF000000) >>> 24 ;
+                                                          var y = (iodr & 0x00FF0000) >>> 16 ;
+                                                          var z = (iodr & 0x0000FF00) >>>  8 ;
 
                                                           var p = z*Math.pow(sim_p.internal_states.l3d_dim, 2) +
 							          y*sim_p.internal_states.l3d_dim +
@@ -204,9 +204,9 @@ function io_l3d_base_register ( sim_p )
                                                           set_value(sim_p.states[s_expr[4]], bus_db) ;
 
                                                           // update internal state
-                                                          var x = (bus_db & 0xFF000000) >> 24 ;
-                                                          var y = (bus_db & 0x00FF0000) >> 16 ;
-                                                          var z = (bus_db & 0x0000FF00) >>  8 ;
+                                                          var x = (bus_db & 0xFF000000) >>> 24 ;
+                                                          var y = (bus_db & 0x00FF0000) >>> 16 ;
+                                                          var z = (bus_db & 0x0000FF00) >>>  8 ;
 
                                                           var p = z*Math.pow(sim_p.internal_states.l3d_dim, 2) +
 							          y*sim_p.internal_states.l3d_dim +
