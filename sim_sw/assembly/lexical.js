@@ -191,7 +191,7 @@ function asm_isToken_arr ( context, arr )
  *  Error handler
  */
 
-function asm_langError ( context, msgError )
+function asm_langError ( context, msgError, msgOrigin )
 {
         // detect lines
 	var line2 = 0 ;
@@ -213,8 +213,7 @@ function asm_langError ( context, msgError )
         highI++;
 
         // print lines
-        context.error = "<br>" +
-                        "<pre class='border rounded p-3 bg-dark text-white'>" +
+        context.error = "<pre class='border rounded p-3 mt-1 bg-dark text-white'>" +
                         "...\n" ;
         for (var i=lowI; i<highI; i++)
         {
@@ -231,7 +230,7 @@ function asm_langError ( context, msgError )
                          "(*) " + i18n_get_TagFor('compiler', 'PROBLEM AROUND LINE') + " " +
 			 context.line + ": <br>" + msgError + ".<br>" ;
 
-        simcore_ga('cc', 'cc.err', 'cc.err.' + msgError) ;
+        simcore_ga('cc', 'cc.err', 'cc.err.' + msgOrigin) ;
 
         return context;
 }
