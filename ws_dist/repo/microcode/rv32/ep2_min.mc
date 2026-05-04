@@ -3,6 +3,12 @@
 # WepSIM (https://wepsim.github.io/wepsim/)
 #
 
+firmware {
+   version  = 2,
+   rel_mult = 2,
+   endian   = little
+}
+
 begin
 {
          # ensure R0 is zero
@@ -19,8 +25,9 @@ begin
 }
 
 test {
-   co=010110,
    nwords=1,
+   oc(31:26)=010110,
+   help='test',
    {
        (),
        (),
