@@ -759,6 +759,13 @@ pseudoinstructions
         addu rd, rd, sel(11,0,label)
     }
 
+    # lla rd, label        (several expansions)        Load address
+    lla rd=reg, label=imm
+    {
+        lui  rd,     sel(31,12,label) ;
+        addu rd, rd, sel(11,0,label)
+    }
+
     # mv rd, rs               addi rd, rs, 0              Copy register
     mv rd=reg, rs=reg
     {
@@ -783,6 +790,13 @@ pseudoinstructions
         sub rd, zero, rs
     }
 
+    # call                jalr x0, x1, 0        Call subroutine
+    call offset=imm
+    {
+        savepc ra 4
+        addpc offset
+    }
+    
     # ret                jalr x0, x1, 0        Return from subroutine
     ret
     {
