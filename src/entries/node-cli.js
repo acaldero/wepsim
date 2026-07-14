@@ -1,15 +1,31 @@
 // WepSIM Node.js CLI entry
 
 // polyfill localStorage for Node.js
-if (typeof localStorage === 'undefined' || localStorage === null) {
+if (typeof localStorage === 'undefined' || localStorage === null)
+{
     var store = {};
     globalThis.localStorage = {
-        getItem: function (key) { return Object.prototype.hasOwnProperty.call(store, key) ? store[key] : null; },
-        setItem: function (key, value) { store[key] = String(value); },
-        removeItem: function (key) { delete store[key]; },
-        clear: function () { store = {}; },
+        getItem: function (key)
+        {
+            return Object.prototype.hasOwnProperty.call(store, key) ? store[key] : null;
+        },
+        setItem: function (key, value)
+        {
+            store[key] = String(value);
+        },
+        removeItem: function (key)
+        {
+            delete store[key];
+        },
+        clear: function ()
+        {
+            store = {};
+        },
         length: 0,
-        key: function () { return null; },
+        key:    function ()
+        {
+            return null;
+        },
     };
 }
 
@@ -23,10 +39,13 @@ import { i18n_init } from '../../wepsim_i18n/i18n.js';
 i18n_init();
 sim_hw_register_hw();
 wepsim_register_core();
-try {
+try
+{
     simcore_init(true);
     upgrade_cfg();
-} catch (err) {
+}
+catch (err)
+{
     console.error('WepSIM init error:', err.message);
 }
 

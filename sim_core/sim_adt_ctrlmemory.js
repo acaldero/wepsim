@@ -29,135 +29,137 @@ import { compute_signal_verbals } from '../sim_hw/sim_hw_behavior.js';
          *            }
          */
 
-        export function control_memory_getkeys ( memory )
+export function control_memory_getkeys (memory)
+{
+    return Object.keys(memory) ;
+}
+
+export function control_memory_get (memory, elto)
+{
+    return memory[elto] ;
+}
+
+export function control_memory_set (memory, elto, melto)
+{
+    // default computed attributes
+    if (typeof melto.changed === 'undefined') melto.changed = false ;
+    if (typeof melto.state === 'undefined') melto.state = false ;
+    if (typeof melto.breakpoint === 'undefined') melto.breakpoint = false ;
+    if (typeof melto.notify === 'undefined') melto.notify = [] ;
+    if (typeof melto.is_native === 'undefined') melto.is_native = false ;
+
+    // modify computed attributes by comments "operators"
+    var comments_str ;
+    if (null != melto.comments)
+    {
+        comments_str = melto.comments ;
+        if (melto.comments instanceof Array)
+            comments_str = melto.comments.join('\n') ;
+
+        melto.state = melto.state || (comments_str.trim().split('state:').length > 1) ;
+        melto.breakpoint = melto.breakpoint || (comments_str.trim().split('break:').length > 1) ;
+        melto.notify = comments_str.trim().split('notify:') ;
+        for (var k = 0; k < melto.notify.length; k++)
         {
-            return Object.keys(memory) ;
+            melto.notify[k] = melto.notify[k].split('\n')[0] ;
         }
+    }
 
-        export function control_memory_get ( memory, elto )
+    // get existing element (or undefined)
+    var valobj = memory[elto] ;
+
+    // if element exits -> update it and return it
+    if (typeof valobj !== 'undefined')
+    {
+        set_value(valobj, melto.value) ;
+        valobj.changed = melto.changed ;
+
+        if (null != melto.comments)
         {
-            return memory[elto] ;
+            valobj.comments = melto.comments ;
+            valobj.state = melto.state ;
+            valobj.breakpoint = melto.breakpoint ;
+            valobj.notify = melto.notify ;
         }
 
-        export function control_memory_set ( memory, elto, melto )
+        return valobj ;
+    }
+
+    // new element to be added and return "undefined" to inform the callee
+    memory[elto] = melto ;
+
+    return valobj ;
+}
+
+//
+// Auxiliar functions
+//
+
+export function control_memory_lineToString (memory, key)
+{
+    var mcelto = control_memory_get(memory, key) ;
+
+    // if empty element -> ""
+    if (typeof mcelto === 'undefined')
+    {
+        return '' ;
+    }
+
+    // if native -> ""
+    if (mcelto.is_native)
+    {
+        if (typeof mcelto.NATIVE_JIT === 'function')
+            return '&lt;built-in&gt; ' ;
+        else return '&lt;native&gt; ' ;
+    }
+
+    // if signals -> "S=V, ..."
+    var value = '' ;
+    var mc_val = get_value(mcelto) ;
+    for (var ks in mc_val)
+    {
+        if (1 == mc_val[ks])
+            value += ks + ' ';
+        else value += ks + '=' + parseInt(mc_val[ks]).toString(2) + ' ';
+    }
+
+    return value ;
+}
+
+//
+// verbal description
+//
+
+export function get_verbal_from_current_mpc ()
+{
+    var active_signals = '' ;
+    var active_verbal = '' ;
+
+    var maddr_name = simhw_sim_ctrlStates_get().mpc.state ;
+    var curr_maddr = get_value(simhw_sim_state(maddr_name)) ;
+
+    var mcelto = simhw_internalState_get('MC', curr_maddr) ;
+    var mins = get_value(mcelto) ;
+    for (var key in mins)
+    {
+        if ('MADDR' === key)
         {
-            // default computed attributes
-            if (typeof melto.changed     === "undefined")  melto.changed     = false ;
-            if (typeof melto.state       === "undefined")  melto.state       = false ;
-            if (typeof melto.breakpoint  === "undefined")  melto.breakpoint  = false ;
-            if (typeof melto.notify      === "undefined")  melto.notify      = [] ;
-            if (typeof melto.is_native   === "undefined")  melto.is_native   = false ;
-
-            // modify computed attributes by comments "operators"
-            var comments_str ;
-            if (null != melto.comments)
-            {
-                comments_str = melto.comments ;
-                if (melto.comments instanceof Array)
-                    comments_str = melto.comments.join("\n") ;
-
-	        melto.state      = melto.state      || (comments_str.trim().split("state:").length > 1) ;
-	        melto.breakpoint = melto.breakpoint || (comments_str.trim().split("break:").length > 1) ;
-	        melto.notify     =                      comments_str.trim().split("notify:") ;
-	        for (var k=0; k<melto.notify.length; k++) {
-	             melto.notify[k] = melto.notify[k].split('\n')[0] ;
-	        }
-            }
-
-            // get existing element (or undefined)
-            var valobj = memory[elto] ;
-
-            // if element exits -> update it and return it
-            if (typeof valobj !== "undefined")
-            {
-                set_value(valobj, melto.value) ;
-                valobj.changed = melto.changed ;
-
-                if (null != melto.comments) {
-                    valobj.comments   = melto.comments ;
-		    valobj.state      = melto.state ;
-		    valobj.breakpoint = melto.breakpoint ;
-		    valobj.notify     = melto.notify ;
-                }
-
-                return valobj ;
-            }
-
-            // new element to be added and return "undefined" to inform the callee
-            memory[elto] = melto ;
-
-            return valobj ;
+            active_verbal = active_verbal + 'MADDR is ' + mins[key] + '. ' ;
+            continue ;
         }
 
+        active_signals = active_signals + key + ' ';
+        active_verbal = active_verbal + compute_signal_verbals(key, mins[key]) ;
+    }
 
-        //
-        // Auxiliar functions
-        //
+    // set default for empty
+    active_signals = active_signals.trim() ;
+    if (active_signals === '')
+        active_signals = '<no active signal>' ;
+    if (active_verbal.trim() === '')
+        active_verbal = '<no actions>' ;
 
-        export function control_memory_lineToString ( memory, key )
-        {
-                var mcelto = control_memory_get(memory, key) ;
-
-                // if empty element -> ""
-	        if (typeof mcelto === "undefined") {
-	   	    return "" ;
-	        }
-
-                // if native -> ""
-	        if (mcelto.is_native)
-                {
-	            if (typeof mcelto.NATIVE_JIT === "function")
-		         return "&lt;built-in&gt; " ;
-	   	    else return "&lt;native&gt; " ;
-	        }
-
-                // if signals -> "S=V, ..."
-		var value = "" ;
-                var mc_val = get_value(mcelto) ;
-		for (var ks in mc_val)
-		{
-		     if (1 == mc_val[ks])
-			  value += ks + " ";
-                     else value += ks + "=" + parseInt(mc_val[ks]).toString(2) + " ";
-		}
-
-		return value ;
-        }
-
-
-        //
-        // verbal description
-        //
-
-	export function get_verbal_from_current_mpc ( )
-	{
-	     var active_signals = "" ;
-	     var active_verbal  = "" ;
-
-	     var maddr_name = simhw_sim_ctrlStates_get().mpc.state ;
-	     var curr_maddr = get_value(simhw_sim_state(maddr_name)) ;
-
-             var mcelto = simhw_internalState_get('MC', curr_maddr) ;
-             var mins   = get_value(mcelto) ;
-	     for (var key in mins)
-	     {
-		  if ("MADDR" === key) {
-	   	      active_verbal  = active_verbal  + "MADDR is " + mins[key] + ". " ;
-                      continue ;
-		  }
-
-		  active_signals = active_signals + key + " ";
-	   	  active_verbal  = active_verbal  + compute_signal_verbals(key, mins[key]) ;
-	     }
-
-             // set default for empty
-             active_signals = active_signals.trim() ;
-             if (active_signals === "")
-                 active_signals = "<no active signal>" ;
-             if (active_verbal.trim() === "")
-                 active_verbal = "<no actions>" ;
-
-             // return
-             return "Activated signals are: " + active_signals + ". Associated actions are: " + active_verbal ;
-        }
+    // return
+    return 'Activated signals are: ' + active_signals + '. Associated actions are: ' + active_verbal ;
+}
 

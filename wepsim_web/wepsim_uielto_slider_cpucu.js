@@ -20,54 +20,55 @@
 import { ws_uielto } from './wepsim_uielto.js';
 import { wsweb_set_cpucu_size } from './wepsim_web_api.js';
 
-        /*
+/*
          *  Slider: CPU / Control Unit
          */
 
-        /* jshint esversion: 6 */
-        export class ws_slider_cpucu extends ws_uielto
+/* jshint esversion: 6 */
+export class ws_slider_cpucu extends ws_uielto
+{
+    constructor ()
+    {
+        // parent
+        super();
+    }
+
+    render (event_name)
+    {
+        // initialize render elements...
+        super.render() ;
+
+        // html holder
+        var o1 = '<form id="slider2f" class="full-width-slider row-auto mt-0 p-0 pt-0 pb-2">' +
+            '<label class="my-0 form-label" for="' + this.name_str + '" style="min-width:95%">' +
+            '<span data-langkey=\'processor\'>processor</span>:' +
+            '</label>' +
+            '  <input aria-label="Show CPU/CU" type="range" ' +
+            '         name="' + this.name_str + '" ' +
+            '           id="' + this.name_str + '"' +
+            '      min="0" max="14" value="7" step="1"' +
+            '      data-show-value="false"' +
+            '         class="form-range slider col mx-0 px-0"' +
+            '         data-bind="input" data-action="slider-cpucu-change">' +
+            '</form>' ;
+
+        // load html
+        this.innerHTML = o1 ;
+    }
+
+    bindElements ()
+    {
+        this.addEventListener('input', function(ev)
         {
-	      constructor ()
-	      {
-		    // parent
-		    super();
-	      }
-
-	      render ( event_name )
-	      {
-                    // initialize render elements...
-                    super.render() ;
-
-		    // html holder
-		    var o1 = '<form id="slider2f" class="full-width-slider row-auto mt-0 p-0 pt-0 pb-2">' +
-			     '<label class="my-0 form-label" for="' + this.name_str + '" style="min-width:95%">' +
-                             '<span data-langkey=\'processor\'>processor</span>:' +
-                             '</label>' +
-			     '  <input aria-label="Show CPU/CU" type="range" ' +
-                             '         name="' + this.name_str + '" ' +
-                             '           id="' + this.name_str + '"' +
-			     '	  min="0" max="14" value="7" step="1"' +
-			     '	  data-show-value="false"' +
-			     '         class="form-range slider col mx-0 px-0"' +
-			     '         data-bind="input" data-action="slider-cpucu-change">' +
-			     '</form>' ;
-
-		    // load html
-		    this.innerHTML = o1 ;
-	      }
-
-	      bindElements ()
-	      {
-		    this.addEventListener('input', function(ev) {
-			  var el = ev.target.closest('[data-action]');
-			  if (!el) return;
-			  switch (el.dataset.action) {
-				case 'slider-cpucu-change':
-				      wsweb_set_cpucu_size(el.value);
-				      break;
-			  }
-		    });
-	      }
-        }
-
+            var el = ev.target.closest('[data-action]');
+            if (!el) return;
+            switch (el.dataset.action)
+            {
+                case 'slider-cpucu-change':
+                    wsweb_set_cpucu_size(el.value);
+                    break;
+            }
+        });
+    }
+}
 

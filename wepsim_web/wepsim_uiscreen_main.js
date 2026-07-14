@@ -24,105 +24,108 @@ import { upgrade_cfg } from '../sim_core/sim_cfg.js';
 import { wepsim_example_reset } from '../wepsim_core/wepsim_example.js';
 import { wepsim_general_exception_handler, wepsim_init_default, wepsim_init_ui } from './wepsim_web_simulator.js';
 
-
-        /*
+/*
          *  Simulation main
          */
 
-        /* jshint esversion: 6 */
-        export class ws_web_main extends ws_uielto
+/* jshint esversion: 6 */
+export class ws_web_main extends ws_uielto
+{
+    // constructor
+    constructor ()
+    {
+        // parent
+        super();
+    }
+
+    // render
+    render (event_name)
+    {
+        // initialize render elements...
+        super.render() ;
+
+        // render current element
+        this.render_skel() ;
+        this.render_populate(event_name) ;
+
+        this.bindElements();
+    }
+
+    render_skel ()
+    {
+        // make HTML code
+        var o1 = '<h2>ws-web-main:<br>' +
+            '<li>Valid values for the "layout" attribute are: classic or compact</li>' +
+            '</h2>' ;
+
+        // load HTML
+        this.innerHTML = o1 ;
+    }
+
+    render_populate (event_name)
+    {
+        // get layout value
+        var ly = 'classic' ;
+        if (this.layout != null)
         {
-              // constructor
-	      constructor ()
-	      {
-		   // parent
-		   super();
-	      }
-
-              // render
-	      render ( event_name )
-	      {
-                    // initialize render elements...
-	            super.render() ;
-
-                    // render current element
-		    this.render_skel() ;
-		    this.render_populate(event_name) ;
-
-	      this.bindElements();
-	      }
-
-	      render_skel ( )
-	      {
-                   // make HTML code
-                   var o1 = '<h2>ws-web-main:<br>' +
-                            '<li>Valid values for the "layout" attribute are: classic or compact</li>' +
-                            '</h2>' ;
-
-                   // load HTML
-                   this.innerHTML = o1 ;
-	      }
-
-	      render_populate ( event_name )
-	      {
-                   // get layout value
-                   var ly = 'classic' ;
-                   if (this.layout != null) {
-                       ly = this.layout.trim() ;
-                   }
-
-                   // make HTML code
-                   var o1 = '' ;
-
-                   if ('classic' == ly) {
-                        o1 += '<ws-topbar></ws-topbar>' +
-                              '<ws-recordbar></ws-recordbar>' +
-                              '<ws-screen-classic></ws-screen-classic>' ;
-                   }
-                   if ('compact' == ly) {
-                        o1 += '<ws-topbar></ws-topbar>' +
-                              '<ws-recordbar></ws-recordbar>' +
-                              '<ws-screen-compact></ws-screen-compact>' ;
-                   }
-
-                   // load HTML
-                   this.innerHTML = o1 ;
-
-                   // (if empty HTML then return)
-		   if ('' == o1) {
-	               this.render_skel() ;
-                       return ;
-		   }
-
-                   // initialization only on "connectedCallback"
-		   if ("connectedCallback" != event_name) {
-                       return ;
-		   }
-
-	           // basic initialization of wepsim first time...
-	           simcore_init(true) ;
-	           simcore_welcome() ;
-	           upgrade_cfg() ;
-
-	           // ...and full initialization after jquery-ready
-           $(document).ready(function()
-	           {
-		      // try
-		      // {
-			   wepsim_init_ui() ;
-                           wepsim_example_reset() ;
-			   wepsim_init_default() ;
-		      // }
-		      // catch(err)
-		      // {
-			// wepsim_general_exception_handler(err) ;
-		      // }
-	           }) ;
-	      }
-
-	      bindElements()
-	      {
-	      }
+            ly = this.layout.trim() ;
         }
 
+        // make HTML code
+        var o1 = '' ;
+
+        if ('classic' == ly)
+        {
+            o1 += '<ws-topbar></ws-topbar>' +
+                '<ws-recordbar></ws-recordbar>' +
+                '<ws-screen-classic></ws-screen-classic>' ;
+        }
+        if ('compact' == ly)
+        {
+            o1 += '<ws-topbar></ws-topbar>' +
+                '<ws-recordbar></ws-recordbar>' +
+                '<ws-screen-compact></ws-screen-compact>' ;
+        }
+
+        // load HTML
+        this.innerHTML = o1 ;
+
+        // (if empty HTML then return)
+        if ('' == o1)
+        {
+            this.render_skel() ;
+            return ;
+        }
+
+        // initialization only on "connectedCallback"
+        if ('connectedCallback' != event_name)
+        {
+            return ;
+        }
+
+        // basic initialization of wepsim first time...
+        simcore_init(true) ;
+        simcore_welcome() ;
+        upgrade_cfg() ;
+
+        // ...and full initialization after jquery-ready
+        $(document).ready(function()
+        {
+            // try
+            // {
+            wepsim_init_ui() ;
+            wepsim_example_reset() ;
+            wepsim_init_default() ;
+            // }
+            // catch(err)
+            // {
+            // wepsim_general_exception_handler(err) ;
+            // }
+        }) ;
+    }
+
+    bindElements()
+    {
+    }
+}
 

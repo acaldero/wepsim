@@ -25,237 +25,247 @@ import { uint_to_float32 } from '../../sim_core/sim_core_ui.js';
  *  Constants
  */
 
-    export var BYTE_LENGTH = 8 ;
-    export var WORD_BYTES  = 4 ;
-    export var WORD_LENGTH = WORD_BYTES * BYTE_LENGTH ;
-
+export var BYTE_LENGTH = 8 ;
+export var WORD_BYTES = 4 ;
+export var WORD_LENGTH = WORD_BYTES * BYTE_LENGTH ;
 
 /*
  *  Datatypes
  */
 
-export function isDecimal ( n )
+export function isDecimal (n)
 {
-        var ret = {
-                     'number':    0,
-                     'isDecimal': false,
-                     'format':    ''
-                  } ;
+    var ret = {
+        'number':    0,
+        'isDecimal': false,
+        'format':    '',
+    } ;
 
-        // check errors
-	if ( (n.length > 1) && (n[0] == "0") ) {
-            return ret ;
-	}
-	if ((typeof n === "string") && n.includes(".")) {
-            return ret ;
-	}
-
-        // convert
-	if ( !isNaN(parseFloat(n)) && isFinite(n) )
-        {
-             ret.isDecimal = true ;
-             ret.format    = 'dec' ;
-             ret.number    = parseInt(n) ;
-	     return ret ;
-	}
-
+    // check errors
+    if ((n.length > 1) && (n[0] == '0'))
+    {
         return ret ;
-}
-
-export function isOctal ( n )
-{
-        var ret = {
-                     'number':    0,
-                     'isDecimal': false,
-                     'format':    ''
-                  } ;
-
-	if (n[0] == "0")
-        {
-	    var octal     = n.substring(1).replace(/\b0+/g, '') ;
-            ret.number    = parseInt(octal, 8) ;
-            ret.isDecimal = (ret.number.toString(8) === octal) ;
-            ret.format    = 'octal' ;
-            return ret ;
-        }
-
+    }
+    if ((typeof n === 'string') && n.includes('.'))
+    {
         return ret ;
-}
+    }
 
-export function isHex ( n )
-{
-        var ret = {
-                     'number':    0,
-                     'isDecimal': false,
-                     'format':    ''
-                  } ;
-
-        if (n.substring(0,2).toLowerCase() == "0x")
-        {
-	    var hex = n.substring(2).toLowerCase().replace(/\b0+/g, '') ;
-            if (hex == "") {
-                hex = "0" ;
-            }
-
-	    ret.number    = parseInt(hex, 16) ;
-            ret.isDecimal = (ret.number.toString(16) === hex) ;
-            ret.format    = 'hex' ;
-            return ret ;
-        }
-
+    // convert
+    if (!isNaN(parseFloat(n)) && isFinite(n))
+    {
+        ret.isDecimal = true ;
+        ret.format = 'dec' ;
+        ret.number = parseInt(n) ;
         return ret ;
+    }
+
+    return ret ;
 }
 
-export function isChar ( n )
+export function isOctal (n)
 {
-        var ret = {
-                     'number':    0,
-                     'isDecimal': false,
-                     'format':    ''
-                  } ;
+    var ret = {
+        'number':    0,
+        'isDecimal': false,
+        'format':    '',
+    } ;
 
-        // check errors
-        var ret1 = treatControlSequences(n) ;
-	if (true == ret1.error) {
-	    return ret ;
-        }
+    if (n[0] == '0')
+    {
+        var octal = n.substring(1).replace(/\b0+/g, '') ;
+        ret.number = parseInt(octal, 8) ;
+        ret.isDecimal = (ret.number.toString(8) === octal) ;
+        ret.format = 'octal' ;
+        return ret ;
+    }
 
-        // convert
-        var possible_value = ret1.string ;
-	if (
-              ((possible_value[0] == "'") && (possible_value[2] == "'")) ||
-	      ((possible_value[0] == '"') && (possible_value[2] == '"'))
-           )
+    return ret ;
+}
+
+export function isHex (n)
+{
+    var ret = {
+        'number':    0,
+        'isDecimal': false,
+        'format':    '',
+    } ;
+
+    if (n.substring(0, 2).toLowerCase() == '0x')
+    {
+        var hex = n.substring(2).toLowerCase().replace(/\b0+/g, '') ;
+        if (hex == '')
         {
-	    ret.number    = possible_value.charCodeAt(1);
-	    ret.isDecimal = true ;
-	    ret.format    = 'ascii' ;
-	    return ret ;
+            hex = '0' ;
         }
 
-	return ret ;
+        ret.number = parseInt(hex, 16) ;
+        ret.isDecimal = (ret.number.toString(16) === hex) ;
+        ret.format = 'hex' ;
+        return ret ;
+    }
+
+    return ret ;
 }
 
-export function isFloat ( n )
+export function isChar (n)
 {
-        var ret = {
-                     'number':    0.0,
-                     'isFloat':   false,
-                     'format':    ''
-                  } ;
+    var ret = {
+        'number':    0,
+        'isDecimal': false,
+        'format':    '',
+    } ;
 
-        // check errors
-        var non_float = /[a-df-zA-DF-Z]+/ ;
-        if (non_float.test(n) === true) {
-            return ret ;
-        }
+    // check errors
+    var ret1 = treatControlSequences(n) ;
+    if (true == ret1.error)
+    {
+        return ret ;
+    }
 
-        // convert
-	ret.number  = parseFloat(n) ;
-	ret.isFloat = (isNaN(ret.number) == false) ;
-	ret.format  = 'ieee754' ;
-	return ret ;
+    // convert
+    var possible_value = ret1.string ;
+    if (
+        ((possible_value[0] == "'") && (possible_value[2] == "'")) ||
+        ((possible_value[0] == '"') && (possible_value[2] == '"'))
+    )
+    {
+        ret.number = possible_value.charCodeAt(1);
+        ret.isDecimal = true ;
+        ret.format = 'ascii' ;
+        return ret ;
+    }
+
+    return ret ;
 }
 
+export function isFloat (n)
+{
+    var ret = {
+        'number':  0.0,
+        'isFloat': false,
+        'format':  '',
+    } ;
+
+    // check errors
+    var non_float = /[a-df-zA-DF-Z]+/ ;
+    if (non_float.test(n) === true)
+    {
+        return ret ;
+    }
+
+    // convert
+    ret.number = parseFloat(n) ;
+    ret.isFloat = (isNaN(ret.number) == false) ;
+    ret.format = 'ieee754' ;
+    return ret ;
+}
 
 /*
  *  API Functions
  */
 
-export function dt_get_decimal_value ( possible_value )
+export function dt_get_decimal_value (possible_value)
 {
-        // var ret = {
-        //              'number':    0,
-        //              'isDecimal': true,
-        //              'format':    ''
-        //           } ;
+    // var ret = {
+    //              'number':    0,
+    //              'isDecimal': true,
+    //              'format':    ''
+    //           } ;
 
-        // check if Octal value: 072
-   	var ret = isOctal(possible_value) ;
-        if (ret.isDecimal) {
-            return ret ;
-        }
-
-        // check if Hex value: 0xF12
-	ret = isHex(possible_value) ;
-        if (ret.isDecimal) {
-            return ret ;
-        }
-
-        // check if Decimal value: 634
-	ret = isDecimal(possible_value) ;
-        if (ret.isDecimal) {
-            return ret ;
-        }
-
-        // check if Char value: 'a'
-	ret = isChar(possible_value) ;
-        if (ret.isDecimal) {
-            return ret ;
-        }
-
+    // check if Octal value: 072
+    var ret = isOctal(possible_value) ;
+    if (ret.isDecimal)
+    {
         return ret ;
+    }
+
+    // check if Hex value: 0xF12
+    ret = isHex(possible_value) ;
+    if (ret.isDecimal)
+    {
+        return ret ;
+    }
+
+    // check if Decimal value: 634
+    ret = isDecimal(possible_value) ;
+    if (ret.isDecimal)
+    {
+        return ret ;
+    }
+
+    // check if Char value: 'a'
+    ret = isChar(possible_value) ;
+    if (ret.isDecimal)
+    {
+        return ret ;
+    }
+
+    return ret ;
 }
 
-export function dt_get_imm_value ( value )
+export function dt_get_imm_value (value)
 {
-        var ret1 ;
-        var ret  = {
-                      'number':    0,
-                      'isDecimal': false,
-                      'isFloat':   false
-                   } ;
+    var ret1 ;
+    var ret = {
+        'number':    0,
+        'isDecimal': false,
+        'isFloat':   false,
+    } ;
 
-	ret1 = dt_get_decimal_value(value) ;
-	if (ret1.isDecimal == true) {
-	    ret1.isFloat = false ;
-            return ret1 ;
-	}
+    ret1 = dt_get_decimal_value(value) ;
+    if (ret1.isDecimal == true)
+    {
+        ret1.isFloat = false ;
+        return ret1 ;
+    }
 
-	ret1 = isFloat(value) ;
-	if (ret1.isFloat == true) {
-	    ret1.isDecimal = false ;
-            return ret1 ;
-	}
+    ret1 = isFloat(value) ;
+    if (ret1.isFloat == true)
+    {
+        ret1.isDecimal = false ;
+        return ret1 ;
+    }
 
-        return ret ;
+    return ret ;
 }
 
-export function dt_binary2format ( valbin, format )
+export function dt_binary2format (valbin, format)
 {
-        var val = parseInt(valbin, 2) ;
-        var ret ; // ret = val.toString(10) ;
+    var val = parseInt(valbin, 2) ;
+    var ret ; // ret = val.toString(10) ;
 
-        switch (format)
-        {
-           case 'dec':
-                ret = val.toString(10) ;
-                break ;
+    switch (format)
+    {
+        case 'dec':
+            ret = val.toString(10) ;
+            break ;
 
-           case 'octal':
-                ret = '0' + val.toString(8) ;
-                break ;
+        case 'octal':
+            ret = '0' + val.toString(8) ;
+            break ;
 
-           case 'hex':
-                ret = '0x' + val.toString(16) ;
-                break ;
+        case 'hex':
+            ret = '0x' + val.toString(16) ;
+            break ;
 
-	   case 'ascii':
-                ret = String.fromCharCode(val) ;
-                if (ret.length < 1) {
-                    ret = 'ascii-' + val.toString(10) ;
-                }
-                break ;
+        case 'ascii':
+            ret = String.fromCharCode(val) ;
+            if (ret.length < 1)
+            {
+                ret = 'ascii-' + val.toString(10) ;
+            }
+            break ;
 
-	   case 'ieee754':
-                ret = uint_to_float32(val) ;
-                break ;
+        case 'ieee754':
+            ret = uint_to_float32(val) ;
+            break ;
 
-	   default:
-                ret = val.toString(10) ;
-                break ;
-        }
+        default:
+            ret = val.toString(10) ;
+            break ;
+    }
 
-        return ret ;
+    return ret ;
 }
 

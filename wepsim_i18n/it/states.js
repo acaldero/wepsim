@@ -18,42 +18,40 @@
  *
  */
 
+export function i18n_it_register_states(i18n)
+{
 
-    export function i18n_it_register_states(i18n) {
+    i18n.eltos.states.it = {
 
+        'States':                                 'Stati',
+        'state':                                  'stato',
+        'Current':                                'Attuale',
+        'Current State':                          'Stato attuale',
+        'History':                                'Storia',
+        'None':                                   'Nessuna',
+        'Empty history':                          'Storia vuota',
+        'Empty (only modified values are shown)': 'Vuoto (vengono mostrati solo i valori modificati)',
+        'Differences':                            'Differenze',
+        'differences with clipboard state':       'differenze con lo stato degli appunti',
+        'Meets the specified requirements':       'Soddisfa i requisiti specificati',
+        'history':                                'storia',
+        'Add':                                    'Inserisci',
+        '\'Current State\' to History':           '\'Current State\' to History',
+        'Check':                                  'Dai un\'occhiata',
+        'Copy':                                   'Copia',
+        'to clipboard':                           'negli appunti',
+        'Checkpoint':                             'Posto di controllo',
+        'File name':                              'File name',
+        'Tag for checkpoint':                     'Tag per checkpoint',
+        'File to be loaded':                      'File da caricare',
+        'Save to File':                           'Salva su file',
+        'State(s) to checkpoint':                 'Stato / i al punto di controllo',
+        'Record to checkpoint':                   'Registra al punto di controllo',
+        'Browser cache':                          'Browser cache',
+        'Session to be restore':                  'Sessione da ripristinare',
 
-
-        i18n.eltos.states.it = {
-
-		'States':				'Stati',
-		'state':				'stato',
-		'Current':				'Attuale',
-		'Current State':			'Stato attuale',
-		'History':				'Storia',
-		'None':					'Nessuna',
-		'Empty history':			'Storia vuota',
-		'Empty (only modified values are shown)':		'Vuoto (vengono mostrati solo i valori modificati)',
-		'Differences':				'Differenze',
-		'differences with clipboard state':	'differenze con lo stato degli appunti',
-		'Meets the specified requirements':	'Soddisfa i requisiti specificati',
-		'history':				'storia',
-		'Add':					'Inserisci',
-		'\'Current State\' to History':		'\'Current State\' to History',
-		'Check':				'Dai un\'occhiata',
-		'Copy':					'Copia',
-		'to clipboard':				'negli appunti',
-		'Checkpoint':				'Posto di controllo',
-		'File name':				'File name',
-		'Tag for checkpoint':			'Tag per checkpoint',
-		'File to be loaded':			'File da caricare',
-		'Save to File':				'Salva su file',
-		'State(s) to checkpoint':		'Stato / i al punto di controllo',
-		'Record to checkpoint':			'Registra al punto di controllo',
-		'Browser cache':			'Browser cache',
-		'Session to be restore':		'Sessione da ripristinare',
-
-		'_last_':				'_last_'
+        '_last_': '_last_',
 
     };
-    }
+}
 

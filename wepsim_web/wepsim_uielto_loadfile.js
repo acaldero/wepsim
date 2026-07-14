@@ -18,109 +18,108 @@
  *
  */
 
-
 import $ from 'jquery';
 
-        /*
+/*
          *  Load file
          */
 
-        /* jshint esversion: 6 */
-        export class ws_load_file extends HTMLElement
+/* jshint esversion: 6 */
+export class ws_load_file extends HTMLElement
+{
+    static get observedAttributes()
+    {
+        return ['fid', 'jload'] ;
+    }
+
+    constructor ()
+    {
+        // parent
+        super();
+    }
+
+    update_internal_attributes ()
+    {
+        // fid
+        var fid = this.getAttribute('fid') ;
+        if (fid === null)
+            this.setAttribute('fid', 'id55') ;
+
+        // jload
+        var jload = this.getAttribute('jload') ;
+        if (jload === null)
+            this.setAttribute('jload', '') ;
+    }
+
+    render (elto)
+    {
+        // update attributes
+        this.update_internal_attributes() ;
+
+        // load html
+        var o1 = '' ;
+
+        o1 += "<div class='card border-secondary h-100'>" +
+            "<div class='card-header border-secondary text-white bg-secondary p-1'>" +
+            " <h5 class='m-0'>" +
+            " <span class='text-white bg-secondary' data-langkey='Input file'>Input file</span>" +
+            " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
+            "         data-bind='click' data-action='load' data-code='" + this.jload + "'><span data-langkey='Load'>Load</span></button>" +
+            ' </h5>' +
+            '</div>' +
+            "<div class='card-body'>" +
+            "  <label for='" + this.fid + "' class='collapse7'><em><span data-langkey='Load from this File'>Load from this File</span>:</em></label>" +
+            "  <p><input aria-label='file to load' data-max-height='20vh' " +
+            "            type='file' id='" + this.fid + "' class='dropify'/></p>" +
+            '</div>' +
+            '</div>' ;
+
+        this.innerHTML = o1 ;
+
+        // initialize sub-components
+        $('.dropify').dropify() ;
+    }
+
+    bindElements ()
+    {
+        this.addEventListener('click', (e) =>
         {
-              static get observedAttributes()
-	      {
-	            return [ 'fid', 'jload' ] ;
-	      }
+            const el = e.target.closest('[data-bind="click"]');
+            if (!el) return;
+            e.preventDefault();
+            eval(el.getAttribute('data-code'));
+        });
+    }
 
-	      constructor ()
-	      {
-		    // parent
-		    super();
-	      }
+    connectedCallback ()
+    {
+        this.render(this) ;
+        this.bindElements();
+    }
 
-	      update_internal_attributes ( )
-	      {
-                    // fid
-                    var fid = this.getAttribute('fid') ;
-                    if (fid === null)
-                        this.setAttribute('fid', 'id55') ;
+    attributeChangedCallback (name, oldValue, newValue)
+    {
+        this.render(this) ;
+    }
 
-                    // jload
-                    var jload = this.getAttribute('jload') ;
-                    if (jload === null)
-                        this.setAttribute('jload', '') ;
-	      }
+    get fid ()
+    {
+        return this.getAttribute('fid') ;
+    }
 
-	      render ( elto )
-	      {
-                    // update attributes
-                    this.update_internal_attributes() ;
+    set fid (value)
+    {
+        this.setAttribute('fid', value) ;
+    }
 
-                    // load html
-                    var o1  = '' ;
+    get jload ()
+    {
+        return this.getAttribute('jload') ;
+    }
 
-		    o1 += "<div class='card border-secondary h-100'>" +
-			  "<div class='card-header border-secondary text-white bg-secondary p-1'>" +
-			  " <h5 class='m-0'>" +
-			  " <span class='text-white bg-secondary' data-langkey='Input file'>Input file</span>" +
-			  " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
-                           "         data-bind='click' data-action='load' data-code='" + this.jload + "'><span data-langkey='Load'>Load</span></button>" +
-			  " </h5>" +
-			  "</div>" +
-			  "<div class='card-body'>" +
-			  "  <label for='" + this.fid + "' class='collapse7'><em><span data-langkey='Load from this File'>Load from this File</span>:</em></label>" +
-	                  "  <p><input aria-label='file to load' data-max-height='20vh' " +
-                          "            type='file' id='" + this.fid + "' class='dropify'/></p>" +
-			  "</div>" +
-			  "</div>" ;
-
-                    this.innerHTML = o1 ;
-
-                    // initialize sub-components
-                    $('.dropify').dropify() ;
-	      }
-
-	      bindElements ()
-	      {
-		    this.addEventListener('click', (e) => {
-			const el = e.target.closest('[data-bind="click"]');
-			if (!el) return;
-			e.preventDefault();
-			eval(el.getAttribute('data-code'));
-		    });
-	      }
-
-	      connectedCallback ()
-	      {
-		    this.render(this) ;
-		    this.bindElements();
-	      }
-
-	      attributeChangedCallback (name, oldValue, newValue)
-	      {
-		    this.render(this) ;
-	      }
-
-	      get fid ( )
-	      {
-                   return this.getAttribute('fid') ;
-	      }
-
-	      set fid ( value )
-	      {
-                   this.setAttribute('fid', value) ;
-	      }
-
-	      get jload ( )
-	      {
-                   return this.getAttribute('jload') ;
-	      }
-
-	      set jload ( value )
-	      {
-                   this.setAttribute('jload', value) ;
-	      }
-        }
-
+    set jload (value)
+    {
+        this.setAttribute('jload', value) ;
+    }
+}
 

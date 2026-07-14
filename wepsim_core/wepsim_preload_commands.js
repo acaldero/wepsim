@@ -31,263 +31,281 @@ import { ws_info } from '../sim_core/sim_adt_core.js';
 
 export function wepsim_register_preload_tasks()
 {
-ws_info.preload_tasks = [
+    ws_info.preload_tasks = [
 
-	 // parameter: mode
-	 {
-	    'name':   'mode',
-	    'action': function( hash )
-		      {
-                         var ws_mode = get_cfg('ws_mode');
-                         if (hash.mode !== ws_mode) {
-			     wsweb_select_main(hash.mode) ;
-                         }
+        // parameter: mode
+        {
+            'name':   'mode',
+            'action': function(hash)
+            {
+                var ws_mode = get_cfg('ws_mode');
+                if (hash.mode !== ws_mode)
+                {
+                    wsweb_select_main(hash.mode) ;
+                }
 
-			 return '<li>Mode set to <strong>' + hash.mode + '</strong>.</li> ' ;
-		      }
-	 },
+                return '<li>Mode set to <strong>' + hash.mode + '</strong>.</li> ' ;
+            },
+        },
 
-	 // parameter: config_set
-	 {
-	    'name':   'config_set',
-	    'action': function( hash )
-		      {
-                          cfgset_load(hash.config_set) ;
-	                  wepsim_uicfg_restore() ;
-			  return '<li>Configuration set titled <strong>' + hash.config_set + '</strong> loaded.</li>';
-		      }
-	 },
+        // parameter: config_set
+        {
+            'name':   'config_set',
+            'action': function(hash)
+            {
+                cfgset_load(hash.config_set) ;
+                wepsim_uicfg_restore() ;
+                return '<li>Configuration set titled <strong>' + hash.config_set + '</strong> loaded.</li>';
+            },
+        },
 
-	 // parameter: examples_set
-	 {
-	    'name':   'examples_set',
-	    'action': function( hash )
-		      {
-			 var url_examples_set = get_cfg('example_url') ;
-			 var ret = wepsim_example_loadSet(url_examples_set) ;
-			 wepsim_example_reset() ;
-			 wepsim_example_load(hash.examples_set) ;
+        // parameter: examples_set
+        {
+            'name':   'examples_set',
+            'action': function(hash)
+            {
+                var url_examples_set = get_cfg('example_url') ;
+                var ret = wepsim_example_loadSet(url_examples_set) ;
+                wepsim_example_reset() ;
+                wepsim_example_load(hash.examples_set) ;
 
-			 var result_txt = ' has been loaded' ;
-			 if (null == ret) {
-			     result_txt = ' could not be loaded' ;
-			 }
+                var result_txt = ' has been loaded' ;
+                if (null == ret)
+                {
+                    result_txt = ' could not be loaded' ;
+                }
 
-			 return '<li>Examples set titled <strong>' + hash.examples_set + '</strong>' + result_txt + '.</li>';
-		      }
-	 },
+                return '<li>Examples set titled <strong>' + hash.examples_set + '</strong>' + result_txt + '.</li>';
+            },
+        },
 
-	 // parameter: example
-	 {
-	    'name':   'example',
-	    'action': function( hash )
-		      {
-			  var example_obj = null ;
+        // parameter: example
+        {
+            'name':   'example',
+            'action': function(hash)
+            {
+                var example_obj = null ;
 
-                          // try as array index...
-			  var example_index = parseInt(hash.example) ;
-                          if (isNaN(example_index) == false) {
-			      example_obj = ws_info.examples[example_index] ;
-                          }
-                          // try as example id...
-                          else {
-                              for (var i=0; i<ws_info.examples.length; i++) {
-                                   if (ws_info.examples[i].id == hash.example)
-			               example_obj = ws_info.examples[i] ;
-                              }
-                          }
+                // try as array index...
+                var example_index = parseInt(hash.example) ;
+                if (isNaN(example_index) == false)
+                {
+                    example_obj = ws_info.examples[example_index] ;
+                }
+                // try as example id...
+                else
+                {
+                    for (var i = 0; i < ws_info.examples.length; i++)
+                    {
+                        if (ws_info.examples[i].id == hash.example)
+                            example_obj = ws_info.examples[i] ;
+                    }
+                }
 
-			  if (typeof example_obj === "undefined") {
-			      return '' ;
-			  }
+                if (typeof example_obj === 'undefined')
+                {
+                    return '' ;
+                }
 
-			  var example_uri = example_obj.hardware + ":" +
-                                            example_obj.microcode + ":" +
-                                            example_obj.assembly ;
-                          var load_example_assembly = ('' == hash.asm) ? true : false ;
-			  load_from_example_firmware(example_uri, load_example_assembly) ;
-			  return '<li>Example titled <strong>' + example_obj.title + '</strong> has been loaded.</li> ' ;
-		      }
-	 },
+                var example_uri = example_obj.hardware + ':' +
+                    example_obj.microcode + ':' +
+                    example_obj.assembly ;
+                var load_example_assembly = ('' == hash.asm) ? true : false ;
+                load_from_example_firmware(example_uri, load_example_assembly) ;
+                return '<li>Example titled <strong>' + example_obj.title + '</strong> has been loaded.</li> ' ;
+            },
+        },
 
-	 // parameter: microcode (mc)
-	 {
-	    'name':   'mc',
-	    'action': function( hash )
-		      {
-			 var result_txt ;
-                         var mc_code    = '' ;
+        // parameter: microcode (mc)
+        {
+            'name':   'mc',
+            'action': function(hash)
+            {
+                var result_txt ;
+                var mc_code = '' ;
 
-                         try
-                         {
-			    if ('cache' == hash.mc) {
-			         var cpts = wepsim_checkpoint_backup_load() ;
-                                 if (cpts.length != 0)
-			             mc_code = cpts[0].firmware ;
-                            }
-                            else {
-                                 mc_code = LZString.decompressFromEncodedURIComponent( hash.mc ) ;
-			         if (null == mc_code) throw new Error("null decompressed data from hash.mc :-(");
-                            }
-			    result_txt = ' has been loaded' ;
-                         }
-                         catch (e) {
-                            mc_code    = '' ;
-			    result_txt = ' could not be loaded' ;
-                         }
+                try
+                {
+                    if ('cache' == hash.mc)
+                    {
+                        var cpts = wepsim_checkpoint_backup_load() ;
+                        if (cpts.length != 0)
+                            mc_code = cpts[0].firmware ;
+                    }
+                    else
+                    {
+                        mc_code = LZString.decompressFromEncodedURIComponent(hash.mc) ;
+                        if (null == mc_code) throw new Error('null decompressed data from hash.mc :-(');
+                    }
+                    result_txt = ' has been loaded' ;
+                }
+                catch (e)
+                {
+                    mc_code = '' ;
+                    result_txt = ' could not be loaded' ;
+                }
 
-			 if ('' != mc_code) {
-                             inputfirm.setValue(mc_code) ;
-                             inputfirm.refresh() ;
-			 }
+                if ('' != mc_code)
+                {
+                    inputfirm.setValue(mc_code) ;
+                    inputfirm.refresh() ;
+                }
 
-			 return '<li><b>Microcode from URI</b> ' + result_txt + '.</li>' ;
-		      }
-	 },
+                return '<li><b>Microcode from URI</b> ' + result_txt + '.</li>' ;
+            },
+        },
 
-	 // parameter: assembly code (asm)
-	 {
-	    'name':   'asm',
-	    'action': function( hash )
-		      {
-			 var result_txt ;
-                         var asm_code   = '' ;
+        // parameter: assembly code (asm)
+        {
+            'name':   'asm',
+            'action': function(hash)
+            {
+                var result_txt ;
+                var asm_code = '' ;
 
-                         try
-                         {
-			    if ('cache' == hash.asm) {
-			         var cpts = wepsim_checkpoint_backup_load() ;
-                                 if (cpts.length != 0)
-			             asm_code = cpts[0].assembly ;
-                            }
-                            else {
-                                 asm_code = LZString.decompressFromEncodedURIComponent( hash.asm ) ;
-			         if (null == asm_code) throw new Error("null decompressed data from hash.asm :-(");
-                            }
-			    result_txt = ' has been loaded' ;
-                         }
-                         catch (e) {
-                            asm_code   = '' ;
-			    result_txt = ' could not be loaded' ;
-                         }
+                try
+                {
+                    if ('cache' == hash.asm)
+                    {
+                        var cpts = wepsim_checkpoint_backup_load() ;
+                        if (cpts.length != 0)
+                            asm_code = cpts[0].assembly ;
+                    }
+                    else
+                    {
+                        asm_code = LZString.decompressFromEncodedURIComponent(hash.asm) ;
+                        if (null == asm_code) throw new Error('null decompressed data from hash.asm :-(');
+                    }
+                    result_txt = ' has been loaded' ;
+                }
+                catch (e)
+                {
+                    asm_code = '' ;
+                    result_txt = ' could not be loaded' ;
+                }
 
-			 if ('' != asm_code)
-                         {
-                             inputasm.setValue(asm_code) ;
-                             inputasm.refresh() ;
+                if ('' != asm_code)
+                {
+                    inputasm.setValue(asm_code) ;
+                    inputasm.refresh() ;
 
-			     if ('' != hash.example)
-			     setTimeout(function() {
-					    wsweb_firmware_compile() ;
-					    wsweb_assembly_compile() ;
-					}, 500);
-			 }
+                    if ('' != hash.example)
+                        setTimeout(function()
+                        {
+                            wsweb_firmware_compile() ;
+                            wsweb_assembly_compile() ;
+                        }, 500);
+                }
 
-			 return '<li><b>Assembly from URI</b> ' + result_txt + '.</li>' ;
-		      }
-	 },
+                return '<li><b>Assembly from URI</b> ' + result_txt + '.</li>' ;
+            },
+        },
 
-	 // parameter: simulator UI
-	 {
-	    'name':   'simulator',
-	    'action': function( hash )
-		      {
-			  var panels = hash.simulator.split(":") ;
+        // parameter: simulator UI
+        {
+            'name':   'simulator',
+            'action': function(hash)
+            {
+                var panels = hash.simulator.split(':') ;
 
-			  if (typeof panels[0] !== "undefined")
-			  {
-			      if (panels[0] === "microcode") {
-				  wsweb_change_show_processor() ;
-			      }
-			      if (panels[0] === "assembly") {
-				  wsweb_change_show_asmdbg() ;
-			      }
-			  }
-			  if (typeof panels[1] !== "undefined")
-			  {
-			      wsweb_set_details(panels[1].toUpperCase()) ;
-			  }
-			  if (typeof panels[2] !== "undefined")
-			  {
-			      wsweb_do_action(panels[2].toLowerCase()) ;
-			  }
+                if (typeof panels[0] !== 'undefined')
+                {
+                    if (panels[0] === 'microcode')
+                    {
+                        wsweb_change_show_processor() ;
+                    }
+                    if (panels[0] === 'assembly')
+                    {
+                        wsweb_change_show_asmdbg() ;
+                    }
+                }
+                if (typeof panels[1] !== 'undefined')
+                {
+                    wsweb_set_details(panels[1].toUpperCase()) ;
+                }
+                if (typeof panels[2] !== 'undefined')
+                {
+                    wsweb_do_action(panels[2].toLowerCase()) ;
+                }
 
-			  return '<li>User interface has been adapted.</li> ' ;
-		      }
-	 },
+                return '<li>User interface has been adapted.</li> ' ;
+            },
+        },
 
-	 // parameter: cache
-	 {
-	    'name':   'cache',
-	    'action': function( hash )
-		      {
-			 var result_txt ;
-                         var cm_cfg_json = '[]' ;
+        // parameter: cache
+        {
+            'name':   'cache',
+            'action': function(hash)
+            {
+                var result_txt ;
+                var cm_cfg_json = '[]' ;
 
-                         try
-                         {
-			    if ('cache' == hash.asm)
-			    {
-			         var cpts = wepsim_checkpoint_backup_load() ;
-                                 if (cpts.length != 0) {
-			             cm_cfg_json = cpts[0].cache ;
-				 }
-                            }
-                            else
-			    {
-                                 cm_cfg_json = LZString.decompressFromEncodedURIComponent( hash.cache ) ;
-			         if (null == cm_cfg_json) throw new Error("null decompressed data from hash.cache :-(");
-                            }
-			    result_txt = ' has been loaded' ;
-                         }
-                         catch (e) {
-                            cm_cfg_json = '[]' ;
-			    result_txt  = ' could not be loaded' ;
-                         }
+                try
+                {
+                    if ('cache' == hash.asm)
+                    {
+                        var cpts = wepsim_checkpoint_backup_load() ;
+                        if (cpts.length != 0)
+                        {
+                            cm_cfg_json = cpts[0].cache ;
+                        }
+                    }
+                    else
+                    {
+                        cm_cfg_json = LZString.decompressFromEncodedURIComponent(hash.cache) ;
+                        if (null == cm_cfg_json) throw new Error('null decompressed data from hash.cache :-(');
+                    }
+                    result_txt = ' has been loaded' ;
+                }
+                catch (e)
+                {
+                    cm_cfg_json = '[]' ;
+                    result_txt = ' could not be loaded' ;
+                }
 
-			 if ('[]' != cm_cfg_json)
-                         {
-			     let cm_cfg = JSON.parse(cm_cfg_json) ;
-			     let cm = cache_memory_init_cm(cm_cfg) ;
-			     simhw_internalState_reset('CM_cfg', cm_cfg) ;
-			     simhw_internalState_reset('CM',     cm) ;
-			     wepsim_show_cache_memory_config() ;
-			 }
+                if ('[]' != cm_cfg_json)
+                {
+                    let cm_cfg = JSON.parse(cm_cfg_json) ;
+                    let cm = cache_memory_init_cm(cm_cfg) ;
+                    simhw_internalState_reset('CM_cfg', cm_cfg) ;
+                    simhw_internalState_reset('CM', cm) ;
+                    wepsim_show_cache_memory_config() ;
+                }
 
-			 return '<li><b>Cache configuration from URI</b> ' + result_txt + '.</li>' ;
-		      }
-	 },
+                return '<li><b>Cache configuration from URI</b> ' + result_txt + '.</li>' ;
+            },
+        },
 
-	 // parameter: checkpoint
-	 {
-	    'name':   'checkpoint',
-	    'action': function( hash )
-		      {
-			  var uri_obj = new URL(hash.checkpoint) ;
-			  wepsim_checkpoint_loadURI(uri_obj) ;
-		      }
-	 },
+        // parameter: checkpoint
+        {
+            'name':   'checkpoint',
+            'action': function(hash)
+            {
+                var uri_obj = new URL(hash.checkpoint) ;
+                wepsim_checkpoint_loadURI(uri_obj) ;
+            },
+        },
 
-	 // dummy parameter: notify
-	 // in wepsim_preload_fromHash
-	 {
-	    'name':   'notify',
-	    'action': function( )
-		      {
-			 return '' ;
-		      }
-	 },
+        // dummy parameter: notify
+        // in wepsim_preload_fromHash
+        {
+            'name':   'notify',
+            'action': function()
+            {
+                return '' ;
+            },
+        },
 
-	 // dummy parameter: preload
-	 // in wepsim_preload_get2hash
-	 {
-	    'name':   'preload',
-	    'action': function( )
-		      {
-			 return '' ;
-		      }
-	 }
+        // dummy parameter: preload
+        // in wepsim_preload_get2hash
+        {
+            'name':   'preload',
+            'action': function()
+            {
+                return '' ;
+            },
+        },
 
-     ] ;
+    ] ;
 }
 

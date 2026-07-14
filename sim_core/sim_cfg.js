@@ -26,422 +26,440 @@ import { ws_alert } from './sim_core_ui.js';
 
 export var WSCFG = {} ;
 
-
-        /*
+/*
          *  Access: get_cfg/set_cfg/update_cfg
          */
 
-        export function get_cfg ( field )
-        {
-             return WSCFG[field].value ;
-        }
+export function get_cfg (field)
+{
+    return WSCFG[field].value ;
+}
 
-        export function set_cfg ( field, value )
-        {
-             if (WSCFG[field] && WSCFG[field].type === "boolean" && typeof value === "string") {
-                  value = (value === "true");
-             } else if (WSCFG[field] && WSCFG[field].type === "int" && typeof value === "string") {
-                  value = parseInt(value, 10);
-             }
-             WSCFG[field].value = value ;
-        }
+export function set_cfg (field, value)
+{
+    if (WSCFG[field] && WSCFG[field].type === 'boolean' && typeof value === 'string')
+    {
+        value = (value === 'true');
+    }
+    else if (WSCFG[field] && WSCFG[field].type === 'int' && typeof value === 'string')
+    {
+        value = parseInt(value, 10);
+    }
+    WSCFG[field].value = value ;
+}
 
-        // update_cfg = set_cfg + ga + save_cfg
-        export function update_cfg ( field, value )
-        {
-             if (WSCFG[field] && WSCFG[field].type === "boolean" && typeof value === "string") {
-                  value = (value === "true");
-             } else if (WSCFG[field] && WSCFG[field].type === "int" && typeof value === "string") {
-                  value = parseInt(value, 10);
-             }
+// update_cfg = set_cfg + ga + save_cfg
+export function update_cfg (field, value)
+{
+    if (WSCFG[field] && WSCFG[field].type === 'boolean' && typeof value === 'string')
+    {
+        value = (value === 'true');
+    }
+    else if (WSCFG[field] && WSCFG[field].type === 'int' && typeof value === 'string')
+    {
+        value = parseInt(value, 10);
+    }
 
-             if (WSCFG[field].value != value)
-             {
-                 simcore_ga('cfg',
-                            'cfg.' + WSCFG.version.value,
-                            'cfg.' + WSCFG.version.value + '.' + field + '.' + value) ;
-             }
+    if (WSCFG[field].value != value)
+    {
+        simcore_ga('cfg',
+                   'cfg.' + WSCFG.version.value,
+                   'cfg.' + WSCFG.version.value + '.' + field + '.' + value) ;
+    }
 
-             WSCFG[field].value = value ;
+    WSCFG[field].value = value ;
 
-             // add if recording
-             simcore_record_append_new('Set configuration option ' + field + ' to ' + value,
-                                       'update_cfg("' + field + '","' + value + '");\n') ;
+    // add if recording
+    simcore_record_append_new('Set configuration option ' + field + ' to ' + value,
+                              'update_cfg("' + field + '","' + value + '");\n') ;
 
-             save_cfg() ;
-        }
+    save_cfg() ;
+}
 
-        export function is_cfg_empty ( )
-        {
-             return (Object.keys(WSCFG).length === 0) ;
-        }
+export function is_cfg_empty ()
+{
+    return (Object.keys(WSCFG).length === 0) ;
+}
 
-
-        /*
+/*
          *  Persistence: save_cfg/restore_cfg
          */
 
-        export function save_cfg ( )
+export function save_cfg ()
+{
+    try
+    {
+        for (var item in WSCFG)
         {
-	   try
-	   {
-                for (var item in WSCFG) {
-                     localStorage.setItem('wepsim_' + item, get_cfg(item));
-                }
-	   }
-           catch (err)
-           {
-                console.log("WepSIM can not save the configuration in a persistent way on this web browser,\n" +
-                            "found following error: \n" + err.message) ;
-	   }
+            localStorage.setItem('wepsim_' + item, get_cfg(item));
+        }
+    }
+    catch (err)
+    {
+        console.log('WepSIM can not save the configuration in a persistent way on this web browser,\n' +
+            'found following error: \n' + err.message) ;
+    }
 
-           set_secondary_cfg() ;
+    set_secondary_cfg() ;
+}
+
+export function restore_cfg ()
+{
+    // set primary configuration with default values
+    WSCFG = get_primary_cfg() ;
+    set_secondary_cfg() ;
+
+    if (localStorage === null)
+    {
+        return ;
+    }
+
+    // try to restore primary configuration values from local_storage
+    var default_value ;
+    var saved_value = null ;
+
+    for (var item in WSCFG)
+    {
+        if (item === 'version')
+        {
+            continue;
         }
 
-        export function restore_cfg ( )
+        default_value = get_cfg(item) ;
+
+        set_cfg(item, localStorage.getItem('wepsim_' + item)) ;
+        if (WSCFG[item].type != 'string')
         {
-           // set primary configuration with default values
-           WSCFG = get_primary_cfg() ;
-           set_secondary_cfg() ;
-
-           if (localStorage === null) {
-	       return ;
-	   }
-
-           // try to restore primary configuration values from local_storage
-           var default_value ;
-           var saved_value   = null ;
-
-           for (var item in WSCFG)
-           {
-                if (item === 'version') {
-                    continue;
-                }
-
-                default_value = get_cfg(item) ;
-
-                set_cfg(item, localStorage.getItem('wepsim_' + item)) ;
-                if (WSCFG[item].type != "string")
-		{
-                    try {
-                      saved_value = JSON.parse(get_cfg(item)) ;
-		      set_cfg(item, saved_value);
-		    }
-		    catch (e) {
-                      saved_value = null ;
-		    }
-		}
-
-                if (saved_value === null) {
-                    set_cfg(item, default_value) ;
-		}
-           }
-
-           // set secondary configuration values
-           set_secondary_cfg() ;
+            try
+            {
+                saved_value = JSON.parse(get_cfg(item)) ;
+                set_cfg(item, saved_value);
+            }
+            catch (e)
+            {
+                saved_value = null ;
+            }
         }
 
+        if (saved_value === null)
+        {
+            set_cfg(item, default_value) ;
+        }
+    }
 
-        /*
+    // set secondary configuration values
+    set_secondary_cfg() ;
+}
+
+/*
          *  Transitions: reset_cfg/upgrade_cfg
          */
 
-        export function reset_cfg ( )
-        {
-             WSCFG = get_primary_cfg() ;
-             set_secondary_cfg() ;
+export function reset_cfg ()
+{
+    WSCFG = get_primary_cfg() ;
+    set_secondary_cfg() ;
 
-             // save as updated configuration
-             save_cfg() ;
+    // save as updated configuration
+    save_cfg() ;
+}
+
+export function reset_cfg_values ()
+{
+    WSCFG = get_primary_cfg() ;
+    set_secondary_cfg() ;
+}
+
+export function upgrade_cfg ()
+{
+    var wscfg = get_primary_cfg() ;
+    var item = null ;
+
+    // repair old broken fields
+    for (item in wscfg)
+    {
+        if (typeof WSCFG[item] === 'undefined')
+        {
+            WSCFG[item] = wscfg[item] ;
         }
-
-        export function reset_cfg_values ( )
+        if ((WSCFG[item].value === null) || (WSCFG[item].value === 'null'))
         {
-             WSCFG = get_primary_cfg() ;
-             set_secondary_cfg() ;
+            WSCFG[item].value = wscfg[item].value ;
         }
+    }
 
-        export function upgrade_cfg ( )
+    // update new fields
+    if (wscfg.build.value != WSCFG.build.value)
+    {
+        for (item in wscfg)
         {
-            var wscfg = get_primary_cfg() ;
-            var item  = null ;
-
-            // repair old broken fields
-            for (item in wscfg)
+            if (wscfg[item].upgrade)
             {
-                 if (typeof WSCFG[item] === "undefined") {
-                     WSCFG[item] = wscfg[item] ;
-                 }
-                 if ( (WSCFG[item].value === null) || (WSCFG[item].value === 'null') ) {
-                       WSCFG[item].value = wscfg[item].value ;
-                 }
+                WSCFG[item] = wscfg[item] ;
             }
-
-            // update new fields
-            if (wscfg.build.value != WSCFG.build.value)
-            {
-                for (item in wscfg)
-                {
-                     if (wscfg[item].upgrade) {
-                         WSCFG[item] = wscfg[item] ;
-                     }
-                }
-            }
-
-            // quick fix to force to upgrade to 2.4.x options for ws_skin_users...
-            if (WSCFG["ws_skin_user"].value.startsWith("only_asm:")) {
-                WSCFG["ws_skin_user"] = { upgrade:false,  type:"string", value:'extra_mcode:extra_morecfg:extra_share' } ;
-            }
-
-            // update secondary fields
-            set_secondary_cfg() ;
-
-            // save as updated configuration
-            save_cfg() ;
         }
+    }
 
+    // quick fix to force to upgrade to 2.4.x options for ws_skin_users...
+    if (WSCFG['ws_skin_user'].value.startsWith('only_asm:'))
+    {
+        WSCFG['ws_skin_user'] = { upgrade: false, type: 'string', value: 'extra_mcode:extra_morecfg:extra_share' } ;
+    }
 
-        /*
+    // update secondary fields
+    set_secondary_cfg() ;
+
+    // save as updated configuration
+    save_cfg() ;
+}
+
+/*
          *  Auxiliar functions
          */
 
-        export function is_mobile ( )
-        {
-             if (typeof navigator === "undefined") {
-                 return false ;
-	     }
+export function is_mobile ()
+{
+    if (typeof navigator === 'undefined')
+    {
+        return false ;
+    }
 
-             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ;
-        }
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ;
+}
 
-        export function is_cordova ( )
-        {
-             // https://stackoverflow.com/questions/8068052/phonegap-detect-if-running-on-desktop-browser
-             return document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
-        }
+export function is_cordova ()
+{
+    // https://stackoverflow.com/questions/8068052/phonegap-detect-if-running-on-desktop-browser
+    return document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1;
+}
 
-        export function is_darkmode ( )
-        {
-            var is_dark ;
+export function is_darkmode ()
+{
+    var is_dark ;
 
-	    var cfgValue = get_cfg('ws_skin_dark_mode') ;
-            switch (cfgValue)
-	    {
-               case 'on':
-	            is_dark = true ;
-                    break;
+    var cfgValue = get_cfg('ws_skin_dark_mode') ;
+    switch (cfgValue)
+    {
+        case 'on':
+            is_dark = true ;
+            break;
 
-               case 'off':
-	            is_dark = false ;
-                    break;
+        case 'off':
+            is_dark = false ;
+            break;
 
-               default: // 'auto':
-	            is_dark = window.matchMedia('(prefers-color-scheme: dark)').matches
-                    break;
-            }
+        default: // 'auto':
+            is_dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            break;
+    }
 
-	    return is_dark ;
-        }
+    return is_dark ;
+}
 
-        export function get_primary_cfg ( )
-        {
-             var wscfg = {
-                   /* version */
-                   "version":               { upgrade:false, type:"string",    value:"2.4.1" },
-                   "build":                 { upgrade:true,  type:"string",    value:"2.4.1.20260510A" },
+export function get_primary_cfg ()
+{
+    var wscfg = {
+        /* version */
+        'version': { upgrade: false, type: 'string', value: '2.4.1' },
+        'build':   { upgrade: true, type: 'string', value: '2.4.1.20260510A' },
 
-	           /* simulation screen: SVG */
-                   "color_data_active":     { upgrade:false, type:"string",    value:"#0066FF" },
-                   "color_data_inactive":   { upgrade:false, type:"string",    value:"#000000" },
-                   "color_name_active":     { upgrade:false, type:"string",    value:"#FF0000" },
-                   "color_name_inactive":   { upgrade:false, type:"string",    value:"#000000" }, // "black"
-	           "size_active":           { upgrade:false, type:"float",     value:3.00 },
-	           "size_inactive":         { upgrade:false, type:"float",     value:1.00 },
-                   "is_byvalue":            { upgrade:false, type:"boolean",   value:false },
-                   "CPUCU_show_graph":      { upgrade:false, type:"boolean",   value:true },
+        /* simulation screen: SVG */
+        'color_data_active':   { upgrade: false, type: 'string', value: '#0066FF' },
+        'color_data_inactive': { upgrade: false, type: 'string', value: '#000000' },
+        'color_name_active':   { upgrade: false, type: 'string', value: '#FF0000' },
+        'color_name_inactive': { upgrade: false, type: 'string', value: '#000000' }, // "black"
+        'size_active':         { upgrade: false, type: 'float', value: 3.00 },
+        'size_inactive':       { upgrade: false, type: 'float', value: 1.00 },
+        'is_byvalue':          { upgrade: false, type: 'boolean', value: false },
+        'CPUCU_show_graph':    { upgrade: false, type: 'boolean', value: true },
 
-	           /* simulation screen: Register File */
-                   "RF_display_format":     { upgrade:false, type:"string",    value:'unsigned_16_fill' },
-                   "RF_display_name":       { upgrade:false, type:"string",    value:'numerical' },
-                   "is_editable":           { upgrade:false, type:"boolean",   value:true },
-                   "RF_vertical_pack":      { upgrade:false, type:"boolean",   value:true },
+        /* simulation screen: Register File */
+        'RF_display_format': { upgrade: false, type: 'string', value: 'unsigned_16_fill' },
+        'RF_display_name':   { upgrade: false, type: 'string', value: 'numerical' },
+        'is_editable':       { upgrade: false, type: 'boolean', value: true },
+        'RF_vertical_pack':  { upgrade: false, type: 'boolean', value: true },
 
-	           /* simulation screen: Memory */
-                   "MEM_display_format":    { upgrade:false, type:"string",    value:'unsigned_16_nofill' },
-                   "MEM_show_segments":     { upgrade:false, type:"boolean",   value:false },
-                   "MEM_show_source":       { upgrade:false, type:"boolean",   value:false },
-                   "MEM_display_direction": { upgrade:false, type:"string",    value:'h2l' },
-                   "MEM_show_nwords":       { upgrade:false, type:"int",       value:1 },
+        /* simulation screen: Memory */
+        'MEM_display_format':    { upgrade: false, type: 'string', value: 'unsigned_16_nofill' },
+        'MEM_show_segments':     { upgrade: false, type: 'boolean', value: false },
+        'MEM_show_source':       { upgrade: false, type: 'boolean', value: false },
+        'MEM_display_direction': { upgrade: false, type: 'string', value: 'h2l' },
+        'MEM_show_nwords':       { upgrade: false, type: 'int', value: 1 },
 
-	           /* simulation screen: Execution */
-                   "DBG_delay":             { upgrade:false, type:"int",       value:100 },
-                   "DBG_level":             { upgrade:false, type:"string",    value:"microinstruction" },
-                   "DBG_limitins":          { upgrade:false, type:"int",       value:10000 },
-                   "DBG_limitick":          { upgrade:false, type:"int",       value:2000 },
-                   "DBG_skip_notifycolon":  { upgrade:false, type:"boolean",   value:false },
-                   "ICON_theme":            { upgrade:false, type:"string",    value:'classic' },
-                   "AS_enable":             { upgrade:false, type:"boolean",   value:true },
-                   "AS_delay":              { upgrade:false, type:"int",       value:500 },
+        /* simulation screen: Execution */
+        'DBG_delay':            { upgrade: false, type: 'int', value: 100 },
+        'DBG_level':            { upgrade: false, type: 'string', value: 'microinstruction' },
+        'DBG_limitins':         { upgrade: false, type: 'int', value: 10000 },
+        'DBG_limitick':         { upgrade: false, type: 'int', value: 2000 },
+        'DBG_skip_notifycolon': { upgrade: false, type: 'boolean', value: false },
+        'ICON_theme':           { upgrade: false, type: 'string', value: 'classic' },
+        'AS_enable':            { upgrade: false, type: 'boolean', value: true },
+        'AS_delay':             { upgrade: false, type: 'int', value: 500 },
 
-	           /* simulation screen: Notification, etc. */
-                   "NOTIF_delay":           { upgrade:false, type:"int",       value:1000 },
-                   "CPUCU_size":            { upgrade:false, type:"int",       value:7    },
-                   "C1C2_size":             { upgrade:false, type:"int",       value:8    },
-                   "SHOWCODE_label":        { upgrade:false, type:"boolean",   value:true },
-                   "SHOWCODE_addr":         { upgrade:false, type:"boolean",   value:true },
-                   "SHOWCODE_hex":          { upgrade:false, type:"boolean",   value:true },
-                   "SHOWCODE_ins":          { upgrade:false, type:"boolean",   value:true },
-                   "SHOWCODE_pins":         { upgrade:false, type:"boolean",   value:true },
-                   "ws_mode":               { upgrade:false, type:"string",    value:'newbie' },
-                   "ws_action":             { upgrade:false, type:"string",    value:'checkpoint' },
-                   "ws_examples_set":       { upgrade:true,  type:"string",    value:'Empty' },
-                   "is_interactive":        { upgrade:false, type:"boolean",   value:true },
-                   "is_quick_interactive":  { upgrade:false, type:"boolean",   value:false },
-                   "ws_idiom":              { upgrade:false, type:"string",    value:'en' },
-                   "use_voice":             { upgrade:false, type:"boolean",   value:false },
-                   "ws_skin_ui":            { upgrade:false, type:"string",    value:'classic' },
-                   "ws_skin_user":          { upgrade:true,  type:"string",    value:'extra_mcode:extra_morecfg:extra_share:beta_cache:beta_ep2' },
-                   "ws_skin_dark_mode":     { upgrade:true,  type:"string",    value:'off' },
+        /* simulation screen: Notification, etc. */
+        'NOTIF_delay':          { upgrade: false, type: 'int', value: 1000 },
+        'CPUCU_size':           { upgrade: false, type: 'int', value: 7 },
+        'C1C2_size':            { upgrade: false, type: 'int', value: 8 },
+        'SHOWCODE_label':       { upgrade: false, type: 'boolean', value: true },
+        'SHOWCODE_addr':        { upgrade: false, type: 'boolean', value: true },
+        'SHOWCODE_hex':         { upgrade: false, type: 'boolean', value: true },
+        'SHOWCODE_ins':         { upgrade: false, type: 'boolean', value: true },
+        'SHOWCODE_pins':        { upgrade: false, type: 'boolean', value: true },
+        'ws_mode':              { upgrade: false, type: 'string', value: 'newbie' },
+        'ws_action':            { upgrade: false, type: 'string', value: 'checkpoint' },
+        'ws_examples_set':      { upgrade: true, type: 'string', value: 'Empty' },
+        'is_interactive':       { upgrade: false, type: 'boolean', value: true },
+        'is_quick_interactive': { upgrade: false, type: 'boolean', value: false },
+        'ws_idiom':             { upgrade: false, type: 'string', value: 'en' },
+        'use_voice':            { upgrade: false, type: 'boolean', value: false },
+        'ws_skin_ui':           { upgrade: false, type: 'string', value: 'classic' },
+        'ws_skin_user':         { upgrade: true, type: 'string', value: 'extra_mcode:extra_morecfg:extra_share:beta_cache:beta_ep2' },
+        'ws_skin_dark_mode':    { upgrade: true, type: 'string', value: 'off' },
 
-	           /* micro/assembly screen: editor */
-                   "editor_theme":          { upgrade:false, type:"string",    value:'default' },
-                   "editor_mode":           { upgrade:false, type:"string",    value:'default' },
+        /* micro/assembly screen: editor */
+        'editor_theme': { upgrade: false, type: 'string', value: 'default' },
+        'editor_mode':  { upgrade: false, type: 'string', value: 'default' },
 
-	           /* set of urls */
-                   "base_url":              { upgrade:true,  type:"string",    value:'https://wepsim.github.io/wepsim/ws_dist/' },
-                   "cfg_url":               { upgrade:true,  type:"string",    value:'repo/configuration/default.json' },
-                   "example_url":           { upgrade:true,  type:"string",    value:'repo/examples_set/default.json' },
-                   "hw_url":                { upgrade:true,  type:"string",    value:'repo/hardware/hw.json' },
+        /* set of urls */
+        'base_url':    { upgrade: true, type: 'string', value: 'https://wepsim.github.io/wepsim/ws_dist/' },
+        'cfg_url':     { upgrade: true, type: 'string', value: 'repo/configuration/default.json' },
+        'example_url': { upgrade: true, type: 'string', value: 'repo/examples_set/default.json' },
+        'hw_url':      { upgrade: true, type: 'string', value: 'repo/hardware/hw.json' },
 
-	           /* misc. */
-                   "max_json_size":         { upgrade:true,  type:"int",       value:1*1024*1024 },
-                   "verbal_verbose":        { upgrade:false, type:"string",    value:'math' },
-                   "extended_ui":           { upgrade:false, type:"boolean",   value:false },
-                   "use_ga":                { upgrade:false, type:"boolean",   value:true },
-                   "history_enable":        { upgrade:false, type:"boolean",   value:false },
-                   "history_size":          { upgrade:false, type:"int",       value:100 }
-             } ;
+        /* misc. */
+        'max_json_size':  { upgrade: true, type: 'int', value: 1 * 1024 * 1024 },
+        'verbal_verbose': { upgrade: false, type: 'string', value: 'math' },
+        'extended_ui':    { upgrade: false, type: 'boolean', value: false },
+        'use_ga':         { upgrade: false, type: 'boolean', value: true },
+        'history_enable': { upgrade: false, type: 'boolean', value: false },
+        'history_size':   { upgrade: false, type: 'int', value: 100 },
+    } ;
 
-             // some mobile-tuning
-             if (is_mobile())
-             {
-                 wscfg.NOTIF_delay.value = 2000 ;
-                 wscfg.ICON_theme.value  = 'cat1' ;
-                 wscfg.CPUCU_size.value  = 7 ;
-                 wscfg.C1C2_size.value   = 14 ;
-                 wscfg.ws_skin_ui.value  = 'compact' ;
-             }
+    // some mobile-tuning
+    if (is_mobile())
+    {
+        wscfg.NOTIF_delay.value = 2000 ;
+        wscfg.ICON_theme.value = 'cat1' ;
+        wscfg.CPUCU_size.value = 7 ;
+        wscfg.C1C2_size.value = 14 ;
+        wscfg.ws_skin_ui.value = 'compact' ;
+    }
 
-             return wscfg ;
-        }
+    return wscfg ;
+}
 
-        export var cfg_show_rf_delay             = 100 ;
-        export var cfg_show_eltos_delay          = 100 ;
-        export var cfg_show_main_memory_delay    = 150 ;
-        export var cfg_show_control_memory_delay = 120 ;
-        export var cfg_show_dbg_ir_delay         = 100 ;
-        export var cfg_show_rf_refresh_delay     = 30 ;
-        export var cfg_show_asmdbg_pc_delay      = 50 ;
+export var cfg_show_rf_delay = 100 ;
+export var cfg_show_eltos_delay = 100 ;
+export var cfg_show_main_memory_delay = 150 ;
+export var cfg_show_control_memory_delay = 120 ;
+export var cfg_show_dbg_ir_delay = 100 ;
+export var cfg_show_rf_refresh_delay = 30 ;
+export var cfg_show_asmdbg_pc_delay = 50 ;
 
-        export function set_secondary_cfg ( )
-        {
-            var dbg_delay = get_cfg('DBG_delay') ;
+export function set_secondary_cfg ()
+{
+    var dbg_delay = get_cfg('DBG_delay') ;
 
-            if (dbg_delay < 100)
-            {
-                cfg_show_rf_delay             = 350 ;
-                cfg_show_eltos_delay          = 350 ;
-                cfg_show_main_memory_delay    = 450 ;
-                cfg_show_control_memory_delay = 360 ;
-                cfg_show_dbg_ir_delay         = 300 ;
-                cfg_show_rf_refresh_delay     = 120 ;
-            }
-            else
-            {
-                cfg_show_rf_delay             = 100 ;
-                cfg_show_eltos_delay          = 100 ;
-                cfg_show_main_memory_delay    = 150 ;
-                cfg_show_control_memory_delay = 120 ;
-                cfg_show_dbg_ir_delay         = 100 ;
-                cfg_show_rf_refresh_delay     = 30 ;
-            }
+    if (dbg_delay < 100)
+    {
+        cfg_show_rf_delay = 350 ;
+        cfg_show_eltos_delay = 350 ;
+        cfg_show_main_memory_delay = 450 ;
+        cfg_show_control_memory_delay = 360 ;
+        cfg_show_dbg_ir_delay = 300 ;
+        cfg_show_rf_refresh_delay = 120 ;
+    }
+    else
+    {
+        cfg_show_rf_delay = 100 ;
+        cfg_show_eltos_delay = 100 ;
+        cfg_show_main_memory_delay = 150 ;
+        cfg_show_control_memory_delay = 120 ;
+        cfg_show_dbg_ir_delay = 100 ;
+        cfg_show_rf_refresh_delay = 30 ;
+    }
 
-            cfg_show_asmdbg_pc_delay = 50 ;
-            if (dbg_delay < 3)
-                cfg_show_asmdbg_pc_delay = 150 ;
-        }
+    cfg_show_asmdbg_pc_delay = 50 ;
+    if (dbg_delay < 3)
+        cfg_show_asmdbg_pc_delay = 150 ;
+}
 
-
-    /*
+/*
      *  Configurations: available set
      */
 
-    export var ws_cfg_hash = {} ;
-    export var ws_cfg_set  = [] ;
+export var ws_cfg_hash = {} ;
+export var ws_cfg_set = [] ;
 
-    export function cfgset_init ( )
+export function cfgset_init ()
+{
+    var url_list = get_cfg('cfg_url') ;
+
+    // try to load the index
+    ws_cfg_set = wepsim_url_getJSON(url_list) ;
+
+    // build reference hash
+    for (var i = 0; i < ws_cfg_set.length; i++)
     {
-         var url_list = get_cfg('cfg_url') ;
-
-         // try to load the index
-         ws_cfg_set = wepsim_url_getJSON(url_list) ;
-
-         // build reference hash
-         for (var i=0; i<ws_cfg_set.length; i++) {
-              ws_cfg_hash[ws_cfg_set[i].name] = ws_cfg_set[i].url ;
-         }
-
-         return ws_cfg_hash ;
+        ws_cfg_hash[ws_cfg_set[i].name] = ws_cfg_set[i].url ;
     }
 
-    export function cfgset_getSet ( )
+    return ws_cfg_hash ;
+}
+
+export function cfgset_getSet ()
+{
+    return ws_cfg_hash ;
+}
+
+export function cfgset_load (cfg_name)
+{
+    var ret = null ;
+    var jobj ;
+
+    if (typeof ws_cfg_hash[cfg_name] === 'undefined')
     {
-         return ws_cfg_hash ;
+        return ret ;
     }
 
-    export function cfgset_load ( cfg_name )
+    // try to import the requested one
+    try
     {
-         var ret  = null ;
-         var jobj ;
-
-         if (typeof ws_cfg_hash[cfg_name] === "undefined") {
-             return ret ;
-         }
-
-         // try to import the requested one
-	 try {
-	    jobj = $.getJSON({'url': ws_cfg_hash[cfg_name], 'async': false}) ;
-	     jobj = JSON.parse(jobj.responseText) ;
-	     ret  = cfgset_import(jobj) ;
-	 }
-	 catch (e) {
-             ws_alert("WepSIM can not import the configuration from URL: \n'" +
-                       ws_cfg_hash[cfg_name]  + "'.\n" +
-                      "Found following error: \n" +
-                       e.message) ;
-	 }
-
-	 return ret ;
+        jobj = $.getJSON({ 'url': ws_cfg_hash[cfg_name], 'async': false }) ;
+        jobj = JSON.parse(jobj.responseText) ;
+        ret = cfgset_import(jobj) ;
+    }
+    catch (e)
+    {
+        ws_alert("WepSIM can not import the configuration from URL: \n'" +
+            ws_cfg_hash[cfg_name] + "'.\n" +
+            'Found following error: \n' +
+            e.message) ;
     }
 
-    export function cfgset_import ( wscfg )
+    return ret ;
+}
+
+export function cfgset_import (wscfg)
+{
+    // import primary fields
+    for (var item in wscfg)
     {
-         // import primary fields
-	 for (var item in wscfg)
-	 {
-             if (typeof WSCFG[item] === "undefined") {
-                 continue ;
-             }
-             if (WSCFG[item].type !== wscfg[item].type) {
-                 continue ;
-             }
+        if (typeof WSCFG[item] === 'undefined')
+        {
+            continue ;
+        }
+        if (WSCFG[item].type !== wscfg[item].type)
+        {
+            continue ;
+        }
 
-             WSCFG[item] = wscfg[item] ;
-	 }
-
-         // update secondary fields
-         set_secondary_cfg() ;
-
-         return true ;
+        WSCFG[item] = wscfg[item] ;
     }
+
+    // update secondary fields
+    set_secondary_cfg() ;
+
+    return true ;
+}
 

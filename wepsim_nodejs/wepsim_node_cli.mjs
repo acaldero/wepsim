@@ -28,12 +28,12 @@ var ws_cl_ver = 'WepSIM-cl v2.0.2' ;
 
 function ws_header ()
 {
-     var o = '\n' +
+    var o = '\n' +
             ws_cl_ver + '\n' +
             '> WepSIM simulator interface for command line.\n' +
             '\n' ;
 
-     return o ;
+    return o ;
 }
 
 function ws_help_usage ()
@@ -57,8 +57,8 @@ function ws_help_usage ()
 function ws_open_file ( filename )
 {
     var ret = {} ;
-        ret.data   = '' ;
-        ret.status = false ;
+    ret.data   = '' ;
+    ret.status = false ;
 
     try
     {
@@ -100,109 +100,109 @@ function ws_help_examples_basic ()
 export function ws_main ()
 {
     var argv = yargs(process.argv.slice(2))
-               .usage(ws_help_usage())
-               .option('examples', {
-                   alias:    'e',
-                   type:     'string',
-                   describe: 'basic | more',
-                   nargs:    1,
-                   demand:   false,
-                   default:  ''
-                })
-               .option('action', {
-                   alias:    'a',
-                   type:     'string',
-                   describe: 'run | stepbystep | microstepbymicrostep | check |' +
+        .usage(ws_help_usage())
+        .option('examples', {
+            alias:    'e',
+            type:     'string',
+            describe: 'basic | more',
+            nargs:    1,
+            demand:   false,
+            default:  '',
+        })
+        .option('action', {
+            alias:    'a',
+            type:     'string',
+            describe: 'run | stepbystep | microstepbymicrostep | check |' +
                              ' show-console | microstepverbalized | show-binary |' +
                              ' show-record | show-microcode | show-assembly | build-checkpoint',
-                   nargs:    1,
-                   default:  'usage'
-                })
-               .option('mode', {
-                   alias:    'm',
-                   type:     'string',
-                   describe: 'ep | poc',
-                   nargs:    1,
-                   demand:   false,
-                   default:  'ep'
-                })
-               .option('firmware', {
-                   alias:    'f',
-                   type:     'string',
-                   describe: 'Firmware file',
-                   nargs:    1,
-                   demand:   false,
-                   default:  ''
-                })
-               .option('assembly', {
-                   alias:    's',
-                   type:     'string',
-                   describe: 'Assembly file',
-                   nargs:    1,
-                   demand:   false,
-                   default:  ''
-                })
-               .option('checkpoint', {
-                   alias:    'c',
-                   type:     'string',
-                   describe: 'Checkpoint file',
-                   nargs:    1,
-                   demand:   false,
-                   default:  ''
-                })
-               .option('resultok', {
-                   alias:    'r',
-                   type:     'string',
-                   describe: 'OK result file',
-                   nargs:    1,
-                   demand:   false,
-                   default:  ''
-                })
-               .option('maxi', {
-                   type:     'string',
-                   describe: 'Maximum number of instructions to be executed',
-                   nargs:    1,
-                   demand:   false,
-                   default:  '1000'
-                })
-               .option('maxc', {
-                   type:     'string',
-                   describe: 'Maximum number of clock cycles to be executed',
-                   nargs:    1,
-                   demand:   false,
-                   default:  '1024'
-                })
-               .option('verbal', {
-                   type:     'string',
-                   describe: 'text | math',
-                   nargs:    1,
-                   demand:   false,
-                   default:  'text'
-                })
-               .option('idiom', {
-                   type:     'string',
-                   describe: 'en | es | it | pt | zh_cn | fr | hi | ja | kr | ru | sv | de',
-                   nargs:    1,
-                   demand:   false,
-                   default:  'en'
-                })
-               .option('purify', {
-                   alias:    'p',
-                   type:     'string',
-                   describe: 'Filter output',
-                   nargs:    1,
-                   demand:   false,
-                   default:  ''
-                })
-               .help('h')
-               .demandOption(['action'])
-               .argv ;
+            nargs:   1,
+            default: 'usage',
+        })
+        .option('mode', {
+            alias:    'm',
+            type:     'string',
+            describe: 'ep | poc',
+            nargs:    1,
+            demand:   false,
+            default:  'ep',
+        })
+        .option('firmware', {
+            alias:    'f',
+            type:     'string',
+            describe: 'Firmware file',
+            nargs:    1,
+            demand:   false,
+            default:  '',
+        })
+        .option('assembly', {
+            alias:    's',
+            type:     'string',
+            describe: 'Assembly file',
+            nargs:    1,
+            demand:   false,
+            default:  '',
+        })
+        .option('checkpoint', {
+            alias:    'c',
+            type:     'string',
+            describe: 'Checkpoint file',
+            nargs:    1,
+            demand:   false,
+            default:  '',
+        })
+        .option('resultok', {
+            alias:    'r',
+            type:     'string',
+            describe: 'OK result file',
+            nargs:    1,
+            demand:   false,
+            default:  '',
+        })
+        .option('maxi', {
+            type:     'string',
+            describe: 'Maximum number of instructions to be executed',
+            nargs:    1,
+            demand:   false,
+            default:  '1000',
+        })
+        .option('maxc', {
+            type:     'string',
+            describe: 'Maximum number of clock cycles to be executed',
+            nargs:    1,
+            demand:   false,
+            default:  '1024',
+        })
+        .option('verbal', {
+            type:     'string',
+            describe: 'text | math',
+            nargs:    1,
+            demand:   false,
+            default:  'text',
+        })
+        .option('idiom', {
+            type:     'string',
+            describe: 'en | es | it | pt | zh_cn | fr | hi | ja | kr | ru | sv | de',
+            nargs:    1,
+            demand:   false,
+            default:  'en',
+        })
+        .option('purify', {
+            alias:    'p',
+            type:     'string',
+            describe: 'Filter output',
+            nargs:    1,
+            demand:   false,
+            default:  '',
+        })
+        .help('h')
+        .demandOption(['action'])
+        .argv ;
 
-
-    if ( (argv.examples !== "") || (argv.action === "usage") )
+    if ( (argv.examples !== '') || (argv.action === 'usage') )
     {
         var o = ws_help_usage() + '\n' ;
-        if ("basic" == argv.examples) {
+        if ('basic' == argv.examples)
+        {
             o = ws_help_examples_basic() ;
         }
         clear() ;
@@ -212,7 +212,7 @@ export function ws_main ()
 
     try
     {
-        if (typeof argv.action.toUpperCase == "undefined")
+        if (typeof argv.action.toUpperCase == 'undefined')
         {
             console.log(ws_help_usage() + '\n\n' + 'unknown action "' + argv.action + '"\n') ;
             return false ;
@@ -221,7 +221,7 @@ export function ws_main ()
         var options = {} ;
         options.instruction_limit = parseInt(argv.maxi) ;
         options.cycles_limit      = parseInt(argv.maxc) ;
-        options.verbalize         = (argv.verbal.toUpperCase() == "MATH") ? 'math' : 'text' ;
+        options.verbalize         = (argv.verbal.toUpperCase() == 'MATH') ? 'math' : 'text' ;
         options.purify            =  argv.purify ;
 
         var data = {} ;
@@ -237,7 +237,7 @@ export function ws_main ()
         ret.status = true ;
         ret.data   = '' ;
 
-        if (argv.checkpoint !== "")
+        if (argv.checkpoint !== '')
         {
             ret = ws_open_file(argv.checkpoint) ;
             if (ret.status)
@@ -252,38 +252,42 @@ export function ws_main ()
             }
         }
 
-        if (argv.firmware !== "")
+        if (argv.firmware !== '')
         {
             ret = ws_open_file(argv.firmware) ;
-            if (ret.status) {
+            if (ret.status)
+            {
                 data.firmware = ret.data ;
             }
         }
 
-        if (argv.assembly !== "")
+        if (argv.assembly !== '')
         {
-            if (argv.action === "help")
+            if (argv.action === 'help')
             {
                 data.assembly = argv.assembly ;
             }
             else
             {
                 ret = ws_open_file(argv.assembly) ;
-                if (ret.status) {
+                if (ret.status)
+                {
                     data.assembly = ret.data ;
                 }
             }
         }
 
-        if (argv.resultok !== "")
+        if (argv.resultok !== '')
         {
             ret = ws_open_file(argv.resultok) ;
-            if (ret.status) {
+            if (ret.status)
+            {
                 data.result_ok = ret.data ;
             }
         }
 
-        if (ret.status) {
+        if (ret.status)
+        {
             wepsim_nodejs_regiter_action();
             return wepsim_nodejs_doAction(data, options) ;
         }

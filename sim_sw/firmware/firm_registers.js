@@ -21,193 +21,211 @@
 import { frm_getToken, frm_isToken, frm_langError, frm_nextToken } from './lexical.js';
 import { i18n, i18n_get_TagFor } from '../../wepsim_i18n/i18n.js';
 
-export function firm_registers_write ( context )
+export function firm_registers_write (context)
 {
-	var o = "" ;
+    var o = '' ;
 
-        // no registers -> return empty section
-	if (typeof context.registers == "undefined") {
-            return o ;
+    // no registers -> return empty section
+    if (typeof context.registers == 'undefined')
+    {
+        return o ;
+    }
+
+    var context_registers_keys = Object.keys(context.registers) ;
+    if (0 == context_registers_keys.length)
+    {
+        return o ;
+    }
+
+    // return registers as string...
+    var m ;
+    for (var k = 0; k < context_registers_keys.length; k++)
+    {
+        m = context_registers_keys[k] ;
+
+        // skip empty register file sections
+        if (0 == context.registers[m].registers.length)
+        {
+            continue ;
         }
 
-        var context_registers_keys = Object.keys(context.registers) ;
-	if (0 == context_registers_keys.length) {
-            return o ;
+        o += 'registers ' + context.registers[m].name + '\n' +
+            '{\n' ;
+        for (var i = 0; i < context.registers[m].registers.length; i++)
+        {
+            if (typeof context.registers[m].registers[i] == 'undefined')
+            {
+                continue ;
+            }
+
+            var l = context.registers[m].registers[i].length - 1 ;
+            var r = '(' ;
+            for (var j = 0; j < l; j++)
+            {
+                r += context.registers[m].registers[i][j] + ', ' ;
+            }
+            r += context.registers[m].registers[i][l] + ')' ;
+
+            // To decide if skip stackRegister or check if current register is the stack_pointer
+            if (null == context.stackRegister)
+            {
+                continue ;
+            }
+
+            if ((context.stackRegister.rf_name == context.registers[m].name) &&
+                (context.stackRegister.r_name == i))
+                o += '\t' + i + '=' + r + ' (stack_pointer),' + '\n' ;
+            else o += '\t' + i + '=' + r + ',' + '\n' ;
         }
+        o = o.substr(0, o.length - 2) ;
+        o += '\n' +
+            '}\n' ;
+    }
 
-        // return registers as string...
-        var m ;
-	for (var k=0; k < context_registers_keys.length; k++)
-	{
-             m = context_registers_keys[k] ;
-
-             // skip empty register file sections
-             if (0 == context.registers[m].registers.length) {
-                 continue ;
-             }
-
-	     o += 'registers ' + context.registers[m].name + '\n' +
-		  '{\n' ;
-	     for (var i=0; i< context.registers[m].registers.length; i++)
-	     {
-		     if (typeof context.registers[m].registers[i] == "undefined") {
-			 continue ;
-		     }
-
-		     var l = context.registers[m].registers[i].length - 1 ;
-		     var r = "(" ;
-		     for (var j=0; j<l; j++) {
-			  r += context.registers[m].registers[i][j] + ", " ;
-		     }
-		     r += context.registers[m].registers[i][l] + ")" ;
-
-                     // To decide if skip stackRegister or check if current register is the stack_pointer
-		     if (null == context.stackRegister) {
-			 continue ;
-		     }
-
-		     if ( (context.stackRegister.rf_name == context.registers[m].name) &&
-		          (context.stackRegister.r_name  == i) )
-			  o += '\t' + i + "=" + r + " (stack_pointer)," + '\n' ;
-		     else o += '\t' + i + "=" + r + "," + '\n' ;
-	     }
-	     o  = o.substr(0, o.length-2) ;
-	     o += '\n' +
-	          '}\n' ;
-        }
-
-        // return string
-	return o ;
+    // return string
+    return o ;
 }
 
-
-export function firm_find_rf_by_name ( context, rf_name )
+export function firm_find_rf_by_name (context, rf_name)
 {
-	for (var i=0; i<context.registers.length; i++)
-	{
-             if (context.registers[i].name == rf_name) {
-                 return i ;
-             }
-	}
+    for (var i = 0; i < context.registers.length; i++)
+    {
+        if (context.registers[i].name == rf_name)
+        {
+            return i ;
+        }
+    }
 
-        return -1 ;
+    return -1 ;
 }
 
-export function firm_registers_read ( context )
+export function firm_registers_read (context)
 {
-	// *registers [register file name]
-	// {*
-        //    0=(zero, x0),
-        //    1=(ra,   x1),
-        //    2=(sp,   x2) (stack_pointer)
-	// }
+    // *registers [register file name]
+    // {*
+    //    0=(zero, x0),
+    //    1=(ra,   x1),
+    //    2=(sp,   x2) (stack_pointer)
+    // }
 
-       var rf_item ;
-       var rf_name = "default" ;
+    var rf_item ;
+    var rf_name = 'default' ;
 
-       // skip 'registers'
-       frm_nextToken(context) ;
+    // skip 'registers'
+    frm_nextToken(context) ;
 
-       // optional 'name' (or 'default' if none is used)
-       if (! frm_isToken(context, "{")) {
-	   rf_name = frm_getToken(context) ;
-           frm_nextToken(context) ;
-       }
+    // optional 'name' (or 'default' if none is used)
+    if (! frm_isToken(context, '{'))
+    {
+        rf_name = frm_getToken(context) ;
+        frm_nextToken(context) ;
+    }
 
-       // check '{' and skip '{'
-       if (! frm_isToken(context, "{")) {
-	     return frm_langError(context,
-			          i18n_get_TagFor('compiler', 'OPEN BRACE NOT FOUND')) ;
-       }
-       frm_nextToken(context) ;
+    // check '{' and skip '{'
+    if (! frm_isToken(context, '{'))
+    {
+        return frm_langError(context,
+                             i18n_get_TagFor('compiler', 'OPEN BRACE NOT FOUND')) ;
+    }
+    frm_nextToken(context) ;
 
-       // find 'name' to use it or add a new one
-       rf_item = context.registers[rf_name] ;
-       if (typeof rf_item == "undefined") {
-           rf_item = { name:"default", registers:[] } ;
-           context.registers[rf_name] = rf_item ;
-       }
+    // find 'name' to use it or add a new one
+    rf_item = context.registers[rf_name] ;
+    if (typeof rf_item == 'undefined')
+    {
+        rf_item = { name: 'default', registers: [] } ;
+        context.registers[rf_name] = rf_item ;
+    }
 
-       // while not '}'
-       while (! frm_isToken(context, "}"))
-       {
-           //   *1=*ra,
-           //   *1=*(ra, x1),
- 	   var nombre_reg = frm_getToken(context) ;
-	   if (nombre_reg.startsWith("0x")) {
-	       nombre_reg = parseInt(nombre_reg, 16);
-	   }
+    // while not '}'
+    while (! frm_isToken(context, '}'))
+    {
+        //   *1=*ra,
+        //   *1=*(ra, x1),
+        var nombre_reg = frm_getToken(context) ;
+        if (nombre_reg.startsWith('0x'))
+        {
+            nombre_reg = parseInt(nombre_reg, 16);
+        }
 
-	   frm_nextToken(context) ;
-	   if (! frm_isToken(context, "=")) {
-		 return frm_langError(context,
-				      i18n_get_TagFor('compiler', 'EQUAL NOT FOUND')) ;
-	   }
+        frm_nextToken(context) ;
+        if (! frm_isToken(context, '='))
+        {
+            return frm_langError(context,
+                                 i18n_get_TagFor('compiler', 'EQUAL NOT FOUND')) ;
+        }
 
-           //   1=*ra*,
-           //   1=*(*ra, x1),
-	   frm_nextToken(context) ;
-	   if (! frm_isToken(context, "(")) {
-		 rf_item.registers[nombre_reg] = [] ;
-		 rf_item.registers[nombre_reg].push(frm_getToken(context)) ;
-	   }
-	   else
-	   {
-		 frm_nextToken(context) ;
-		 if (frm_isToken(context, ")")) {
-		     return frm_langError(context,
-				          i18n_get_TagFor('compiler', 'EMPTY NAME LIST')) ;
-		 }
+        //   1=*ra*,
+        //   1=*(*ra, x1),
+        frm_nextToken(context) ;
+        if (! frm_isToken(context, '('))
+        {
+            rf_item.registers[nombre_reg] = [] ;
+            rf_item.registers[nombre_reg].push(frm_getToken(context)) ;
+        }
+        else
+        {
+            frm_nextToken(context) ;
+            if (frm_isToken(context, ')'))
+            {
+                return frm_langError(context,
+                                     i18n_get_TagFor('compiler', 'EMPTY NAME LIST')) ;
+            }
 
-                 // 1=(ra*, x1*),
-		 rf_item.registers[nombre_reg] = [] ;
-		 while (! frm_isToken(context, ")"))
-		 {
-		       rf_item.registers[nombre_reg].push(frm_getToken(context)) ;
+            // 1=(ra*, x1*),
+            rf_item.registers[nombre_reg] = [] ;
+            while (! frm_isToken(context, ')'))
+            {
+                rf_item.registers[nombre_reg].push(frm_getToken(context)) ;
 
-		       frm_nextToken(context) ;
-		       if (frm_isToken(context,",")) {
-			   frm_nextToken(context);
-		       }
-		 }
-	   }
+                frm_nextToken(context) ;
+                if (frm_isToken(context, ','))
+                {
+                    frm_nextToken(context);
+                }
+            }
+        }
 
-           //  2=(sp, x2) *(stack_pointer)*
-	   frm_nextToken(context) ;
-	   if (frm_isToken(context, "("))
-	   {
-		if (context.stackRegister != null) {
-		    return frm_langError(context,
-				         i18n_get_TagFor('compiler', 'DUPLICATE SP')) ;
-		}
+        //  2=(sp, x2) *(stack_pointer)*
+        frm_nextToken(context) ;
+        if (frm_isToken(context, '('))
+        {
+            if (context.stackRegister != null)
+            {
+                return frm_langError(context,
+                                     i18n_get_TagFor('compiler', 'DUPLICATE SP')) ;
+            }
 
-		frm_nextToken(context);
-		if (! frm_isToken(context, "stack_pointer")) {
-		    return frm_langError(context,
-				         i18n_get_TagFor('compiler', 'NO SP')) ;
-		}
+            frm_nextToken(context);
+            if (! frm_isToken(context, 'stack_pointer'))
+            {
+                return frm_langError(context,
+                                     i18n_get_TagFor('compiler', 'NO SP')) ;
+            }
 
-	        context.stackRegister = {} ;
-	        context.stackRegister.rf_name = rf_item.name ;
-	        context.stackRegister.r_name  = nombre_reg ;
+            context.stackRegister = {} ;
+            context.stackRegister.rf_name = rf_item.name ;
+            context.stackRegister.r_name = nombre_reg ;
 
-		frm_nextToken(context);
-		if (! frm_isToken(context, ")")) {
-		    return frm_langError(context,
-				         i18n_get_TagFor('compiler', 'CLOSE PAREN. NOT FOUND')) ;
-		}
+            frm_nextToken(context);
+            if (! frm_isToken(context, ')'))
+            {
+                return frm_langError(context,
+                                     i18n_get_TagFor('compiler', 'CLOSE PAREN. NOT FOUND')) ;
+            }
 
-		frm_nextToken(context);
-	   }
+            frm_nextToken(context);
+        }
 
-	   if (frm_isToken(context,",")) {
-	       frm_nextToken(context);
-	   }
-       }
+        if (frm_isToken(context, ','))
+        {
+            frm_nextToken(context);
+        }
+    }
 
-       // skip }
-       frm_nextToken(context);
+    // skip }
+    frm_nextToken(context);
 
-       return {} ;
+    return {} ;
 }
 

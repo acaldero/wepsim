@@ -1,8 +1,8 @@
-/*      
+/*
  *  Copyright 2015-2026 The WepSIM team (see docs/WEPSIM-TEAM.md)
  *
  *  This file is part of WepSIM.
- * 
+ *
  *  WepSIM is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -18,39 +18,38 @@
  *
  */
 
-
-export function board_base_register ( sim_p )
+export function board_base_register (sim_p)
 {
-        /*
+    /*
          *  Syntax of behaviors
          */
 
-        // Print Signal
-        sim_p.behaviors.PRINT_S = { nparameters: 2,
-                                 types: ["S"],
-                                 operation: function(s_expr)
-                                            {
-                                                 console.log(s_expr[1] + ': 0x' + sim_p.signals[s_expr[1]].value.toString(16));
-					    },
-				    verbal: function (s_expr)
-				   	    {
-					         return "Print value of signal " + s_expr[1] + ': 0x' + sim_p.signals[s_expr[1]].value.toString(16) + ". " ;
-					    }
-                               };
+    // Print Signal
+    sim_p.behaviors.PRINT_S = { nparameters: 2,
+        types:       ['S'],
+        operation:   function(s_expr)
+        {
+            console.log(s_expr[1] + ': 0x' + sim_p.signals[s_expr[1]].value.toString(16));
+        },
+        verbal: function (s_expr)
+        {
+            return 'Print value of signal ' + s_expr[1] + ': 0x' + sim_p.signals[s_expr[1]].value.toString(16) + '. ' ;
+        },
+    };
 
-        // Print State
-        sim_p.behaviors.PRINT_E = { nparameters: 2,
-                                 types: ["E"],
-                                 operation: function(s_expr)
-                                            {
-                                                 console.log(s_expr[1] + ': 0x' + sim_p.states[s_expr[1]].value.toString(16));
-					    },
-				    verbal: function (s_expr)
-				   	    {
-					         return "Print value of state " + s_expr[1] + ': 0x' + sim_p.states[s_expr[1]].value.toString(16) + ". " ;
-					    }
-                               };
+    // Print State
+    sim_p.behaviors.PRINT_E = { nparameters: 2,
+        types:       ['E'],
+        operation:   function(s_expr)
+        {
+            console.log(s_expr[1] + ': 0x' + sim_p.states[s_expr[1]].value.toString(16));
+        },
+        verbal: function (s_expr)
+        {
+            return 'Print value of state ' + s_expr[1] + ': 0x' + sim_p.states[s_expr[1]].value.toString(16) + '. ' ;
+        },
+    };
 
-        return sim_p ;
+    return sim_p ;
 }
 

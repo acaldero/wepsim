@@ -18,80 +18,84 @@
  *
  */
 
-
 import $ from 'jquery';
 import * as bootstrap from 'bootstrap';
 
-    //
-    // General tooltip
-    //
+//
+// General tooltip
+//
 
-    export function wepsim_tooltip_init( tooltip_id, tooltip_cfg, fun_ownshown )
+export function wepsim_tooltip_init(tooltip_id, tooltip_cfg, fun_ownshown)
+{
+    // 1) get object
+    var obj1 = document.querySelector(tooltip_id) ;
+    if (null == obj1)
     {
-         // 1) get object
-         var obj1 = document.querySelector(tooltip_id) ;
-         if (null == obj1) {
-             return null ;
-         }
-
-         // 2) new tooltip(object) for object
-	 var po1 = new bootstrap.Popover(obj1, tooltip_cfg) ;
-
-         // 3) associate event to object
-         if (null != fun_ownshown) {
-             obj1.addEventListener('shown.bs.tooltip', fun_ownshown) ;
-         }
-
-         return po1 ;
+        return null ;
     }
 
-    export function wepsim_tooltips_init( tooltip_set_id, tooltip_cfg, fun_ownshown )
+    // 2) new tooltip(object) for object
+    var po1 = new bootstrap.Popover(obj1, tooltip_cfg) ;
+
+    // 3) associate event to object
+    if (null != fun_ownshown)
     {
-         // 1) get object list
-         var list1 = document.querySelectorAll(tooltip_set_id) ;
-         if (null == list1) {
-             return null ;
-         }
-
-         // 2) new tooltip(object) for each object in the list
-         var plist1 = [...list1].map((elto) => new bootstrap.Popover(elto, tooltip_cfg)) ;
-
-         // 3) associate event to all objects
-         if (null != fun_ownshown) {
-             [...list1].map((elto) => elto.addEventListener('shown.bs.tooltip', fun_ownshown)) ;
-         }
-
-         return plist1 ;
+        obj1.addEventListener('shown.bs.tooltip', fun_ownshown) ;
     }
 
-    export function wepsim_tooltip_show( tooltip_id )
+    return po1 ;
+}
+
+export function wepsim_tooltips_init(tooltip_set_id, tooltip_cfg, fun_ownshown)
+{
+    // 1) get object list
+    var list1 = document.querySelectorAll(tooltip_set_id) ;
+    if (null == list1)
     {
-         $('#' + tooltip_id).tooltip('show') ;
+        return null ;
     }
 
-    export function wepsim_tooltip_hide( tooltip_id )
+    // 2) new tooltip(object) for each object in the list
+    var plist1 = [...list1].map((elto) => new bootstrap.Popover(elto, tooltip_cfg)) ;
+
+    // 3) associate event to all objects
+    if (null != fun_ownshown)
     {
-         $('#' + tooltip_id).tooltip('hide') ;
+        [...list1].map((elto) => elto.addEventListener('shown.bs.tooltip', fun_ownshown)) ;
     }
 
-    export function wepsim_tooltip_action( tooltip_id, action )
-    {
-         $('#' + tooltip_id).tooltip(action) ;
-    }
+    return plist1 ;
+}
 
-    export function wepsim_tooltips_hide( tooltips_id )
-    {
-         $(tooltips_id).tooltip('hide') ;
-    }
+export function wepsim_tooltip_show(tooltip_id)
+{
+    $('#' + tooltip_id).tooltip('show') ;
+}
 
-    export function wepsim_tooltips_closeAll( )
-    {
-         var e2 ;
+export function wepsim_tooltip_hide(tooltip_id)
+{
+    $('#' + tooltip_id).tooltip('hide') ;
+}
 
-         var l1 = document.querySelectorAll('[data-bs-toggle="tooltip"]') ;
-    	 for (var i1=0; i1<l1.length; i1++) {
-              e2 = bootstrap.Tooltip.getInstance(l1[i1]) ;
-              if (e2 != null) e2.hide();
-         }
+export function wepsim_tooltip_action(tooltip_id, action)
+{
+    $('#' + tooltip_id).tooltip(action) ;
+}
+
+export function wepsim_tooltips_hide(tooltips_id)
+{
+    $(tooltips_id).tooltip('hide') ;
+}
+
+export function wepsim_tooltips_closeAll()
+{
+    var e2 ;
+
+    var l1 = document.querySelectorAll('[data-bs-toggle="tooltip"]') ;
+    for (var i1 = 0; i1 < l1.length; i1++)
+    {
+        e2 = bootstrap.Tooltip.getInstance(l1[i1]) ;
+        if (e2 != null) e2.hide();
     }
+}
 

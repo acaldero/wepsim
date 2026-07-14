@@ -23,98 +23,99 @@ import Vue from 'vue';
 import { wepsim_example_getSet, wepsim_example_reset, wepsim_example_load } from '../wepsim_core/wepsim_example.js';
 import { wepsim_notify_success } from '../wepsim_core/wepsim_notify.js';
 
-
-        /*
+/*
          *  Example list
          */
 
-        /* jshint esversion: 6 */
-        export class ws_list_example extends ws_uielto
+/* jshint esversion: 6 */
+export class ws_list_example extends ws_uielto
+{
+    // constructor
+    constructor ()
+    {
+        // parent
+        super();
+    }
+
+    // render
+    render (event_name)
+    {
+        // initialize render elements...
+        super.render() ;
+
+        // render current element
+        this.render_skel() ;
+        this.render_populate() ;
+    }
+
+    render_skel ()
+    {
+        var o1 = '' ;
+
+        // build HTML
+        o1 += '<div class="card border-secondary h-100">' +
+            '<div class="card-header border-secondary text-white bg-secondary p-1 text-center">' +
+            '<h5 class="py-1 m-0">' +
+            '<em class="fas fa-stream pe-2"></em>' +
+            '<span data-langkey="Examples">Examples</span>' +
+            '</h5>' +
+            '</div>' +
+            '<div class="card-body" id="list_examples_' + this.name_str + '">' +
+            '<span>&lt;Empty list&gt;</span>' +
+            '</div>' +
+            '</div>' ;
+
+        this.innerHTML = o1 ;
+    }
+
+    render_populate ()
+    {
+        var o1 = '' ;
+
+        // check if exists any example...
+        var e_exs = wepsim_example_getSet() ;
+        if (typeof e_exs === 'undefined')
         {
-              // constructor
-	      constructor ()
-	      {
-		    // parent
-		    super();
-	      }
-
-              // render
-	      render ( event_name )
-	      {
-                    // initialize render elements...
-	            super.render() ;
-
-                    // render current element
-		    this.render_skel() ;
-		    this.render_populate() ;
-	      }
-
-	      render_skel ( )
-	      {
-                    var o1  = '' ;
-
-                    // build HTML
-		    o1 += '<div class="card border-secondary h-100">' +
-			  '<div class="card-header border-secondary text-white bg-secondary p-1 text-center">' +
-			  '<h5 class="py-1 m-0">' +
-			  '<em class="fas fa-stream pe-2"></em>' +
-                          '<span data-langkey="Examples">Examples</span>' +
-                          '</h5>' +
-			  '</div>' +
-			  '<div class="card-body" id="list_examples_' + this.name_str + '">' +
-			  '<span>&lt;Empty list&gt;</span>' +
-                          '</div>' +
-			  '</div>' ;
-
-		    this.innerHTML = o1 ;
-	      }
-
-	      render_populate ( )
-	      {
-                    var o1  = '' ;
-
-                    // check if exists any example...
-                    var e_exs = wepsim_example_getSet() ;
-                    if (typeof e_exs === "undefined") {
-                        return ;
-                    }
-
-                    // build HTML code
-o1 += '<div class="btn-group-vertical w-100" role="group" aria-label="Examples">' +
-      '<button type="button" ' +
-      '        v-for="ex in examples" ' +
-      '        v-bind:data-name="ex.name" ' +
-      '        class="text-danger btn border-secondary m-1 btn-block" ' +
-      '        data-bind="click" data-action="example-load">' +
-      '<span :data-langkey="ex.name">{{ ex.name }}</span>' +
-      '</button>' +
-      '</div>' ;
-
-		    $('#list_examples_' + this.name_str).html(o1) ;
-
-                    this.vueobj = new Vue({
-                                                    el: '#list_examples_' + this.name_str,
-                                                    data: { examples: e_exs }
-                                               }) ;
-	      }
-
-              bindElements ()
-              {
-                    this.addEventListener('click', (e) => {
-                        const el = e.target.closest('[data-bind="click"]');
-                        if (!el) return;
-                        e.preventDefault();
-                        switch (el.dataset.action) {
-                            case 'example-load':
-                                wepsim_example_reset();
-                                var ex_name = el.getAttribute('data-name');
-                                wepsim_example_load(ex_name);
-                                wepsim_notify_success('<strong>INFO</strong>',
-                                                     'Examples list loaded!.');
-                                break;
-                        }
-                    });
-              }
+            return ;
         }
 
+        // build HTML code
+        o1 += '<div class="btn-group-vertical w-100" role="group" aria-label="Examples">' +
+            '<button type="button" ' +
+            '        v-for="ex in examples" ' +
+            '        v-bind:data-name="ex.name" ' +
+            '        class="text-danger btn border-secondary m-1 btn-block" ' +
+            '        data-bind="click" data-action="example-load">' +
+            '<span :data-langkey="ex.name">{{ ex.name }}</span>' +
+            '</button>' +
+            '</div>' ;
+
+        $('#list_examples_' + this.name_str).html(o1) ;
+
+        this.vueobj = new Vue({
+            el:   '#list_examples_' + this.name_str,
+            data: { examples: e_exs },
+        }) ;
+    }
+
+    bindElements ()
+    {
+        this.addEventListener('click', (e) =>
+        {
+            const el = e.target.closest('[data-bind="click"]');
+            if (!el) return;
+            e.preventDefault();
+            switch (el.dataset.action)
+            {
+                case 'example-load':
+                    wepsim_example_reset();
+                    var ex_name = el.getAttribute('data-name');
+                    wepsim_example_load(ex_name);
+                    wepsim_notify_success('<strong>INFO</strong>',
+                                          'Examples list loaded!.');
+                    break;
+            }
+        });
+    }
+}
 

@@ -20,97 +20,104 @@
 import { ws_uielto } from './wepsim_uielto.js';
 import { inputasm, inputfirm } from '../wepsim_web/wepsim_web_simulator.js';
 
-        /*
+/*
          *  Navbar: navtab simulator/microcode/assembly
          */
 
-        /* jshint esversion: 6 */
-        export class ws_simmicasm extends ws_uielto
+/* jshint esversion: 6 */
+export class ws_simmicasm extends ws_uielto
+{
+    constructor ()
+    {
+        // parent
+        super();
+    }
+
+    render (event_name)
+    {
+        // html holder
+        var o1 = '<!-- Nav tabs -->' +
+            '<nav>' +
+            '  <div class="nav nav-tabs nav-justified nav-tabs" id="nav-tab" role="tablist">' +
+            '    <a class="nav-item nav-link active" id="nav-simulation-tab"' +
+            '       style="border-top-width:2px; border-right-width:2px; border-left-width:2px;"' +
+            '       data-bs-toggle="tab" href="#nav-simulation" role="tab"' +
+            '       aria-controls="nav-home" aria-selected="true">' +
+            '<span class="d-none d-sm-inline-flex" data-langkey="Simulation">Simulation</span><span class="d-sm-none">Sim.</span></a>' +
+            '    <a class="nav-item nav-link wsx_microcode"    id="nav-microcode-tab" data-oldid="s5b_20"' +
+            '       style="border-top-width:2px; border-right-width:2px; border-left-width:2px;"' +
+            ' data-bind="click" data-action="refresh-microcode"' +
+            '       data-bs-toggle="tab" href="#nav-microcode" role="tab"' +
+            '       aria-controls="nav-profile" aria-selected="false">' +
+            '<span class="d-none d-sm-inline-flex" data-langkey="MicroCode">MicroCode</span><span class="d-sm-none">&#181;code</span></a>' +
+            '    <a class="nav-item nav-link"        id="nav-assembly-tab"  data-oldid="s5b_21"' +
+            '       style="border-top-width:2px; border-right-width:2px; border-left-width:2px;"' +
+            ' data-bind="click" data-action="refresh-assembly"' +
+            '       data-bs-toggle="tab" href="#nav-assembly" role="tab"' +
+            '       aria-controls="nav-contact" aria-selected="false">' +
+            '<span class="d-none d-sm-inline-flex" data-langkey="Assembly">Assembly</span><span class="d-sm-none">Asm.</span></a>' +
+            '  </div>' +
+            '</nav>' +
+            '' +
+            '<div class="tab-content p-1" id="nav-tabContent">' +
+            '  <div class="tab-pane fade show active" id="nav-simulation" role="tabpanel" aria-labelledby="nav-simulation-tab">' +
+            '' +
+            '    <div class="px-1 pt-1">' +
+            '    <ws-executionbar name="exebar1" class="btn-toolbar btn-block"' +
+            '                   components="btn_reset,btn_pm,btn_emins,btn_eins,btn_rnf"' +
+            '                   icons="up" role="toolbar"></ws-executionbar>' +
+            '    </div>' +
+            '' +
+            '    <div class="px-1 pt-1">' +
+            '    <div class="btn-toolbar btn-block" role="toolbar">' +
+            '    <ws-ddown-sel class="col btn-group p-0" ' +
+            '                components="mp,con,all,mc,io,cpu,mpcfg,iocfg,iol3d,ioldm,cm,cmcfg,sound"></ws-ddown-sel>' +
+            '    </div>' +
+            '    </div>' +
+            '' +
+            '    <ws-ddown-info components="mp,con,all,mc,io,cpu,mpcfg,iocfg,iol3d,ioldm,cm,cmcfg,sound"></ws-ddown-info>' +
+            '  </div>' +
+            '' +
+            '  <div class="tab-pane fade wsx_microcode" id="nav-microcode" role="tabpanel" ' +
+            '       aria-labelledby="nav-microcode-tab">' +
+            '       <ws-edit-mc layout="compilebar,editor"></ws-edit-mc>' +
+            '  </div>' +
+            '' +
+            '  <div class="tab-pane fade" id="nav-assembly" role="tabpanel" ' +
+            '       aria-labelledby="nav-assembly-tab">' +
+            '       <ws-edit-as layout="compilebar,editor"></ws-edit-as>' +
+            '  </div>' +
+            '' +
+            '  </div>' +
+            '</div>' ;
+
+        this.innerHTML = o1 ;
+    }
+
+    bindElements ()
+    {
+        this.addEventListener('click', (e) =>
         {
-	      constructor ()
-	      {
-		    // parent
-		    super();
-	      }
+            const el = e.target.closest('[data-bind="click"]') ;
+            if (!el) return ;
+            e.preventDefault() ;
 
-	      render ( event_name )
-	      {
-		    // html holder
-		    var o1 = '<!-- Nav tabs -->' +
-			     '<nav>' +
-			     '  <div class="nav nav-tabs nav-justified nav-tabs" id="nav-tab" role="tablist">' +
-			     '    <a class="nav-item nav-link active" id="nav-simulation-tab"' +
-			     '       style="border-top-width:2px; border-right-width:2px; border-left-width:2px;"' +
-			     '       data-bs-toggle="tab" href="#nav-simulation" role="tab"' +
-			     '       aria-controls="nav-home" aria-selected="true">' +
-			     '<span class="d-none d-sm-inline-flex" data-langkey="Simulation">Simulation</span><span class="d-sm-none">Sim.</span></a>' +
-			     '    <a class="nav-item nav-link wsx_microcode"    id="nav-microcode-tab" data-oldid="s5b_20"' +
-			     '       style="border-top-width:2px; border-right-width:2px; border-left-width:2px;"' +
-			     ' data-bind="click" data-action="refresh-microcode"' +
-			     '       data-bs-toggle="tab" href="#nav-microcode" role="tab"' +
-			     '       aria-controls="nav-profile" aria-selected="false">' +
-			     '<span class="d-none d-sm-inline-flex" data-langkey="MicroCode">MicroCode</span><span class="d-sm-none">&#181;code</span></a>' +
-			     '    <a class="nav-item nav-link"        id="nav-assembly-tab"  data-oldid="s5b_21"' +
-			     '       style="border-top-width:2px; border-right-width:2px; border-left-width:2px;"' +
-			     ' data-bind="click" data-action="refresh-assembly"' +
-			     '       data-bs-toggle="tab" href="#nav-assembly" role="tab"' +
-			     '       aria-controls="nav-contact" aria-selected="false">' +
-			     '<span class="d-none d-sm-inline-flex" data-langkey="Assembly">Assembly</span><span class="d-sm-none">Asm.</span></a>' +
-			     '  </div>' +
-			     '</nav>' +
-			     '' +
-			     '<div class="tab-content p-1" id="nav-tabContent">' +
-			     '  <div class="tab-pane fade show active" id="nav-simulation" role="tabpanel" aria-labelledby="nav-simulation-tab">' +
-			     '' +
-			     '    <div class="px-1 pt-1">' +
-			     '    <ws-executionbar name="exebar1" class="btn-toolbar btn-block"' +
-			     '		           components="btn_reset,btn_pm,btn_emins,btn_eins,btn_rnf"' +
-			     '		           icons="up" role="toolbar"></ws-executionbar>' +
-			     '    </div>' +
-			     '' +
-			     '    <div class="px-1 pt-1">' +
-			     '    <div class="btn-toolbar btn-block" role="toolbar">' +
-			     '    <ws-ddown-sel class="col btn-group p-0" ' +
-			     '    	        components="mp,con,all,mc,io,cpu,mpcfg,iocfg,iol3d,ioldm,cm,cmcfg,sound"></ws-ddown-sel>' +
-			     '    </div>' +
-			     '    </div>' +
-			     '' +
-			     '    <ws-ddown-info components="mp,con,all,mc,io,cpu,mpcfg,iocfg,iol3d,ioldm,cm,cmcfg,sound"></ws-ddown-info>' +
-			     '  </div>' +
-			     '' +
-			     '  <div class="tab-pane fade wsx_microcode" id="nav-microcode" role="tabpanel" ' +
-			     '       aria-labelledby="nav-microcode-tab">' +
-			     '       <ws-edit-mc layout="compilebar,editor"></ws-edit-mc>' +
-			     '  </div>' +
-			     '' +
-			     '  <div class="tab-pane fade" id="nav-assembly" role="tabpanel" ' +
-			     '       aria-labelledby="nav-assembly-tab">' +
-			     '       <ws-edit-as layout="compilebar,editor"></ws-edit-as>' +
-			     '  </div>' +
-			     '' +
-			     '  </div>' +
-			     '</div>' ;
-
-		    this.innerHTML = o1 ;
-	      }
-
-	      bindElements ()
-	      {
-		    this.addEventListener('click', (e) => {
-			const el = e.target.closest('[data-bind="click"]') ;
-			if (!el) return ;
-			e.preventDefault() ;
-
-			switch (el.dataset.action) {
-			    case 'refresh-microcode':
-				setTimeout(function(){ inputfirm.refresh(); }, 200) ;
-				break ;
-			    case 'refresh-assembly':
-				setTimeout(function(){ inputasm.refresh(); }, 200) ;
-				break ;
-			}
-		    }) ;
-	      }
-        }
-
+            switch (el.dataset.action)
+            {
+                case 'refresh-microcode':
+                    setTimeout(function()
+                    {
+                        inputfirm.refresh();
+                    }, 200) ;
+                    break ;
+                case 'refresh-assembly':
+                    setTimeout(function()
+                    {
+                        inputasm.refresh();
+                    }, 200) ;
+                    break ;
+            }
+        }) ;
+    }
+}
 

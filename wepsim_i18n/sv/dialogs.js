@@ -18,33 +18,31 @@
  *
  */
 
+export function i18n_sv_register_dialogs(i18n)
+{
 
-    export function i18n_sv_register_dialogs(i18n) {
+    i18n.eltos.dialogs.sv = {
 
+        'Show/Hide ActionBar':           'Visa / Dölj ActionBar',
+        'Show/Hide Slider':              'Visa / Dölj Slider',
+        'Initial intro':                 'Inledande intro',
+        'About WepSIM':                  'Om WepSIM',
+        'Title':                         'Titel',
+        'Message':                       'Meddelande',
+        'Duration':                      'Varaktighet',
+        'Confirm remove record...':      'Vill du ta bort den aktuella posten?',
+        'Close or Reset...':             'Vänligen klicka på Stäng för att hålla den, <br> eller klicka på Återställ-knappen för att ta bort den.',
+        'Sure Control Memory...':        'Vill du att jag ska spara det aktuella kontrollminneinnehållet istället för redaktörens innehåll?',
+        'Show/Hide labels':              'Visa / Dölj etiketter',
+        'Show/Hide content':             'Visa / Dölj innehåll',
+        'Show/Hide assembly':            'Visa / Dölj monteringen',
+        'Show/Hide pseudo-instructions': 'Visa / Dölj pseudo-instruktioner',
+        'Close':                         'Stänga',
+        'details':                       'detaljer',
+        'idiom':                         'idiom',
 
-
-        i18n.eltos.dialogs.sv = {
-
-		'Show/Hide ActionBar':			'Visa / Dölj ActionBar',
-		'Show/Hide Slider':			'Visa / Dölj Slider',
-		'Initial intro':			'Inledande intro',
-		'About WepSIM':				'Om WepSIM',
-		'Title':				'Titel',
-		'Message':				'Meddelande',
-		'Duration':				'Varaktighet',
-		'Confirm remove record...':		'Vill du ta bort den aktuella posten?',
-		'Close or Reset...':			'Vänligen klicka på Stäng för att hålla den, <br> eller klicka på Återställ-knappen för att ta bort den.',
-		'Sure Control Memory...':		'Vill du att jag ska spara det aktuella kontrollminneinnehållet istället för redaktörens innehåll?',
-		'Show/Hide labels':			'Visa / Dölj etiketter',
-		'Show/Hide content':			'Visa / Dölj innehåll',
-		'Show/Hide assembly':			'Visa / Dölj monteringen',
-		'Show/Hide pseudo-instructions':	'Visa / Dölj pseudo-instruktioner',
-		'Close':				'Stänga',
-		'details':				'detaljer',
-                'idiom': 				'idiom',
-
-		'_last_':				'_last_'
+        '_last_': '_last_',
 
     };
-    }
+}
 

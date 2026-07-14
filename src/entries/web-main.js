@@ -11,9 +11,12 @@ i18n_init();
 sim_hw_register_hw();
 wepsim_register_core();
 wepsim_web_register_components();
-try {
-  simcore_init(true);
-  upgrade_cfg();
-} catch (err) {
-  console.error('WepSIM init error:', err.message);
+try
+{
+    simcore_init(true);
+    upgrade_cfg();
+}
+catch (err)
+{
+    console.error('WepSIM init error:', err.message);
 }

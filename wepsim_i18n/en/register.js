@@ -12,7 +12,8 @@ import { i18n_en_register_tour_intro } from './tour-intro.js' ;
 import { i18n_en_register_tutorial_simpleusage } from './tutorial-simpleusage.js' ;
 import { i18n_en_register_tutorial_welcome } from './tutorial-welcome.js' ;
 
-export function i18n_en_register(i18n) {
+export function i18n_en_register(i18n)
+{
     i18n_en_register_cfg(i18n) ;
     i18n_en_register_compiler(i18n) ;
     i18n_en_register_dialogs(i18n) ;

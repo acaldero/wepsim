@@ -23,66 +23,71 @@ import { ws_alert } from '../sim_core/sim_core_ui.js';
 import { ws_info } from '../sim_core/sim_adt_core.js';
 
 //
-    // Preload work
-    //
+// Preload work
+//
 
-    export function wepsim_preload_fromHash ( hash )
+export function wepsim_preload_fromHash (hash)
+{
+    var key ;
+    var act ;
+
+    // preload tasks in order
+    var o = '' ;
+    for (var i = 0; i < ws_info.preload_tasks.length; i++)
     {
-        var key ;
-        var act ;
+        key = ws_info.preload_tasks[i].name ;
+        act = ws_info.preload_tasks[i].action ;
 
-        // preload tasks in order
-	var o = '' ;
-        for (var i=0; i<ws_info.preload_tasks.length; i++)
+        if (hash[key] !== '')
         {
-	    key = ws_info.preload_tasks[i].name ;
-	    act = ws_info.preload_tasks[i].action ;
-
-	    if (hash[key] !== '') {
-	        o = o + act(hash) ;
-            }
+            o = o + act(hash) ;
         }
-
-	// return ok
-	return o ;
     }
 
-    export function wepsim_preload_get2hash ( window_location, f_preload_fromHash )
+    // return ok
+    return o ;
+}
+
+export function wepsim_preload_get2hash (window_location, f_preload_fromHash)
+{
+    var hash = {} ;
+    var hash_field ;
+    var uri_obj = null ;
+
+    // 1.- check params
+    if (typeof window_location === 'undefined')
     {
-	    var hash       = {} ;
-        var hash_field ;
-	    var uri_obj    = null ;
-
-	    // 1.- check params
-	    if (typeof window_location === "undefined") {
-		return hash ;
-	    }
-
-	    // 2.- get parameters
-            var parameters = new URL(window_location).searchParams ;
-            for (let i=0; i<ws_info.preload_tasks.length; i++)
-            {
-                 hash_field = ws_info.preload_tasks[i].name ;
-                 hash[hash_field] = parameters.get(hash_field) ;
-
-	         // overwrite null with default values
-                 if (hash[hash_field] === null) {
-                     hash[hash_field] = '' ;
-                 }
-            }
-	
-	    // 3.- get parameters from json
-	    if (hash.preload !== '')
-	    {
-		try {
-	           uri_obj = new URL(hash.preload) ;
-	           wepsim_url_json(uri_obj.pathname, f_preload_fromHash) ;
-		}
-		catch (e) {
-		   ws_alert('unable to preload json from "' + uri_obj.pathname + '"') ;
-                }
-	    }
-
-	    return hash ;
+        return hash ;
     }
+
+    // 2.- get parameters
+    var parameters = new URL(window_location).searchParams ;
+    for (let i = 0; i < ws_info.preload_tasks.length; i++)
+    {
+        hash_field = ws_info.preload_tasks[i].name ;
+        hash[hash_field] = parameters.get(hash_field) ;
+
+        // overwrite null with default values
+        if (hash[hash_field] === null)
+        {
+            hash[hash_field] = '' ;
+        }
+    }
+
+    // 3.- get parameters from json
+    if (hash.preload !== '')
+    {
+        try
+        {
+            uri_obj = new URL(hash.preload) ;
+            wepsim_url_json(uri_obj.pathname, f_preload_fromHash) ;
+        }
+        catch (e)
+        {
+            ws_alert('unable to preload json from "' + uri_obj.pathname + '"') ;
+        }
+    }
+
+    return hash ;
+}
 

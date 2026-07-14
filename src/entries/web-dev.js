@@ -10,12 +10,15 @@ const bootstrapMod = await import('bootstrap');
 // Workaround: Rolldown/Vite 8 optimizer drops Bootstrap's internal
 // onDOMContentLoaded → getjQuery → $.fn registration chain.
 // Manually register jQuery plugins from the module exports.
-for (const name of Object.keys(bootstrapMod)) {
+for (const name of Object.keys(bootstrapMod))
+{
     const Plugin = bootstrapMod[name];
-    if (typeof Plugin === 'function' && Plugin.NAME && Plugin.jQueryInterface) {
+    if (typeof Plugin === 'function' && Plugin.NAME && Plugin.jQueryInterface)
+    {
         $.fn[Plugin.NAME] = Plugin.jQueryInterface;
         $.fn[Plugin.NAME].Constructor = Plugin;
-        $.fn[Plugin.NAME].noConflict = () => {
+        $.fn[Plugin.NAME].noConflict = () =>
+        {
             $.fn[Plugin.NAME] = Plugin.jQueryInterface;
             return Plugin.jQueryInterface;
         };
@@ -32,12 +35,13 @@ await import('dropify');
 await import('./web-main.js');
 
 // UI init
-$(document).ready(function () {
-    $("#ws_loader").hide();
+$(document).ready(function ()
+{
+    $('#ws_loader').hide();
 });
 
-import {wepsim_init_PWA, wepsim_init_firefoxOS} from '../../wepsim_web/wepsim_web_simulator.js'
-import {simcore_sound_init} from '../../sim_core/sim_core_sound.js'
+import { wepsim_init_PWA, wepsim_init_firefoxOS } from '../../wepsim_web/wepsim_web_simulator.js';
+import { simcore_sound_init } from '../../sim_core/sim_core_sound.js';
 
 if (typeof wepsim_init_PWA === 'function')
 {

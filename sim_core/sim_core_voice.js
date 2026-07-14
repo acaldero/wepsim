@@ -21,45 +21,47 @@
 import { get_cfg } from './sim_cfg.js';
 
 /*
-	 *  Voice (speak)
-	 */
+     *  Voice (speak)
+     */
 
-        export function simcore_voice_canSpeak ( )
-        {
-    	    if (typeof window.speechSynthesis == "undefined") {
-                return false ;
-            }
+export function simcore_voice_canSpeak ()
+{
+    if (typeof window.speechSynthesis == 'undefined')
+    {
+        return false ;
+    }
 
-            if (false === get_cfg('use_voice')) {
-                return false ;
-            }
+    if (false === get_cfg('use_voice'))
+    {
+        return false ;
+    }
 
-            return true ;
-        }
+    return true ;
+}
 
-        export function simcore_voice_speak ( msg )
-        {
-	    var ssu;
+export function simcore_voice_speak (msg)
+{
+    var ssu;
 
-    	    if (simcore_voice_canSpeak())
-	    {
-	         ssu = new SpeechSynthesisUtterance(msg) ;
+    if (simcore_voice_canSpeak())
+    {
+        ssu = new SpeechSynthesisUtterance(msg) ;
 
-	         ssu.lang = 'es-ES' ;
-                 if ('en' == get_cfg('ws_idiom'))
-		      ssu.lang = 'en-US' ;
-                 if ('es' == get_cfg('ws_idiom'))
-		      ssu.lang = 'es-EN' ;
+        ssu.lang = 'es-ES' ;
+        if ('en' == get_cfg('ws_idiom'))
+            ssu.lang = 'en-US' ;
+        if ('es' == get_cfg('ws_idiom'))
+            ssu.lang = 'es-EN' ;
 
-	         window.speechSynthesis.speak(ssu) ;
-	    }
-        }
+        window.speechSynthesis.speak(ssu) ;
+    }
+}
 
-        export function simcore_voice_stopSpeak ( )
-        {
-    	    if (simcore_voice_canSpeak())
-	    {
-	         window.speechSynthesis.cancel() ;
-	    }
-        }
+export function simcore_voice_stopSpeak ()
+{
+    if (simcore_voice_canSpeak())
+    {
+        window.speechSynthesis.cancel() ;
+    }
+}
 

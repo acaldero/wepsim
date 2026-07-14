@@ -29,248 +29,273 @@ import { sim_cfg_editor_theme, sim_cfg_editor_mode } from './wepsim_web_editor.j
 import { show_memories_values } from '../sim_core/sim_core_ui.js';
 import { i18n_handle_idiom_change } from '../wepsim_i18n/i18n.js';
 
-
-
-        /*
+/*
          *  Configuration options
          */
-        /* jshint esversion: 6 */
-        export class ws_config extends ws_uielto
+/* jshint esversion: 6 */
+export class ws_config extends ws_uielto
+{
+    // constructor
+    constructor ()
+    {
+        // parent
+        super();
+    }
+
+    // render
+    render (event_name)
+    {
+        // initialize render elements...
+        super.render() ;
+
+        // render current element
+        this.render_skel() ;
+        this.render_populate() ;
+    }
+
+    render_skel ()
+    {
+        var cfgdiv_id = 'config2-scroller' ; // -> this.name_str + '-scroller' ;
+
+        // default content
+        this.innerHTML = "<div class='ui-body-d ui-content p-0' id='" + cfgdiv_id + "' " +
+            "     style='min-height:50vh; max-height:70vh; " +
+            "            overflow-y:auto; overflow-x:auto; -webkit-overflow-scrolling:touch;'>" +
+            '</div>' ;
+    }
+
+    render_populate ()
+    {
+        var cfgdiv_id = 'config2-scroller' ; // -> this.name_str + '-scroller' ;
+
+        // render HTML elements
+        var o1 = table_config_html(ws_info.config_ui) ;
+        $('#' + cfgdiv_id).html(o1) ;
+
+        // initialize UI elements
+        var m ;
+        try
         {
-              // constructor
-	      constructor ()
-	      {
-		    // parent
-		    super();
-	      }
-
-              // render
-              render ( event_name )
-              {
-                    // initialize render elements...
-                    super.render() ;
-
-                    // render current element
-                    this.render_skel() ;
-                    this.render_populate() ;
-              }
-
-              render_skel ( )
-              {
-                    var cfgdiv_id = 'config2-scroller' ; // -> this.name_str + '-scroller' ;
-
-                    // default content
-                    this.innerHTML = "<div class='ui-body-d ui-content p-0' id='" + cfgdiv_id + "' " +
-                                     "     style='min-height:50vh; max-height:70vh; " +
-                                     "            overflow-y:auto; overflow-x:auto; -webkit-overflow-scrolling:touch;'>" +
-                                     "</div>" ;
-              }
-
-              render_populate ( )
-              {
-                    var cfgdiv_id = 'config2-scroller' ; // -> this.name_str + '-scroller' ;
-
-                    // render HTML elements
-                    var o1 = table_config_html(ws_info.config_ui) ;
-                    $('#' + cfgdiv_id).html(o1) ;
-
-		    // initialize UI elements
-                    var m ;
-		    try
-		    {
-		        for (m=0; m<ws_info.config_ui.length; m++) {
-		   	     ws_info.config_ui[m].code_init() ;
-		        }
-		    }
-		    catch (e) {
-		        reset_cfg() ;
-		        for (m=0; m<ws_info.config_ui.length; m++) {
-			     ws_info.config_ui[m].code_init() ;
-		        }
-		    }
-
-		    var popover_cfg = {
-		   	    placement:  'bottom',
-			    trigger:    'focus, hover',
-			    animation:  false,
-			    delay:      { "show": 500, "hide": 100 },
-			    sanitizeFn: function (content) {
-					     return content ; // DOMPurify.sanitize(content) ;
-				        }
-		        } ;
-                    wepsim_popovers_init('a[data-bs-toggle="popover1"]', popover_cfg, null) ;
-              }
-
-              bindElements ()
-              {
-                    this.addEventListener('click', (e) => {
-                        var el = e.target.closest('[data-bind="click"]');
-                        if (!el) return;
-                        e.preventDefault();
-                        console.log(el.dataset);
-                        switch (el.dataset.action) {
-                            case 'cfg-toggle2':
-                                wepsim_config_button_toggle2(el.dataset.key, el.dataset.value === 'true', el.dataset.extra);
-                                break;
-                            case 'cfg-toggle':
-                            case 'config_toggle_off':
-                            case 'config_toggle_on':
-                            case 'config_2opt_off':
-                            case 'config_2opt_on':
-                                if (el.dataset.key) {
-                                    var setId = el.id.split('-')[0].replace('label', '');
-                                    wepsim_config_button_toggle(el.dataset.key, el.dataset.value, setId);
-                                    if (el.dataset.key === 'DBG_skip_notifycolon') {
-                                        update_cfg('editor_mode', el.dataset.value);
-                                    } else if (el.dataset.key === 'RF_display_name') {
-                                        wepsim_show_rf_names();
-                                    } else if (el.dataset.key === 'history_enable') {
-                                        wepsim_toggle_history_ui();
-                                    } else if (el.dataset.key === 'ws_skin_dark_mode') {
-                                        wepsim_restore_darkmode();
-                                    } else if (el.dataset.key === 'RF_display_format') {
-                                        show_memories_values();
-                                    }
-                                }
-                                break;
-                            case 'wepsim_popover_hide':
-                                if (el.dataset.popoverId) {
-                                    wepsim_popover_hide(el.dataset.popoverId);
-                                } else {
-                                    $('[data-bs-toggle="popover"]').popover('hide');
-                                }
-                                break;
-                            case 'collapse_toggle_descr':
-                            case 'collapse_toggle_dd':
-                                $('.collapse7').toggleClass('show');
-                                break;
-                        }
-                    });
-
-                     this.addEventListener('change', (e) => {
-                         var el = e.target.closest('[data-bind="change"]');
-                         if (!el) return;
-
-                         switch (el.dataset.action) {
-                             case 'idiom-change':
-                                 i18n_handle_idiom_change(e);
-                                 break;
-                             case 'cfg-select':
-                                update_cfg(el.dataset.key, el.value);
-                                if (el.dataset.key === 'ws_skin_ui') {
-                                    window.removeEventListener('beforeunload', wepsim_confirm_exit);
-                                    window.location = 'wepsim-' + el.value + '.html';
-                                } else if (el.dataset.key === 'editor_theme') {
-                                    sim_cfg_editor_theme(inputfirm);
-                                    sim_cfg_editor_theme(inputasm);
-                                } else if (el.dataset.key === 'editor_mode') {
-                                    sim_cfg_editor_mode(inputfirm);
-                                    sim_cfg_editor_mode(inputasm);
-                                }
-                                break;
-                            case 'cfg-color':
-                                wepsim_config_color_update(el.dataset.key, el.value, '#' + el.dataset.id);
-                                break;
-                        }
-                    });
-              }
+            for (m = 0; m < ws_info.config_ui.length; m++)
+            {
+                ws_info.config_ui[m].code_init() ;
+            }
+        }
+        catch (e)
+        {
+            reset_cfg() ;
+            for (m = 0; m < ws_info.config_ui.length; m++)
+            {
+                ws_info.config_ui[m].code_init() ;
+            }
         }
 
+        var popover_cfg = {
+            placement:  'bottom',
+            trigger:    'focus, hover',
+            animation:  false,
+            delay:      { 'show': 500, 'hide': 100 },
+            sanitizeFn: function (content)
+            {
+                return content ; // DOMPurify.sanitize(content) ;
+            },
+        } ;
+        wepsim_popovers_init('a[data-bs-toggle="popover1"]', popover_cfg, null) ;
+    }
 
+    bindElements ()
+    {
+        this.addEventListener('click', (e) =>
+        {
+            var el = e.target.closest('[data-bind="click"]');
+            if (!el) return;
+            e.preventDefault();
+            console.log(el.dataset);
+            switch (el.dataset.action)
+            {
+                case 'cfg-toggle2':
+                    wepsim_config_button_toggle2(el.dataset.key, el.dataset.value === 'true', el.dataset.extra);
+                    break;
+                case 'cfg-toggle':
+                case 'config_toggle_off':
+                case 'config_toggle_on':
+                case 'config_2opt_off':
+                case 'config_2opt_on':
+                    if (el.dataset.key)
+                    {
+                        var setId = el.id.split('-')[0].replace('label', '');
+                        wepsim_config_button_toggle(el.dataset.key, el.dataset.value, setId);
+                        if (el.dataset.key === 'DBG_skip_notifycolon')
+                        {
+                            update_cfg('editor_mode', el.dataset.value);
+                        }
+                        else if (el.dataset.key === 'RF_display_name')
+                        {
+                            wepsim_show_rf_names();
+                        }
+                        else if (el.dataset.key === 'history_enable')
+                        {
+                            wepsim_toggle_history_ui();
+                        }
+                        else if (el.dataset.key === 'ws_skin_dark_mode')
+                        {
+                            wepsim_restore_darkmode();
+                        }
+                        else if (el.dataset.key === 'RF_display_format')
+                        {
+                            show_memories_values();
+                        }
+                    }
+                    break;
+                case 'wepsim_popover_hide':
+                    if (el.dataset.popoverId)
+                    {
+                        wepsim_popover_hide(el.dataset.popoverId);
+                    }
+                    else
+                    {
+                        $('[data-bs-toggle="popover"]').popover('hide');
+                    }
+                    break;
+                case 'collapse_toggle_descr':
+                case 'collapse_toggle_dd':
+                    $('.collapse7').toggleClass('show');
+                    break;
+            }
+        });
 
-        /*
+        this.addEventListener('change', (e) =>
+        {
+            var el = e.target.closest('[data-bind="change"]');
+            if (!el) return;
+
+            switch (el.dataset.action)
+            {
+                case 'idiom-change':
+                    i18n_handle_idiom_change(e);
+                    break;
+                case 'cfg-select':
+                    update_cfg(el.dataset.key, el.value);
+                    if (el.dataset.key === 'ws_skin_ui')
+                    {
+                        window.removeEventListener('beforeunload', wepsim_confirm_exit);
+                        window.location = 'wepsim-' + el.value + '.html';
+                    }
+                    else if (el.dataset.key === 'editor_theme')
+                    {
+                        sim_cfg_editor_theme(inputfirm);
+                        sim_cfg_editor_theme(inputasm);
+                    }
+                    else if (el.dataset.key === 'editor_mode')
+                    {
+                        sim_cfg_editor_mode(inputfirm);
+                        sim_cfg_editor_mode(inputasm);
+                    }
+                    break;
+                case 'cfg-color':
+                    wepsim_config_color_update(el.dataset.key, el.value, '#' + el.dataset.id);
+                    break;
+            }
+        });
+    }
+}
+
+/*
          *  Configuration to HTML
          */
 
-        export function table_config_html( config )
+export function table_config_html(config)
+{
+    var e_type ;
+    var e_u_class ;
+    var e_class_1 ;
+    var e_class_2 ;
+    var e_code_cfg ;
+    var e_description ;
+    var e_id = '' ;
+
+    // first pass: build data
+    var row ;
+    var config_groupby_type = {} ;
+    for (var n = 0; n < config.length; n++)
+    {
+        e_type = config[n].type ;
+        e_u_class = config[n].u_class ;
+        e_code_cfg = config[n].code_cfg ;
+        e_description = config[n].description ;
+        e_id = config[n].id ;
+
+        // related row
+        e_class_1 = '                ' + e_u_class + ' ' ;
+        e_class_2 = ' collapse7 show ' + e_u_class + ' ' ;
+
+        row = '<div class="w-100 p-0 m-0 border-top border-2 ' + e_class_2 + '">' +
+            '</div>' +
+            '<div class="col-md-auto py-2 ' + e_class_1 + '">' +
+            '    <span class="badge rounded-pill text-secondary">' + (n + 1) + '</span>' +
+            '</div>' +
+            '<div class="col-md-4    py-2 ' + e_class_1 + '">' +
+            e_code_cfg +
+            '</div>' +
+            '<div class="col-md      py-2 align-items-center ' + e_class_2 + '">' +
+            '<c>' + e_description + '</c>' +
+            '</div>' ;
+
+        // indexing row
+        if (typeof config_groupby_type[e_type] === 'undefined')
         {
-     	     var e_type        ;
-     	     var e_u_class     ;
-     	     var e_class_1     ;
-     	     var e_class_2     ;
-     	     var e_code_cfg    ;
-     	     var e_description ;
-     	     var e_id          = "" ;
+            config_groupby_type[e_type] = [] ;
+        }
 
+        config_groupby_type[e_type].push({ 'row':     row,
+            'u_class': e_u_class }) ;
+    }
 
-             // first pass: build data
-             var row ;
-             var config_groupby_type = {} ;
-             for (var n=0; n<config.length; n++)
-             {
-     		e_type        = config[n].type ;
-     		e_u_class     = config[n].u_class ;
-     		e_code_cfg    = config[n].code_cfg ;
-     		e_description = config[n].description ;
-     		e_id          = config[n].id ;
+    // second pass: build html
+    var o = '<div class="container grid-striped border border-tertiary"><div class="row">' ;
+    var u ;
+    var l ;
+    var l1 ;
+    var l2 ;
+    for (var m in config_groupby_type)
+    {
+        u = '' ;
+        l2 = {} ;
+        for (n = 0; n < config_groupby_type[m].length; n++)
+        {
+            u = u + config_groupby_type[m][n].row ;
 
-     		// related row
-     	        e_class_1 = "                " + e_u_class + " " ;
-     	        e_class_2 = " collapse7 show " + e_u_class + " " ;
-
-     		row = '<div class="w-100 p-0 m-0 border-top border-2 '   + e_class_2 + '">' +
-                      '</div>' +
-                      '<div class="col-md-auto py-2 ' + e_class_1 + '">' +
-     		      '    <span class="badge rounded-pill text-secondary">' + (n+1) + '</span>' +
-     		      '</div>' +
-     		      '<div class="col-md-4    py-2 ' + e_class_1 + '">' +
-                           e_code_cfg  +
-                      '</div>' +
-     		      '<div class="col-md      py-2 align-items-center ' + e_class_2 + '">' +
-                           '<c>' + e_description + '</c>' +
-                      '</div>' ;
-
-     		// indexing row
-     		if (typeof config_groupby_type[e_type] === "undefined") {
-     		    config_groupby_type[e_type] = [] ;
-     		}
-
-     		config_groupby_type[e_type].push({'row':     row,
-     			                          'u_class': e_u_class}) ;
-            }
-
-            // second pass: build html
-            var o  = '<div class="container grid-striped border border-tertiary"><div class="row">' ;
-            var u  ;
-            var l  ;
-            var l1 ;
-            var l2 ;
-            for (var m in config_groupby_type)
+            l1 = config_groupby_type[m][n].u_class.split(' ') ;
+            for (var li = 0; li < l1.length; li++)
             {
-     	        u  = '' ;
-     	        l2 = {} ;
-                for (n=0; n<config_groupby_type[m].length; n++)
+                if (typeof l2[l1[li]] === 'undefined')
                 {
-     		     u = u + config_groupby_type[m][n].row ;
-
-     	             l1 = config_groupby_type[m][n].u_class.split(' ') ;
-     		     for (var li=0; li<l1.length; li++)
-     	             {
-     			  if (typeof l2[l1[li]] === 'undefined') {
-     			      l2[l1[li]] = 0 ;
-     			  }
-     			  l2[l1[li]]++ ;
-     		     }
-
-                     if (n%2 == 0) {
-                         u = u + '<div class="w-100 p-0 m-0"></div>' ;
-                     }
+                    l2[l1[li]] = 0 ;
                 }
-
-     	        l = '' ;
-     	        for (var lj in l2)
-     	        {
-     		     if (l2[lj] === config_groupby_type[m].length) {
-     			 l += lj + ' ' ;
-     		     }
-     		}
-
-     		o = o + "<div class='float-none text-end text-capitalize fw-bold col-12 border-bottom border-secondary bg-body sticky-top " + l + "'>" +
-     			"<span data-langkey='" + m + "'>" + m + "</span>" +
-     			"</div>" + u ;
+                l2[l1[li]]++ ;
             }
-            o = o + '</div></div>' ;
 
-            return o ;
-         }
+            if (n % 2 == 0)
+            {
+                u = u + '<div class="w-100 p-0 m-0"></div>' ;
+            }
+        }
+
+        l = '' ;
+        for (var lj in l2)
+        {
+            if (l2[lj] === config_groupby_type[m].length)
+            {
+                l += lj + ' ' ;
+            }
+        }
+
+        o = o + "<div class='float-none text-end text-capitalize fw-bold col-12 border-bottom border-secondary bg-body sticky-top " + l + "'>" +
+            "<span data-langkey='" + m + "'>" + m + '</span>' +
+            '</div>' + u ;
+    }
+    o = o + '</div></div>' ;
+
+    return o ;
+}
 

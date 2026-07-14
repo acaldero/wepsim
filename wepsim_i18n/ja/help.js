@@ -18,41 +18,39 @@
  *
  */
 
+export function i18n_ja_register_help(i18n)
+{
 
-    export function i18n_ja_register_help(i18n) {
+    i18n.eltos.help.ja = {
 
-
-
-        i18n.eltos.help.ja = {
-
-		'Welcome tutorial':		'ようこそチュートリアル',
-		'help_01_01':		'ウェルカムチュートリアルを開く',
-		'Simple usage tutorial':		'簡単な使い方のチュートリアル',
-		'help_01_02':		'マイクロプログラミングとアセンブリプログラミングのための簡単な使い方のチュートリアルを開く',
-		'Execute example':		'Execute example',
-		'help_01_03':			'Play the execute example tutorial',
-		'Simulator: firmware':		'シミュレータ：ファームウェア',
-		'help_02_01':		'制御メモリにロードされるファームウェアを使用する方法',
-		'Microcode format':		'マイクロコードフォーマット',
-		'help_02_02':		'使用されているマイクロコードの構文',
-		'Simulator: assembly':		'シミュレータ：組み立て',
-		'help_02_03':		'上記のファームウェアを使用するアセンブリの使用方法',
-		'Assembly format':		'組立フォーマット',
-		'help_02_04':		'アセンブリ要素の構文',
-		'Simulator: execution':		'シミュレータ：実行',
-		'help_02_05':		'シミュレータがアセンブリとファームウェアを実行する方法',
-		'Simulated architecture':		'シミュレーションアーキテクチャ',
-		'help_03_01':		'シミュレートされたプロセッサアーキテクチャの説明',
-		'Simulated signals':		'シミュレーション信号',
-		'help_03_02':		'模擬要素プロセッサの主な信号の概要',
-		'Hardware summary':		'ハードウェア概要',
-		'help_03_03':		'シミュレートされた基本プロセッサーハードウェアの参照カード',
-		'License, platforms, etc.':		'ライセンス、プラットフォームなど',
-		'help_04_01':		'WepSIMライセンス、サポートされているプラ​​ットフォーム、使用されているテクノロジ',
-		'Authors':		'WepSIMチーム',
-		'help_04_02':		'WepSIMチーム',
-		'_last_':		'_last_'
+        'Welcome tutorial':         'ようこそチュートリアル',
+        'help_01_01':               'ウェルカムチュートリアルを開く',
+        'Simple usage tutorial':    '簡単な使い方のチュートリアル',
+        'help_01_02':               'マイクロプログラミングとアセンブリプログラミングのための簡単な使い方のチュートリアルを開く',
+        'Execute example':          'Execute example',
+        'help_01_03':               'Play the execute example tutorial',
+        'Simulator: firmware':      'シミュレータ：ファームウェア',
+        'help_02_01':               '制御メモリにロードされるファームウェアを使用する方法',
+        'Microcode format':         'マイクロコードフォーマット',
+        'help_02_02':               '使用されているマイクロコードの構文',
+        'Simulator: assembly':      'シミュレータ：組み立て',
+        'help_02_03':               '上記のファームウェアを使用するアセンブリの使用方法',
+        'Assembly format':          '組立フォーマット',
+        'help_02_04':               'アセンブリ要素の構文',
+        'Simulator: execution':     'シミュレータ：実行',
+        'help_02_05':               'シミュレータがアセンブリとファームウェアを実行する方法',
+        'Simulated architecture':   'シミュレーションアーキテクチャ',
+        'help_03_01':               'シミュレートされたプロセッサアーキテクチャの説明',
+        'Simulated signals':        'シミュレーション信号',
+        'help_03_02':               '模擬要素プロセッサの主な信号の概要',
+        'Hardware summary':         'ハードウェア概要',
+        'help_03_03':               'シミュレートされた基本プロセッサーハードウェアの参照カード',
+        'License, platforms, etc.': 'ライセンス、プラットフォームなど',
+        'help_04_01':               'WepSIMライセンス、サポートされているプラ​​ットフォーム、使用されているテクノロジ',
+        'Authors':                  'WepSIMチーム',
+        'help_04_02':               'WepSIMチーム',
+        '_last_':                   '_last_',
 
     };
-    }
+}
 

@@ -22,134 +22,141 @@ import { ws_uielto } from './wepsim_uielto.js';
 import { simhw_active, simhw_internalState } from '../sim_hw/sim_hw_index.js';
 import { vue_appyBinding, vue_observable_ifnotjetdone } from '../sim_core/sim_core_values.js';
 
-        /*
+/*
          *  I/O device (config)
          */
 
-        /* jshint esversion: 6 */
-        export class ws_io_config extends ws_uielto
+/* jshint esversion: 6 */
+export class ws_io_config extends ws_uielto
+{
+    constructor ()
+    {
+        // parent
+        super();
+    }
+
+    // render
+    render (event_name)
+    {
+        // initialize render elements...
+        super.render() ;
+
+        // render current element
+        this.render_skel() ;
+        this.render_populate() ;
+    }
+
+    render_skel ()
+    {
+        // default content
+        this.innerHTML = '<div id="' + 'config_IO_' + this.name_str + '" ' +
+            'style="height:58vh; width:inherit; overflow-y:auto;"></div>' ;
+    }
+
+    render_populate ()
+    {
+        var i ;
+        var o1 = '' ;
+        var div_hash = '#config_IO_' + this.name_str ;
+
+        // if no active hardware -> empty
+        if (simhw_active() === null)
         {
-	      constructor ()
-	      {
-		    // parent
-		    super();
-	      }
-
-              // render
-              render ( event_name )
-              {
-                    // initialize render elements...
-                    super.render() ;
-
-                    // render current element
-		    this.render_skel() ;
-		    this.render_populate() ;
-              }
-
-	      render_skel ( )
-	      {
-                    // default content
-                    this.innerHTML = '<div id="' + 'config_IO_' + this.name_str + '" ' +
-                                     'style="height:58vh; width:inherit; overflow-y:auto;"></div>' ;
-              }
-
-	      render_populate ( )
-	      {
-		    var  i ;
-                    var o1 = '' ;
-                    var div_hash = '#config_IO_' + this.name_str ;
-
-                    // if no active hardware -> empty
-                    if (simhw_active() === null) {
-                        $(div_hash).html(o1) ;
-			return ;
-                    }
-
-		    // default content
-		    var curr_iointfactory = simhw_internalState('io_int_factory') ;
-		    if (typeof curr_iointfactory == "undefined") {
-                        $(div_hash).html(o1) ;
-			return ;
-		    }
-
-		    // html holder
-		    o1 += "<div class='container-fluid'>" +
-			  "<div class='row'>" +
-		          "<div class='col-12 p-0'>" +
-			  "<div class='card bg-body-tertiary m-0'>" +
-			  "<div class='card-body p-0' id='iopanel'>" +
-		          "<center>" +
-			  "<table class='table table-hover table-sm table-bordered m-0'>" +
-			  "<thead class='thead-light'>" +
-			  "<tr>" +
-			  "<th style='width:33%' class='text-center'>" +
-			    "<span class='d-none d-sm-inline-flex text-wrap'>" +
-                            "<span data-langkey='Interrupt identificator'>Interrupt identificator</span>" +
-                            "</span>" +
-			    "<span class='d-sm-none text-wrap'>Int. Id.<br>(0 - 7)</span>" +
-			  "</th>" +
-			  "<th style='width:33%' class='text-center'>" +
-			    "<span class='d-none d-sm-inline-flex text-wrap'>" +
-                            "<span data-langkey='CLK period'>CLK period</span>" + " (0 - &infin;)" +
-                            "</span>" +
-			    "<span class='d-sm-none text-wrap'>CLK ticks <br>(0 - &infin;)</span>" +
-			  "</th>" +
-			  "<th style='width:33%' class='text-center'>" +
-			    "<span class='d-none d-sm-inline-flex text-wrap'>" +
-                            "<span data-langkey='Probability'>Probability</span>" + " (0 - 1)" +
-                            "</span>" +
-			    "<span class='d-sm-none text-wrap'>Probability <br>(0 - 1)</span>" +
-			  "</th>" +
-			  "</tr>" +
-			  "</thead>" +
-			  "<tbody>" ;
-		    for (i=0; i<curr_iointfactory.length; i++)
-		    {
-		    o1 += "<tr>" +
-			  "<td align='center' class='p-0' style='vertical-align: middle !important'>" +
-			  "<span class='p-0 m-0'>" + i + "</span>" +
-			  "</td>" +
-			  "<td align='center' class='p-0'>" +
-			  "<div id='int" + i + "_per' class='m-0'>" +
-			  "<input type='number' v-model.lazy='value' " +
-                          "       name='input_io_per_" + i + "' " +
-                          "       min='0' max='99999999' class='form-control p-0 m-0'>" +
-			  "</div>" +
-			  "</td>" +
-			  "<td align='center' class='p-0'>" +
-			  "<div id='int" + i + "_pro' class='m-0'>" +
-			  "<input type='number' v-model.lazy='value' " +
-                          "       name='input_io_pro_" + i + "' " +
-                          "       min='0' max='1' step='.05' class='form-control p-0 m-0'>" +
-			  "</div>" +
-			  "</td>" +
-			  "</tr>" ;
-		    }
-		    o1 += "</tbody>" +
-			  "</table>" +
-			  "</center>" +
-		          "</div>" +
-			  "</div>" +
-			  "</div>" ;
-
-                    $(div_hash).html(o1) ;
-
-		    // vue binding
-		    for (i=0; i<curr_iointfactory.length; i++)
-		    {
-                         // period
-			 curr_iointfactory[i].period = vue_observable_ifnotjetdone(curr_iointfactory[i].period) ;
-                         vue_appyBinding(curr_iointfactory[i].period,
-                                         '#int'+i+'_per',
-                                         function(value){ return value; }) ;
-	
-                         // probability
-			 curr_iointfactory[i].probability = vue_observable_ifnotjetdone(curr_iointfactory[i].probability) ;
-                         vue_appyBinding(curr_iointfactory[i].probability,
-                                         '#int'+i+'_pro',
-                                         function(value){ return value; }) ;
-		    }
-	      }
+            $(div_hash).html(o1) ;
+            return ;
         }
 
+        // default content
+        var curr_iointfactory = simhw_internalState('io_int_factory') ;
+        if (typeof curr_iointfactory == 'undefined')
+        {
+            $(div_hash).html(o1) ;
+            return ;
+        }
+
+        // html holder
+        o1 += "<div class='container-fluid'>" +
+            "<div class='row'>" +
+            "<div class='col-12 p-0'>" +
+            "<div class='card bg-body-tertiary m-0'>" +
+            "<div class='card-body p-0' id='iopanel'>" +
+            '<center>' +
+            "<table class='table table-hover table-sm table-bordered m-0'>" +
+            "<thead class='thead-light'>" +
+            '<tr>' +
+            "<th style='width:33%' class='text-center'>" +
+            "<span class='d-none d-sm-inline-flex text-wrap'>" +
+            "<span data-langkey='Interrupt identificator'>Interrupt identificator</span>" +
+            '</span>' +
+            "<span class='d-sm-none text-wrap'>Int. Id.<br>(0 - 7)</span>" +
+            '</th>' +
+            "<th style='width:33%' class='text-center'>" +
+            "<span class='d-none d-sm-inline-flex text-wrap'>" +
+            "<span data-langkey='CLK period'>CLK period</span>" + ' (0 - &infin;)' +
+            '</span>' +
+            "<span class='d-sm-none text-wrap'>CLK ticks <br>(0 - &infin;)</span>" +
+            '</th>' +
+            "<th style='width:33%' class='text-center'>" +
+            "<span class='d-none d-sm-inline-flex text-wrap'>" +
+            "<span data-langkey='Probability'>Probability</span>" + ' (0 - 1)' +
+            '</span>' +
+            "<span class='d-sm-none text-wrap'>Probability <br>(0 - 1)</span>" +
+            '</th>' +
+            '</tr>' +
+            '</thead>' +
+            '<tbody>' ;
+        for (i = 0; i < curr_iointfactory.length; i++)
+        {
+            o1 += '<tr>' +
+                "<td align='center' class='p-0' style='vertical-align: middle !important'>" +
+                "<span class='p-0 m-0'>" + i + '</span>' +
+                '</td>' +
+                "<td align='center' class='p-0'>" +
+                "<div id='int" + i + "_per' class='m-0'>" +
+                "<input type='number' v-model.lazy='value' " +
+                "       name='input_io_per_" + i + "' " +
+                "       min='0' max='99999999' class='form-control p-0 m-0'>" +
+                '</div>' +
+                '</td>' +
+                "<td align='center' class='p-0'>" +
+                "<div id='int" + i + "_pro' class='m-0'>" +
+                "<input type='number' v-model.lazy='value' " +
+                "       name='input_io_pro_" + i + "' " +
+                "       min='0' max='1' step='.05' class='form-control p-0 m-0'>" +
+                '</div>' +
+                '</td>' +
+                '</tr>' ;
+        }
+        o1 += '</tbody>' +
+            '</table>' +
+            '</center>' +
+            '</div>' +
+            '</div>' +
+            '</div>' ;
+
+        $(div_hash).html(o1) ;
+
+        // vue binding
+        for (i = 0; i < curr_iointfactory.length; i++)
+        {
+            // period
+            curr_iointfactory[i].period = vue_observable_ifnotjetdone(curr_iointfactory[i].period) ;
+            vue_appyBinding(curr_iointfactory[i].period,
+                            '#int' + i + '_per',
+                            function(value)
+                            {
+                                return value;
+                            }) ;
+
+            // probability
+            curr_iointfactory[i].probability = vue_observable_ifnotjetdone(curr_iointfactory[i].probability) ;
+            vue_appyBinding(curr_iointfactory[i].probability,
+                            '#int' + i + '_pro',
+                            function(value)
+                            {
+                                return value;
+                            }) ;
+        }
+    }
+}
 

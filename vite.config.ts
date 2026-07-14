@@ -4,109 +4,98 @@ import eslint from 'vite-plugin-eslint';
 import checker from 'vite-plugin-checker';
 import { DynamicPublicDirectory } from 'vite-multiple-assets';
 import { visualizer } from 'rollup-plugin-visualizer';
-import { copyFileSync, mkdirSync, writeFileSync } from 'fs';
-import { execSync } from 'child_process';
+import { copyFileSync, mkdirSync } from 'fs';
+import { mkdir, writeFile } from 'fs/promises';
+import { exec } from 'child_process';
 import path from 'path';
+import { promisify } from 'util';
 
 const rootDir = process.cwd();
 
-function wepsimPostBuildPlugin() {
+function wepsimPostBuildPlugin()
+{
     var active = false;
     return {
         name: 'wepsim-post-build',
-        async closeBundle() {
+        async closeBundle()
+        {
             if (active) return;
             active = true;
+            console.time('[post-build] Done');
 
             const LANGS = ['es', 'en', 'fr', 'kr', 'ja', 'it', 'pt', 'hi', 'zh_cn', 'ru', 'sv', 'de'];
 
             // 1. Build Node.js CLI
-            console.log('\n  [post-build] Building Node.js CLI...');
+            console.time('\n[post-build] Building Node.js CLI');
             await build({ configFile: path.resolve(rootDir, 'vite.config.node.ts'), logLevel: 'warn' });
 
             // 2. Copy i18n help HTML files
-            console.log('  [post-build] Copying help files...');
+            console.timeEnd('\n[post-build] Building Node.js CLI');
+            console.time('[post-build] Copying help files');
             mkdirSync('ws_dist/help', { recursive: true });
-            for (const l of LANGS) {
+            for (const l of LANGS)
+            {
                 copyFileSync('wepsim_i18n/' + l + '/simulator.html', 'ws_dist/help/simulator-' + l + '.html');
                 copyFileSync('wepsim_i18n/' + l + '/about.html', 'ws_dist/help/about-' + l + '.html');
             }
 
             // 3. Merge example sets (jq)
-            console.log('  [post-build] Merging example sets...');
-            var jq = function (inputs: string[], output: string) {
-                execSync(
-                    "jq 'reduce inputs as $i (.; . += $i)' " + inputs.join(' ') + ' > ' + output,
-                    { shell: 'true', stdio: 'inherit' }
-                );
+            console.timeEnd('[post-build] Copying help files');
+            const execAsync = promisify(exec);
+            console.time('[post-build] Merging example sets');
+            var jq = async function (inputs: string[], output: string)
+            {
+                inputs = inputs.map((value) => ('repo/examples_set/' + value));
+                output = 'ws_dist/repo/examples_set/' + output;
+                await execAsync("node-jq 'reduce inputs as $i (.; . += $i)' " + inputs.join(' ') + ' > ' + output);
             };
-            var JR = function (path: string): string { return 'repo/examples_set/' + path; };
-            var WD = function (path: string): string { return 'ws_dist/repo/examples_set/' + path; };
 
-            jq([JR('mips/es_ep.json'),
-            JR('mips/es_ep_native.json'),
-            JR('mips/es_ep2.json'),
-            JR('mips/es_ep2_native.json'),
-            JR('mips/es_poc.json'),
-            JR('mips/es_poc_native.json'),],
-                WD('mips/default.json'));
+            const jq_tasks = [
+                jq(['mips/es_ep.json', 'mips/es_ep_native.json', 'mips/es_ep2.json', 'mips/es_ep2_native.json', 'mips/es_poc.json', 'mips/es_poc_native.json'],
+                   'mips/default.json'),
+                jq(['mips/es_ep_instructive.json', 'mips/es_poc_instructive.json', 'mips/es_ep2_instructive.json'],
+                   'mips/default_instructive.json'),
+                jq(['rv32/es_ep.json', 'rv32/es_ep_native.json', 'rv32/es_ep2.json', 'rv32/es_ep2_native.json', 'rv32/es_poc.json', 'rv32/es_poc_native.json', 'rv32/es_rv.json'],
+                   'rv32/default.json'),
+                jq(['rv32/es_ep_instructive.json', 'rv32/es_poc_instructive.json', 'rv32/es_ep2_instructive.json'],
+                   'rv32/default_instructive.json'),
+                jq(['arm/es_ep.json', 'arm/es_ep2.json'],
+                   'arm/default.json'),
+                jq(['z80/es_ep.json', 'z80/es_ep2.json'],
+                   'z80/default.json'),
+                jq(['mips_ocw/es_ep.json', 'mips_ocw/es_ep2.json'],
+                   'mips_ocw/default.json'),
+                jq(['rv32_ag/es_ep.json', 'rv32_ag/es_poc.json', 'rv32_ag/es_ep2.json'],
+                   'rv32_ag/default.json'),
+            ];
 
-            jq([JR('mips/es_ep_instructive.json'),
-            JR('mips/es_poc_instructive.json'),
-            JR('mips/es_ep2_instructive.json')],
-                WD('mips/default_instructive.json'));
-
-            jq([JR('rv32/es_ep.json'),
-            JR('rv32/es_ep_native.json'),
-            JR('rv32/es_ep2.json'),
-            JR('rv32/es_ep2_native.json'),
-            JR('rv32/es_poc.json'),
-            JR('rv32/es_poc_native.json'),
-            JR('rv32/es_rv.json')],
-                WD('rv32/default.json'));
-
-            jq([JR('rv32/es_ep_instructive.json'),
-            JR('rv32/es_poc_instructive.json'),
-            JR('rv32/es_ep2_instructive.json')],
-                WD('rv32/default_instructive.json'));
-
-            jq([JR('arm/es_ep.json'),
-            JR('arm/es_ep2.json')],
-                WD('arm/default.json'));
-
-            jq([JR('z80/es_ep.json'),
-            JR('z80/es_ep2.json')],
-                WD('z80/default.json'));
-
-            jq([JR('mips_ocw/es_ep.json'),
-            JR('mips_ocw/es_ep2.json')],
-                WD('mips_ocw/default.json'));
-
-            jq([JR('rv32_ag/es_ep.json'),
-            JR('rv32_ag/es_poc.json'),
-            JR('rv32_ag/es_ep2.json')],
-                WD('rv32_ag/default.json'));
+            await Promise.all(jq_tasks);
 
             // 4. Export hardware definitions
-            console.log('  [post-build] Exporting hardware definitions...');
-            for (var mode of ['ep', 'ep2', 'poc', 'rv', 'rvpipe']) {
-                mkdirSync('ws_dist/repo/hardware/' + mode, { recursive: true });
-                var out = execSync(
-                    'node ws_dist/wepsim.mjs -a export-hardware -m ' + mode,
-                    { encoding: 'utf-8', shell: 'true' }
-                );
-                writeFileSync('ws_dist/repo/hardware/' + mode + '/hw_def.json', out);
-            }
+            console.timeEnd('[post-build] Merging example sets');
+            console.time('[post-build] Exporting hardware definitions');
+            const modes = ['ep', 'ep2', 'poc', 'rv', 'rvpipe'];
 
-            console.log('  [post-build] Done.\n');
-        }
+            const hw_tasks = modes.map(async (mode) =>
+            {
+                const dirPath = `ws_dist/repo/hardware/${mode}`;
+                await mkdir(dirPath, { recursive: true });
+                const { stdout } = await execAsync('node ws_dist/wepsim.mjs -a export-hardware -m ' + mode);
+                await writeFile(`${dirPath}/hw_def.json`, stdout);
+                // console.log(mode, stdout.length);
+            });
+            await Promise.all(hw_tasks);
+
+            console.timeEnd('[post-build] Exporting hardware definitions');
+            console.timeEnd('[post-build] Done');
+        },
     };
 }
 
 export default defineConfig({
     resolve: {
         alias: {
-            'vue': 'vue/dist/vue.esm.js',
+            'vue':         'vue/dist/vue.esm.js',
             'jquery-knob': path.resolve(__dirname, 'node_modules/jquery-knob/js/jquery.knob.js'),
         },
     },
@@ -115,35 +104,38 @@ export default defineConfig({
             typescript: true,
         }),
         eslint({
-            include: ['src/**/*.js', 'src/**/*.vue', 'sim_core/**/*.js', 'sim_hw/**/*.js', 'sim_sw/**/*.js', 'wepsim_core/**/*.js', 'wepsim_web/**/*.js', 'wepsim_i18n/**/*.js'],
-            exclude: ['node_modules/**', 'ws_dist/**', 'external/**', 'sim_hw/ts_out/**'],
+            include:     ['src/**/*.js', 'src/**/*.vue', 'sim_core/**/*.js', 'sim_hw/**/*.js', 'sim_hw/**/*.ts', 'sim_sw/**/*.js', 'wepsim_core/**/*.js', 'wepsim_web/**/*.js', 'wepsim_i18n/**/*.js'],
+            exclude:     ['node_modules/**', 'ws_dist/**', 'external/**', 'repo/**', 'devel/**'],
             emitWarning: true,
-            emitError: true,
+            emitError:   true,
+            fix:         true,
         }),
         DynamicPublicDirectory([
             {
-                input: "repo/**",
-                output: "repo",
+                input:  'repo/**',
+                output: 'repo',
             },
             {
-                input: "images/**",
-                output: "images",
+                input:  'images/**',
+                output: 'images',
             },
             {
-                input: "docs/**",
-                output: "docs",
+                input:  'docs/**',
+                output: 'docs',
             },
         ]),
         wepsimPostBuildPlugin(),
+        // Visualizer of chunks
         // visualizer({ open: true, filename: 'dist/stats.html' }),
     ],
     build: {
-        outDir: 'ws_dist',
-        emptyOutDir: true,
-        minify: true,
-        cssCodeSplit: false,
+        outDir:          'ws_dist',
+        emptyOutDir:     true,
+        minify:          true,
+        cssCodeSplit:    false,
         rolldownOptions: {
-            onwarn(warning, warn) {
+            onwarn(warning, warn)
+            {
                 if (warning.code === 'EVAL') return;
                 warn(warning);
             },
@@ -157,11 +149,13 @@ export default defineConfig({
                 entryFileNames: '[name].js',
                 chunkFileNames: 'chunks/[name].js',
                 assetFileNames: '[name][extname]',
-                codeSplitting: {
+                codeSplitting:  {
                     includeDependenciesRecursively: false,
-                    groups: [{
-                        name(id) {
-                            if (id.includes('node_modules')) {
+                    groups:                         [{
+                        name(id)
+                        {
+                            if (id.includes('node_modules'))
+                            {
                                 if (id.includes('/tone/')) return 'vendor-tone';
                                 if (id.includes('/codemirror/')) return 'vendor-codemirror';
                                 if (id.includes('/jquery') ||
@@ -171,14 +165,16 @@ export default defineConfig({
                                 if (id.includes('/vue/') || id.includes('/vuex/')) return 'vendor-vue';
                                 return 'vendor';
                             }
-                            if (id.includes('wepsim_i18n')) {
+                            if (id.includes('wepsim_i18n'))
+                            {
                                 const parts = path.dirname(id).split(path.sep);
                                 const idx = parts.lastIndexOf('wepsim_i18n');
                                 if (idx >= 0 && idx + 1 < parts.length) return 'wepsim_i18n-' + parts[idx + 1];
                                 return 'wepsim_i18n';
                             }
                             const dirs = ['wepsim_core', 'wepsim_web', 'sim_core', 'sim_hw', 'sim_sw'];
-                            for (const dir of dirs) {
+                            for (const dir of dirs)
+                            {
                                 if (id.includes(dir)) return dir;
                             }
                             return null;

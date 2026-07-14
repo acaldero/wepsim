@@ -18,42 +18,40 @@
  *
  */
 
+export function i18n_hi_register_states(i18n)
+{
 
-    export function i18n_hi_register_states(i18n) {
+    i18n.eltos.states.hi = {
 
+        'States':                                 'राज्य अमेरिका',
+        'state':                                  'राज्य ',
+        'Current':                                'वर्तमान',
+        'Current State':                          'वर्तमान स्थिति',
+        'History':                                'इतिहास',
+        'None':                                   'कोई नहीं',
+        'Empty history':                          'खाली इतिहास',
+        'Empty (only modified values are shown)': 'खाली (केवल संशोधित मान दिखाए गए हैं)',
+        'Differences':                            'मतभेद',
+        'differences with clipboard state':       'क्लिपबोर्ड स्थिति के साथ अंतर',
+        'Meets the specified requirements':       'निर्दिष्ट आवश्यकताओं को पूरा करता है',
+        'history':                                'इतिहास',
+        'Add':                                    'जोड़ना',
+        '\'Current State\' to History':           'इतिहास को \'वर्तमान स्थिति\'',
+        'Check':                                  'चेक',
+        'Copy':                                   'प्रतिलिपि',
+        'to clipboard':                           'क्लिपबोर्ड पर',
+        'Checkpoint':                             'जांच की चौकी',
+        'File name':                              'फ़ाइल का नाम',
+        'Tag for checkpoint':                     'चौकी के लिए टैग',
+        'File to be loaded':                      'फ़ाइल लोड की जानी है',
+        'Save to File':                           'फाइल में बचाएं',
+        'State(s) to checkpoint':                 'चौकी के लिए राज्य (एस)',
+        'Record to checkpoint':                   'चौकी पर रिकॉर्ड',
+        'Browser cache':                          'ब्राउज़र कैश',
+        'Session to be restore':                  'सत्र बहाल होने के लिए',
 
-
-        i18n.eltos.states.hi = {
-
-		'States':		'राज्य अमेरिका',
-		'state':				'राज्य ',
-		'Current':		'वर्तमान',
-		'Current State':		'वर्तमान स्थिति',
-		'History':		'इतिहास',
-		'None':		'कोई नहीं',
-		'Empty history':		'खाली इतिहास',
-		'Empty (only modified values are shown)':		'खाली (केवल संशोधित मान दिखाए गए हैं)',
-		'Differences':		'मतभेद',
-		'differences with clipboard state':		'क्लिपबोर्ड स्थिति के साथ अंतर',
-		'Meets the specified requirements':		'निर्दिष्ट आवश्यकताओं को पूरा करता है',
-		'history':		'इतिहास',
-		'Add':		'जोड़ना',
-		'\'Current State\' to History':		'इतिहास को \'वर्तमान स्थिति\'',
-		'Check':		'चेक',
-		'Copy':		'प्रतिलिपि',
-		'to clipboard':		'क्लिपबोर्ड पर',
-		'Checkpoint':		'जांच की चौकी',
-		'File name':		'फ़ाइल का नाम',
-		'Tag for checkpoint':		'चौकी के लिए टैग',
-		'File to be loaded':		'फ़ाइल लोड की जानी है',
-		'Save to File':		'फाइल में बचाएं',
-		'State(s) to checkpoint':		'चौकी के लिए राज्य (एस)',
-		'Record to checkpoint':		'चौकी पर रिकॉर्ड',
-		'Browser cache':		'ब्राउज़र कैश',
-		'Session to be restore':	'सत्र बहाल होने के लिए',
-
-		'_last_':			'_last_'
+        '_last_': '_last_',
 
     };
-    }
+}
 

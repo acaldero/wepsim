@@ -38,118 +38,117 @@ export function wepsim_register_voice_commands()
     // dialog
     ws_info.voice_commands['hello'] = function()
     {
-	 // speak...
-         var msg = "Hello, I am WepSIM, nice to meet you. " ;
-	 simcore_voice_speak(msg) ;
+        // speak...
+        var msg = 'Hello, I am WepSIM, nice to meet you. ' ;
+        simcore_voice_speak(msg) ;
     } ;
 
     ws_info.voice_commands['(show) configuration'] = function()
     {
-	 wsweb_dialog_open('config') ;
+        wsweb_dialog_open('config') ;
     } ;
 
     ws_info.voice_commands['(show) examples'] = function()
     {
-	 wsweb_dialog_open('examples') ;
+        wsweb_dialog_open('examples') ;
     } ;
 
-    ws_info.voice_commands['load example :mc_name (from) :asm_name'] = function ( mc_name, asm_name )
+    ws_info.voice_commands['load example :mc_name (from) :asm_name'] = function (mc_name, asm_name)
     {
-         load_from_example_firmware("ep:" + mc_name + ":" + asm_name, true) ;
+        load_from_example_firmware('ep:' + mc_name + ':' + asm_name, true) ;
     } ;
 
     ws_info.voice_commands['(show) help'] = function()
     {
-	 wsweb_dialog_open('help') ;
+        wsweb_dialog_open('help') ;
     } ;
 
     ws_info.voice_commands['close'] = function()
     {
-         wsweb_dialog_close('help') ;
-         wsweb_dialog_close('config') ;
-         wsweb_dialog_close('examples') ;
+        wsweb_dialog_close('help') ;
+        wsweb_dialog_close('config') ;
+        wsweb_dialog_close('examples') ;
 
-	 if (null !== wepsim_voice_dialog) {
-	     wepsim_voice_dialog.modal('hide');
-	 }
+        if (null !== wepsim_voice_dialog)
+        {
+            wepsim_voice_dialog.modal('hide');
+        }
     } ;
-
 
     // execution
     ws_info.voice_commands['reset'] = function()
     {
-         wepsim_execute_reset(true, true) ;
+        wepsim_execute_reset(true, true) ;
 
-	 // speak...
-         var msg = "Current processor has been reset." ;
-	 simcore_voice_speak(msg) ;
+        // speak...
+        var msg = 'Current processor has been reset.' ;
+        simcore_voice_speak(msg) ;
     } ;
 
     ws_info.voice_commands['next'] = function()
     {
-         wepsim_execute_instruction() ;
+        wepsim_execute_instruction() ;
 
-	 // speak...
-         var msg = "Next executed." ;
-	 simcore_voice_speak(msg) ;
+        // speak...
+        var msg = 'Next executed.' ;
+        simcore_voice_speak(msg) ;
     } ;
 
     ws_info.voice_commands['next micro(instruction)'] = function()
     {
-         wepsim_execute_microinstruction() ;
+        wepsim_execute_microinstruction() ;
 
-	 // speak...
-         var msg = "Next microinstruction executed. " ;
-	 simcore_voice_speak(msg) ;
+        // speak...
+        var msg = 'Next microinstruction executed. ' ;
+        simcore_voice_speak(msg) ;
     } ;
 
     ws_info.voice_commands['play'] = function()
     {
-         wepsim_execute_play() ;
+        wepsim_execute_play() ;
     } ;
 
     ws_info.voice_commands['stop'] = function()
     {
-         wepsim_execute_stop() ;
+        wepsim_execute_stop() ;
     } ;
-
 
     // info
     ws_info.voice_commands['describe micro(instruction)'] = function()
     {
-	 // speak...
-         var msg = get_verbal_from_current_mpc() ;
-	 simcore_voice_speak(msg) ;
+        // speak...
+        var msg = get_verbal_from_current_mpc() ;
+        simcore_voice_speak(msg) ;
     } ;
 
     ws_info.voice_commands['describe instruction'] = function()
     {
-	 // speak...
-         var msg = get_verbal_from_current_pc() ;
-	 simcore_voice_speak(msg) ;
+        // speak...
+        var msg = get_verbal_from_current_pc() ;
+        simcore_voice_speak(msg) ;
     } ;
 
-
     // control
-    ws_info.voice_commands['list'] =  function()
+    ws_info.voice_commands['list'] = function()
     {
-	 var vc_list = "available commands:<br>" ;
+        var vc_list = 'available commands:<br>' ;
 
-	 for (var vc in ws_info.voice_commands) {
-	      vc_list = vc_list + " * '" + vc + "'<br>" ;
-	 }
+        for (var vc in ws_info.voice_commands)
+        {
+            vc_list = vc_list + " * '" + vc + "'<br>" ;
+        }
 
-	 wepsim_voice_dialog = bootbox.alert(vc_list) ;
-	 wepsim_voice_dialog.modal('show') ;
+        wepsim_voice_dialog = bootbox.alert(vc_list) ;
+        wepsim_voice_dialog.modal('show') ;
 
-	 // speak...
-         var msg = $("</p>").html(vc_list).text() ;
-	 simcore_voice_speak(msg) ;
+        // speak...
+        var msg = $('</p>').html(vc_list).text() ;
+        simcore_voice_speak(msg) ;
     } ;
 
     ws_info.voice_commands['silence'] = function()
     {
-	 simcore_voice_stopSpeak() ;
+        simcore_voice_stopSpeak() ;
     } ;
 }
 

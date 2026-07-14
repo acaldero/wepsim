@@ -18,7 +18,6 @@
  *
  */
 
-
 import CodeMirror from 'codemirror';
 import 'codemirror/addon/fold/foldcode';
 import 'codemirror/addon/fold/foldgutter';
@@ -54,304 +53,321 @@ import { asmdbg_update_assembly } from './wepsim_uielto_dbg_asm.js';
 import { inputasm, inputfirm, sim_change_workspace } from './wepsim_web_simulator.js';
 import { wsasm_src2mem } from '../sim_sw/assembly.js';
 
+//
+// WepSIM API
+//
 
-    //
-    // WepSIM API
-    //
-
-    /*
+/*
      *  Editor
      */
 
-    export function sim_cfg_editor_theme( editor )
+export function sim_cfg_editor_theme(editor)
+{
+    var theme = get_cfg('editor_theme') ;
+
+    editor.getWrapperElement().style['text-shadow'] = '0.0em 0.0em';
+    editor.getWrapperElement().style['font-weight'] = 'bold';
+
+    if (theme === 'blackboard')
     {
-	    var theme = get_cfg('editor_theme') ;
-
-	    editor.getWrapperElement().style['text-shadow'] = '0.0em 0.0em';
-	    editor.getWrapperElement().style['font-weight'] = 'bold';
-
-	    if (theme === 'blackboard') {
-		editor.getWrapperElement().style['font-weight'] = 'normal';
-	    }
-
-	    editor.setOption('theme', theme);
+        editor.getWrapperElement().style['font-weight'] = 'normal';
     }
 
-    export function sim_cfg_editor_mode( editor )
-    {
-	    var edt_mode = get_cfg('editor_mode');
+    editor.setOption('theme', theme);
+}
 
-	    if (edt_mode === 'vim') {
-		editor.setOption('keyMap','vim');
-            }
-	    if (edt_mode === 'emacs') {
-		editor.setOption('keyMap','emacs');
-            }
-	    if (edt_mode === 'sublime') {
-		editor.setOption('keyMap','sublime');
-            }
+export function sim_cfg_editor_mode(editor)
+{
+    var edt_mode = get_cfg('editor_mode');
+
+    if (edt_mode === 'vim')
+    {
+        editor.setOption('keyMap', 'vim');
     }
-
-    export function sim_cm_get_firmcfg( )
+    if (edt_mode === 'emacs')
     {
-	    return {
-			value: "\n\n\n\n\n\n\n\n\n\n\n\n",
-			lineNumbers: true,
-			lineWrapping: true,
-			matchBrackets: true,
-			tabSize: 2,
-			foldGutter: {
-			   rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.brace, CodeMirror.fold.comment)
-			},
-			gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-			mode: "text/javascript"
-		   } ;
+        editor.setOption('keyMap', 'emacs');
     }
-
-    export function sim_cm_get_asmcfg( )
+    if (edt_mode === 'sublime')
     {
-	    return {
-			value: "\n\n\n\n\n\n\n\n\n\n\n\n",
-			lineNumbers: true,
-			lineWrapping: true,
-			matchBrackets: true,
-			tabSize: 2,
-			extraKeys: {
-			  "Ctrl-Space": function(cm) {
-			      CodeMirror.showHint(cm, function(cm, options) {
-				      var simware = get_simware();
-				      var cur = cm.getCursor();
-				      var result = [];
-				      for (var i=0; i<simware.firmware.length; i++) {
-					   if (simware.firmware[i].name != "begin") {
-						result.push(simware.firmware[i].signatureUser) ;
-					   }
-				      }
-				      return { list: result, from: cur, to: cur } ;
-			      });
-			  },
-			  "Ctrl-/": function(cm) {
-			      cm.execCommand('toggleComment');
-			  }
-			},
-			mode: "gas"
-		   } ;
+        editor.setOption('keyMap', 'sublime');
     }
+}
 
-    export function sim_init_editor( editor_id, editor_cfg )
-    {
+export function sim_cm_get_firmcfg()
+{
+    return {
+        value:         '\n\n\n\n\n\n\n\n\n\n\n\n',
+        lineNumbers:   true,
+        lineWrapping:  true,
+        matchBrackets: true,
+        tabSize:       2,
+        foldGutter:    {
+            rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.brace, CodeMirror.fold.comment),
+        },
+        gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+        mode:    'text/javascript',
+    } ;
+}
+
+export function sim_cm_get_asmcfg()
+{
+    return {
+        value:         '\n\n\n\n\n\n\n\n\n\n\n\n',
+        lineNumbers:   true,
+        lineWrapping:  true,
+        matchBrackets: true,
+        tabSize:       2,
+        extraKeys:     {
+            'Ctrl-Space': function(cm)
+            {
+                CodeMirror.showHint(cm, function(cm, options)
+                {
+                    var simware = get_simware();
+                    var cur = cm.getCursor();
+                    var result = [];
+                    for (var i = 0; i < simware.firmware.length; i++)
+                    {
+                        if (simware.firmware[i].name != 'begin')
+                        {
+                            result.push(simware.firmware[i].signatureUser) ;
+                        }
+                    }
+                    return { list: result, from: cur, to: cur } ;
+                });
+            },
+            'Ctrl-/': function(cm)
+            {
+                cm.execCommand('toggleComment');
+            },
+        },
+        mode: 'gas',
+    } ;
+}
+
+export function sim_init_editor(editor_id, editor_cfg)
+{
 /*
             var view = new EditorView({
-			      doc: "\n\n\n\n\n\n\n\n\n\n",
-			      extensions: [
-				 basicSetup,
-				 history(),
-				 keymap.of([...defaultKeymap, ...historyKeymap]),
-				 javascript(),
-				 syntaxHighlighting(defaultHighlightStyle),
-			      ],
-			      parent: document.getElementById(editor_id)
-			   }) ;
+                  doc: "\n\n\n\n\n\n\n\n\n\n",
+                  extensions: [
+                 basicSetup,
+                 history(),
+                 keymap.of([...defaultKeymap, ...historyKeymap]),
+                 javascript(),
+                 syntaxHighlighting(defaultHighlightStyle),
+                  ],
+                  parent: document.getElementById(editor_id)
+               }) ;
 
             return view ;
 */
 
-	    var editor_obj = CodeMirror.fromTextArea(document.getElementById(editor_id), editor_cfg) ;
+    var editor_obj = CodeMirror.fromTextArea(document.getElementById(editor_id), editor_cfg) ;
 
-            // default values
-            editor_obj.setValue("\n\n\n\n\n\n\n\n\n\n") ;
+    // default values
+    editor_obj.setValue('\n\n\n\n\n\n\n\n\n\n') ;
 
-            sim_cfg_editor_theme(editor_obj) ;
-            sim_cfg_editor_mode(editor_obj) ;
+    sim_cfg_editor_theme(editor_obj) ;
+    sim_cfg_editor_mode(editor_obj) ;
 
-            editor_obj.setSize("auto", "75vh");
-            editor_obj.refresh();
+    editor_obj.setSize('auto', '75vh');
+    editor_obj.refresh();
 
-            // event onChange -> update is_* attributes
-	    editor_obj.is_modified  = true ;
-	    editor_obj.is_compiled  = false ;
-	    editor_obj.is_refreshed = false ;
+    // event onChange -> update is_* attributes
+    editor_obj.is_modified = true ;
+    editor_obj.is_compiled = false ;
+    editor_obj.is_refreshed = false ;
 
-            editor_obj.on("change",
-                          function (cmi, change) {
-                             cmi.is_modified  = true ;
-                             cmi.is_compiled  = false ;
-                             cmi.is_refreshed = false ;
-                          }) ;
+    editor_obj.on('change',
+                  function (cmi, change)
+                  {
+                      cmi.is_modified = true ;
+                      cmi.is_compiled = false ;
+                      cmi.is_refreshed = false ;
+                  }) ;
 
-            // return object
-	    return editor_obj ;
-    }
+    // return object
+    return editor_obj ;
+}
 
-
-    /*
+/*
      *  Dialogs
      */
 
-    // Error dialog
+// Error dialog
 
-    export function goError( editor, pos )
+export function goError(editor, pos)
+{
+    editor.setCursor({ line: pos - 1, ch: 0 }) ;
+    var marked = editor.addLineClass(pos - 1, 'background', 'CodeMirror-selected') ;
+    setTimeout(function()
     {
-         editor.setCursor({ line: pos-1, ch: 0 }) ;
-         var marked = editor.addLineClass(pos-1, 'background', 'CodeMirror-selected') ;
-         setTimeout(function(){
-			editor.removeLineClass(marked, 'background', 'CodeMirror-selected');
-                    }, 3000) ;
+        editor.removeLineClass(marked, 'background', 'CodeMirror-selected');
+    }, 3000) ;
 
-   	 var t = editor.charCoords({line: pos, ch: 0}, 'local').top ;
-   	 var middleHeight = editor.getScrollerElement().offsetHeight / 2 ;
-   	 editor.scrollTo(null, t - middleHeight - 5) ;
+    var t = editor.charCoords({ line: pos, ch: 0 }, 'local').top ;
+    var middleHeight = editor.getScrollerElement().offsetHeight / 2 ;
+    editor.scrollTo(null, t - middleHeight - 5) ;
+}
+
+export function showError(Msg, editor)
+{
+    var errorMsg = Msg.replace(/\t/g, ' ').replace(/ {3}/g, ' ');
+
+    var pos = errorMsg.match(/Problem around line \d+/);
+    var lineMsg = '' ;
+    if (null !== pos)
+    {
+        pos = parseInt(pos[0].match(/\d+/)[0]);
+        lineMsg += '<button type="button" class="btn btn-danger" ' +
+            '        data-bind="click" data-action="go-error"' +
+            '        data-editor="' + editor + '" data-pos="' + pos + '">' +
+            ' Go line ' + pos +
+            '</button>&nbsp;' ;
     }
 
-    export function showError( Msg, editor )
+    wepsim_notify_error('<strong>ERROR</strong>',
+                        '<div class="container-fluid p-1 mb-1 mr-1 overflow-auto" ' +
+                        '     style="-webkit-overflow-scrolling:touch; max-height:70vh; max-width:75vw;">' +
+                        errorMsg + '<br>' +
+                        '</div>' +
+                        '<center>' +
+                        lineMsg +
+                        '<button type="button" class="btn btn-danger" ' +
+                        '        data-bind="click" data-action="notify-close"><span data-langkey="Close">Close</span></button>' +
+                        '</center>') ;
+}
+
+// Show binaries
+
+export function wepsim_get_binary_code()
+{
+    // compile if needed
+    if (false == inputasm.is_compiled)
     {
-            var errorMsg = Msg.replace(/\t/g,' ').replace(/ {3}/g,' ');
-
-            var pos = errorMsg.match(/Problem around line \d+/);
-            var lineMsg = '' ;
-            if (null !== pos) {
-                pos = parseInt(pos[0].match(/\d+/)[0]);
-                    lineMsg += '<button type="button" class="btn btn-danger" ' +
-                               '        data-bind="click" data-action="go-error"' +
-                               '        data-editor="' + editor + '" data-pos="' + pos + '">' +
-                               ' Go line ' + pos +
-                               '</button>&nbsp;' ;
-            }
-
-            wepsim_notify_error('<strong>ERROR</strong>',
-		                '<div class="container-fluid p-1 mb-1 mr-1 overflow-auto" ' +
-                                '     style="-webkit-overflow-scrolling:touch; max-height:70vh; max-width:75vw;">' +
-                                errorMsg + '<br>' +
-		                '</div>' +
-		                '<center>' +
-		                lineMsg +
-                                '<button type="button" class="btn btn-danger" ' +
-                                '        data-bind="click" data-action="notify-close"><span data-langkey="Close">Close</span></button>' +
-                                '</center>') ;
+        var textToCompile = inputasm.getValue() ;
+        var ok = wepsim_compile_assembly(textToCompile) ;
+        inputasm.is_compiled = ok ;
     }
 
-    // Show binaries
-
-    export function wepsim_get_binary_code( )
+    // update content
+    if (false == inputfirm.is_compiled)
     {
-         // compile if needed
-	 if (false == inputasm.is_compiled)
-         {
-	     var textToCompile = inputasm.getValue() ;
-	     var ok = wepsim_compile_assembly(textToCompile) ;
-	     inputasm.is_compiled = ok ;
-	 }
+        if (inputfirm.getValue().trim() !== '')
+        {
+            var wsi = get_cfg('ws_idiom') ;
+            var msg = i18n_get('gui', wsi, 'Microcode or Assembly are not compiled properly') ;
+            wait_if_uievents(function()
+            {
+                wsweb_dlg_alert(msg + '.<br>\n') ;
+            }, 50);
+        }
 
-         // update content
-         if (false == inputfirm.is_compiled)
-         {
-             if (inputfirm.getValue().trim() !== "") {
-                 var wsi = get_cfg('ws_idiom') ;
-                 var msg = i18n_get('gui', wsi, 'Microcode or Assembly are not compiled properly') ;
-	         wait_if_uievents(function(){ wsweb_dlg_alert(msg + '.<br>\n') ; }, 50);
-             }
-
-             return null ;
-	 }
-         if (false == inputasm.is_compiled) {
-             return null ;
-	 }
-
-	 return get_simware() ;
+        return null ;
+    }
+    if (false == inputasm.is_compiled)
+    {
+        return null ;
     }
 
-    export function wepsim_get_binary_microcode( )
+    return get_simware() ;
+}
+
+export function wepsim_get_binary_microcode()
+{
+    // microcompile if needed
+    if (false == inputfirm.is_compiled)
     {
-         // microcompile if needed
-	 if (false == inputfirm.is_compiled)
-	 {
-	     var textToMCompile = inputfirm.getValue() ;
-	     var ok = wepsim_compile_firmware(textToMCompile) ;
-	     inputfirm.is_compiled = ok ;
-	      inputasm.is_compiled = false ;
-	 }
-
-         // update content
-	 if (false == inputfirm.is_compiled) {
-	     return null ;
-	 }
-
-	 return get_simware() ;
+        var textToMCompile = inputfirm.getValue() ;
+        var ok = wepsim_compile_firmware(textToMCompile) ;
+        inputfirm.is_compiled = ok ;
+        inputasm.is_compiled = false ;
     }
 
+    // update content
+    if (false == inputfirm.is_compiled)
+    {
+        return null ;
+    }
 
-    /*
+    return get_simware() ;
+}
+
+/*
      * Microcompile and compile
      */
 
-    export function wepsim_compile_assembly( textToCompile )
+export function wepsim_compile_assembly(textToCompile)
+{
+    // get SIMWARE.firmware
+    var SIMWARE = get_simware() ;
+    if (SIMWARE.firmware.length === 0)
     {
-        // get SIMWARE.firmware
-        var SIMWARE = get_simware() ;
-	if (SIMWARE.firmware.length === 0)
-        {
-            wsweb_dlg_alert('WARNING: please load the microcode first.');
-            sim_change_workspace('#main3') ;
-            return false;
-	}
-
-        // compile Assembly and show message
-        var SIMWAREaddon = wsasm_src2mem(SIMWARE, textToCompile, {});
-        if (SIMWAREaddon.error != null)
-        {
-            showError(SIMWAREaddon.error, "inputasm") ;
-            return false;
-        }
-
-        wepsim_notify_success('<strong>INFO</strong>',
-                              'Assembly was compiled and loaded.') ;
-
-        // update memory and segments
-        set_simware(SIMWAREaddon) ;
-	update_memories(SIMWARE);
-
-        // update UI
-	asmdbg_update_assembly() ;
-
-	simcore_reset();
-        return true;
+        wsweb_dlg_alert('WARNING: please load the microcode first.');
+        sim_change_workspace('#main3') ;
+        return false;
     }
 
-    export function wepsim_compile_firmware( textToMCompile )
+    // compile Assembly and show message
+    var SIMWAREaddon = wsasm_src2mem(SIMWARE, textToCompile, {});
+    if (SIMWAREaddon.error != null)
     {
-	var ret = simcore_compile_firmware(textToMCompile) ;
-	if (false === ret.ok)
-        {
-            showError(ret.msg, "inputfirm") ;
-            return false;
-        }
-
-        // update UI
-        wepsim_notify_success('<strong>INFO</strong>',
-                              'Microcode was compiled and loaded.') ;
-
-	simcore_reset() ;
-        return true;
+        showError(SIMWAREaddon.error, 'inputasm') ;
+        return false;
     }
 
-    export function bindElements()
-    {
-        this.addEventListener('click', (e) => {
-            const el = e.target.closest('[data-bind="click"]') ;
-            if (!el) return ;
-            e.preventDefault() ;
+    wepsim_notify_success('<strong>INFO</strong>',
+                          'Assembly was compiled and loaded.') ;
 
-            switch (el.dataset.action) {
-                case 'notify-close':
-                    wepsim_notify_close() ;
-                    break ;
-                case 'go-error': {
-                    var edt = (el.dataset.editor === 'inputasm') ? inputasm : inputfirm ;
-                    wepsim_notify_close() ;
-                    goError(edt, parseInt(el.dataset.pos)) ;
-                    break ;
-                }
+    // update memory and segments
+    set_simware(SIMWAREaddon) ;
+    update_memories(SIMWARE);
+
+    // update UI
+    asmdbg_update_assembly() ;
+
+    simcore_reset();
+    return true;
+}
+
+export function wepsim_compile_firmware(textToMCompile)
+{
+    var ret = simcore_compile_firmware(textToMCompile) ;
+    if (false === ret.ok)
+    {
+        showError(ret.msg, 'inputfirm') ;
+        return false;
+    }
+
+    // update UI
+    wepsim_notify_success('<strong>INFO</strong>',
+                          'Microcode was compiled and loaded.') ;
+
+    simcore_reset() ;
+    return true;
+}
+
+export function bindElements()
+{
+    this.addEventListener('click', (e) =>
+    {
+        const el = e.target.closest('[data-bind="click"]') ;
+        if (!el) return ;
+        e.preventDefault() ;
+
+        switch (el.dataset.action)
+        {
+            case 'notify-close':
+                wepsim_notify_close() ;
+                break ;
+            case 'go-error': {
+                var edt = (el.dataset.editor === 'inputasm') ? inputasm : inputfirm ;
+                wepsim_notify_close() ;
+                goError(edt, parseInt(el.dataset.pos)) ;
+                break ;
             }
-        }) ;
-    }
+        }
+    }) ;
+}
 

@@ -31,73 +31,75 @@ export function wepsim_register_clipboard()
     ws_info.clipboard_copy = '' ;
 }
 
-    export function get_clipboard_copy ( )
-    {
-        return ws_info.clipboard_copy ;
-    }
+export function get_clipboard_copy ()
+{
+    return ws_info.clipboard_copy ;
+}
 
-    // credit for the SelectText function:
-    // https://stackoverflow.com/questions/985272/selecting-text-in-an-element-akin-to-highlighting-with-your-mouse
-    export function SelectText (element)
-    {
-        var doc = document
-            , text = doc.getElementById(element)
-            , range, selection
+// credit for the SelectText function:
+// https://stackoverflow.com/questions/985272/selecting-text-in-an-element-akin-to-highlighting-with-your-mouse
+export function SelectText (element)
+{
+    var doc = document,
+        text = doc.getElementById(element),
+        range, selection
         ;
-        if (doc.body.createTextRange)
-	{
-            range = document.body.createTextRange();
-            range.moveToElementText(text);
-            range.select();
-        }
-	else if (window.getSelection)
-	{
-            selection = window.getSelection();
-            range = document.createRange();
-            range.selectNodeContents(text);
-            selection.removeAllRanges();
-            selection.addRange(range);
-        }
-    }
-
-    export function wepsim_clipboard_CopyFromDiv ( element_name )
+    if (doc.body.createTextRange)
     {
-	    var msg = 'unsuccessful' ;
-
-	    try
-	    {
-                 SelectText(element_name) ;
-
-                 if (document.execCommand('copy'))
-		 {
-		     ws_info.clipboard_copy = $('#' + element_name).text() ;
-		     msg = 'successful' ;
-		 }
-	    }
-	    catch (e)
-	    {
-		 msg += msg + ' because ' + e ;
-	    }
-
-	    wepsim_notify_success('<strong>INFO</strong>',
-                                  'Copied ' + msg + '!.') ;
+        range = document.body.createTextRange();
+        range.moveToElementText(text);
+        range.select();
     }
-
-    export function wepsim_clipboard_CopyFromTextarea ( element_name )
+    else if (window.getSelection)
     {
-	    var msg = 'successful' ;
-
-	    try {
-		 var copyTextarea = document.getElementById(element_name);
-		 copyTextarea.select();
-                 document.execCommand('copy') ;
-		 ws_info.clipboard_copy = $('#' + element_name).val() ;
-	    }
-            catch (err) {
-		 msg = 'unsuccessful' ;
-	    }
-
-	    wepsim_notify_success('<strong>INFO</strong>',
-                                  'Copied ' + msg + '!.') ;
+        selection = window.getSelection();
+        range = document.createRange();
+        range.selectNodeContents(text);
+        selection.removeAllRanges();
+        selection.addRange(range);
     }
+}
+
+export function wepsim_clipboard_CopyFromDiv (element_name)
+{
+    var msg = 'unsuccessful' ;
+
+    try
+    {
+        SelectText(element_name) ;
+
+        if (document.execCommand('copy'))
+        {
+            ws_info.clipboard_copy = $('#' + element_name).text() ;
+            msg = 'successful' ;
+        }
+    }
+    catch (e)
+    {
+        msg += msg + ' because ' + e ;
+    }
+
+    wepsim_notify_success('<strong>INFO</strong>',
+                          'Copied ' + msg + '!.') ;
+}
+
+export function wepsim_clipboard_CopyFromTextarea (element_name)
+{
+    var msg = 'successful' ;
+
+    try
+    {
+        var copyTextarea = document.getElementById(element_name);
+        copyTextarea.select();
+        document.execCommand('copy') ;
+        ws_info.clipboard_copy = $('#' + element_name).val() ;
+    }
+    catch (err)
+    {
+        msg = 'unsuccessful' ;
+    }
+
+    wepsim_notify_success('<strong>INFO</strong>',
+                          'Copied ' + msg + '!.') ;
+}
 

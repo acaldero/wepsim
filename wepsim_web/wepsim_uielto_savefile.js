@@ -18,122 +18,121 @@
  *
  */
 
-
-        /*
+/*
          *  Save file
          */
 
-        /* jshint esversion: 6 */
-        export class ws_save_file extends HTMLElement
+/* jshint esversion: 6 */
+export class ws_save_file extends HTMLElement
+{
+    static get observedAttributes()
+    {
+        return ['fid', 'jsave', 'jshare'] ;
+    }
+
+    constructor ()
+    {
+        // parent
+        super();
+    }
+
+    update_internal_attributes ()
+    {
+        // fid
+        var fid = this.getAttribute('fid') ;
+        if (fid === null)
+            this.setAttribute('fid', 'id52') ;
+
+        // jload
+        var jload = this.getAttribute('jload') ;
+        if (jload === null)
+            this.setAttribute('jload', '') ;
+
+        // jshare
+        var jshare = this.getAttribute('jshare') ;
+        if (jshare === null)
+            this.setAttribute('jshare', '') ;
+    }
+
+    render (event_name)
+    {
+        // update attributes
+        this.update_internal_attributes() ;
+
+        // save html
+        var o1 = '' ;
+        o1 += "<div class='card border-secondary h-100'>" +
+            "<div class='card-header border-secondary text-white bg-secondary p-1'>" +
+            " <h5 class='m-0'>" +
+            " <span class='text-white bg-secondary' data-langkey='Output file'>Output file</span>" +
+            " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
+            "         data-bind='click' data-action='save' data-code='" + this.jsave + "'><span data-langkey='Save'>Save</span></button>" +
+        // " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
+        // "         onclick='" + this.jshare + "'><span data-langkey='Share'>Share</span></button>" +
+            ' </h5>' +
+            '</div>' +
+            "<div class='card-body'>" +
+            " <label for='" + this.fid + "' class='collapse7'><em><span data-langkey='Please write the file name'>Please write the file name</span>:</em></label>" +
+            " <p><input aria-label='filename to save content' id='" + this.fid + "' " +
+            "           class='form-control btn-outline-secondary' " +
+            "           placeholder='File name where information will be saved' " +
+            "           style='min-width: 90%;'/></p>" +
+            '</div>' +
+            '</div>' ;
+
+        this.innerHTML = o1 ;
+    }
+
+    bindElements ()
+    {
+        this.addEventListener('click', (e) =>
         {
-              static get observedAttributes()
-	      {
-	            return [ 'fid', 'jsave', 'jshare' ] ;
-	      }
+            const el = e.target.closest('[data-bind="click"]');
+            if (!el) return;
+            e.preventDefault();
+            eval(el.getAttribute('data-code'));
+        });
+    }
 
-	      constructor ()
-	      {
-		    // parent
-		    super();
-	      }
+    connectedCallback ()
+    {
+        this.render('connectedCallback') ;
+        this.bindElements();
+    }
 
-	      update_internal_attributes ( )
-	      {
-                    // fid
-                    var fid = this.getAttribute('fid') ;
-                    if (fid === null)
-                        this.setAttribute('fid', 'id52') ;
+    attributeChangedCallback (name, oldValue, newValue)
+    {
+        this.render('attributeChangedCallback') ;
+    }
 
-                    // jload
-                    var jload = this.getAttribute('jload') ;
-                    if (jload === null)
-                        this.setAttribute('jload', '') ;
+    get fid ()
+    {
+        return this.getAttribute('fid') ;
+    }
 
-                    // jshare
-                    var jshare = this.getAttribute('jshare') ;
-                    if (jshare === null)
-                        this.setAttribute('jshare', '') ;
-	      }
+    set fid (value)
+    {
+        this.setAttribute('fid', value) ;
+    }
 
-	      render ( event_name )
-	      {
-                    // update attributes
-                    this.update_internal_attributes() ;
+    get jsave ()
+    {
+        return this.getAttribute('jsave') ;
+    }
 
-                    // save html
-                    var o1 = '' ;
-		    o1 += "<div class='card border-secondary h-100'>" +
-			  "<div class='card-header border-secondary text-white bg-secondary p-1'>" +
-			  " <h5 class='m-0'>" +
-			  " <span class='text-white bg-secondary' data-langkey='Output file'>Output file</span>" +
-			  " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
-                           "         data-bind='click' data-action='save' data-code='" + this.jsave + "'><span data-langkey='Save'>Save</span></button>" +
-		       // " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
-                       // "         onclick='" + this.jshare + "'><span data-langkey='Share'>Share</span></button>" +
-			  " </h5>" +
-			  "</div>" +
-			  "<div class='card-body'>" +
-			  " <label for='" + this.fid + "' class='collapse7'><em><span data-langkey='Please write the file name'>Please write the file name</span>:</em></label>" +
-	                  " <p><input aria-label='filename to save content' id='" + this.fid + "' " +
-                          "           class='form-control btn-outline-secondary' " +
-                          "           placeholder='File name where information will be saved' " +
-                          "           style='min-width: 90%;'/></p>" +
-			  "</div>" +
-			  "</div>" ;
+    set jsave (value)
+    {
+        this.setAttribute('jsave', value) ;
+    }
 
-                    this.innerHTML = o1 ;
-	      }
+    get jshare ()
+    {
+        return this.getAttribute('jshare') ;
+    }
 
-	      bindElements ()
-	      {
-		    this.addEventListener('click', (e) => {
-			const el = e.target.closest('[data-bind="click"]');
-			if (!el) return;
-			e.preventDefault();
-			eval(el.getAttribute('data-code'));
-		    });
-	      }
-
-	      connectedCallback ()
-	      {
-		    this.render('connectedCallback') ;
-		    this.bindElements();
-	      }
-
-	      attributeChangedCallback (name, oldValue, newValue)
-	      {
-		    this.render('attributeChangedCallback') ;
-	      }
-
-	      get fid ( )
-	      {
-                   return this.getAttribute('fid') ;
-	      }
-
-	      set fid ( value )
-	      {
-                   this.setAttribute('fid', value) ;
-	      }
-
-	      get jsave ( )
-	      {
-                   return this.getAttribute('jsave') ;
-	      }
-
-	      set jsave ( value )
-	      {
-                   this.setAttribute('jsave', value) ;
-	      }
-
-	      get jshare ( )
-	      {
-                   return this.getAttribute('jshare') ;
-	      }
-
-	      set jshare ( value )
-	      {
-                   this.setAttribute('jshare', value) ;
-	      }
-        }
-
+    set jshare (value)
+    {
+        this.setAttribute('jshare', value) ;
+    }
+}
 

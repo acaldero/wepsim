@@ -18,33 +18,31 @@
  *
  */
 
+export function i18n_hi_register_dialogs(i18n)
+{
 
-    export function i18n_hi_register_dialogs(i18n) {
+    i18n.eltos.dialogs.hi = {
 
-
-
-        i18n.eltos.dialogs.hi = {
-
-		'Show/Hide ActionBar':		'दिखाएँ / छिपाएँ ActionBar',
-		'Show/Hide Slider':		'स्लाइडर दिखाएँ / छिपाएँ',
-		'WepSIM User Interface skin':	'WepSIM यूजर इंटरफेस स्किन',
-		'Initial intro':		'प्रारंभिक परिचय',
-		'About WepSIM':			'WepSIM के बारे में',
-		'Title':		'शीर्षक',
-		'Message':		'संदेश',
-		'Duration':		'अवधि',
-		'Confirm remove record...':		'क्या आप वास्तविक रिकॉर्ड निकालना चाहते हैं?',
-		'Close or Reset...':		'कृपया इसे रखने के लिए Close पर क्लिक करें, <br> या इसे हटाने के लिए रीसेट बटन पर क्लिक करें।',
-		'Sure Control Memory...':		'क्या आप चाहते हैं कि मैं संपादक नियंत्रण सामग्री के बजाय वर्तमान नियंत्रण मेमोरी सामग्री को बचाऊं।',
-		'Show/Hide labels':		'लेबल दिखाएं / छिपाएँ',
-		'Show/Hide content':		'सामग्री दिखाएं / छिपाएँ',
-		'Show/Hide assembly':		'दिखाएँ / छिपाएँ विधानसभा',
-		'Show/Hide pseudo-instructions':		'छद्म निर्देश दिखाएं / छिपाएं',
-		'Close':		'बंद करे',
-		'details':					'details',
-                'idiom': 					'idiom',
-		'_last_':		'_last_'
+        'Show/Hide ActionBar':           'दिखाएँ / छिपाएँ ActionBar',
+        'Show/Hide Slider':              'स्लाइडर दिखाएँ / छिपाएँ',
+        'WepSIM User Interface skin':    'WepSIM यूजर इंटरफेस स्किन',
+        'Initial intro':                 'प्रारंभिक परिचय',
+        'About WepSIM':                  'WepSIM के बारे में',
+        'Title':                         'शीर्षक',
+        'Message':                       'संदेश',
+        'Duration':                      'अवधि',
+        'Confirm remove record...':      'क्या आप वास्तविक रिकॉर्ड निकालना चाहते हैं?',
+        'Close or Reset...':             'कृपया इसे रखने के लिए Close पर क्लिक करें, <br> या इसे हटाने के लिए रीसेट बटन पर क्लिक करें।',
+        'Sure Control Memory...':        'क्या आप चाहते हैं कि मैं संपादक नियंत्रण सामग्री के बजाय वर्तमान नियंत्रण मेमोरी सामग्री को बचाऊं।',
+        'Show/Hide labels':              'लेबल दिखाएं / छिपाएँ',
+        'Show/Hide content':             'सामग्री दिखाएं / छिपाएँ',
+        'Show/Hide assembly':            'दिखाएँ / छिपाएँ विधानसभा',
+        'Show/Hide pseudo-instructions': 'छद्म निर्देश दिखाएं / छिपाएं',
+        'Close':                         'बंद करे',
+        'details':                       'details',
+        'idiom':                         'idiom',
+        '_last_':                        '_last_',
 
     };
-    }
+}
 

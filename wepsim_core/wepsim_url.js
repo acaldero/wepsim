@@ -27,240 +27,261 @@ import { ws_alert } from '../sim_core/sim_core_ui.js';
      * File API
      */
 
-    export function wepsim_file_saveTo ( textToWrite, fileNameToSaveAs )
+export function wepsim_file_saveTo (textToWrite, fileNameToSaveAs)
+{
+    // checks
+    window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem ;
+    if (typeof window.requestFileSystem === 'undefined')
     {
-        // checks
-        window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem ;
-        if (typeof window.requestFileSystem === "undefined") {
-            return false ;
-        }
-
-        // save callbacks chain
-	var koHandler = function(error) {
-            wepsim_notify_error("<strong>ERROR</strong>: failed file write",
-                                "Failed file write. " +
-                                "Error found " +  error.toString()) ;
-	} ;
-
-	var okHandler = function(_msg) {
-	    wepsim_notify_success('<strong>INFO</strong>',
-                                  'Successful file write request: ' + fileNameToSaveAs);
-	} ;
-
-	var onWriteFile = function(fileWriter) {
-            var textFileAsBlob = new Blob([textToWrite],
-                                          { type: 'text/plain' });
-            fileWriter.onerror    = koHandler ;
-            fileWriter.onwriteend = okHandler ;
-            fileWriter.write(textFileAsBlob);
-        } ;
-
-	var onCreatFile = function(fileEntry) {
-            fileEntry.createWriter(onWriteFile) ;
-	} ;
-
-	var onInitFs = function(fs) {
-	    fs.root.getFile(fileNameToSaveAs,
-                            {create: true, exclusive: false},
-                            onCreatFile,
-                            koHandler) ;
-	} ;
-
-        var grandedBytes = 2*1024*1024 ;
-
-	var onQuotaFs = function(_grantedBytes) {
-            window.requestFileSystem(window.PERSISTENT, grandedBytes, onInitFs, koHandler) ;
-	} ;
-
-        navigator.webkitPersistentStorage.requestQuota(grandedBytes, onQuotaFs, koHandler) ;
-        return true ;
+        return false ;
     }
 
+    // save callbacks chain
+    var koHandler = function(error)
+    {
+        wepsim_notify_error('<strong>ERROR</strong>: failed file write',
+                            'Failed file write. ' +
+                            'Error found ' + error.toString()) ;
+    } ;
 
-    /*
+    var okHandler = function(_msg)
+    {
+        wepsim_notify_success('<strong>INFO</strong>',
+                              'Successful file write request: ' + fileNameToSaveAs);
+    } ;
+
+    var onWriteFile = function(fileWriter)
+    {
+        var textFileAsBlob = new Blob([textToWrite],
+                                      { type: 'text/plain' });
+        fileWriter.onerror = koHandler ;
+        fileWriter.onwriteend = okHandler ;
+        fileWriter.write(textFileAsBlob);
+    } ;
+
+    var onCreatFile = function(fileEntry)
+    {
+        fileEntry.createWriter(onWriteFile) ;
+    } ;
+
+    var onInitFs = function(fs)
+    {
+        fs.root.getFile(fileNameToSaveAs,
+                        { create: true, exclusive: false },
+                        onCreatFile,
+                        koHandler) ;
+    } ;
+
+    var grandedBytes = 2 * 1024 * 1024 ;
+
+    var onQuotaFs = function(_grantedBytes)
+    {
+        window.requestFileSystem(window.PERSISTENT, grandedBytes, onInitFs, koHandler) ;
+    } ;
+
+    navigator.webkitPersistentStorage.requestQuota(grandedBytes, onQuotaFs, koHandler) ;
+    return true ;
+}
+
+/*
      * URL API
      */
 
-    export function wepsim_file_loadFrom ( fileToLoad, functionOnLoad )
+export function wepsim_file_loadFrom (fileToLoad, functionOnLoad)
+{
+    // checks
+    if (typeof fileToLoad === 'undefined')
     {
-        // checks
-        if (typeof fileToLoad === "undefined") {
-            return false ;
-        }
-        var fileReader = new FileReader();
-        if (fileReader === null) {
-            return false ;
-        }
-
-        // read
-        fileReader.onload  = function (fileLoadedEvent) {
-                                var textFromFileLoaded = fileLoadedEvent.target.result;
-                                if (null !== functionOnLoad) {
-			            functionOnLoad(textFromFileLoaded);
-			        }
-                             };
-	fileReader.onerror = function(e) {
-                                wepsim_notify_error("<strong>ERROR</strong>",
-                                                    "File could not be read. " +
-                                                    "Error code " + e.target.error.code) ;
-			     };
-
-        fileReader.readAsText(fileToLoad, "UTF-8");
-        return true ;
+        return false ;
+    }
+    var fileReader = new FileReader();
+    if (fileReader === null)
+    {
+        return false ;
     }
 
-    export function wepsim_file_downloadTo ( textToWrite, fileNameToSaveAs )
+    // read
+    fileReader.onload = function (fileLoadedEvent)
     {
-	    var windowURL      = (window.webkitURL || window.URL) ;
-            var textFileAsBlob = new Blob([textToWrite], { type: 'text/plain' }) ;
+        var textFromFileLoaded = fileLoadedEvent.target.result;
+        if (null !== functionOnLoad)
+        {
+            functionOnLoad(textFromFileLoaded);
+        }
+    };
+    fileReader.onerror = function(e)
+    {
+        wepsim_notify_error('<strong>ERROR</strong>',
+                            'File could not be read. ' +
+                            'Error code ' + e.target.error.code) ;
+    };
 
-            var downloadLink = document.createElement("a");
-                downloadLink.innerHTML     = "Download File";
-                downloadLink.style.display = "none";
-                downloadLink.download      = fileNameToSaveAs;
-                downloadLink.href          = windowURL.createObjectURL(textFileAsBlob);
-                downloadLink.onclick       = function ( event ) {
-                                                document.body.removeChild(event.target);
-                                             } ;
+    fileReader.readAsText(fileToLoad, 'UTF-8');
+    return true ;
+}
 
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
+export function wepsim_file_downloadTo (textToWrite, fileNameToSaveAs)
+{
+    var windowURL = (window.webkitURL || window.URL) ;
+    var textFileAsBlob = new Blob([textToWrite], { type: 'text/plain' }) ;
 
-	    wepsim_notify_success('<strong>INFO</strong>',
-                                  'Successful opportunity for downloading: ' + fileNameToSaveAs);
-    }
+    var downloadLink = document.createElement('a');
+    downloadLink.innerHTML = 'Download File';
+    downloadLink.style.display = 'none';
+    downloadLink.download = fileNameToSaveAs;
+    downloadLink.href = windowURL.createObjectURL(textFileAsBlob);
+    downloadLink.onclick = function (event)
+    {
+        document.body.removeChild(event.target);
+    } ;
 
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
 
-    /*
+    wepsim_notify_success('<strong>INFO</strong>',
+                          'Successful opportunity for downloading: ' + fileNameToSaveAs);
+}
+
+/*
      *  Auxiliar API
      */
 
-    export function getURLTimeStamp ( )
-    {
-                return Date.now() ;
+export function getURLTimeStamp ()
+{
+    return Date.now() ;
 
 /*
-		var dateObj = new Date();
-		var year    = dateObj.getUTCFullYear();
-		var month   = dateObj.getUTCMonth() + 1;
-		var day     = dateObj.getUTCDate();
-		var hour    = dateObj.getUTCHours();
-		var minutes = dateObj.getUTCMinutes();
+        var dateObj = new Date();
+        var year    = dateObj.getUTCFullYear();
+        var month   = dateObj.getUTCMonth() + 1;
+        var day     = dateObj.getUTCDate();
+        var hour    = dateObj.getUTCHours();
+        var minutes = dateObj.getUTCMinutes();
 
-		return year + month + day + hour + minutes ;
+        return year + month + day + hour + minutes ;
 */
-    }
+}
 
-    export function fetchURL ( f_url )
+export function fetchURL (f_url)
+{
+    // on-line: try the fresh version
+    if (navigator.onLine)
     {
-		// on-line: try the fresh version
-		if (navigator.onLine) {
-		    return fetch(f_url + "?time=" + getURLTimeStamp());
-		}
-
-		// off-line: try cache version
-		return caches.match(f_url);
+        return fetch(f_url + '?time=' + getURLTimeStamp());
     }
 
+    // off-line: try cache version
+    return caches.match(f_url);
+}
 
-    /*
+/*
      *  Combined API
      */
 
-    export function wepsim_save_to_file ( textToWrite, fileNameToSaveAs )
+export function wepsim_save_to_file (textToWrite, fileNameToSaveAs)
+{
+    var ret ;
+
+    if (is_cordova())
+        ret = wepsim_file_saveTo(textToWrite, fileNameToSaveAs) ;
+    else ret = wepsim_file_downloadTo(textToWrite, fileNameToSaveAs) ;
+
+    return ret ;
+}
+
+export function wepsim_load_from_url (url, do_next)
+{
+    if (false === is_mobile())
     {
-        var ret ;
-
-	if (is_cordova())
-             ret =     wepsim_file_saveTo(textToWrite, fileNameToSaveAs) ;
-        else ret = wepsim_file_downloadTo(textToWrite, fileNameToSaveAs) ;
-
-        return ret ;
-    }
-
-    export function wepsim_load_from_url ( url, do_next )
-    {
-	if (false === is_mobile())
-	{
-		fetchURL(url).then(function(response)
-				   {
-				      if (typeof response == "undefined") {
-					  wepsim_notify_error("<strong>ERROR</strong>",
-					                      "File " + url + " could not be fetched:<br>\n" +
-                                                              " * Please check that you are on-line.") ;
-					  return ;
-				      }
-
-				      if (response.ok) {
-					  response.text().then(function(text) {
-								  do_next(text);
-							       }) ;
-				      }
-				   }) ;
-	}
-	else
+        fetchURL(url).then(function(response)
         {
-		var xmlhttp = new XMLHttpRequest();
+            if (typeof response == 'undefined')
+            {
+                wepsim_notify_error('<strong>ERROR</strong>',
+                                    'File ' + url + ' could not be fetched:<br>\n' +
+                                    ' * Please check that you are on-line.') ;
+                return ;
+            }
 
-		xmlhttp.onreadystatechange = function() {
-			if ((xmlhttp.readyState == 4) && ((xmlhttp.status == 200) || (xmlhttp.status == 0)))
-			{
-			    var textFromFileLoaded = xmlhttp.responseText ;
-			    if (null !== do_next)
-				do_next(textFromFileLoaded);
-			}
-		};
-
-		xmlhttp.open("GET", url, true);
-		xmlhttp.send();
-	}
+            if (response.ok)
+            {
+                response.text().then(function(text)
+                {
+                    do_next(text);
+                }) ;
+            }
+        }) ;
     }
-
-    export function wepsim_url_getJSON ( url_json )
+    else
     {
-       var jstr ;
-       var jobj ;
+        var xmlhttp = new XMLHttpRequest();
 
-       try {
-           jstr = $.getJSON({'url': url_json, 'async': false}) ;
-           jobj = JSON.parse(jstr.responseText) ;
-       }
-       catch (e) {
-           ws_alert("Unable to load '" + url_json + "': " + e + ".\n") ;
-           jobj = [] ;
-       }
+        xmlhttp.onreadystatechange = function()
+        {
+            if ((xmlhttp.readyState == 4) && ((xmlhttp.status == 200) || (xmlhttp.status == 0)))
+            {
+                var textFromFileLoaded = xmlhttp.responseText ;
+                if (null !== do_next)
+                    do_next(textFromFileLoaded);
+            }
+        };
 
-       return jobj ;
+        xmlhttp.open('GET', url, true);
+        xmlhttp.send();
     }
+}
 
-    export function wepsim_url_json ( json_url, do_after )
+export function wepsim_url_getJSON (url_json)
+{
+    var jstr ;
+    var jobj ;
+
+    try
     {
-	    // preload json_url only if file_size(json_url) < max_json_size bytes
-	    var xhr = new XMLHttpRequest() ;
-	    xhr.open("HEAD", json_url, true) ;
-
-	    xhr.onreadystatechange = function() {
-		if (this.readyState == this.DONE)
-	        {
-	            var size = 0 ;
-
-		    var content_length = xhr.getResponseHeader("Content-Length") ;
-		    if (content_length !== null) {
-		        size = parseInt(content_length) ;
-		    }
-
-                    var max_json_size = get_cfg('max_json_size') ;
-		    if (size < max_json_size) {
-	                $.getJSON(json_url, do_after).fail(function(_e) {
-				                              wepsim_notify_do_notify('getJSON',
-									              'There was some problem for getting ' + json_url,
-									              'warning',
-									              0);
-			                                   }) ;
-		    }
-		}
-	    } ;
-
-	    xhr.send();
+        jstr = $.getJSON({ 'url': url_json, 'async': false }) ;
+        jobj = JSON.parse(jstr.responseText) ;
     }
+    catch (e)
+    {
+        ws_alert("Unable to load '" + url_json + "': " + e + '.\n') ;
+        jobj = [] ;
+    }
+
+    return jobj ;
+}
+
+export function wepsim_url_json (json_url, do_after)
+{
+    // preload json_url only if file_size(json_url) < max_json_size bytes
+    var xhr = new XMLHttpRequest() ;
+    xhr.open('HEAD', json_url, true) ;
+
+    xhr.onreadystatechange = function()
+    {
+        if (this.readyState == this.DONE)
+        {
+            var size = 0 ;
+
+            var content_length = xhr.getResponseHeader('Content-Length') ;
+            if (content_length !== null)
+            {
+                size = parseInt(content_length) ;
+            }
+
+            var max_json_size = get_cfg('max_json_size') ;
+            if (size < max_json_size)
+            {
+                $.getJSON(json_url, do_after).fail(function(_e)
+                {
+                    wepsim_notify_do_notify('getJSON',
+                                            'There was some problem for getting ' + json_url,
+                                            'warning',
+                                            0);
+                }) ;
+            }
+        }
+    } ;
+
+    xhr.send();
+}
 

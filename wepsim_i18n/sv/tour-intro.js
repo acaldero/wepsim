@@ -18,27 +18,25 @@
  *
  */
 
+export function i18n_sv_register_tour_intro(i18n)
+{
 
-    export function i18n_sv_register_tour_intro(i18n) {
+    i18n.eltos.tour_intro.sv = {
 
-
-
-        i18n.eltos.tour_intro.sv = {
-
-		'step1':		'WepSIM hjälper till att bättre förstå hur en dator fungerar: den är visuell, interaktiv, integreras från signaler upp till avbrott, systemsamtal, undantag, etc. <br> <br> Vi tror verkligen WepSIM är ett revolutionerande undervisningsverktyg. Den här korta rundan introducerar de viktigaste delarna av dess gränssnitt.',
-	        "step2":                "Den här knappen längst upp till höger är en snabbåtkomstmeny för olika arbetslägen. <br>" +
-                                        "<br>" +
-                                        "Användare kan välja:" +
-                                        "<ul>" +
-                                        "<li>Maskinvaran att arbeta med (t.ex. EP-processor, etc.)</li>" +
-                                        "<li>Endast monteringsläge, med heltal MIPS<sub>32</sub> eller RISC-V<sub>32</sub> instruktioner</li>" +
-                                        "</ul>",
-		'step3':		'I övre högra hörnet öppnas dialogrutan "Hjälp" med den associerade dialogrutan. <br> <br> Hjälpdialogen sammanfattar handledning, beskrivningar, information, etc.',
-		'step4':		'Och till vänster öppnar exemplet dialogrutan "exemplar". <br> <br> Det finns många exempel som kan användas för att lära sig stegvis.',
-		'step5':		'Överst till vänster öppnar konfigurationsdialogen konfigurationsdialogen. <br> <br> Det låter användarna anpassa flera aspekter av körning, användargränssnitt, inställningar etc.',
-		'step6':		'Grattis! Du känner till nyckelelementen i WepSIM-gränssnittet. <br> I dialogrutan "Hjälp" kan du komma åt "Välkommen handledning" för att fortsätta lära. <br> <br>',
-		'_last_':		'_last_'
+        'step1': 'WepSIM hjälper till att bättre förstå hur en dator fungerar: den är visuell, interaktiv, integreras från signaler upp till avbrott, systemsamtal, undantag, etc. <br> <br> Vi tror verkligen WepSIM är ett revolutionerande undervisningsverktyg. Den här korta rundan introducerar de viktigaste delarna av dess gränssnitt.',
+        'step2': 'Den här knappen längst upp till höger är en snabbåtkomstmeny för olika arbetslägen. <br>' +
+            '<br>' +
+            'Användare kan välja:' +
+            '<ul>' +
+            '<li>Maskinvaran att arbeta med (t.ex. EP-processor, etc.)</li>' +
+            '<li>Endast monteringsläge, med heltal MIPS<sub>32</sub> eller RISC-V<sub>32</sub> instruktioner</li>' +
+            '</ul>',
+        'step3':  'I övre högra hörnet öppnas dialogrutan "Hjälp" med den associerade dialogrutan. <br> <br> Hjälpdialogen sammanfattar handledning, beskrivningar, information, etc.',
+        'step4':  'Och till vänster öppnar exemplet dialogrutan "exemplar". <br> <br> Det finns många exempel som kan användas för att lära sig stegvis.',
+        'step5':  'Överst till vänster öppnar konfigurationsdialogen konfigurationsdialogen. <br> <br> Det låter användarna anpassa flera aspekter av körning, användargränssnitt, inställningar etc.',
+        'step6':  'Grattis! Du känner till nyckelelementen i WepSIM-gränssnittet. <br> I dialogrutan "Hjälp" kan du komma åt "Välkommen handledning" för att fortsätta lära. <br> <br>',
+        '_last_': '_last_',
 
     };
-    }
+}
 

@@ -28,88 +28,91 @@ import { simcore_record_append_new } from '../sim_core/sim_core_record.js';
      * API - one notification
      */
 
-    export function wepsim_notify_show_notify ( ntf_title, ntf_message, ntf_type, ntf_delay )
+export function wepsim_notify_show_notify (ntf_title, ntf_message, ntf_type, ntf_delay)
+{
+    if (typeof document == 'undefined')
     {
-	    if (typeof document == "undefined")
-	    {
-                console.log(" *********************") ;
-                console.log("Notification type '" + ntf_type + "' and title '" + ntf_title + "': " + ntf_message + ". ") ;
-                console.log(" *********************") ;
-		console.trace();
-                console.log(" *********************") ;
-		return ;
-	    }
-
-	    // alerts-container does not exist, create it
-	    var ac = $("#alerts-container") ;
-	    if (ac.length === 0)
-            {
-		ac = $('<div id="alerts-container" ' +
-                       '     class="col-10 offset-1  col-md-8 offset-md-2  col-lg-6 offset-lg-3" ' +
-                       '     style="position:fixed; top:10%; z-index:1024;">') ;
-		$("body").append(ac) ;
-	    }
- 
-	    // div configuration...
-            var btn1_close_class = "btn-close border border-secondary float-end alert-dismissible" ;
-            var ale1_div_class   = "alert alert-" + ntf_type + " shadow border border-tertiary" ;
-
-	    // create the alert div
-            var btn1   = $('<button type="button" class="' + btn1_close_class + '" data-bind="click" data-action="notify-close">') ;
-	    var alert1 = $('<div class="' + ale1_div_class + '">') ;
-	    ac.prepend(alert1.append(btn1.append("")).append(ntf_message)) ;
-
-	    // if delay was passed, set up a timeout to close the alert
-	    if (ntf_delay != 0) {
-		window.setTimeout(function() { alert1.alert("close"); }, ntf_delay) ;
-	    }
-
-	    // audio
-            var msg = "Notification type " + ntf_type + " and title " + ntf_title + ":" + ntf_message + ". " ;
-            msg = $("</p>").html(msg).text() ;
-            simcore_voice_speak(msg) ;
+        console.log(' *********************') ;
+        console.log("Notification type '" + ntf_type + "' and title '" + ntf_title + "': " + ntf_message + '. ') ;
+        console.log(' *********************') ;
+        console.trace();
+        console.log(' *********************') ;
+        return ;
     }
 
-
-    export function wepsim_notify_do_notify ( ntf_title, ntf_message, ntf_type, ntf_delay )
+    // alerts-container does not exist, create it
+    var ac = $('#alerts-container') ;
+    if (ac.length === 0)
     {
-	    var title_text = ntf_title ;
-	    var mesg_text  = ntf_message ;
-
-	    if (typeof document != "undefined")
-	    {
-	        title_text = $('<p>').html(ntf_title).text() ;
-	        mesg_text  = $('<p>').html(ntf_message).text() ;
-	    }
-
-	    // add to notifications
-	    simcore_notifications_add(title_text, mesg_text, ntf_type, ntf_delay) ;
-
-	    // show up notifications
-            wepsim_notify_show_notify(title_text, mesg_text, ntf_type, ntf_delay) ;
+        ac = $('<div id="alerts-container" ' +
+            '     class="col-10 offset-1  col-md-8 offset-md-2  col-lg-6 offset-lg-3" ' +
+            '     style="position:fixed; top:10%; z-index:1024;">') ;
+        $('body').append(ac) ;
     }
 
-	    export function wepsim_notify_success ( ntf_title, ntf_message )
-	    {
-		 return wepsim_notify_do_notify(ntf_title, ntf_message, 'success', get_cfg('NOTIF_delay')) ;
-	    }
+    // div configuration...
+    var btn1_close_class = 'btn-close border border-secondary float-end alert-dismissible' ;
+    var ale1_div_class = 'alert alert-' + ntf_type + ' shadow border border-tertiary' ;
 
-	    export function wepsim_notify_error ( ntf_title, ntf_message )
-	    {
-		 return wepsim_notify_do_notify(ntf_title, ntf_message, 'danger', 0) ;
-	    }
+    // create the alert div
+    var btn1 = $('<button type="button" class="' + btn1_close_class + '" data-bind="click" data-action="notify-close">') ;
+    var alert1 = $('<div class="' + ale1_div_class + '">') ;
+    ac.prepend(alert1.append(btn1.append('')).append(ntf_message)) ;
 
-	    export function wepsim_notify_warning ( ntf_title, ntf_message )
-	    {
-		 return wepsim_notify_do_notify(ntf_title, ntf_message, 'warning', get_cfg('NOTIF_delay')) ;
-	    }
-
-    export function wepsim_notify_close ( )
+    // if delay was passed, set up a timeout to close the alert
+    if (ntf_delay != 0)
     {
-            $(".alert").alert('close') ;
-
-            // add if recording
-            simcore_record_append_new('Close all notifications',
-                                      'wepsim_notify_close();\n') ;
+        window.setTimeout(function()
+        {
+            alert1.alert('close');
+        }, ntf_delay) ;
     }
+
+    // audio
+    var msg = 'Notification type ' + ntf_type + ' and title ' + ntf_title + ':' + ntf_message + '. ' ;
+    msg = $('</p>').html(msg).text() ;
+    simcore_voice_speak(msg) ;
+}
+
+export function wepsim_notify_do_notify (ntf_title, ntf_message, ntf_type, ntf_delay)
+{
+    var title_text = ntf_title ;
+    var mesg_text = ntf_message ;
+
+    if (typeof document != 'undefined')
+    {
+        title_text = $('<p>').html(ntf_title).text() ;
+        mesg_text = $('<p>').html(ntf_message).text() ;
+    }
+
+    // add to notifications
+    simcore_notifications_add(title_text, mesg_text, ntf_type, ntf_delay) ;
+
+    // show up notifications
+    wepsim_notify_show_notify(title_text, mesg_text, ntf_type, ntf_delay) ;
+}
+
+export function wepsim_notify_success (ntf_title, ntf_message)
+{
+    return wepsim_notify_do_notify(ntf_title, ntf_message, 'success', get_cfg('NOTIF_delay')) ;
+}
+
+export function wepsim_notify_error (ntf_title, ntf_message)
+{
+    return wepsim_notify_do_notify(ntf_title, ntf_message, 'danger', 0) ;
+}
+
+export function wepsim_notify_warning (ntf_title, ntf_message)
+{
+    return wepsim_notify_do_notify(ntf_title, ntf_message, 'warning', get_cfg('NOTIF_delay')) ;
+}
+
+export function wepsim_notify_close ()
+{
+    $('.alert').alert('close') ;
+
+    // add if recording
+    simcore_record_append_new('Close all notifications',
+                              'wepsim_notify_close();\n') ;
+}
 

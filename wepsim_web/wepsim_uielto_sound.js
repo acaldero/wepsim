@@ -20,69 +20,69 @@
 import { ws_uielto } from './wepsim_uielto.js';
 import { simcore_native_set_value } from '../sim_core/sim_api_native.js';
 
-        /*
+/*
          *  Sound
          */
 
-        /* jshint esversion: 6 */
-        export class ws_sound extends ws_uielto
-        {
-              constructor ()
-              {
-                    // parent
-                    super();
-              }
+/* jshint esversion: 6 */
+export class ws_sound extends ws_uielto
+{
+    constructor ()
+    {
+        // parent
+        super();
+    }
 
-              // render
-	      render ( event_name )
-	      {
-		    // html holder
-		    var o1 = '<label class="my-0" for="snd_card" style="min-width:95%">' +
-                             '  <i style="height:5vh; opacity:0.6;" ' +
-                             '     class="fa-solid fa-music fa-2x mb-2"></i>' +
-			     '</label>' +
-			     '<textarea ' +
-                             '     aria-label="monitor"' +
-			     '     style="width:100%; overflow-y:auto; -webkit-overflow-scrolling: touch; margin:0 0 8 0"' +
-			     '     placeholder="WepSIM" id="snd_card" rows="8" readonly></textarea>' ;
+    // render
+    render (event_name)
+    {
+        // html holder
+        var o1 = '<label class="my-0" for="snd_card" style="min-width:95%">' +
+            '  <i style="height:5vh; opacity:0.6;" ' +
+            '     class="fa-solid fa-music fa-2x mb-2"></i>' +
+            '</label>' +
+            '<textarea ' +
+            '     aria-label="monitor"' +
+            '     style="width:100%; overflow-y:auto; -webkit-overflow-scrolling: touch; margin:0 0 8 0"' +
+            '     placeholder="WepSIM" id="snd_card" rows="8" readonly></textarea>' ;
 
-		    this.innerHTML = o1 ;
-	      }
-        }
+        this.innerHTML = o1 ;
+    }
+}
 
+//
+// Screen / Keyboard
+//
 
+export function wepsim_get_sound_content()
+{
+    var sound_content = '' ;
 
-        //
-        // Screen / Keyboard
-        //
+    var scrobj = document.getElementById('snd_card') ;
+    if (scrobj != null)
+    {
+        sound_content = scrobj.value ;
+    }
 
-	export function wepsim_get_sound_content( )
-	{
-	      var sound_content = "" ;
+    simcore_native_set_value('SOUND', 'content', sound_content) ;
 
-	      var scrobj = document.getElementById("snd_card") ;
-              if (scrobj != null) {
-		  sound_content = scrobj.value ;
-	      }
+    return sound_content ;
+}
 
-              simcore_native_set_value("SOUND", "content", sound_content) ;
+export function wepsim_set_sound_content(sound_content)
+{
+    var scrobj = document.getElementById('snd_card') ;
+    if (scrobj != null)
+    {
+        scrobj.value = sound_content ;
+    }
 
-	      return sound_content ;
-	}
+    simcore_native_set_value('SOUND', 'content', sound_content) ;
 
-	export function wepsim_set_sound_content( sound_content )
-	{
-	      var scrobj = document.getElementById("snd_card") ;
-              if (scrobj != null) {
-		  scrobj.value = sound_content ;
-	      }
+    // from https://stackoverflow.com/questions/10158190/how-to-set-cursor-at-the-end-in-a-textarea
+    scrobj.focus() ;
+    scrobj.setSelectionRange(scrobj.value.length, scrobj.value.length) ;
 
-              simcore_native_set_value("SOUND", "content", sound_content) ;
-
-              // from https://stackoverflow.com/questions/10158190/how-to-set-cursor-at-the-end-in-a-textarea
-              scrobj.focus() ;
-              scrobj.setSelectionRange(scrobj.value.length, scrobj.value.length) ;
-
-	      return sound_content ;
-	}
+    return sound_content ;
+}
 

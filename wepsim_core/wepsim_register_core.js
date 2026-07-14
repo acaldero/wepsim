@@ -10,7 +10,8 @@ import { wepsim_register_preload_tasks } from './wepsim_preload_commands.js';
 import { wepsim_register_config_ui } from '../wepsim_web/wepsim_web_ui_config_commands.js';
 import { wepsim_state_history_reset } from './wepsim_state.js';
 
-export function wepsim_register_core() {
+export function wepsim_register_core()
+{
     wepsim_register_modes();
     wepsim_register_breakpoint_icons();
     wepsim_register_clipboard();

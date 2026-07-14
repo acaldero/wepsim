@@ -27,245 +27,250 @@ import { simcore_ga } from '../../sim_core/sim_core_ga.js';
 
 export function wsasm_isEndOfFile (context)
 {
-        return ("" === asm_getToken(context)) && (context.t >= context.text.length) ;
+    return ('' === asm_getToken(context)) && (context.t >= context.text.length) ;
 }
 
-export function asm_nextToken ( context )
+export function asm_nextToken (context)
 {
-	  var tok   ;
-	  var first ;
-	  var last  ;
-          var token_type ;
+    var tok ;
+    var first ;
+    var last ;
+    var token_type ;
 
-          // skip whitespaces
-          while ( ("# \t\n\r\u2003".indexOf(context.text[context.t]) != -1) && (context.t < context.text.length) )
-          {
-                 // # till end of line
-                 if (context.text[context.t] == '#')
-                 {
-		     first = context.t + 1 ;
-		     while ( ("\n".indexOf(context.text[context.t]) == -1) && (context.t < context.text.length) ) {
-		    	      context.t++;
-		     }
-		     last = context.t ;
+    // skip whitespaces
+    while (('# \t\n\r\u2003'.indexOf(context.text[context.t]) != -1) && (context.t < context.text.length))
+    {
+        // # till end of line
+        if (context.text[context.t] == '#')
+        {
+            first = context.t + 1 ;
+            while (('\n'.indexOf(context.text[context.t]) == -1) && (context.t < context.text.length))
+            {
+                context.t++;
+            }
+            last = context.t ;
 
-                     // store the comment but do not return it as token
-                     tok = context.text.substring(first, last) ;
-	             tok = tok.trim() ;
-		     context.comments.push(tok) ;
-                 }
+            // store the comment but do not return it as token
+            tok = context.text.substring(first, last) ;
+            tok = tok.trim() ;
+            context.comments.push(tok) ;
+        }
 
-                 if (context.text[context.t] == '\n')
-                 {
-                     context.line++;
-                     context.newlines.push(context.t) ;
-                 }
+        if (context.text[context.t] == '\n')
+        {
+            context.line++;
+            context.newlines.push(context.t) ;
+        }
 
-		 context.t++;
-	  }
-	
-          // if {},()=: token, insert token
-          if ( ("{},()=:".indexOf(context.text[context.t]) != -1) && (context.t < context.text.length) )
-          {
-               tok = context.text[context.t] ;
-               context.t++ ;
-               context.tokens.push(tok) ;
-               context.token_types.push("TOKEN") ;
-               context.i = context.tokens.length - 1 ;
-               return context ;
-          }
+        context.t++;
+    }
 
-          // read string "...." or token
-          if ("\"" == context.text[context.t])
-          {
-		  // read until "
-		  first = context.t ;
-                  context.t++ ;
-		  while ( ("\"".indexOf(context.text[context.t]) == -1) && (context.t < context.text.length) ) {
-                         if ("\\".indexOf(context.text[context.t]) != -1) {
-			     context.t++;
-		         }
-			 context.t++;
-		  }
-		  context.t++ ;
-		  last = context.t ;
+    // if {},()=: token, insert token
+    if (('{},()=:'.indexOf(context.text[context.t]) != -1) && (context.t < context.text.length))
+    {
+        tok = context.text[context.t] ;
+        context.t++ ;
+        context.tokens.push(tok) ;
+        context.token_types.push('TOKEN') ;
+        context.i = context.tokens.length - 1 ;
+        return context ;
+    }
 
-	          token_type = "STRING" ;
-          }
-          else if("'" == context.text[context.t])
-          {
-		  // read until '
-		  first = context.t ;
-                  context.t++ ;
-		  while ( ("'".indexOf(context.text[context.t]) == -1) && (context.t < context.text.length) ) {
-                         if ("\\".indexOf(context.text[context.t]) != -1) {
-			     context.t++;
-		         }
-			 context.t++;
-		  }
-		  context.t++ ;
-		  last = context.t ;
+    // read string "...." or token
+    if ('"' == context.text[context.t])
+    {
+        // read until "
+        first = context.t ;
+        context.t++ ;
+        while (('"'.indexOf(context.text[context.t]) == -1) && (context.t < context.text.length))
+        {
+            if ('\\'.indexOf(context.text[context.t]) != -1)
+            {
+                context.t++;
+            }
+            context.t++;
+        }
+        context.t++ ;
+        last = context.t ;
 
-	          token_type = "STRING" ;
-          }
-          else
-          {
-		  // read until whitespaces
-		  first = context.t ;
-		  while ( ("{},()=:# \t\n\r\u2003".indexOf(context.text[context.t]) == -1) && (context.t < context.text.length) ) {
-			 context.t++;
-		  }
-		  last = context.t ;
+        token_type = 'STRING' ;
+    }
+    else if ("'" == context.text[context.t])
+    {
+        // read until '
+        first = context.t ;
+        context.t++ ;
+        while (("'".indexOf(context.text[context.t]) == -1) && (context.t < context.text.length))
+        {
+            if ('\\'.indexOf(context.text[context.t]) != -1)
+            {
+                context.t++;
+            }
+            context.t++;
+        }
+        context.t++ ;
+        last = context.t ;
 
-	          token_type = "TOKEN" ;
-          }
+        token_type = 'STRING' ;
+    }
+    else
+    {
+        // read until whitespaces
+        first = context.t ;
+        while (('{},()=:# \t\n\r\u2003'.indexOf(context.text[context.t]) == -1) && (context.t < context.text.length))
+        {
+            context.t++;
+        }
+        last = context.t ;
 
-          // try to explore if a ":" is near...
-          var tmp_context = context.t ;
-          while ( ("# \t\n\r\u2003".indexOf(context.text[tmp_context]) != -1) && (tmp_context < context.text.length) )
-	  {
-			 if (context.text[tmp_context] == '#')
-                         {
-			     while ( ("\n".indexOf(context.text[tmp_context]) == -1) && (tmp_context < context.text.length) ) {
-				      tmp_context++;
-			     }
-			 }
-			 tmp_context++;
-	  }
-	  if (":" == context.text[tmp_context])
-             {
-		 token_type = "TAG" ;
-                 context.t = tmp_context + 1 ;
-             }
+        token_type = 'TOKEN' ;
+    }
 
-          // insert token
-          tok = context.text.substring(first, last) ;
-	  tok = tok.trim() ;
-          if ("TAG" == token_type)
-          {
-              if (isNaN(tok))
-              { // (tok != "25") -> "label:"
-                   tok = tok + ":" ;
-              }
-              else
-              { // (tok == "25") -> "25" ("25:20")
-                   token_type = "NUMBER" ;
-                   context.t = context.t - 1;
-              }
-          }
+    // try to explore if a ":" is near...
+    var tmp_context = context.t ;
+    while (('# \t\n\r\u2003'.indexOf(context.text[tmp_context]) != -1) && (tmp_context < context.text.length))
+    {
+        if (context.text[tmp_context] == '#')
+        {
+            while (('\n'.indexOf(context.text[tmp_context]) == -1) && (tmp_context < context.text.length))
+            {
+                tmp_context++;
+            }
+        }
+        tmp_context++;
+    }
+    if (':' == context.text[tmp_context])
+    {
+        token_type = 'TAG' ;
+        context.t = tmp_context + 1 ;
+    }
 
-          context.tokens.push(tok) ;
-          context.token_types.push(token_type) ;
-          context.i = context.tokens.length - 1 ;
+    // insert token
+    tok = context.text.substring(first, last) ;
+    tok = tok.trim() ;
+    if ('TAG' == token_type)
+    {
+        if (isNaN(tok))
+        { // (tok != "25") -> "label:"
+            tok = tok + ':' ;
+        }
+        else
+        { // (tok == "25") -> "25" ("25:20")
+            token_type = 'NUMBER' ;
+            context.t = context.t - 1;
+        }
+    }
 
-          return context ;
+    context.tokens.push(tok) ;
+    context.token_types.push(token_type) ;
+    context.i = context.tokens.length - 1 ;
+
+    return context ;
 }
 
-export function asm_getToken ( context )
+export function asm_getToken (context)
 {
-	 return context.tokens[context.i] ;
+    return context.tokens[context.i] ;
 }
 
-export function asm_getTokenType ( context )
+export function asm_getTokenType (context)
 {
-	 return context.token_types[context.i] ;
+    return context.token_types[context.i] ;
 }
 
-export function asm_isToken ( context, text )
+export function asm_isToken (context, text)
 {
-         return (asm_getToken(context) == text.trim()) ;
+    return (asm_getToken(context) == text.trim()) ;
 }
 
-export function asm_isToken_arr ( context, arr )
+export function asm_isToken_arr (context, arr)
 {
-         for (var i=0; i<arr.length; i++)
-         {
-              if (asm_getToken(context) == arr[i].trim()) {
-                  return true ;
-              }
-         }
+    for (var i = 0; i < arr.length; i++)
+    {
+        if (asm_getToken(context) == arr[i].trim())
+        {
+            return true ;
+        }
+    }
 
-         return false ;
+    return false ;
 }
-
 
 /*
  *  Error handler
  */
 
-export function asm_langError ( context, msgError, msgOrigin )
+export function asm_langError (context, msgError, msgOrigin)
 {
-        // detect lines
-	var line2 = 0 ;
-        if (context.newlines.length > 0)
-            line2 = context.newlines[context.newlines.length - 1] + 1;
+    // detect lines
+    var line2 = 0 ;
+    if (context.newlines.length > 0)
+        line2 = context.newlines[context.newlines.length - 1] + 1;
 
-	var line1 = 0 ;
-        if (context.newlines.length > 1)
-            line1 = context.newlines[context.newlines.length - 2] + 1;
+    var line1 = 0 ;
+    if (context.newlines.length > 1)
+        line1 = context.newlines[context.newlines.length - 2] + 1;
 
-        var lowI = line1 ;
+    var lowI = line1 ;
 
-        var highI = Math.min(context.t - 1, line2+32);
-        for (; (typeof context.text[highI+1] != "undefined") && (context.text[highI+1] != '\n'); highI++) ;
-        var line3 = highI + 2 ;
+    var highI = Math.min(context.t - 1, line2 + 32);
+    for (; (typeof context.text[highI + 1] != 'undefined') && (context.text[highI + 1] != '\n'); highI++) ;
+    var line3 = highI + 2 ;
 
-        highI++;
-        for (; (typeof context.text[highI+1] != "undefined") && (context.text[highI+1] != '\n'); highI++) ;
-        highI++;
+    highI++;
+    for (; (typeof context.text[highI + 1] != 'undefined') && (context.text[highI + 1] != '\n'); highI++) ;
+    highI++;
 
-        // print lines
-        context.error = "<pre class='border rounded p-3 mt-1 bg-dark text-white'>" +
-                        "...\n" ;
-        for (var i=lowI; i<highI; i++)
-        {
-             if (i == line1) context.error += " " + (context.line-1) + "\t" ;
-             if (i == line2) context.error += "*" +  context.line    + "\t" ;
-             if (i == line3) context.error += " " + (context.line+1) + "\t" ;
+    // print lines
+    context.error = "<pre class='border rounded p-3 mt-1 bg-dark text-white'>" +
+        '...\n' ;
+    for (var i = lowI; i < highI; i++)
+    {
+        if (i == line1) context.error += ' ' + (context.line - 1) + '\t' ;
+        if (i == line2) context.error += '*' + context.line + '\t' ;
+        if (i == line3) context.error += ' ' + (context.line + 1) + '\t' ;
 
-             if (typeof context.text[i] != "undefined")
-                  context.error += context.text[i] ;
-             else context.error += "&lt;EOF&gt;" ;
-        }
-        context.error += "\n...\n" +
-                         "</pre>" +
-                         "(*) " + i18n_get_TagFor('compiler', 'PROBLEM AROUND LINE') + " " +
-			 context.line + ": <br>" + msgError + ".<br>" ;
+        if (typeof context.text[i] != 'undefined')
+            context.error += context.text[i] ;
+        else context.error += '&lt;EOF&gt;' ;
+    }
+    context.error += '\n...\n' +
+        '</pre>' +
+        '(*) ' + i18n_get_TagFor('compiler', 'PROBLEM AROUND LINE') + ' ' +
+        context.line + ': <br>' + msgError + '.<br>' ;
 
-        simcore_ga('cc', 'cc.err', 'cc.err.' + msgOrigin) ;
+    simcore_ga('cc', 'cc.err', 'cc.err.' + msgOrigin) ;
 
-        return context;
+    return context;
 }
-
 
 /*
  *  Label context management
  */
 
-export function asm_getLabelContext ( context )
+export function asm_getLabelContext (context)
 {
-        return { t: context.t, line: context.line, newlines: context.newlines.slice() } ;
+    return { t: context.t, line: context.line, newlines: context.newlines.slice() } ;
 }
 
-export function asm_setLabelContext ( context, labelContext )
+export function asm_setLabelContext (context, labelContext)
 {
-        context.t = labelContext.t ;
-        context.line = labelContext.line ;
-        context.newlines = labelContext.newlines ;
+    context.t = labelContext.t ;
+    context.line = labelContext.line ;
+    context.newlines = labelContext.newlines ;
 }
-
 
 /*
  *  Comments management
  */
 
-export function asm_getComments ( context )
+export function asm_getComments (context)
 {
-        return context.comments.join('\n') ;
+    return context.comments.join('\n') ;
 }
 
-export function asm_resetComments ( context )
+export function asm_resetComments (context)
 {
-        context.comments = [] ;
+    context.comments = [] ;
 }
 

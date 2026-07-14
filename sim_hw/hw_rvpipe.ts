@@ -1,8 +1,8 @@
-/*      
+/*
  *  Copyright 2015-2026 The WepSIM team (see docs/WEPSIM-TEAM.md)
  *
  *  This file is part of WepSIM.
- * 
+ *
  *  WepSIM is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -18,7 +18,6 @@
  *
  */
 
-
 /*
  *  RISC-V Processor with Pipeline
  */
@@ -31,25 +30,26 @@ import { io_screen_rvpipe_register } from './hw_items/io_screen_rvpipe.js';
 import { io_keyboard_rvpipe_register } from './hw_items/io_keyboard_rvpipe.js';
 import { io_clk_rvpipe_register } from './hw_items/io_clk_rvpipe.js';
 
-export var rvpipe_def: Simulator = {
-    sim_name: "RISC-V Processor with Pipeline",
-    sim_short_name: "rvpipe",
-    sim_img_processor: "repo/hardware/rvpipe/images/processor.svg",
-    sim_img_controlunit: "repo/hardware/rvpipe/images/controlunit.svg",
-    sim_img_cpu: "repo/hardware/rvpipe/images/cpu.svg",
+export const rvpipe_def: Simulator = {
+    sim_name:            'RISC-V Processor with Pipeline',
+    sim_short_name:      'rvpipe',
+    sim_img_processor:   'repo/hardware/rvpipe/images/processor.svg',
+    sim_img_controlunit: 'repo/hardware/rvpipe/images/controlunit.svg',
+    sim_img_cpu:         'repo/hardware/rvpipe/images/cpu.svg',
 
     components: {},
-    states: { BR: [] as SimState[] },
-    signals: {},
-    behaviors: {},
-    elements: {},
+    states:     { BR: [] as SimState[] },
+    signals:    {},
+    behaviors:  {},
+    elements:   {},
 
     internal_states: {},
-    ctrl_states: {},
-    events: {}
+    ctrl_states:     {},
+    events:          {},
 };
 
-export function sim_hw_register_RVPIPE() {
+export function sim_hw_register_RVPIPE()
+{
     board_base_register(rvpipe_def);
     cpu_rvpipe_register(rvpipe_def);
     mem_rvpipe_register(rvpipe_def);

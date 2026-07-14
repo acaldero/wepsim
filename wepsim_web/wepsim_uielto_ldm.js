@@ -24,162 +24,160 @@ import { simcore_rest_add } from '../sim_core/sim_core_rest.js';
 import { simhw_active, simhw_internalState, simhw_internalState_set } from '../sim_hw/sim_hw_index.js';
 import { vue_appyBinding, vue_observable_ifnotjetdone } from '../sim_core/sim_core_values.js';
 
-
-        /*
+/*
          *  LEDM device
          */
 
-        /* jshint esversion: 6 */
+/* jshint esversion: 6 */
 
+export var ledm_apirest_name = 'LEDM' ;
+export var ledm_apirest_endpoint = { value: '' } ;
+export var ledm_apirest_user = '' ;
+export var ledm_apirest_pass = '' ;
 
-        export var ledm_apirest_name     = "LEDM" ;
-        export var ledm_apirest_endpoint = { value: "" } ;
-        export var ledm_apirest_user     = "" ;
-        export var ledm_apirest_pass     = "" ;
+export class ws_ledm extends ws_uielto
+{
+    constructor ()
+    {
+        // parent
+        super();
+    }
 
+    // render
+    render (event_name)
+    {
+        // initialize render elements...
+        super.render() ;
 
-        export class ws_ledm extends ws_uielto
+        // render current element
+        this.render_skel() ;
+        this.render_populate() ;
+    }
+
+    render_skel ()
+    {
+        // default content
+        this.innerHTML = '<div id="' + 'config_LEDM_' + this.name_str + '" ' +
+            'style="height:58vh; width:inherit; overflow-y:auto;"></div>' ;
+    }
+
+    render_populate ()
+    {
+        var o1 = '' ;
+        var div_hash = '#config_LEDM_' + this.name_str ;
+        var offset = 0 ;
+        var i ;
+
+        // if no active hardware -> empty
+        if (simhw_active() === null)
         {
-	      constructor ()
-	      {
-		    // parent
-		    super();
-	      }
-
-              // render
-              render ( event_name )
-              {
-                    // initialize render elements...
-                    super.render() ;
-
-                    // render current element
-		    this.render_skel() ;
-		    this.render_populate() ;
-              }
-
-	      render_skel ( )
-	      {
-                    // default content
-                    this.innerHTML = '<div id="' + 'config_LEDM_' + this.name_str + '" ' +
-                                     'style="height:58vh; width:inherit; overflow-y:auto;"></div>' ;
-              }
-
-	      render_populate ( )
-	      {
-                    var o1 = '' ;
-                    var div_hash = '#config_LEDM_' + this.name_str ;
-		    var offset = 0 ;
-		    var i ;
-
-                    // if no active hardware -> empty
-                    if (simhw_active() === null) {
-                        $(div_hash).html(o1) ;
-                        return ;
-                    }
-
-		    // default content
-		    var ledm_states = simhw_internalState('ledm_state') ;
-	            var ledm_dim    = simhw_internalState('ledm_dim') ;
-		    if ( (typeof ledm_states == "undefined") || (typeof ledm_dim == "undefined") )
-                    {
-                        $(div_hash).html(o1) ;
-			return ;
-		    }
-
-		    // API REST
-		    simcore_rest_add(ledm_apirest_name,
-				     { 'endpoint': ledm_apirest_endpoint,
-				       'user':     ledm_apirest_user,
-				       'pass':     ledm_apirest_pass }) ;
-
-		    // html holder
-		    o1  += "<div class='container text-end'>" +
-                           "" +
-                           '<span class="my-0" for="popover-ledmcfg" style="min-width:95%">' +
-                           '<span data-langkey="quick config">quick config</span>: ' +
-                           "<a data-bs-toggle='collapse' href='#collapse-ledmcfg' aria-expanded='false' " +
-                           "   tabindex='0' class='m-auto' role='button' id='popover-ledmcfg'>" +
-                           "<strong><strong class='fas fa-wrench text-secondary'></strong></strong></a>" +
-                           "</span>" +
-                           "" +
-			   "<table id='collapse-ledmcfg' " +
-                           "       class='table table-hover table-sm table-bordered m-0 collapse'>" +
-			   "<tr><td>" +
-                           "<label class='my-0 text-wrap' for='ledm_apirest_endpoint'>REST URL (e.g.: http://localhost:5000/matrix)</label>" +
-			   "<input id='ledm_apirest_endpoint' type='text' v-model.lazy='value' class='form-control text-info p-0'>" +
-			   "</td></tr>" +
-			   "</table>" +
-                           "" +
-			   "<div class='row mt-3 justify-content-center'>" +
-			   "<div class='col-auto' style=''>" ;
-
-			o1 += "<table class='table table-hover table-sm table-bordered pb-3'>" ;
-			    for (var j=0; j<ledm_dim; j++)
-			    {
-			o1 += "<tr>" ;
-				    for (var k=0; k<ledm_dim; k++)
-				    {
-			o1 += "<td align='center' class='m-0' " +
-                              "    id='ledm" + (j*ledm_dim + k) + "_context' " +
-                              "    v-bind:style='{ \"background-color\": webui_ledm_value2color(value), height: \"15px\", width: \"15px\"}' " +
-                              "    v-on:click='value = (value + 1) % 256'>" +
-                              "<span class='visually-hidden'>background-color {{value}}</span>" +
-                              "</td>" ;
-				    }
-			o1 += "</tr>" ;
-			    }
-			o1 += "</table>" ;
-
-		     o1 += "</div>" +
-			   "</div>" +
-			   "</div>" ;
-
-                    $(div_hash).html(o1) ;
-
-		    // vue binding
-                    var f_computed_value = function(value) {
-                                               webui_ledm_set() ;
-                                               return value ;
-                                           } ;
-
-		    for (i=0; i<ledm_states.length; i++)
-		    {
-			 ledm_states[i].color = vue_observable_ifnotjetdone(ledm_states[i].color) ;
-                         vue_appyBinding(ledm_states[i].color, '#ledm'+i+'_context', f_computed_value, { webui_ledm_value2color: webui_ledm_value2color }) ;
-		    }
-
-		    ledm_apirest_endpoint = vue_observable_ifnotjetdone(ledm_apirest_endpoint) ;
-		    vue_appyBinding(ledm_apirest_endpoint, '#ledm_apirest_endpoint', f_computed_value) ;
-	      }
+            $(div_hash).html(o1) ;
+            return ;
         }
 
-
-
-	export function webui_ledm_set( )
+        // default content
+        var ledm_states = simhw_internalState('ledm_state') ;
+        var ledm_dim = simhw_internalState('ledm_dim') ;
+        if ((typeof ledm_states == 'undefined') || (typeof ledm_dim == 'undefined'))
         {
-            // get internal state
-	    var ledm_states = simhw_internalState('ledm_state') ;
-	    if (typeof ledm_states == "undefined") {
-		return false ;
-	    }
-
-	    simhw_internalState_set('ledm_sync', false) ;
-            compute_general_behavior('LEDM_SYNC') ;
-            return true ;
+            $(div_hash).html(o1) ;
+            return ;
         }
 
-        export function webui_ledm_value2color( value )
+        // API REST
+        simcore_rest_add(ledm_apirest_name,
+                         { 'endpoint': ledm_apirest_endpoint,
+                             'user':     ledm_apirest_user,
+                             'pass':     ledm_apirest_pass }) ;
+
+        // html holder
+        o1 += "<div class='container text-end'>" +
+            '' +
+            '<span class="my-0" for="popover-ledmcfg" style="min-width:95%">' +
+            '<span data-langkey="quick config">quick config</span>: ' +
+            "<a data-bs-toggle='collapse' href='#collapse-ledmcfg' aria-expanded='false' " +
+            "   tabindex='0' class='m-auto' role='button' id='popover-ledmcfg'>" +
+            "<strong><strong class='fas fa-wrench text-secondary'></strong></strong></a>" +
+            '</span>' +
+            '' +
+            "<table id='collapse-ledmcfg' " +
+            "       class='table table-hover table-sm table-bordered m-0 collapse'>" +
+            '<tr><td>' +
+            "<label class='my-0 text-wrap' for='ledm_apirest_endpoint'>REST URL (e.g.: http://localhost:5000/matrix)</label>" +
+            "<input id='ledm_apirest_endpoint' type='text' v-model.lazy='value' class='form-control text-info p-0'>" +
+            '</td></tr>' +
+            '</table>' +
+            '' +
+            "<div class='row mt-3 justify-content-center'>" +
+            "<div class='col-auto' style=''>" ;
+
+        o1 += "<table class='table table-hover table-sm table-bordered pb-3'>" ;
+        for (var j = 0; j < ledm_dim; j++)
         {
-             var len  ;
-             var color = "0x000000" ;
-
-             var colors = simhw_internalState('ledm_colors') ;
-             if (typeof colors != "undefined")
-             {
-                 len   = colors.length ;
-                 color = colors[value % len] ;
-             }
-
-             return color ;
+            o1 += '<tr>' ;
+            for (var k = 0; k < ledm_dim; k++)
+            {
+                o1 += "<td align='center' class='m-0' " +
+                    "    id='ledm" + (j * ledm_dim + k) + "_context' " +
+                    "    v-bind:style='{ \"background-color\": webui_ledm_value2color(value), height: \"15px\", width: \"15px\"}' " +
+                    "    v-on:click='value = (value + 1) % 256'>" +
+                    "<span class='visually-hidden'>background-color {{value}}</span>" +
+                    '</td>' ;
+            }
+            o1 += '</tr>' ;
         }
+        o1 += '</table>' ;
+
+        o1 += '</div>' +
+            '</div>' +
+            '</div>' ;
+
+        $(div_hash).html(o1) ;
+
+        // vue binding
+        var f_computed_value = function(value)
+        {
+            webui_ledm_set() ;
+            return value ;
+        } ;
+
+        for (i = 0; i < ledm_states.length; i++)
+        {
+            ledm_states[i].color = vue_observable_ifnotjetdone(ledm_states[i].color) ;
+            vue_appyBinding(ledm_states[i].color, '#ledm' + i + '_context', f_computed_value, { webui_ledm_value2color: webui_ledm_value2color }) ;
+        }
+
+        ledm_apirest_endpoint = vue_observable_ifnotjetdone(ledm_apirest_endpoint) ;
+        vue_appyBinding(ledm_apirest_endpoint, '#ledm_apirest_endpoint', f_computed_value) ;
+    }
+}
+
+export function webui_ledm_set()
+{
+    // get internal state
+    var ledm_states = simhw_internalState('ledm_state') ;
+    if (typeof ledm_states == 'undefined')
+    {
+        return false ;
+    }
+
+    simhw_internalState_set('ledm_sync', false) ;
+    compute_general_behavior('LEDM_SYNC') ;
+    return true ;
+}
+
+export function webui_ledm_value2color(value)
+{
+    var len ;
+    var color = '0x000000' ;
+
+    var colors = simhw_internalState('ledm_colors') ;
+    if (typeof colors != 'undefined')
+    {
+        len = colors.length ;
+        color = colors[value % len] ;
+    }
+
+    return color ;
+}
 

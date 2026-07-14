@@ -18,52 +18,50 @@
  *
  */
 
+export function i18n_en_register_help(i18n)
+{
 
-    export function i18n_en_register_help(i18n) {
+    i18n.eltos.help.en = {
 
+        'Welcome tutorial': 'Welcome tutorial',
+        'help_01_01':       'Open the welcome tutorial',
 
+        'Simple usage tutorial': 'Simple usage tutorial',
+        'help_01_02':            'Open the simple usage tutorial, for microprogramming and assembly programming',
 
-        i18n.eltos.help.en = {
+        'Execute example': 'Execute example',
+        'help_01_03':      'Play the execute example tutorial',
 
-	"Welcome tutorial":		"Welcome tutorial",
-	"help_01_01":			"Open the welcome tutorial",
+        'Simulator: firmware': 'Simulator: firmware',
+        'help_02_01':          'How to work with the firmware to be loaded into the control memory',
 
-	"Simple usage tutorial":	"Simple usage tutorial",
-	"help_01_02":			"Open the simple usage tutorial, for microprogramming and assembly programming",
+        'Microcode format': 'Microcode format',
+        'help_02_02':       'Syntax of the microcode used',
 
-	"Execute example":		"Execute example",
-	"help_01_03":			"Play the execute example tutorial",
+        'Simulator: assembly': 'Simulator: assembly',
+        'help_02_03':          'How to work with the assembly that use the aforementioned firmware',
 
-	"Simulator: firmware":		"Simulator: firmware",
-	"help_02_01":			"How to work with the firmware to be loaded into the control memory",
+        'Assembly format': 'Assembly format',
+        'help_02_04':      'Syntax of the assembly elements',
 
-	"Microcode format":		"Microcode format",
-	"help_02_02":			"Syntax of the microcode used",
+        'Simulator: execution': 'Simulator: execution',
+        'help_02_05':           'How the simulator can execute the assembly and firmware',
 
-	"Simulator: assembly":		"Simulator: assembly",
-	"help_02_03":			"How to work with the assembly that use the aforementioned firmware",
+        'Simulated architecture': 'Simulated architecture',
+        'help_03_01':             'Description of the simulated processor architecture',
 
-	"Assembly format":		"Assembly format",
-	"help_02_04":			"Syntax of the assembly elements",
+        'Simulated signals': 'Simulated signals',
+        'help_03_02':        'Main signals summary of the simulated elemental processor',
 
-	"Simulator: execution":		"Simulator: execution",
-	"help_02_05":			"How the simulator can execute the assembly and firmware",
+        'Hardware summary': 'Hardware summary',
+        'help_03_03':       'Reference card for the simulated elemental processor hardware',
 
-	"Simulated architecture":	"Simulated architecture",
-	"help_03_01":			"Description of the simulated processor architecture",
+        'License, platforms, etc.': 'License, platforms, etc.',
+        'help_04_01':               'WepSIM license, supported platforms, technologies used',
 
-	"Simulated signals":		"Simulated signals",
-	"help_03_02":			"Main signals summary of the simulated elemental processor",
-
-	"Hardware summary":		"Hardware summary",
-	"help_03_03":			"Reference card for the simulated elemental processor hardware",
-
-	"License, platforms, etc.":	"License, platforms, etc.",
-	"help_04_01":			"WepSIM license, supported platforms, technologies used",
-
-	"Authors":			"WepSIM Team",
-	"help_04_02":			"WepSIM Team"
+        'Authors':    'WepSIM Team',
+        'help_04_02': 'WepSIM Team',
 
     };
-    }
+}
 

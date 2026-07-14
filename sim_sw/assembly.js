@@ -25,137 +25,147 @@ import { wsasm_obj2mem } from './assembly/compiler3_obj2mem_wepsim.js';
 
 /* jshint esversion: 9 */
 
-
-export function wsasm_src2mem ( datosCU, asm_source, options )
+export function wsasm_src2mem (datosCU, asm_source, options)
 {
-     var context ;
-     var ret = {
-                  error: i18n_get_TagFor('compiler', 'UNKNOWN 2')
-               } ;
+    var context ;
+    var ret = {
+        error: i18n_get_TagFor('compiler', 'UNKNOWN 2'),
+    } ;
 
-     try
-     {
-         context = wsasm_prepare_context(datosCU, options) ;
-	 if (context.error != null) {
-	     return context;
-	 }
+    try
+    {
+        context = wsasm_prepare_context(datosCU, options) ;
+        if (context.error != null)
+        {
+            return context;
+        }
 
-         context = wsasm_prepare_source(context, asm_source) ;
-	 if (context.error != null) {
-	     return context;
-	 }
+        context = wsasm_prepare_source(context, asm_source) ;
+        if (context.error != null)
+        {
+            return context;
+        }
 
-         ret = wsasm_src2obj(context) ;
-	 if (ret.error != null) {
-	     return ret;
-	 }
+        ret = wsasm_src2obj(context) ;
+        if (ret.error != null)
+        {
+            return ret;
+        }
 
-         ret = wsasm_obj2mem(ret) ;
-	 if (ret.error != null) {
-	     return ret;
-	 }
-     }
-     catch (e)
-     {
-         console.log("ERROR on 'wsasm_src2mem' function :-(") ;
-         console.log("Details:\n " + e) ;
-         console.log("Stack:\n"    + e.stack) ;
+        ret = wsasm_obj2mem(ret) ;
+        if (ret.error != null)
+        {
+            return ret;
+        }
+    }
+    catch (e)
+    {
+        console.log("ERROR on 'wsasm_src2mem' function :-(") ;
+        console.log('Details:\n ' + e) ;
+        console.log('Stack:\n' + e.stack) ;
 
-	 ret.error = "Compilation error found !<br>" +
-                     "Please review your assembly code and try another way to write your algorithm.<br>" +
-                     "<br>" +
-                     e.toString() ;
-     }
+        ret.error = 'Compilation error found !<br>' +
+            'Please review your assembly code and try another way to write your algorithm.<br>' +
+            '<br>' +
+            e.toString() ;
+    }
 
-     return ret ;
+    return ret ;
 }
 
-export function wsasm_src2src ( datosCU, text, options )
+export function wsasm_src2src (datosCU, text, options)
 {
-     var context ;
-     var ret = {
-                  error: i18n_get_TagFor('compiler', 'UNKNOWN 2')
-               } ;
+    var context ;
+    var ret = {
+        error: i18n_get_TagFor('compiler', 'UNKNOWN 2'),
+    } ;
 
-     try
-     {
-         context = wsasm_prepare_context(datosCU, {}) ;
-	 if (context.error != null) {
-	     return context;
-	 }
+    try
+    {
+        context = wsasm_prepare_context(datosCU, {}) ;
+        if (context.error != null)
+        {
+            return context;
+        }
 
-         context = wsasm_prepare_source(context, text) ;
-	 if (context.error != null) {
-	     return context;
-	 }
+        context = wsasm_prepare_source(context, text) ;
+        if (context.error != null)
+        {
+            return context;
+        }
 
-         ret = wsasm_src2obj(context) ;
-	 if (ret.error != null) {
-	     return ret;
-	 }
+        ret = wsasm_src2obj(context) ;
+        if (ret.error != null)
+        {
+            return ret;
+        }
 
-         ret = wsasm_obj2src(context, ret, options) ;
-	 if (ret.error != null) {
-	     return ret;
-	 }
-     }
-     catch (e)
-     {
-         console.log("ERROR on 'wsasm_src2src' function :-(") ;
-         console.log("Details:\n " + e) ;
-         console.log("Stack:\n"    + e.stack) ;
+        ret = wsasm_obj2src(context, ret, options) ;
+        if (ret.error != null)
+        {
+            return ret;
+        }
+    }
+    catch (e)
+    {
+        console.log("ERROR on 'wsasm_src2src' function :-(") ;
+        console.log('Details:\n ' + e) ;
+        console.log('Stack:\n' + e.stack) ;
 
-	 ret.error = "Compilation error found !<br>" +
-                     "Please review your assembly code and try another way to write your algorithm.<br>" +
-                     "<br>" +
-                     e.toString() ;
-     }
+        ret.error = 'Compilation error found !<br>' +
+            'Please review your assembly code and try another way to write your algorithm.<br>' +
+            '<br>' +
+            e.toString() ;
+    }
 
-     return ret ;
+    return ret ;
 }
 
-export function wsasm_src2binsrc ( datosCU, text, options )
+export function wsasm_src2binsrc (datosCU, text, options)
 {
-     var context ;
-     var ret = {
-                  error: i18n_get_TagFor('compiler', 'UNKNOWN 2')
-               } ;
+    var context ;
+    var ret = {
+        error: i18n_get_TagFor('compiler', 'UNKNOWN 2'),
+    } ;
 
-     try
-     {
-         context = wsasm_prepare_context(datosCU, {}) ;
-	 if (context.error != null) {
-	     return context;
-	 }
+    try
+    {
+        context = wsasm_prepare_context(datosCU, {}) ;
+        if (context.error != null)
+        {
+            return context;
+        }
 
-         context = wsasm_prepare_source(context, text) ;
-	 if (context.error != null) {
-	     return context;
-	 }
+        context = wsasm_prepare_source(context, text) ;
+        if (context.error != null)
+        {
+            return context;
+        }
 
-         ret = wsasm_src2obj(context) ;
-	 if (ret.error != null) {
-	     return ret;
-	 }
+        ret = wsasm_src2obj(context) ;
+        if (ret.error != null)
+        {
+            return ret;
+        }
 
-         ret = wsasm_obj2bin(context, ret) ;
-	 if (ret.error != null) {
-	     return ret;
-	 }
-     }
-     catch (e)
-     {
-         console.log("ERROR on 'wsasm_src2binsrc' function :-(") ;
-         console.log("Details:\n " + e) ;
-         console.log("Stack:\n"    + e.stack) ;
+        ret = wsasm_obj2bin(context, ret) ;
+        if (ret.error != null)
+        {
+            return ret;
+        }
+    }
+    catch (e)
+    {
+        console.log("ERROR on 'wsasm_src2binsrc' function :-(") ;
+        console.log('Details:\n ' + e) ;
+        console.log('Stack:\n' + e.stack) ;
 
-	 ret.error = "Compilation error found !<br>" +
-                     "Please review your assembly code and try another way to write your algorithm.<br>" +
-                     "<br>" +
-                     e.toString() ;
-     }
+        ret.error = 'Compilation error found !<br>' +
+            'Please review your assembly code and try another way to write your algorithm.<br>' +
+            '<br>' +
+            e.toString() ;
+    }
 
-     return ret ;
+    return ret ;
 }
-
 

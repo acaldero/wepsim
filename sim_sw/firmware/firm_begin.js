@@ -21,61 +21,64 @@
 import { frm_getToken, frm_isToken, frm_nextToken } from './lexical.js';
 import { firm_mcode_signals_read, read_native } from './firm_mcode.js';
 
-export function firm_begin_read ( context )
+export function firm_begin_read (context)
 {
-	// *begin {
-	//            (XX, Y, BW=11),
-	//     fetch: (X2, X0),
-	//            (A0, B=0, C=0)
-	// }*
+    // *begin {
+    //            (XX, Y, BW=11),
+    //     fetch: (X2, X0),
+    //            (A0, B=0, C=0)
+    // }*
 
-	var instruccionAux = {};
-	instruccionAux.name         = frm_getToken(context) ;
-	instruccionAux["mc-start"]  = context.contadorMC ;
-	instruccionAux["is_native"] = false;
+    var instruccionAux = {};
+    instruccionAux.name = frm_getToken(context) ;
+    instruccionAux['mc-start'] = context.contadorMC ;
+    instruccionAux['is_native'] = false;
 
-        // skip 'begin'
-	frm_nextToken(context);
+    // skip 'begin'
+    frm_nextToken(context);
 
-	// match optional ,
-	if (frm_isToken(context,",")) {
-	    frm_nextToken(context);
-	}
+    // match optional ,
+    if (frm_isToken(context, ','))
+    {
+        frm_nextToken(context);
+    }
 
-	// match optional native
-	if (frm_isToken(context, "native"))
-	{
-	    instruccionAux["is_native"] = true;
-	    frm_nextToken(context);
+    // match optional native
+    if (frm_isToken(context, 'native'))
+    {
+        instruccionAux['is_native'] = true;
+        frm_nextToken(context);
 
-	    // match optional ,
-	    if (frm_isToken(context,",")) {
-		frm_nextToken(context);
-            }
-
-	    // add 'fetch' label
-	    context.etiquetas[context.contadorMC] = "fetch" ;
-	}
-
-	var ret = (instruccionAux.is_native)
-		    ? read_native(context)
-		    : firm_mcode_signals_read(context) ;
-
-	if (typeof ret.error != "undefined") {
-	    return ret ;
+        // match optional ,
+        if (frm_isToken(context, ','))
+        {
+            frm_nextToken(context);
         }
 
-	instruccionAux.signature       = "begin" ;
-	instruccionAux.signatureGlobal = "begin" ;
-	instruccionAux.signatureUser   = "begin" ;
-	instruccionAux.signatureRaw    = "begin" ;
-	instruccionAux.NATIVE          = ret.NATIVE ;
-	instruccionAux.microcode       = ret.microprograma ;
-	instruccionAux.microcomments   = ret.microcomments ;
-	context.instrucciones.push(instruccionAux);
+        // add 'fetch' label
+        context.etiquetas[context.contadorMC] = 'fetch' ;
+    }
 
-	context.contadorMC = context.contadorMC + 9; // padding between instrucctions
+    var ret = (instruccionAux.is_native) ?
+        read_native(context) :
+        firm_mcode_signals_read(context) ;
 
-        return {} ;
+    if (typeof ret.error != 'undefined')
+    {
+        return ret ;
+    }
+
+    instruccionAux.signature = 'begin' ;
+    instruccionAux.signatureGlobal = 'begin' ;
+    instruccionAux.signatureUser = 'begin' ;
+    instruccionAux.signatureRaw = 'begin' ;
+    instruccionAux.NATIVE = ret.NATIVE ;
+    instruccionAux.microcode = ret.microprograma ;
+    instruccionAux.microcomments = ret.microcomments ;
+    context.instrucciones.push(instruccionAux);
+
+    context.contadorMC = context.contadorMC + 9; // padding between instrucctions
+
+    return {} ;
 }
 

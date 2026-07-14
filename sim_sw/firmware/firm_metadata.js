@@ -21,210 +21,222 @@
 import { frm_getToken, frm_isToken, frm_langError, frm_nextToken } from './lexical.js';
 import { i18n, i18n_get_TagFor } from '../../wepsim_i18n/i18n.js';
 
-export function firm_metadata_write ( context )
+export function firm_metadata_write (context)
 {
-	var o = "" ;
+    var o = '' ;
 
-        // no metadata -> return empty metadata section
-	if (typeof context.metadata == "undefined") {
-            return o ;
-        }
+    // no metadata -> return empty metadata section
+    if (typeof context.metadata == 'undefined')
+    {
+        return o ;
+    }
 
-        // set default metadata
-        var m = {
-                   version:    2,
-                   rel_mult:   2,
-                   pc_rel_offset: 0,
-                   endian:     "little",
-                   immediates: ''
-                } ;
+    // set default metadata
+    var m = {
+        version:       2,
+        rel_mult:      2,
+        pc_rel_offset: 0,
+        endian:        'little',
+        immediates:    '',
+    } ;
 
-        // update metadata with actual values
-        if (typeof context.metadata.version != "undefined") {
-            m.version = context.metadata.version ;
-        }
+    // update metadata with actual values
+    if (typeof context.metadata.version != 'undefined')
+    {
+        m.version = context.metadata.version ;
+    }
 
-        if (typeof context.metadata.rel_mult != "undefined") {
-            m.rel_mult = context.metadata.rel_mult ;
-        }
+    if (typeof context.metadata.rel_mult != 'undefined')
+    {
+        m.rel_mult = context.metadata.rel_mult ;
+    }
 
-        if (typeof context.metadata.pc_rel_offset != "undefined") {
-            m.pc_rel_offset = context.metadata.pc_rel_offset ;
-        }
+    if (typeof context.metadata.pc_rel_offset != 'undefined')
+    {
+        m.pc_rel_offset = context.metadata.pc_rel_offset ;
+    }
 
-        if (typeof context.metadata.endian != "undefined") {
-            m.endian = context.metadata.endian ;
-        }
+    if (typeof context.metadata.endian != 'undefined')
+    {
+        m.endian = context.metadata.endian ;
+    }
 
-        if (typeof context.metadata.immediates != "undefined")
-	{
-	    m.immediates = JSON.stringify(context.metadata.immediates) ;
-            m.immediates = m.immediates.replace("'", "\"")
-                                       .replace("[", "'")
-                                       .replace("]", "'") ;
-        }
+    if (typeof context.metadata.immediates != 'undefined')
+    {
+        m.immediates = JSON.stringify(context.metadata.immediates) ;
+        m.immediates = m.immediates.replace("'", '"')
+            .replace('[', "'")
+            .replace(']', "'") ;
+    }
 
-        // return metadata as string...
-        o += "\n" +
-             "firmware {\n" +
-             "   version    = " + m.version    + ",\n" +
-             "   rel_mult   = " + m.rel_mult   + ",\n" +
-             "   pc_rel_offset = " + m.pc_rel_offset + ",\n" +
-             "   endian     = " + m.endian     + ",\n" +
-             "   immediates = " + m.immediates +  "\n" +
-             "}\n" +
-             "\n" ;
+    // return metadata as string...
+    o += '\n' +
+        'firmware {\n' +
+        '   version    = ' + m.version + ',\n' +
+        '   rel_mult   = ' + m.rel_mult + ',\n' +
+        '   pc_rel_offset = ' + m.pc_rel_offset + ',\n' +
+        '   endian     = ' + m.endian + ',\n' +
+        '   immediates = ' + m.immediates + '\n' +
+        '}\n' +
+        '\n' ;
 
-	return o ;
+    return o ;
 }
 
-
-export function firm_metadata_read ( context )
+export function firm_metadata_read (context)
 {
-        // optional:
-        //   *firmware {
-        //       version    = 2,
-        //       rel_mult   = 2,
-        //       pc_rel_offset = 0,
-        //       endian     = little,
-        //       immediates = '...'
-        //    }*
+    // optional:
+    //   *firmware {
+    //       version    = 2,
+    //       rel_mult   = 2,
+    //       pc_rel_offset = 0,
+    //       endian     = little,
+    //       immediates = '...'
+    //    }*
 
-	frm_nextToken(context);
-	// match mandatory {
-	if (! frm_isToken(context,"{")) {
-	      return frm_langError(context,
-				   i18n_get_TagFor('compiler', 'OPEN BRACE NOT FOUND')) ;
-	}
+    frm_nextToken(context);
+    // match mandatory {
+    if (! frm_isToken(context, '{'))
+    {
+        return frm_langError(context,
+                             i18n_get_TagFor('compiler', 'OPEN BRACE NOT FOUND')) ;
+    }
 
-	frm_nextToken(context) ;
-        // match "version, rel_mult, endian, ... }"
-        while ( (context.t < context.text.length) && (! frm_isToken(context,"}")) )
+    frm_nextToken(context) ;
+    // match "version, rel_mult, endian, ... }"
+    while ((context.t < context.text.length) && (! frm_isToken(context, '}')))
+    {
+        // optional: *version* = 2,
+        if (frm_isToken(context, 'version'))
         {
-		// optional: *version* = 2,
-		if (frm_isToken(context, "version"))
-		{
-		    frm_nextToken(context);
-		    // match mandatory =
-		    if (! frm_isToken(context,"=")) {
-			  return frm_langError(context,
-					       i18n_get_TagFor('compiler', 'EQUAL NOT FOUND')) ;
-		    }
+            frm_nextToken(context);
+            // match mandatory =
+            if (! frm_isToken(context, '='))
+            {
+                return frm_langError(context,
+                                     i18n_get_TagFor('compiler', 'EQUAL NOT FOUND')) ;
+            }
 
-		    frm_nextToken(context);
-		    // match mandatory FIRMWARE_VERSION
-		    context.metadata.version = frm_getToken(context) ;
+            frm_nextToken(context);
+            // match mandatory FIRMWARE_VERSION
+            context.metadata.version = frm_getToken(context) ;
 
-		    frm_nextToken(context);
-		    // match optional ,
-		    if (frm_isToken(context,","))
-			frm_nextToken(context);
-		}
-
-		// optional: *rel_mult* = 2,
-		if (frm_isToken(context, "rel_mult"))
-		{
-		    frm_nextToken(context);
-		    // match mandatory =
-		    if (! frm_isToken(context,"=")) {
-			  return frm_langError(context,
-					       i18n_get_TagFor('compiler', 'EQUAL NOT FOUND')) ;
-		    }
-
-		    frm_nextToken(context);
-		    // match mandatory relative_offset_multiplier (1, 2, 4, ...)
-		    context.metadata.rel_mult = frm_getToken(context) ;
-
-		    frm_nextToken(context);
-		    // match optional ,
-		    if (frm_isToken(context,","))
-			frm_nextToken(context);
-		}
-
-		// optional: *pc_rel_offset* = 0,
-		if (frm_isToken(context, "pc_rel_offset"))
-		{
-		    frm_nextToken(context);
-		    // match mandatory =
-		    if (! frm_isToken(context,"=")) {
-			  return frm_langError(context,
-					       i18n_get_TagFor('compiler', 'EQUAL NOT FOUND')) ;
-		    }
-
-		    frm_nextToken(context);
-		    // match mandatory pc_relative_offset (0, 4, -4, ...)
-		    context.metadata.pc_rel_offset = frm_getToken(context) ;
-
-		    frm_nextToken(context);
-		    // match optional ,
-		    if (frm_isToken(context,","))
-			frm_nextToken(context);
-		}
-
-                // optional: *endian* = little
-		if (frm_isToken(context, "endian"))
-		{
-		    frm_nextToken(context);
-		    // match mandatory =
-		    if (! frm_isToken(context,"=")) {
-			  return frm_langError(context,
-					       i18n_get_TagFor('compiler', 'EQUAL NOT FOUND')) ;
-		    }
-
-		    frm_nextToken(context);
-		    // match mandatory endian (big or little)
-		    context.metadata.endian = frm_getToken(context) ;
-
-		    frm_nextToken(context);
-		    // match optional ,
-		    if (frm_isToken(context,","))
-			frm_nextToken(context);
-		}
-
-		// optional: *immediates* = '...',
-		if (frm_isToken(context, "immediates"))
-		{
-		    frm_nextToken(context);
-		    // match mandatory =
-		    if (! frm_isToken(context,"=")) {
-			  return frm_langError(context,
-					       i18n_get_TagFor('compiler', 'EQUAL NOT FOUND')) ;
-		    }
-
-		    frm_nextToken(context);
-		    // match mandatory FIRMWARE_IMMEDIATES (string to JSON)
-		    var ifmt = frm_getToken(context) ;
-		    if (ifmt[0] == "'") {
-		        // '{ "key": value, ... }' -> [ {"key": value, ... ]
-                        ifmt = ifmt.replaceAll(/^\'/g, "[")
-                                   .replaceAll(/\'$/g, "]") ;
-		    }
-		    else
-		    if (ifmt[0] == '"') {
-		        // "{ 'key': value, ... }" -> [ {"key": value, ... ]
-                        ifmt = ifmt.replaceAll(/'/g, '"')
-				   .replaceAll(/^\"/g, "[")
-                                   .replaceAll(/\"$/g, "]") ;
-		    }
-		    context.metadata.immediates = JSON.parse(ifmt) ;
-
-		    frm_nextToken(context);
-		    // match optional ,
-		    if (frm_isToken(context,","))
-			frm_nextToken(context);
-		}
+            frm_nextToken(context);
+            // match optional ,
+            if (frm_isToken(context, ','))
+                frm_nextToken(context);
         }
 
-	// match mandatory }
-	if (! frm_isToken(context,"}")) {
-	      return frm_langError(context,
-				   i18n_get_TagFor('compiler', 'CLOSE BRACE NOT FOUND')) ;
-	}
-	frm_nextToken(context);
+        // optional: *rel_mult* = 2,
+        if (frm_isToken(context, 'rel_mult'))
+        {
+            frm_nextToken(context);
+            // match mandatory =
+            if (! frm_isToken(context, '='))
+            {
+                return frm_langError(context,
+                                     i18n_get_TagFor('compiler', 'EQUAL NOT FOUND')) ;
+            }
 
-        // return context
-        context.error = null ;
-        return context ;
+            frm_nextToken(context);
+            // match mandatory relative_offset_multiplier (1, 2, 4, ...)
+            context.metadata.rel_mult = frm_getToken(context) ;
+
+            frm_nextToken(context);
+            // match optional ,
+            if (frm_isToken(context, ','))
+                frm_nextToken(context);
+        }
+
+        // optional: *pc_rel_offset* = 0,
+        if (frm_isToken(context, 'pc_rel_offset'))
+        {
+            frm_nextToken(context);
+            // match mandatory =
+            if (! frm_isToken(context, '='))
+            {
+                return frm_langError(context,
+                                     i18n_get_TagFor('compiler', 'EQUAL NOT FOUND')) ;
+            }
+
+            frm_nextToken(context);
+            // match mandatory pc_relative_offset (0, 4, -4, ...)
+            context.metadata.pc_rel_offset = frm_getToken(context) ;
+
+            frm_nextToken(context);
+            // match optional ,
+            if (frm_isToken(context, ','))
+                frm_nextToken(context);
+        }
+
+        // optional: *endian* = little
+        if (frm_isToken(context, 'endian'))
+        {
+            frm_nextToken(context);
+            // match mandatory =
+            if (! frm_isToken(context, '='))
+            {
+                return frm_langError(context,
+                                     i18n_get_TagFor('compiler', 'EQUAL NOT FOUND')) ;
+            }
+
+            frm_nextToken(context);
+            // match mandatory endian (big or little)
+            context.metadata.endian = frm_getToken(context) ;
+
+            frm_nextToken(context);
+            // match optional ,
+            if (frm_isToken(context, ','))
+                frm_nextToken(context);
+        }
+
+        // optional: *immediates* = '...',
+        if (frm_isToken(context, 'immediates'))
+        {
+            frm_nextToken(context);
+            // match mandatory =
+            if (! frm_isToken(context, '='))
+            {
+                return frm_langError(context,
+                                     i18n_get_TagFor('compiler', 'EQUAL NOT FOUND')) ;
+            }
+
+            frm_nextToken(context);
+            // match mandatory FIRMWARE_IMMEDIATES (string to JSON)
+            var ifmt = frm_getToken(context) ;
+            if (ifmt[0] == "'")
+            {
+                // '{ "key": value, ... }' -> [ {"key": value, ... ]
+                ifmt = ifmt.replaceAll(/^\'/g, '[')
+                    .replaceAll(/\'$/g, ']') ;
+            }
+            else
+                if (ifmt[0] == '"')
+                {
+                    // "{ 'key': value, ... }" -> [ {"key": value, ... ]
+                    ifmt = ifmt.replaceAll(/'/g, '"')
+                        .replaceAll(/^\"/g, '[')
+                        .replaceAll(/\"$/g, ']') ;
+                }
+            context.metadata.immediates = JSON.parse(ifmt) ;
+
+            frm_nextToken(context);
+            // match optional ,
+            if (frm_isToken(context, ','))
+                frm_nextToken(context);
+        }
+    }
+
+    // match mandatory }
+    if (! frm_isToken(context, '}'))
+    {
+        return frm_langError(context,
+                             i18n_get_TagFor('compiler', 'CLOSE BRACE NOT FOUND')) ;
+    }
+    frm_nextToken(context);
+
+    // return context
+    context.error = null ;
+    return context ;
 }
-
 

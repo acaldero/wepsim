@@ -18,53 +18,52 @@
  *
  */
 
+// Translated thanks to Google translate
 
-    // Translated thanks to Google translate
+export function i18n_fr_register_help(i18n)
+{
 
-    export function i18n_fr_register_help(i18n) {
+    i18n.eltos.help.fr = {
 
+        'Welcome tutorial': 'Tutoriel de bienvenue',
+        'help_01_01':       'Ouvrez le tutoriel de bienvenue',
 
-        i18n.eltos.help.fr = {
+        'Simple usage tutorial': "Tutoriel d'utilisation simple",
+        'help_01_02':            "Ouvrez le tutoriel d'utilisation simple, pour la microprogrammation et l'assemblage. programmation",
 
-		"Welcome tutorial":				"Tutoriel de bienvenue",
-		"help_01_01":					"Ouvrez le tutoriel de bienvenue",
+        'Execute example': 'Execute example',
+        'help_01_03':      'Play the execute example tutorial',
 
-		"Simple usage tutorial":			"Tutoriel d'utilisation simple",
-		"help_01_02":					"Ouvrez le tutoriel d'utilisation simple, pour la microprogrammation et l'assemblage. programmation",
+        'Simulator: firmware': 'Simulateur: firmware',
+        'help_02_01':          'Comment utiliser le firmware à charger dans la mémoire de contrôle',
 
-		"Execute example":				"Execute example",
-		"help_01_03":					"Play the execute example tutorial",
+        'Microcode format': 'Format du microcode',
+        'help_02_02':       'Syntaxe du microcode utilisé',
 
-		"Simulator: firmware":				"Simulateur: firmware",
-		"help_02_01":					"Comment utiliser le firmware à charger dans la mémoire de contrôle",
+        'Simulator: assembly': 'Simulateur: assemblage',
+        'help_02_03':          "Comment utiliser l'assemblage utilisant le microprogramme susmentionné",
 
-		"Microcode format":				"Format du microcode",
-		"help_02_02":					"Syntaxe du microcode utilisé",
+        'Assembly format': "Format d'assemblage",
+        'help_02_04':      "Syntaxe des éléments d'assemblage",
 
-		"Simulator: assembly":				"Simulateur: assemblage",
-		"help_02_03":					"Comment utiliser l'assemblage utilisant le microprogramme susmentionné",
+        'Simulator: execution': 'Simulateur: exécution',
+        'help_02_05':           "Comment le simulateur peut exécuter l'assemblage et le firmware",
 
-		"Assembly format":				"Format d'assemblage",
-		"help_02_04":					"Syntaxe des éléments d'assemblage",
+        'Simulated architecture': 'Architecture simulée',
+        'help_03_01':             "Description de l'architecture du processeur simulé",
 
-		"Simulator: execution":				"Simulateur: exécution",
-		"help_02_05":					"Comment le simulateur peut exécuter l'assemblage et le firmware",
+        'Simulated signals': 'Signaux simulés',
+        'help_03_02':        'Résumé des signaux principaux du processeur élémentaire simulé',
 
-		"Simulated architecture":			"Architecture simulée",
-		"help_03_01":					"Description de l'architecture du processeur simulé",
+        'Hardware summary': 'Résumé du matériel',
+        'help_03_03':       'Carte de référence pour le matériel du processeur élémentaire simulé',
 
-		"Simulated signals":				"Signaux simulés",
-		"help_03_02":					"Résumé des signaux principaux du processeur élémentaire simulé",
+        'License, platforms, etc.': 'Licence, plates-formes, etc.',
+        'help_04_01':               'Licence WepSIM, prise en charge plateformes, technologies utilisées',
 
-		"Hardware summary":				"Résumé du matériel",
-		"help_03_03":					"Carte de référence pour le matériel du processeur élémentaire simulé",
-
-		"License, platforms, etc.":			"Licence, plates-formes, etc.",
-		"help_04_01":					"Licence WepSIM, prise en charge plateformes, technologies utilisées",
-
-		"Authors":					"L'équipe WepSIM",
-		"help_04_02":					"L'équipe WepSIM"
+        'Authors':    "L'équipe WepSIM",
+        'help_04_02': "L'équipe WepSIM",
 
     };
-    }
+}
 

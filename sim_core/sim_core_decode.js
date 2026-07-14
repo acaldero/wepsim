@@ -24,69 +24,71 @@ import { i18n, i18n_get_TagFor } from '../wepsim_i18n/i18n.js';
 // Treat control sequences
 //
 
- export var control_sequences = {
-                        'b':  '\b',
-                        'f':  '\f',
-                        'n':  '\n',
-                        'r':  '\r',
-                        't':  '\t',
-                        'v':  '\v',
-                        'a':  String.fromCharCode(0x0007),
-                        "'":  '\'',
-                        "\"": '\"',
-                        '0':  '\0'
-                     } ;
+export var control_sequences = {
+    'b': '\b',
+    'f': '\f',
+    'n': '\n',
+    'r': '\r',
+    't': '\t',
+    'v': '\v',
+    'a': String.fromCharCode(0x0007),
+    "'": '\'',
+    '"': '\"',
+    '0': '\0',
+} ;
 
-export function treatControlSequences ( possible_value )
+export function treatControlSequences (possible_value)
 {
-        var ret = {} ;
-        ret.string = "" ;
-        ret.error  = false ;
+    var ret = {} ;
+    ret.string = '' ;
+    ret.error = false ;
 
-	for (var i=0; i<possible_value.length; i++)
-	{
-		if ("\\" != possible_value[i]) {
-                    ret.string = ret.string + possible_value[i] ;
-                    continue ;
-                }
+    for (var i = 0; i < possible_value.length; i++)
+    {
+        if ('\\' != possible_value[i])
+        {
+            ret.string = ret.string + possible_value[i] ;
+            continue ;
+        }
 
-                i++ ;
+        i++ ;
 
-                if (control_sequences[possible_value[i]] === "undefined") {
-		    ret.string = i18n_get_TagFor('compiler', 'UNKNOWN ESCAPE CHAR') +
-                                 "Unknown escape char" +
-                                 " '\\" + possible_value[i] + "'" ;
-                    ret.error  = true ;
-        	    return ret ;
-                }
+        if (control_sequences[possible_value[i]] === 'undefined')
+        {
+            ret.string = i18n_get_TagFor('compiler', 'UNKNOWN ESCAPE CHAR') +
+                'Unknown escape char' +
+                " '\\" + possible_value[i] + "'" ;
+            ret.error = true ;
+            return ret ;
+        }
 
-		ret.string = ret.string + control_sequences[possible_value[i]] ;
-	}
+        ret.string = ret.string + control_sequences[possible_value[i]] ;
+    }
 
-        return ret ;
+    return ret ;
 }
 
- //
- // Treat HTML sequences
- //
+//
+// Treat HTML sequences
+//
 
- export var html_sequences = {
-                         '&amp;':  '&',
-                         '&lt;':   '<',
-                         '&gt;':   '>',
-                         '&quot;': '"',
-                         '&#039;': "'"
-                      } ;
+export var html_sequences = {
+    '&amp;':  '&',
+    '&lt;':   '<',
+    '&gt;':   '>',
+    '&quot;': '"',
+    '&#039;': "'",
+} ;
 
-export function treatHTMLSequences ( text_with_html )
+export function treatHTMLSequences (text_with_html)
 {
-    var re  ;
+    var re ;
     var key = null ;
 
     for (key in html_sequences)
     {
-         re = new RegExp(key, "gi");
-         text_with_html = text_with_html.replace(re, html_sequences[key]) ;
+        re = new RegExp(key, 'gi');
+        text_with_html = text_with_html.replace(re, html_sequences[key]) ;
     }
 
     return text_with_html ;

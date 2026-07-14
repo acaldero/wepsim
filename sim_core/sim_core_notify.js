@@ -18,41 +18,39 @@
  *
  */
 
-
-        /*
+/*
          *  Notifications: public API
          */
 
-        export var simcore_notifications = [] ;
+export var simcore_notifications = [] ;
 
+export function simcore_notifications_get ()
+{
+    return simcore_notifications ;
+}
 
-        export function simcore_notifications_get ( )
-        {
-            return simcore_notifications ;
-        }
+export function simcore_notifications_reset ()
+{
+    simcore_notifications = [] ;
+}
 
-        export function simcore_notifications_reset ( )
-        {
-            simcore_notifications = [] ;
-        }
+export function simcore_notifications_add2 (ntf)
+{
+    simcore_notifications.push({
+        title:   ntf.title,
+        message: ntf.message,
+        type:    ntf.type,
+        date:    ntf.date,
+    }) ;
+}
 
-        export function simcore_notifications_add2 ( ntf )
-        {
-	    simcore_notifications.push({
-		                          title:   ntf.title,
-		                          message: ntf.message,
-		                          type:    ntf.type,
-		                          date:    ntf.date
-	                               }) ;
-        }
-
-        export function simcore_notifications_add ( ntf_title, ntf_message, ntf_type, ntf_delay )
-        {
-	    simcore_notifications.push({
-		                          title:   ntf_title,
-		                          message: ntf_message,
-		                          type:    ntf_type,
-		                          date:    new Date().getTime()
-	                               }) ;
-        }
+export function simcore_notifications_add (ntf_title, ntf_message, ntf_type, ntf_delay)
+{
+    simcore_notifications.push({
+        title:   ntf_title,
+        message: ntf_message,
+        type:    ntf_type,
+        date:    new Date().getTime(),
+    }) ;
+}
 

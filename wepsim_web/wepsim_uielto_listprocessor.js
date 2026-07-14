@@ -23,93 +23,94 @@ import { simhw_hwset_getSet } from '../sim_hw/sim_hw_index.js';
 import { wepsim_reload_hw } from './wepsim_web_simulator.js';
 import { wepsim_notify_success } from '../wepsim_core/wepsim_notify.js';
 
-        /*
+/*
          *  Processors list
          */
 
-        /* jshint esversion: 6 */
-        export class ws_list_processor extends ws_uielto
+/* jshint esversion: 6 */
+export class ws_list_processor extends ws_uielto
+{
+    // constructor
+    constructor ()
+    {
+        // parent
+        super();
+    }
+
+    // render
+    render (event_name)
+    {
+        // initialize render elements...
+        super.render() ;
+
+        // render current element
+        this.render_skel() ;
+        this.render_populate() ;
+    }
+
+    render_skel ()
+    {
+        var o1 = '' ;
+
+        // build HTML
+        o1 += '<div class="card border-secondary h-100">' +
+            '<div class="card-header border-secondary text-white bg-secondary p-1 text-center">' +
+            '<h5 class="py-1 m-0">' +
+            '<em class="fas fa-microchip pe-2"></em>' +
+            '<span data-langkey="Processor">Processor</span>' +
+            '</h5>' +
+            '</div>' +
+            '<div class="card-body" id="list_processors_1"></div>' +
+            '</div>' ;
+
+        this.innerHTML = o1 ;
+    }
+
+    render_populate ()
+    {
+        var o1 = '' ;
+
+        // check if exists any processor...
+        var e_hws = simhw_hwset_getSet() ;
+        if (typeof e_hws === 'undefined')
         {
-              // constructor
-	      constructor ()
-	      {
-		    // parent
-		    super();
-	      }
-
-              // render
-	      render ( event_name )
-	      {
-                    // initialize render elements...
-	            super.render() ;
-
-                    // render current element
-		    this.render_skel() ;
-		    this.render_populate() ;
-	      }
-
-	      render_skel ( )
-	      {
-                    var o1  = '' ;
-
-                    // build HTML
-		    o1 += '<div class="card border-secondary h-100">' +
-			  '<div class="card-header border-secondary text-white bg-secondary p-1 text-center">' +
-			  '<h5 class="py-1 m-0">' +
-			  '<em class="fas fa-microchip pe-2"></em>' +
-                          '<span data-langkey="Processor">Processor</span>' +
-                          '</h5>' +
-			  '</div>' +
-			  '<div class="card-body" id="list_processors_1"></div>' +
-			  '</div>' ;
-
-		    this.innerHTML = o1 ;
-	      }
-
-	      render_populate ( )
-	      {
-                    var o1  = '' ;
-
-                    // check if exists any processor...
-                    var e_hws = simhw_hwset_getSet() ;
-                    if (typeof e_hws === "undefined")
-                    {
-		        $('#list_processors_1').html(o1) ;
-                        return ;
-                    }
-
-                    // build HTML code
-		    o1 += ' <div class="btn-group-vertical w-100" role="group" aria-label="Processor">' ;
-		    for (var e_hw in e_hws)
-                    {
-			 var ename = e_hw.toUpperCase() ;
-			 o1 += '<button type="button" ' +
-			       '    class="text-danger btn border-secondary m-1 btn-block" ' +
-			       '    data-bind="click" data-action="processor-load" ' +
-			       '    data-hw-name="' + e_hw + '">' +
-			       '<span data-langkey="' + ename + '">' + ename + '</span>' +
-			       '</button>' ;
-		    }
-		    o1 += '</div>' ;
-
-		    $('#list_processors_1').html(o1) ;
-	      }
-
-              bindElements ()
-              {
-                    this.addEventListener('click', (e) => {
-                        const el = e.target.closest('[data-bind="click"]');
-                        if (!el) return;
-                        e.preventDefault();
-                        switch (el.dataset.action) {
-                            case 'processor-load':
-                                wepsim_reload_hw(el.dataset.hwName);
-                                wepsim_notify_success('<strong>INFO</strong>',
-                                                     el.dataset.hwName + ' processor loaded!.');
-                                break;
-                        }
-                    });
-              }
+            $('#list_processors_1').html(o1) ;
+            return ;
         }
 
+        // build HTML code
+        o1 += ' <div class="btn-group-vertical w-100" role="group" aria-label="Processor">' ;
+        for (var e_hw in e_hws)
+        {
+            var ename = e_hw.toUpperCase() ;
+            o1 += '<button type="button" ' +
+                '    class="text-danger btn border-secondary m-1 btn-block" ' +
+                '    data-bind="click" data-action="processor-load" ' +
+                '    data-hw-name="' + e_hw + '">' +
+                '<span data-langkey="' + ename + '">' + ename + '</span>' +
+                '</button>' ;
+        }
+        o1 += '</div>' ;
+
+        $('#list_processors_1').html(o1) ;
+    }
+
+    bindElements ()
+    {
+        this.addEventListener('click', (e) =>
+        {
+            const el = e.target.closest('[data-bind="click"]');
+            if (!el) return;
+            e.preventDefault();
+            switch (el.dataset.action)
+            {
+                case 'processor-load':
+                    wepsim_reload_hw(el.dataset.hwName);
+                    wepsim_notify_success('<strong>INFO</strong>',
+                                          el.dataset.hwName + ' processor loaded!.');
+                    break;
+            }
+        });
+    }
+}
 

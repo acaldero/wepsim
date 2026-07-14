@@ -20,102 +20,104 @@
 import { ws_uielto } from './wepsim_uielto.js';
 import { simcore_native_set_value } from '../sim_core/sim_api_native.js';
 
-        /*
+/*
          *  Console (keyboard + screen)
          */
 
-        /* jshint esversion: 6 */
-        export class ws_console extends ws_uielto
-        {
-              constructor ()
-              {
-                    // parent
-                    super();
-              }
+/* jshint esversion: 6 */
+export class ws_console extends ws_uielto
+{
+    constructor ()
+    {
+        // parent
+        super();
+    }
 
-              // render
-	      render ( event_name )
-	      {
-		    // html holder
-		    var o1 = '<label class="my-0" for="kdb_con" style="min-width:95%">' +
-                              '  <i style="height:5vh; opacity:0.6;" ' +
-                              '     class="fas fa-desktop fa-2x mb-2"></i>' +
-			     '</label>' +
-			     '<textarea aria-label="monitor"' +
-			     '          style="width:100%; overflow-y:auto; -webkit-overflow-scrolling: touch; margin:0 0 8 0"' +
-			     '          placeholder="WepSIM" id="kdb_con" rows="8" readonly></textarea>' +
-                              '' +
-                              '<label class="my-0" for="kdb_key" style="min-width:95%">' +
-                              '  <i style="height:5vh; opacity:0.6;" ' +
-                              '     class="far fa-keyboard fa-2x mt-2 mb-1"></i>' +
-                              '</label>' +
-                              '<textarea aria-label="keyboard"' +
-                              '          style="min-width:100%; overflow-y:auto; -webkit-overflow-scrolling: touch; margin:0 0 0 0"' +
-                              '          placeholder="WepSIM" id="kdb_key" rows="2"></textarea>' ;
+    // render
+    render (event_name)
+    {
+        // html holder
+        var o1 = '<label class="my-0" for="kdb_con" style="min-width:95%">' +
+            '  <i style="height:5vh; opacity:0.6;" ' +
+            '     class="fas fa-desktop fa-2x mb-2"></i>' +
+            '</label>' +
+            '<textarea aria-label="monitor"' +
+            '          style="width:100%; overflow-y:auto; -webkit-overflow-scrolling: touch; margin:0 0 8 0"' +
+            '          placeholder="WepSIM" id="kdb_con" rows="8" readonly></textarea>' +
+            '' +
+            '<label class="my-0" for="kdb_key" style="min-width:95%">' +
+            '  <i style="height:5vh; opacity:0.6;" ' +
+            '     class="far fa-keyboard fa-2x mt-2 mb-1"></i>' +
+            '</label>' +
+            '<textarea aria-label="keyboard"' +
+            '          style="min-width:100%; overflow-y:auto; -webkit-overflow-scrolling: touch; margin:0 0 0 0"' +
+            '          placeholder="WepSIM" id="kdb_key" rows="2"></textarea>' ;
 
-		    this.innerHTML = o1 ;
-	      }
+        this.innerHTML = o1 ;
+    }
 
-              bindElements()
-              {
-              }
-        }
+    bindElements()
+    {
+    }
+}
 
+//
+// Screen / Keyboard
+//
 
+export function wepsim_get_screen_content()
+{
+    var screen_content = '' ;
 
-        //
-        // Screen / Keyboard
-        //
+    var scrobj = document.getElementById('kdb_con') ;
+    if (scrobj != null)
+    {
+        screen_content = scrobj.value ;
+    }
 
-	export function wepsim_get_screen_content( )
-	{
-	      var screen_content = "" ;
+    simcore_native_set_value('SCREEN', 'content', screen_content) ;
 
-	      var scrobj = document.getElementById("kdb_con") ;
-              if (scrobj != null) {
-		  screen_content = scrobj.value ;
-	      }
+    return screen_content ;
+}
 
-              simcore_native_set_value("SCREEN", "content", screen_content) ;
+export function wepsim_set_screen_content(screen_content)
+{
+    var scrobj = document.getElementById('kdb_con') ;
+    if (scrobj != null)
+    {
+        scrobj.value = screen_content ;
+    }
 
-	      return screen_content ;
-	}
+    simcore_native_set_value('SCREEN', 'content', screen_content) ;
 
-	export function wepsim_set_screen_content( screen_content )
-	{
-	      var scrobj = document.getElementById("kdb_con") ;
-              if (scrobj != null) {
-		  scrobj.value = screen_content ;
-	      }
+    return screen_content ;
+}
 
-              simcore_native_set_value("SCREEN", "content", screen_content) ;
+export function wepsim_get_keyboard_content()
+{
+    var keystrokes = '' ;
 
-	      return screen_content ;
-	}
+    var keyobj = document.getElementById('kdb_key') ;
+    if (keyobj != null)
+    {
+        keystrokes = keyobj.value ;
+    }
 
-	export function wepsim_get_keyboard_content( )
-	{
-	      var keystrokes = "" ;
+    simcore_native_set_value('KBD', 'keystrokes', keystrokes) ;
 
-	      var keyobj = document.getElementById("kdb_key") ;
-              if (keyobj != null) {
-		  keystrokes = keyobj.value ;
-	      }
+    return keystrokes ;
+}
 
-              simcore_native_set_value("KBD", "keystrokes", keystrokes) ;
+export function wepsim_set_keyboard_content(keystrokes)
+{
+    var keyobj = document.getElementById('kdb_key') ;
+    if (keyobj != null)
+    {
+        keyobj.value = keystrokes ;
+    }
 
-	      return keystrokes ;
-	}
+    simcore_native_set_value('KBD', 'keystrokes', keystrokes) ;
 
-	export function wepsim_set_keyboard_content( keystrokes )
-	{
-	      var keyobj = document.getElementById("kdb_key") ;
-              if (keyobj != null) {
-		  keyobj.value = keystrokes ;
-	      }
-
-              simcore_native_set_value("KBD", "keystrokes", keystrokes) ;
-
-	      return true ;
-	}
+    return true ;
+}
 

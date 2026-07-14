@@ -1,8 +1,8 @@
-/*      
+/*
  *  Copyright 2015-2026 The WepSIM team (see docs/WEPSIM-TEAM.md)
  *
  *  This file is part of WepSIM.
- * 
+ *
  *  WepSIM is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -33,34 +33,35 @@ import { simhw_add } from './sim_hw_index.js';
          *  RISC-V Processor
          */
 
-        export var rv_def = {
-                       sim_name:            "RISC-V Processor",
-                       sim_short_name:      "rv",
-                       sim_img_processor:   "repo/hardware/rv/images/processor.svg",
-                       sim_img_controlunit: "",
-                       sim_img_cpu:         "repo/hardware/rv/images/cpu.svg",
+export var rv_def = {
+    sim_name:            'RISC-V Processor',
+    sim_short_name:      'rv',
+    sim_img_processor:   'repo/hardware/rv/images/processor.svg',
+    sim_img_controlunit: '',
+    sim_img_cpu:         'repo/hardware/rv/images/cpu.svg',
 
-                       components:          {},
-                       states:              {},
-                       signals:             {},
-                       behaviors:           {},
-                       elements:            {},
+    components: {},
+    states:     {},
+    signals:    {},
+    behaviors:  {},
+    elements:   {},
 
-                       internal_states:     {},
-                       ctrl_states:         {},
-                       events:              {}
-	             } ;
+    internal_states: {},
+    ctrl_states:     {},
+    events:          {},
+} ;
 
-export function sim_hw_register_RV() {
-    board_base_register ( rv_def ) ;
-    cpu_rv_register ( rv_def ) ;
-    mem_rv_register ( rv_def ) ;
-    io_screen_base_register ( rv_def ) ;
-    io_keyboard_base_register ( rv_def ) ;
-    io_clk_base_register ( rv_def ) ;
-    io_l3d_base_register ( rv_def ) ;
-    io_ldm_base_register ( rv_def ) ;
-    io_sound_base_register ( rv_def ) ;
+export function sim_hw_register_RV()
+{
+    board_base_register (rv_def) ;
+    cpu_rv_register (rv_def) ;
+    mem_rv_register (rv_def) ;
+    io_screen_base_register (rv_def) ;
+    io_keyboard_base_register (rv_def) ;
+    io_clk_base_register (rv_def) ;
+    io_l3d_base_register (rv_def) ;
+    io_ldm_base_register (rv_def) ;
+    io_sound_base_register (rv_def) ;
 
     simhw_add(rv_def) ;
 }

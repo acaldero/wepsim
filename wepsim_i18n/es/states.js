@@ -18,43 +18,41 @@
  *
  */
 
+export function i18n_es_register_states(i18n)
+{
 
-    export function i18n_es_register_states(i18n) {
+    i18n.eltos.states.es = {
+        'States':                                 'Estados',
+        'state':                                  'estado',
+        'Current':                                'Actual',
+        'Current State':                          'Estado Actual',
+        'History':                                'Historia',
+        'None':                                   'Ninguno',
+        'Empty history':                          'Historia vac&iacute;a',
+        'Empty (only modified values are shown)': 'Vac&iacute;o (solo se muestra los valores modificados)',
+        'Differences':                            'Diferencias',
+        'differences with clipboard state':       'diferencias con estado en portapapeles',
+        'Meets the specified requirements':       'Iguales (cumple los requisitos)',
 
+        'history':                    'historial',
+        'Add':                        'A&ntilde;adir',
+        "'Current State' to History": "'Estado Actual' al historial",
+        'Check':                      'Comprobar',
+        'Copy':                       'Copiar',
+        'to clipboard':               'al portapapeles',
 
+        'Checkpoint':             'Checkpoint',
+        'File name':              'Nombre de fichero',
+        'Tag for checkpoint':     'Etiqueta para checkpoint',
+        'File to be loaded':      'Fichero a cargar',
+        'Save to File':           'Guardar a fichero',
+        'State(s) to checkpoint': 'Estados para checkpoint',
+        'Record to checkpoint':   'Grabaci&oacute;n para checkpoint',
 
-        i18n.eltos.states.es = {
-			"States": 			     		"Estados",
-			'state':					'estado',
-			"Current":  			                "Actual",
-			"Current State":  			        "Estado Actual",
-			"History":  			                "Historia",
-			"None":  			                "Ninguno",
-			"Empty history":  			        "Historia vac&iacute;a",
-			"Empty (only modified values are shown)":       "Vac&iacute;o (solo se muestra los valores modificados)",
-			"Differences":  			        "Diferencias",
-			"differences with clipboard state":  	        "diferencias con estado en portapapeles",
-			"Meets the specified requirements": 	        "Iguales (cumple los requisitos)",
+        'Browser cache':         'Cache navegador',
+        'Session to be restore': 'Sesi&oacute;n a restaurar',
 
-                        "history": 		                	"historial",
-                        "Add": 		                	        "A&ntilde;adir",
-                        "'Current State' to History": 		        "'Estado Actual' al historial",
-                        "Check": 		                	"Comprobar",
-                        "Copy": 		                	"Copiar",
-                        "to clipboard": 		                "al portapapeles",
-
-                        "Checkpoint":                                   "Checkpoint",
-                        "File name":                                    "Nombre de fichero",
-                        "Tag for checkpoint":                           "Etiqueta para checkpoint",
-                        "File to be loaded":                            "Fichero a cargar",
-	                "Save to File":                                 "Guardar a fichero",
-	                "State(s) to checkpoint":                       "Estados para checkpoint",
-	                "Record to checkpoint":                         "Grabaci&oacute;n para checkpoint",
-
-			"Browser cache":				"Cache navegador",
-			"Session to be restore":			"Sesi&oacute;n a restaurar",
-
-		        "_last_":					"_last_"
-                  };
-                  }
+        '_last_': '_last_',
+    };
+}
 
