@@ -18,15 +18,28 @@
  *
  */
 
+import { firm_metadata_read, firm_metadata_write } from './firmware/firm_metadata.js';
+import { firm_instruction_read, firm_instruction_write } from './firmware/firm_instruction.js';
+import { firm_registers_read, firm_registers_write } from './firmware/firm_registers.js';
+import { firm_pseudoinstructions_read, firm_pseudoinstructions_write } from './firmware/firm_pseudoinstructions.js';
+import { simhw_internalState, simhw_sim_ctrlStates_get } from '../sim_hw/sim_hw_index.js';
+import { frm_isToken, frm_langError, frm_nextToken } from './firmware/lexical.js';
+import { firm_begin_read } from './firmware/firm_begin.js';
+import { i18n, i18n_get_TagFor } from '../wepsim_i18n/i18n.js';
+import { resolve_pending_oceoc_v2 } from './firmware/firm_oc_eoc_v2.js';
+import { resolve_pending_oceoc_v1 } from './firmware/firm_oc_eoc_v1.js';
+import { simcore_native_get_fields } from '../sim_core/sim_api_native.js';
+import { wepsim_notify_error } from '../wepsim_core/wepsim_notify.js';
+import { get_value } from '../sim_core/sim_core_values.js';
 
 /*
  *  Save Firmware
  */
 
-function saveFirmware ( SIMWARE, firm_version )
+export function saveFirmware ( SIMWARE, firm_version )
 {
 	var o = "" ;
-
+	var i ;
 
         // Saving as version 2 by default ;-)
         if (typeof SIMWARE.metadata == "undefined")
@@ -73,10 +86,11 @@ function saveFirmware ( SIMWARE, firm_version )
  *  Load Firmware
  */
 
-function loadFirmware (text)
+export function loadFirmware (text)
 {
-           var ret = {} ;
-           var i = 0 ;
+           var ret ;
+           var i ;
+           var key ;
 
            var     xr_info = simhw_sim_ctrlStates_get() ;
 	   var all_ones_oc = "1".repeat(xr_info.ir.default_eltos.oc.length) ;
@@ -235,7 +249,7 @@ function loadFirmware (text)
 	   {
 		for (i=0; i<context.labelsNotFound.length; i++)
 		{
-			for (var j in context.etiquetas)
+			for (j in context.etiquetas)
 			{
 				if (context.etiquetas[j] == context.labelsNotFound[i].nombre)
 				{
@@ -280,8 +294,8 @@ function loadFirmware (text)
 	   }
 
 	   // oc_eoc_hash
-           var fioc  = 0 ;
-	   var fieoc = 0 ;
+        var fioc ;
+	   var fieoc ;
 	   context.hash_oceoc = {} ;
 
 	   for (var fi in context.instrucciones)
@@ -337,7 +351,13 @@ function loadFirmware (text)
  *  Auxiliar firmware interface
  */
 
-function decode_instruction ( curr_firm, ep_ir, binstruction )
+/**
+ * @param {any} curr_firm
+ * @param {any} ep_ir
+ * @param {number} binstruction
+ * @returns {DecodeInstructionResult}
+ */
+export function decode_instruction ( curr_firm, ep_ir, binstruction )
 {
 	var ret = {
 		      "oinstruction": null,
@@ -364,7 +384,7 @@ function decode_instruction ( curr_firm, ep_ir, binstruction )
 	}
 
 	// (.witheoc == true) -> eoc/cop-code
-	var maskval = 0 ;
+	var maskval ;
 	var masklen = 0 ;
 	for (var eoc in hash_entry)
 	{
@@ -383,7 +403,7 @@ function decode_instruction ( curr_firm, ep_ir, binstruction )
         return ret ;
 }
 
-function decode_ram ( )
+export function decode_ram ( )
 {
     var curr_ircfg = simhw_sim_ctrlStates_get().ir ;
     var curr_firm  = simhw_internalState('FIRMWARE') ;

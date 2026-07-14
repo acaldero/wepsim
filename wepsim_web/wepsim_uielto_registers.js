@@ -17,25 +17,55 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto } from './wepsim_uielto.js';
+import { simhw_sim_signals, simhw_sim_states, simhw_internalState, simhw_sim_state_getref } from '../sim_hw/sim_hw_index.js';
+import { get_simware } from '../sim_core/sim_adt_core.js';
+import { get_cfg, set_cfg } from '../sim_core/sim_cfg.js';
+import { get_value, set_value, update_value } from '../sim_core/sim_core_values.js';
+import { value2string, hex2char8, hex2bin, hex2float, simcoreui_pack } from '../sim_core/sim_core_ui.js';
+import { vue_observable_ifnotjetdone, vue_appyBinding } from '../sim_core/sim_core_values.js';
+import { i18n_get_TagFor } from '../wepsim_i18n/i18n.js';
+import { quickcfg_html_btn, quickcfg_html_btnreg, quickcfg_html_onoff, quickcfg_html_header, quickcfg_html_br, quickcfg_html_close, wepsim_quickcfg_init } from './wepsim_web_ui_quickcfg.js';
+import { wepsim_popovers_init } from './wepsim_web_ui_popover.js';
+import { wait_if_uievents } from '../sim_core/sim_core_ctrl.js';
+
 
 
         /*
          *  Registers (Register file + transparent registers)
          */
-
         /* jshint esversion: 6 */
-        class ws_registers extends ws_uielto
+        export class ws_registers extends ws_uielto
         {
 	      constructor ()
 	      {
 		    // parent
 		    super();
+                    this.bindElements();
 
                     this.rf_div = "states_BR" ;
                     this.tf_div = "states_ALL" ;
                     this.gf_div = "states_GR" ;
 	      }
 
+
+              bindElements () {
+                  this.addEventListener('click', (e) => {
+                      var el = e.target.closest('[data-action]');
+                      if (!el) return;
+                      switch (el.dataset.action) {
+                          case 'reg-hex-update':
+                              hex2values_update(el.dataset.regIndex);
+                              break;
+                          case 'reg-popover-close':
+                              if (el.dataset.targetId) {
+                                  $('#' + el.dataset.targetId).click();
+                              }
+                              break;
+                      }
+                  });
+              }
 	      render ( event_name )
 	      {
                     // html holder
@@ -67,16 +97,13 @@
 	      }
         }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-registers', ws_registers) ;
-        }
 
 
         /*
          *  Auxiliar to init_x & show_x
          */
 
-        function quick_config_find_reg ( simware, reg_name )
+        export function quick_config_find_reg( simware, reg_name )
         {
               for (let rf_item in simware.registers)
               {
@@ -88,7 +115,7 @@
               return null ;
         }
 
-        function hex2values_update ( index )
+        export function hex2values_update( index )
         {
               var sim_eltos = simhw_sim_states() ;
 	      var new_value = parseInt($("#popover1")[0].value) ;
@@ -112,7 +139,7 @@
               }
         }
 
-        function hex2values ( hexvalue, index )
+        export function hex2values( hexvalue, index )
         {
                 var rhex = /[0-9A-F]{1,8}/gi;
                 if (!rhex.test(hexvalue)) {
@@ -131,8 +158,8 @@
 		    o2 = "<tr><td class='py-1 px-1 pt-2' colspan='5' align='center'>" +
                          "<input type='text' id='popover1' value='" + valueui + "' data-mini='true' " +
                          "       style='width:65%'>" +
-                         "<span class='badge text-bg-secondary shadow ms-2 py-2' " +
-                         "      onclick='hex2values_update(\"" + index + "\");'>" +
+                         '<span class=\'badge text-bg-secondary shadow ms-2 py-2\' ' +
+                         '      data-bind="click" data-action="reg-hex-update" data-reg-index="' + index + '">' +
                          "<span data-langkey='update'>update</span></span>" +
                          "</td></tr>";
                 }
@@ -166,7 +193,7 @@
 		return o1;
         }
 
-        var r_formats = [
+        export var r_formats = [
 		  { "label2":"0x0000001A<sub>16</sub>", "format2":"unsigned_16_fill",   "colwidth":"col-7" },
 		  { "label2":"0x1A<sub>16</sub>",       "format2":"unsigned_16_nofill", "colwidth":"col"   },
 		  { "label2":"00000032<sub>8</sub>",    "format2":"unsigned_8_fill",    "colwidth":"col-7" },
@@ -177,7 +204,7 @@
 		  { "label2":"3.6e-44<sub>10</sub>",    "format2":"float_10_nofill",    "colwidth":"col"   }
 	    ] ;
 
-           function quick_config_rf_register_format ( )
+           export function quick_config_rf_register_format( )
            {
 	       var o1 = "" ;
 
@@ -188,22 +215,19 @@
                         continue ;
                     }
 
-	            o1 += quickcfg_html_btn(r_formats[i].label2,
-				            "update_cfg(\"RF_display_format\", " +
-				            "           \"" + r_formats[i].format2 + "\");" +
-				            "wepsim_refresh_registers();",
+ 	            o1 += quickcfg_html_btn(r_formats[i].label2,
 				            r_formats[i].colwidth) ;
                }
 
 	       return o1 ;
            }
 
-           function quick_config_rf_register_names ( )
+           export function quick_config_rf_register_names( )
            {
               var sim_eltos = simhw_sim_states() ;
               var SIMWARE   = get_simware() ;
               var o2 = "" ;
-              var rf_item = null ;
+              var rf_item ;
 
               // get: [ 'r10', 'la' ]
               var logical_defined = [] ;
@@ -217,45 +241,36 @@
               }
 
               // make menu
-	      o2 += quickcfg_html_btnreg('R10',
-	 			         "update_cfg(\"RF_display_name\", \"numerical\");" +
-				         "wepsim_show_rf_names();",
+ 	      o2 += quickcfg_html_btnreg('R10',
 				         'col-6') ;
               if (logical_defined.length == 0)
                    o2 += "<div class='col-6 p-1'></div>" ;
               else o2 += quickcfg_html_btnreg(logical_defined.join('|'),
-	 			              "update_cfg(\"RF_display_name\", \"logical\");" +
-				              "wepsim_show_rf_names();",
 				              'col-6') ;
 
               for (var i=0; i<logical_defined.length; i++)
               {
-	           o2 += quickcfg_html_btnreg(logical_defined[i],
-		  		              "update_cfg(\"RF_display_name\", \"logical\");" +
-                                              "wepsim_refresh_rf_names(" + (i+1) + ");",
+ 	           o2 += quickcfg_html_btnreg(logical_defined[i],
 				              'col-6') ;
               }
 
 	      return o2 ;
            }
 
-           function quick_config_rf_register_orientation  ( )
+           export function quick_config_rf_register_orientation( )
            {
-	       var o1 = "" ;
+	       var o1 ;
 
-	       o1 = quickcfg_html_onoff('20', 
+ 	       o1 = quickcfg_html_onoff('20', 
 			                'Register show in horizontal',
 				           i18n_get_TagFor('cfg', 'Horizontal'),
-			                "  wepsim_config_button_toggle('RF_vertical_pack', false, '20');" +
-		                        "  $('.mp_tooltip').collapse('hide');",
 				           "(*) " + i18n_get_TagFor('cfg', 'Vertical'),
-			                "  wepsim_config_button_toggle('RF_vertical_pack', true,  '20');" +
-		                        "  $('.mp_tooltip').collapse('show');") ;
+                                           'rf-orientation') ;
 
 	       return  o1 ;
            }
 
-        function quick_config_rf ( )
+        export function quick_config_rf( )
         {
 	      return "<div class='container mt-1'>" +
                      "<div class='row'>" +
@@ -278,7 +293,7 @@
          *  refresh
          */
 
-        function wepsim_refresh_registers ( )
+        export function wepsim_refresh_registers( )
         {
             // register file
             var sim_eltos = simhw_sim_states() ;
@@ -299,17 +314,17 @@
             if (filter_groups) {
                 for (var group_name in filter_groups) {
                     var group = filter_groups[group_name];
-                    for (var i = 0; i < group.length; i++) {
-                        var s = group[i].split(",")[0] ;
+                    for (i = 0; i < group.length; i++) {
+                        s = group[i].split(",")[0] ;
                         update_value(simhw_sim_state_getref(s)) ;
                     }
                 }
             }
         }
 
-        function wepsim_refresh_rf_names_mkname ( disp_name, SIMWARE, rf_index, index, logical_index )
+        export function wepsim_refresh_rf_names_mkname( disp_name, SIMWARE, rf_index, index, logical_index )
         {
-            var br_value = "" ;
+            var br_value ;
 
 	    if (typeof SIMWARE.registers[rf_index] == "undefined") {
 	         br_value = "R" + index ;
@@ -339,7 +354,7 @@
             return br_value ;
         }
 
-        function wepsim_refresh_rf_names ( logical_index )
+        export function wepsim_refresh_rf_names( logical_index )
         {
 	    var disp_name = get_cfg('RF_display_name') ;
             var sim_eltos = simhw_sim_states() ;
@@ -357,7 +372,7 @@
 	    }
         }
 
-        function wepsim_show_rf_names ( )
+        export function wepsim_show_rf_names( )
         {
             wepsim_refresh_rf_names(0) ;
         }
@@ -368,9 +383,9 @@
          */
 
 	// helper for vue binding
-        var last_rf_id = { value: null } ;
+        export var last_rf_id = { value: null } ;
 
-        function init_update_last_id ( old_id, elto_id )
+        export function init_update_last_id( old_id, elto_id )
         {
 	    if (old_id.value == elto_id) {
 	        return true ;
@@ -394,19 +409,19 @@
 	    return true ;
         }
 
-        function wepsim_init_rf ( )
+        export function wepsim_init_rf( )
         {
             // Registers
             var o1_rf = "" ;
-            var o1_rn = "" ;
-            var r_index = '' ;
+            var o1_rn ;
+            var r_index ;
 
             // TODO: (hw)   BR*[rf]*[index]
             // TODO: (here) outter-loop in all rf at BR[*rf*][index]
             var rf_index = 'default' ;
             var rf_item  = simhw_sim_states().BR ;
 
-            var separator_class = "" ;
+            var separator_class ;
             if (get_cfg('RF_vertical_pack'))
                  separator_class = "row mp_tooltip collapse show" ;
             else separator_class = "row mp_tooltip collapse" ;
@@ -467,7 +482,7 @@
 		        return '<span class="text-body font-monospace col"><strong>' + rname + '</strong></span>' +
                                '<button type="button" id="close" ' +
                                '        class="btn-close border border-secondary ms-auto" ' +
-                               '        onclick="$(' + id_button + ').click();"></button>';
+                               '        data-bind="click" data-action="reg-popover-close" data-target-id="rf' + r_index + '"></button>';
 		    },
 		    sanitizeFn: function (content) {
                         return content ; // DOMPurify.sanitize(content) ;
@@ -486,7 +501,7 @@
 				             return value2string(rf_format, (value >>> 0)) ;
 			                 } ;
 
-	    for (var index=0; index < simhw_sim_states().BR.length; index++)
+	    for (index=0; index < simhw_sim_states().BR.length; index++)
             {
 		 var ref_obj = simhw_sim_states().BR[index] ;
 
@@ -495,10 +510,10 @@
 	    }
         }
 
-function render_state_button(ename, vir_real, separator_class, btn_id_prefix, val_id_prefix, toggle_name) {
+export function render_state_button(ename, vir_real, separator_class, btn_id_prefix, val_id_prefix, toggle_name) {
     var dbs_toggle = "";
-    var divclass = "";
-    var spanbetw = "";
+    var divclass ;
+    var spanbetw ;
 
     if ("real" == vir_real) {
         dbs_toggle = " data-bs-toggle='" + toggle_name + "' data-popover-content='" + ename + "' data-container='body' ";
@@ -533,7 +548,7 @@ function render_state_button(ename, vir_real, separator_class, btn_id_prefix, va
         "</button>";
 }
 
-function popover_cfg_make(btn_prefix) {
+export function popover_cfg_make(btn_prefix) {
     return {
         html: true,
         placement: 'bottom',
@@ -556,7 +571,7 @@ function popover_cfg_make(btn_prefix) {
                 '</strong></span>' +
                 '<button type="button" id="close" ' +
                 '        class="btn-close border border-secondary ms-auto" ' +
-                '        onclick="$(' + id_button.replace(".", "_") + ').click();"></button>';
+                '        data-bind="click" data-action="reg-popover-close" data-target-id="' + btn_prefix + index.replace('.', '_') + '"></button>';
         },
         sanitizeFn: function (content) {
             return content;
@@ -564,7 +579,7 @@ function popover_cfg_make(btn_prefix) {
     };
 }
 
-function bind_state_vue(entry, val_prefix, f_computed) {
+export function bind_state_vue(entry, val_prefix, f_computed) {
     var s = entry.split(",")[0];
     var ref_obj = simhw_sim_state_getref(s);
     ref_obj.value = vue_observable_ifnotjetdone(ref_obj);
@@ -572,11 +587,11 @@ function bind_state_vue(entry, val_prefix, f_computed) {
     vue_appyBinding(ref_obj.value, '#' + val_prefix + s, f_computed);
 }
 
-function wepsim_init_states() {
+export function wepsim_init_states() {
     var filter = simhw_internalState('filter_states');
     var filter_groups = simhw_internalState('filter_states_groups');
 
-    var separator_class = "";
+    var separator_class ;
     if (get_cfg('RF_vertical_pack'))
         separator_class = "row mp_tooltip collapse show";
     else separator_class = "row mp_tooltip collapse";
@@ -591,8 +606,8 @@ function wepsim_init_states() {
     wepsim_popovers_init("[data-bs-toggle=popover-bottom]", popover_cfg_make('rp'), null);
 
     var f_computed_value = function (value, elto_id) {
-        var rf_format = '';
-        var rf_value = '';
+        var rf_format ;
+        var rf_value ;
         if (Number.isInteger(value)) {
             rf_format = get_cfg('RF_display_format');
             rf_value = value2string(rf_format, (value >>> 0));
@@ -603,7 +618,7 @@ function wepsim_init_states() {
         return rf_value;
     };
 
-    for (var i = 0; i < filter.length; i++)
+    for (i = 0; i < filter.length; i++)
         bind_state_vue(filter[i], 'rf_', f_computed_value);
 
     // filter_states_groups (below register file)
@@ -619,16 +634,16 @@ function wepsim_init_states() {
                         "</strong></small></div>";
                     last_group = group_name;
                 }
-                var filspl = group[j].split(",");
+                filspl = group[j].split(",");
                 o2 += render_state_button(filspl[0], filspl[1], separator_class, 'rpg', 'rfg_', 'popover-grp');
             }
         }
         $("#states_GR").html("<div class='d-flex flex-row flex-wrap justify-content-around justify-content-sm-between'>" + o2 + "</div>");
         wepsim_popovers_init("[data-bs-toggle=popover-grp]", popover_cfg_make('rpg'), null);
 
-        for (var group_name in filter_groups) {
-            var group = filter_groups[group_name];
-            for (var j = 0; j < group.length; j++)
+        for (group_name in filter_groups) {
+            group = filter_groups[group_name];
+            for (j = 0; j < group.length; j++)
                 bind_state_vue(group[j], 'rfg_', f_computed_value);
         }
     } else {

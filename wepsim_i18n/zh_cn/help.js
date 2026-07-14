@@ -21,7 +21,10 @@
 
     // Tranlation thanks to https://github.com/shiptux
 
-    i18n.eltos.help.zh_cn = {
+    export function i18n_zh_cn_register_help(i18n) {
+
+
+        i18n.eltos.help.zh_cn = {
 
 		'Welcome tutorial':		'欢迎教程',
 		'help_01_01':		'打开欢迎教程',
@@ -52,4 +55,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

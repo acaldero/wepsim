@@ -18,12 +18,23 @@
  *
  */
 
+import { board_base_register } from './hw_items/board_base.js';
+import { cpu_poc_register } from './hw_items/cpu_poc.js';
+import { cu_poc_register } from './hw_items/cu_poc.js';
+import { mem_poc_register } from './hw_items/mem_poc.js';
+import { io_screen_base_register } from './hw_items/io_screen_base.js';
+import { io_keyboard_base_register } from './hw_items/io_keyboard_base.js';
+import { io_clk_base_register } from './hw_items/io_clk_base.js';
+import { io_l3d_base_register } from './hw_items/io_l3d_base.js';
+import { io_ldm_base_register } from './hw_items/io_ldm_base.js';
+import { io_sound_base_register } from './hw_items/io_sound_base.js';
+import { simhw_add } from './sim_hw_index.js';
 
-        /*
+/*
          *  Proof-Of-Concept Processor
          */
 
-        var poc_def = {
+        export var poc_def = {
                          sim_name:            "Proof-Of-Concept Processor",
                          sim_short_name:      "poc",
                          sim_img_processor:   "repo/hardware/poc/images/processor.svg",
@@ -41,17 +52,18 @@
                          events:              {}
 	              } ;
 
-            // registering elements
-                  board_base_register ( poc_def ) ;
-            cpu_poc_register          ( poc_def ) ;
-             cu_poc_register          ( poc_def ) ;
-            mem_poc_register          ( poc_def ) ;
-              io_screen_base_register ( poc_def ) ;
-            io_keyboard_base_register ( poc_def ) ;
-                 io_clk_base_register ( poc_def ) ;
-                 io_l3d_base_register ( poc_def ) ;
-                 io_ldm_base_register ( poc_def ) ;
-               io_sound_base_register ( poc_def ) ;
+export function sim_hw_register_POC() {
+    board_base_register ( poc_def ) ;
+    cpu_poc_register          ( poc_def ) ;
+    cu_poc_register          ( poc_def ) ;
+    mem_poc_register          ( poc_def ) ;
+    io_screen_base_register ( poc_def ) ;
+    io_keyboard_base_register ( poc_def ) ;
+    io_clk_base_register ( poc_def ) ;
+    io_l3d_base_register ( poc_def ) ;
+    io_ldm_base_register ( poc_def ) ;
+    io_sound_base_register ( poc_def ) ;
 
-            simhw_add(poc_def) ;
+    simhw_add(poc_def) ;
+}
 

@@ -19,11 +19,14 @@
  */
 
 
+import $ from 'jquery';
+import * as bootstrap from 'bootstrap';
+
     //
     // General popover
     //
 
-    function wepsim_popover_init ( popover_id, popover_cfg, fun_ownshown )
+    export function wepsim_popover_init( popover_id, popover_cfg, fun_ownshown )
     {
          // 1) get object
          var obj1 = document.querySelector(popover_id) ;
@@ -42,7 +45,7 @@
          return po1 ;
     }
 
-    function wepsim_popovers_init ( popover_set_id, popover_cfg, fun_ownshown )
+    export function wepsim_popovers_init( popover_set_id, popover_cfg, fun_ownshown )
     {
          // 1) get object list
          var list1 = document.querySelectorAll(popover_set_id) ;
@@ -61,22 +64,22 @@
          return plist1 ;
     }
 
-    function wepsim_popover_show ( popover_id )
+    export function wepsim_popover_show( popover_id )
     {
          $('#' + popover_id).popover('show') ;
     }
 
-    function wepsim_popover_hide ( popover_id )
+    export function wepsim_popover_hide( popover_id )
     {
          $('#' + popover_id).popover('hide') ;
     }
 
-    function wepsim_popover_action ( popover_id, action )
+    export function wepsim_popover_action( popover_id, action )
     {
          $('#' + popover_id).popover(action) ;
     }
 
-    function wepsim_popovers_hide ( popovers_id )
+    export function wepsim_popovers_hide( popovers_id )
     {
          $(popovers_id).popover('hide') ;
     }

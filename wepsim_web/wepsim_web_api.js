@@ -19,13 +19,49 @@
  */
 
 
+import $ from 'jquery';
+import jQuery from 'jquery';
+import { get_cfg, set_cfg, update_cfg, save_cfg, upgrade_cfg } from '../sim_core/sim_cfg.js';
+import { get_simware } from '../sim_core/sim_adt_core.js';
+import { i18n_get, i18n_update_tags } from '../wepsim_i18n/i18n.js';
+import { simcore_ga } from '../sim_core/sim_core_ga.js';
+import { simcore_record_append_new, simcore_record_isRecording, simcore_record_pause, simcore_record_play, simcore_record_playInterval, simcore_record_reset, simcore_record_setTimeBeforeNow, simcore_record_start, simcore_record_stop } from '../sim_core/sim_core_record.js';
+import { simhw_active } from '../sim_hw/sim_hw_index.js';
+import { wait_if_uievents } from '../sim_core/sim_core_ctrl.js';
+import { show_memories_values } from '../sim_core/sim_core_ui.js';
+import { compute_general_behavior } from '../sim_hw/sim_hw_behavior.js';
+import { saveFirmware } from '../sim_sw/firmware.js';
+import { wepsim_execute_instruction, wepsim_execute_microinstruction, wepsim_execute_reset, wepsim_reset_max_turbo } from '../wepsim_core/wepsim_execute.js';
+import { wepsim_help_set } from '../wepsim_core/wepsim_help.js';
+import { wepsim_mode_change } from '../wepsim_core/wepsim_mode.js';
+import { wepsim_newbie_tour } from '../wepsim_core/wepsim_tour.js';
+import { wepsim_save_to_file } from '../wepsim_core/wepsim_url.js';
+import { wepsim_update_signal_dialog, wepsim_update_signal_quick } from '../wepsim_core/wepsim_signal.js';
+import { wsweb_dlg_alert, wsweb_dlg_close, wsweb_dlg_open } from '../wepsim_core/wepsim_dialog.js';
+import { inputasm, inputfirm, set_ab_size, sim_change_workspace, wepsim_general_exception_handler, wepsim_init_default } from './wepsim_web_simulator.js';
+import { cpucu_show_graph, show_cpuview_view } from './wepsim_uipacker_cpu_cu.js';
+import { fullshow_asmdbg_pc } from './wepsim_uielto_dbg_asm.js';
+import { scroll_memory_to_lastaddress } from './wepsim_uielto_mem.js';
+import { simcoreui_show_hw } from './wepsim_uielto_hw.js';
+import { topbar_quickmenu_action } from './wepsim_uielto_topbar.js';
+import { uipacker_ddown_info_set_select } from './wepsim_uipacker_ddown_info.js';
+import { uipacker_ddown_sel_set_select } from './wepsim_uipacker_ddown_sel.js';
+import { webui_executionbar_toggle_play } from './wepsim_uielto_executionbar.js';
+import { webui_toolbar_updateAction, webui_toolbar_updateMode } from './wepsim_uielto_toolbar.js';
+import { wepsim_compile_assembly, wepsim_compile_firmware } from './wepsim_web_editor.js';
+import { wepsim_popover_action, wepsim_popover_hide, wepsim_popover_show } from './wepsim_web_ui_popover.js';
+import { wepsim_show_cache_memory_config } from './wepsim_uielto_cache_config.js';
+import { wepsim_svg_is_drawing, wepsim_svg_start_drawing, wepsim_svg_stop_drawing } from './wepsim_uielto_cpusvg.js';
+import { wepsim_tooltips_hide } from './wepsim_web_ui_tooltip.js';
+import { wsweb_dialogs } from './wepsim_web_ui_dialogs.js';
+
     //
     // WepSIM API
     //
 
     //  To change Workspaces
 
-    var hash_skin2action = {
+    export var hash_skin2action = {
 	    "classic": {
 		         "simulator": function() {
 					  sim_change_workspace('#main1', 0) ;
@@ -90,7 +126,7 @@
 		       }
         } ;
 
-    function wsweb_change_workspace_simulator ( )
+    export function wsweb_change_workspace_simulator( )
     {
 	    var skin_ui = get_cfg('ws_skin_ui') ;
 
@@ -111,7 +147,7 @@
             return true ;
     }
 
-    function wsweb_change_workspace_microcode ( )
+    export function wsweb_change_workspace_microcode( )
     {
 	    var skin_ui = get_cfg('ws_skin_ui') ;
 
@@ -132,7 +168,7 @@
             return true ;
     }
 
-    function wsweb_change_workspace_assembly ( )
+    export function wsweb_change_workspace_assembly( )
     {
 	    var skin_ui = get_cfg('ws_skin_ui') ;
 
@@ -153,7 +189,7 @@
             return true ;
     }
 
-    function wsweb_change_show_processor ( )
+    export function wsweb_change_show_processor( )
     {
 	    $("#tab26").tab('show') ;
 
@@ -168,7 +204,7 @@
             return true ;
     }
 
-    function wsweb_change_show_asmdbg ( )
+    export function wsweb_change_show_asmdbg( )
     {
 	    $("#tab24").tab('show') ;
 
@@ -207,7 +243,7 @@
 
     //  Workspace simulator: execution
 
-    function wsweb_execution_reset ( )
+    export function wsweb_execution_reset( )
     {
             if (simhw_active() !== null)
             {
@@ -223,7 +259,7 @@
             return true ;
     }
 
-    function wsweb_execution_previous_microinstruction ( )
+    export function wsweb_execution_previous_microinstruction( )
     {
             if (simhw_active() !== null)
             {
@@ -234,7 +270,7 @@
             return true ;
     }
 
-    function wsweb_execution_microinstruction ( )
+    export function wsweb_execution_microinstruction( )
     {
             if (simhw_active() !== null)
             {
@@ -250,7 +286,7 @@
             return true ;
     }
 
-    function wsweb_execution_instruction ( )
+    export function wsweb_execution_instruction( )
     {
             if (simhw_active() !== null) {
 	        wepsim_execute_instruction() ;
@@ -268,7 +304,7 @@
             return true ;
     }
 
-    function wsweb_execution_run ( )
+    export function wsweb_execution_run( )
     {
             if (false == inputfirm.is_compiled) {
 		wsweb_dlg_alert('The Microcode is not microcompiled.<br>\n');
@@ -296,7 +332,7 @@
 
     //  Workspace simulator: dialog-boxes
 
-    function wsweb_dialog_open ( dialog_id )
+    export function wsweb_dialog_open( dialog_id )
     {
 	    // check params
 	    if (typeof wsweb_dialogs[dialog_id] === "undefined") {
@@ -323,7 +359,7 @@
 	    return d1 ;
     }
 
-    function wsweb_dialog_close ( dialog_id )
+    export function wsweb_dialog_close( dialog_id )
     {
 	    // check params
 	    if (typeof wsweb_dialogs[dialog_id] === "undefined") {
@@ -341,7 +377,7 @@
 	    return d1 ;
     }
 
-    function wsweb_dialogbox_close_all ( )
+    export function wsweb_dialogbox_close_all( )
     {
 	    // Close all dialogbox
 	    wsweb_dialog_close('help') ;
@@ -361,11 +397,11 @@
 
     //  Workspace simulator: Signal dialog
 
-    var hash_signal2action = {
+    export var hash_signal2action = {
 	    "<all>":  function(key, event_type){ wsweb_dialogbox_open_updatesignal(key, event_type); },
         } ;
 
-    function wsweb_dialogbox_open_updatesignal ( key, event_type )
+    export function wsweb_dialogbox_open_updatesignal( key, event_type )
     {
 	    // update interface
             if (false === get_cfg('is_interactive')) {
@@ -399,7 +435,7 @@
             return true ;
     }
 
-    function wsweb_dialogbox_close_updatesignal ( )
+    export function wsweb_dialogbox_close_updatesignal( )
     {
 	    $('#dlg_updatesignal').modal('hide') ;
 
@@ -413,7 +449,7 @@
 
     //  Workspace simulator: Selects
 
-    function wsweb_set_details_select ( opt )
+    export function wsweb_set_details_select( opt )
     {
 	    // update interface
             uipacker_ddown_sel_set_select(opt) ;
@@ -427,7 +463,7 @@
             return true ;
     }
 
-    var hash_detail2action = {
+    export var hash_detail2action = {
 	    "CLOCK":          function(){ wepsim_execute_microinstruction(); },
 	    "REGISTER_FILE":  function(){ wsweb_set_details_select(11); },
 
@@ -475,7 +511,7 @@
                                         }
         } ;
 
-    function wsweb_set_details ( opt )
+    export function wsweb_set_details( opt )
     {
             if (
                  (simhw_active() !== null) &&
@@ -493,7 +529,7 @@
             return true ;
     }
 
-    function wsweb_select_refresh ( )
+    export function wsweb_select_refresh( )
     {
             if (simhw_active() !== null)
             {
@@ -520,7 +556,7 @@
 
     //  Workspace simulator: Mode
 
-    function wsweb_select_main ( opt )
+    export function wsweb_select_main( opt )
     {
 	    // save ws_mode
 	    set_cfg('ws_mode', opt) ;
@@ -544,7 +580,7 @@
             return true ;
     }
 
-    function wsweb_do_action ( opt )
+    export function wsweb_do_action( opt )
     {
 	    switch (opt)
 	    {
@@ -615,7 +651,7 @@
 	    return false;
     }
 
-    function wsweb_select_action ( opt )
+    export function wsweb_select_action( opt )
     {
 	    // save ws_action
 	    set_cfg('ws_action', opt) ;
@@ -637,7 +673,7 @@
 
     //  Workspace simulator: Sliders
 
-    function wsweb_set_cpucu_size ( new_value )
+    export function wsweb_set_cpucu_size( new_value )
     {
             var int_value = parseInt(new_value, 10) ;
 
@@ -655,7 +691,7 @@
             return true ;
     }
 
-    function wsweb_set_c1c2_size ( new_value )
+    export function wsweb_set_c1c2_size( new_value )
     {
             var int_value = parseInt(new_value, 10) ;
 
@@ -675,7 +711,7 @@
 
     //  Workspace simulator: Compile
 
-    function wsweb_assembly_compile ( )
+    export function wsweb_assembly_compile( )
     {
             if (false == inputfirm.is_compiled)
             {
@@ -696,7 +732,7 @@
             return true ;
     }
 
-    function wsweb_firmware_compile ( )
+    export function wsweb_firmware_compile( )
     {
 	    var textToMCompile = inputfirm.getValue();
 	    var ok = wepsim_compile_firmware(textToMCompile);
@@ -719,7 +755,7 @@
 
     //  Workspace simulator: Files
 
-    function wsweb_save_controlmemory_to_file ( firm_version )
+    export function wsweb_save_controlmemory_to_file( firm_version )
     {
             var wsi = get_cfg('ws_idiom') ;
 
@@ -749,7 +785,7 @@
 
     //  Workspace simulator: record
 
-    function wsweb_record_on ( )
+    export function wsweb_record_on( )
     {
 	    simcore_record_start() ;
 
@@ -760,7 +796,7 @@
             return true ;
     }
 
-    function wsweb_record_off ( )
+    export function wsweb_record_off( )
     {
 	    simcore_record_stop() ;
 
@@ -771,7 +807,7 @@
             return true ;
     }
 
-    function wsweb_record_reset ( )
+    export function wsweb_record_reset( )
     {
 	    simcore_record_reset() ;
 
@@ -782,7 +818,7 @@
             return true ;
     }
 
-    function wsweb_record_play ( )
+    export function wsweb_record_play( )
     {
 	    simcore_record_play() ;
 
@@ -793,7 +829,7 @@
             return true ;
     }
 
-    function wsweb_record_pause ( )
+    export function wsweb_record_pause( )
     {
 	    simcore_record_pause() ;
 
@@ -804,7 +840,7 @@
             return true ;
     }
 
-    function wsweb_record_playInterval ( from, to )
+    export function wsweb_record_playInterval( from, to )
     {
 	    simcore_record_playInterval(from, to) ;
 
@@ -815,7 +851,7 @@
             return true ;
     }
 
-    function wsweb_record_confirmReset ( )
+    export function wsweb_record_confirmReset( )
     {
 	    // show dialogbox
             wsweb_dlg_open(wsweb_dialogs.rec_confirm_reset) ;
@@ -830,7 +866,7 @@
     //
 
     // quick menu
-    function wsweb_quickmenu_show ( )
+    export function wsweb_quickmenu_show( )
     {
             topbar_quickmenu_action('show') ;
 
@@ -842,7 +878,7 @@
             return true ;
     }
 
-    function wsweb_quickmenu_close ( )
+    export function wsweb_quickmenu_close( )
     {
             topbar_quickmenu_action('hide') ;
 
@@ -854,7 +890,7 @@
             return true ;
     }
 
-    function wsweb_quickmenu_toggle ( )
+    export function wsweb_quickmenu_toggle( )
     {
             topbar_quickmenu_action('toggle') ;
 
@@ -867,7 +903,7 @@
     }
 
     // quick slider(s)
-    function wsweb_quickslider_show ( )
+    export function wsweb_quickslider_show( )
     {
             wepsim_popover_show('popover-slidercfg') ;
 
@@ -879,7 +915,7 @@
             return true ;
     }
 
-    function wsweb_quickslider_close ( )
+    export function wsweb_quickslider_close( )
     {
             wepsim_popover_hide('popover-slidercfg') ;
 
@@ -891,7 +927,7 @@
             return true ;
     }
 
-    function wsweb_quickslider_toggle ( )
+    export function wsweb_quickslider_toggle( )
     {
             wepsim_popover_action('popover-slidercfg', 'toggle') ;
 
@@ -904,7 +940,7 @@
     }
 
     // quick cpucu
-    function wsweb_quickcpuview_show ( )
+    export function wsweb_quickcpuview_show( )
     {
             wepsim_popover_show('popover-cpuview') ;
 
@@ -916,7 +952,7 @@
             return true ;
     }
 
-    function wsweb_quickcpuview_close ( )
+    export function wsweb_quickcpuview_close( )
     {
             wepsim_popover_hide('popover-cpuview') ;
 
@@ -928,7 +964,7 @@
             return true ;
     }
 
-    function wsweb_quickcpuview_toggle ( )
+    export function wsweb_quickcpuview_toggle( )
     {
             wepsim_popover_action('popover-cpuview', 'toggle') ;
 
@@ -940,7 +976,7 @@
             return true ;
     }
 
-    function wsweb_cpuview_as_graph ( )
+    export function wsweb_cpuview_as_graph( )
     {
             update_cfg("CPUCU_show_graph", true) ;
             show_cpuview_view() ;
@@ -953,7 +989,7 @@
             return true ;
     }
 
-    function wsweb_cpuview_as_text ( )
+    export function wsweb_cpuview_as_text( )
     {
             update_cfg("CPUCU_show_graph", false) ;
             show_cpuview_view() ;
@@ -967,7 +1003,7 @@
     }
 
     // quick rfcfg
-    function wsweb_quickrf_show ( )
+    export function wsweb_quickrf_show( )
     {
             wepsim_popover_show('popover-rfcfg') ;
 
@@ -979,7 +1015,7 @@
             return true ;
     }
 
-    function wsweb_quickrf_close ( )
+    export function wsweb_quickrf_close( )
     {
             wepsim_popover_hide('popover-rfcfg') ;
 
@@ -991,7 +1027,7 @@
             return true ;
     }
 
-    function wsweb_quickrf_toggle ( )
+    export function wsweb_quickrf_toggle( )
     {
             wepsim_popover_action('popover-rfcfg', 'toggle') ;
 
@@ -1004,7 +1040,7 @@
     }
 
     // recordbar
-    function wsweb_recordbar_show ( )
+    export function wsweb_recordbar_show( )
     {
 	    $('#record_div').collapse('show') ;
 
@@ -1016,7 +1052,7 @@
             return true ;
     }
 
-    function wsweb_recordbar_toggle ( )
+    export function wsweb_recordbar_toggle( )
     {
 	    $('#record_div').collapse('toggle') ;
 
@@ -1028,7 +1064,7 @@
             return true ;
     }
 
-    function wsweb_recordbar_close ( )
+    export function wsweb_recordbar_close( )
     {
 	    $('#record_div').hide() ;
 
@@ -1047,16 +1083,16 @@
 
     // timer
 
-    var wepsim_updatediv_timer = null ;
+    export var wepsim_updatediv_timer = null ;
 
-    function wepsim_updatetime ( div_id, time_left_sec )
+    export function wepsim_updatetime( div_id, time_left_sec )
     {
             $(div_id).html('<span>Close automatically after ' + time_left_sec + ' seconds.</span>') ;
 
             wepsim_updatediv_timer = setTimeout(wepsim_updatetime, 1000, div_id, (time_left_sec - 1));
     }
 
-    function wepsim_updatetime_start ( div_id, time_left_sec )
+    export function wepsim_updatetime_start( div_id, time_left_sec )
     {
             clearTimeout(wepsim_updatediv_timer) ;
 
@@ -1066,9 +1102,9 @@
 
     //  simulator: notify
 
-    var wsweb_nfbox = null ;
+    export var wsweb_nfbox = null ;
 
-    function wsweb_notifyuser_show ( title, message, duration )
+    export function wsweb_notifyuser_show( title, message, duration )
     {
 	    // check params
 	    if (title.trim() === '') {
@@ -1115,7 +1151,7 @@
             return true ;
     }
 
-    function wsweb_notifyuser_hide ( )
+    export function wsweb_notifyuser_hide( )
     {
 	    wsweb_nfbox.modal("hide") ;
 
@@ -1123,7 +1159,7 @@
             return true ;
     }
 
-    function wsweb_notifyuser_add ( )
+    export function wsweb_notifyuser_add( )
     {
 	    // check if recording
             if (simcore_record_isRecording() === false) {
@@ -1206,15 +1242,15 @@
 
     // scroll in Div
 
-    var wsweb_scroll_timer = null;
+    export var wsweb_scroll_timer = null;
 
-    function wsweb_scroll_to ( div_id, div_pos )
+    export function wsweb_scroll_to( div_id, div_pos )
     {
 	    var div_obj = $(div_id) ;
 	    div_obj.scrollTop(div_pos) ;
     }
 
-    function wsweb_scroll_record ( container_id )
+    export function wsweb_scroll_record( container_id )
     {
 	    var container_obj = $(container_id) ;
 	    var add_scroll_to = function() {

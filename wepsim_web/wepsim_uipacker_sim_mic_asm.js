@@ -17,14 +17,15 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
+import { ws_uielto } from './wepsim_uielto.js';
+import { inputasm, inputfirm } from '../wepsim_web/wepsim_web_simulator.js';
 
         /*
          *  Navbar: navtab simulator/microcode/assembly
          */
 
         /* jshint esversion: 6 */
-        class ws_simmicasm extends ws_uielto
+        export class ws_simmicasm extends ws_uielto
         {
 	      constructor ()
 	      {
@@ -45,15 +46,13 @@
 			     '<span class="d-none d-sm-inline-flex" data-langkey="Simulation">Simulation</span><span class="d-sm-none">Sim.</span></a>' +
 			     '    <a class="nav-item nav-link wsx_microcode"    id="nav-microcode-tab" data-oldid="s5b_20"' +
 			     '       style="border-top-width:2px; border-right-width:2px; border-left-width:2px;"' +
-			     '       onclick="setTimeout(function(){ inputfirm.refresh(); }, 200) ;' +
-			     '                return false;"' +
+			     ' data-bind="click" data-action="refresh-microcode"' +
 			     '       data-bs-toggle="tab" href="#nav-microcode" role="tab"' +
 			     '       aria-controls="nav-profile" aria-selected="false">' +
 			     '<span class="d-none d-sm-inline-flex" data-langkey="MicroCode">MicroCode</span><span class="d-sm-none">&#181;code</span></a>' +
 			     '    <a class="nav-item nav-link"        id="nav-assembly-tab"  data-oldid="s5b_21"' +
 			     '       style="border-top-width:2px; border-right-width:2px; border-left-width:2px;"' +
-			     '       onclick="setTimeout(function(){ inputasm.refresh(); }, 200) ;' +
-			     '                return false;"' +
+			     ' data-bind="click" data-action="refresh-assembly"' +
 			     '       data-bs-toggle="tab" href="#nav-assembly" role="tab"' +
 			     '       aria-controls="nav-contact" aria-selected="false">' +
 			     '<span class="d-none d-sm-inline-flex" data-langkey="Assembly">Assembly</span><span class="d-sm-none">Asm.</span></a>' +
@@ -94,9 +93,24 @@
 
 		    this.innerHTML = o1 ;
 	      }
+
+	      bindElements ()
+	      {
+		    this.addEventListener('click', (e) => {
+			const el = e.target.closest('[data-bind="click"]') ;
+			if (!el) return ;
+			e.preventDefault() ;
+
+			switch (el.dataset.action) {
+			    case 'refresh-microcode':
+				setTimeout(function(){ inputfirm.refresh(); }, 200) ;
+				break ;
+			    case 'refresh-assembly':
+				setTimeout(function(){ inputasm.refresh(); }, 200) ;
+				break ;
+			}
+		    }) ;
+	      }
         }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-simmicasm', ws_simmicasm) ;
-        }
 

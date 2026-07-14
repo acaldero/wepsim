@@ -17,14 +17,25 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { ws_info } from '../sim_core/sim_adt_core.js';
+import { get_cfg, update_cfg, reset_cfg } from '../sim_core/sim_cfg.js';
+import { wepsim_popovers_init, wepsim_popover_hide } from './wepsim_web_ui_popover.js';
+import { wepsim_config_button_toggle, wepsim_config_button_toggle2, wepsim_config_color_update } from './wepsim_web_ui_config.js';
+import { wepsim_show_rf_names } from './wepsim_uielto_registers.js';
+import { wepsim_toggle_history_ui, wepsim_restore_darkmode, wepsim_confirm_exit, inputfirm, inputasm } from './wepsim_web_simulator.js';
+import { sim_cfg_editor_theme, sim_cfg_editor_mode } from './wepsim_web_editor.js';
+import { show_memories_values } from '../sim_core/sim_core_ui.js';
+import { i18n_handle_idiom_change } from '../wepsim_i18n/i18n.js';
+
 
 
         /*
          *  Configuration options
          */
-
         /* jshint esversion: 6 */
-        class ws_config extends ws_uielto
+        export class ws_config extends ws_uielto
         {
               // constructor
 	      constructor ()
@@ -64,7 +75,7 @@
                     $('#' + cfgdiv_id).html(o1) ;
 
 		    // initialize UI elements
-                    var m=0 ;
+                    var m ;
 		    try
 		    {
 		        for (m=0; m<ws_info.config_ui.length; m++) {
@@ -89,28 +100,101 @@
 		        } ;
                     wepsim_popovers_init('a[data-bs-toggle="popover1"]', popover_cfg, null) ;
               }
+
+              bindElements ()
+              {
+                    this.addEventListener('click', (e) => {
+                        var el = e.target.closest('[data-bind="click"]');
+                        if (!el) return;
+                        e.preventDefault();
+                        console.log(el.dataset);
+                        switch (el.dataset.action) {
+                            case 'cfg-toggle2':
+                                wepsim_config_button_toggle2(el.dataset.key, el.dataset.value === 'true', el.dataset.extra);
+                                break;
+                            case 'cfg-toggle':
+                            case 'config_toggle_off':
+                            case 'config_toggle_on':
+                            case 'config_2opt_off':
+                            case 'config_2opt_on':
+                                if (el.dataset.key) {
+                                    var setId = el.id.split('-')[0].replace('label', '');
+                                    wepsim_config_button_toggle(el.dataset.key, el.dataset.value, setId);
+                                    if (el.dataset.key === 'DBG_skip_notifycolon') {
+                                        update_cfg('editor_mode', el.dataset.value);
+                                    } else if (el.dataset.key === 'RF_display_name') {
+                                        wepsim_show_rf_names();
+                                    } else if (el.dataset.key === 'history_enable') {
+                                        wepsim_toggle_history_ui();
+                                    } else if (el.dataset.key === 'ws_skin_dark_mode') {
+                                        wepsim_restore_darkmode();
+                                    } else if (el.dataset.key === 'RF_display_format') {
+                                        show_memories_values();
+                                    }
+                                }
+                                break;
+                            case 'wepsim_popover_hide':
+                                if (el.dataset.popoverId) {
+                                    wepsim_popover_hide(el.dataset.popoverId);
+                                } else {
+                                    $('[data-bs-toggle="popover"]').popover('hide');
+                                }
+                                break;
+                            case 'collapse_toggle_descr':
+                            case 'collapse_toggle_dd':
+                                $('.collapse7').toggleClass('show');
+                                break;
+                        }
+                    });
+
+                     this.addEventListener('change', (e) => {
+                         var el = e.target.closest('[data-bind="change"]');
+                         if (!el) return;
+
+                         switch (el.dataset.action) {
+                             case 'idiom-change':
+                                 i18n_handle_idiom_change(e);
+                                 break;
+                             case 'cfg-select':
+                                update_cfg(el.dataset.key, el.value);
+                                if (el.dataset.key === 'ws_skin_ui') {
+                                    window.removeEventListener('beforeunload', wepsim_confirm_exit);
+                                    window.location = 'wepsim-' + el.value + '.html';
+                                } else if (el.dataset.key === 'editor_theme') {
+                                    sim_cfg_editor_theme(inputfirm);
+                                    sim_cfg_editor_theme(inputasm);
+                                } else if (el.dataset.key === 'editor_mode') {
+                                    sim_cfg_editor_mode(inputfirm);
+                                    sim_cfg_editor_mode(inputasm);
+                                }
+                                break;
+                            case 'cfg-color':
+                                wepsim_config_color_update(el.dataset.key, el.value, '#' + el.dataset.id);
+                                break;
+                        }
+                    });
+              }
         }
 
-        register_uielto('ws-config', ws_config) ;
 
 
         /*
          *  Configuration to HTML
          */
 
-        function table_config_html ( config )
+        export function table_config_html( config )
         {
-     	     var e_type        = "" ;
-     	     var e_u_class     = "" ;
-     	     var e_class_1     = "" ;
-     	     var e_class_2     = "" ;
-     	     var e_code_cfg    = "" ;
-     	     var e_description = "" ;
+     	     var e_type        ;
+     	     var e_u_class     ;
+     	     var e_class_1     ;
+     	     var e_class_2     ;
+     	     var e_code_cfg    ;
+     	     var e_description ;
      	     var e_id          = "" ;
 
 
              // first pass: build data
-             var row = "" ;
+             var row ;
              var config_groupby_type = {} ;
              for (var n=0; n<config.length; n++)
              {
@@ -147,10 +231,10 @@
 
             // second pass: build html
             var o  = '<div class="container grid-striped border border-tertiary"><div class="row">' ;
-            var u  = '' ;
-            var l  = '' ;
-            var l1 = [] ;
-            var l2 = {} ;
+            var u  ;
+            var l  ;
+            var l1 ;
+            var l2 ;
             for (var m in config_groupby_type)
             {
      	        u  = '' ;

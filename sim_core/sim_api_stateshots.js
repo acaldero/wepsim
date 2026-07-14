@@ -18,10 +18,11 @@
  *
  */
 
+import { simhw_sim_component, simhw_sim_components } from '../sim_hw/sim_hw_index.js';
 
-    /* jshint esversion: 6 */
+/* jshint esversion: 6 */
 
-    function simcore_simstate_checklist2state ( checklist )
+    export function simcore_simstate_checklist2state ( checklist )
     {
         var o = {} ;
 	var ret = false ;
@@ -29,7 +30,7 @@
 	// white-spaces...
 	checklist = checklist.replace(/;|==|!=|>=|<=|=|>|</gi,
                                       function (x){return ' ' + x + ' ';});
-        checklist = checklist.replace(/  /g,' ') ;
+        checklist = checklist.replace(/ {2}/g,' ') ;
 
 	// lines...
         var lines = checklist.split(";") ;
@@ -61,7 +62,7 @@
         return o ;
     }
 
-    function simcore_simstate_current2state ( )
+    export function simcore_simstate_current2state ( )
     {
 	var o = {} ;
 	for (var index in simhw_sim_components()) {
@@ -71,12 +72,12 @@
         return o ;
     }
 
-    function simcore_simstate_expandfilter ( filter )
+    export function simcore_simstate_expandfilter ( filter )
     {
-	var first_value = 0 ;
-	var last_value  = 0 ;
-        var elto = null ;
-        var j = 0 ;
+	var first_value ;
+	var last_value  ;
+        var elto ;
+        var j ;
 
         // to prepare filter
 	var filter_ext = [] ;
@@ -121,7 +122,7 @@
         return filter_ext ;
     }
 
-    function simcore_simstate_state2checklist ( s_obj, filter )
+    export function simcore_simstate_state2checklist ( s_obj, filter )
     {
 	var ret = "" ;
 
@@ -145,7 +146,7 @@
         return ret ;
     }
 
-    function simcore_simstate_check_results ( expected_result, obtained_result, newones_too )
+    export function simcore_simstate_check_results ( expected_result, obtained_result, newones_too )
     {
         var d = {} ;
         d.result = [] ;
@@ -154,9 +155,9 @@
         d.neltos_obtained = 0 ;
 
         var elto = null ;
-	var diff = {} ;
+	var diff ;
 
-        var obtained_value = 0 ;
+        var obtained_value ;
 	for (var compo in simhw_sim_components())
 	{
 	    // if there are different values -> diff
@@ -232,19 +233,19 @@
         return d ;
     }
 
-    function simcore_simstate_diff_results ( expected_result, obtained_result )
+    export function simcore_simstate_diff_results ( expected_result, obtained_result )
     {
         return simcore_simstate_check_results(expected_result, obtained_result, true) ;
     }
 
-    function simcore_simstate_diff_states ( before_state_obj, after_state_obj )
+    export function simcore_simstate_diff_states ( before_state_obj, after_state_obj )
     {
 	var before_arr = simcore_simstate_state2checklist(before_state_obj, '').split(";") ;
 	var after_arr  = simcore_simstate_state2checklist(after_state_obj,  '').split(";") ;
 	return after_arr.filter(function(elto) { return !before_arr.includes(elto); }).join(";").trim() ;
     }
 
-    function simcore_simstate_checkreport2txt ( checklist )
+    export function simcore_simstate_checkreport2txt ( checklist )
     {
         var o = "";
 
@@ -259,10 +260,10 @@
         return o;
     }
 
-    function simcore_simstate_checkreport2html ( checklist, only_errors )
+    export function simcore_simstate_checkreport2html ( checklist, only_errors )
     {
         var o = "" ;
-        var color = "green" ;
+        var color ;
 
         if (typeof only_errors === 'undefined')
             only_errors = false ;

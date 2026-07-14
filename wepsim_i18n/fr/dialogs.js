@@ -21,7 +21,10 @@
 
     // Translated thanks to Google translate
 
-    i18n.eltos.dialogs.fr = {
+    export function i18n_fr_register_dialogs(i18n) {
+
+
+        i18n.eltos.dialogs.fr = {
 
 		"Show/Hide ActionBar":                          "Afficher/masquer la barre d'action",
 		"Show/Hide Slider":                             "Afficher/masquer le curseur",
@@ -48,5 +51,6 @@
 
 		'_last_':					'_last_'
 
-    } ;
+    };
+    }
 

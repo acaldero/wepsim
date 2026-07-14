@@ -24,7 +24,7 @@
          */
 
         /* jshint esversion: 6 */
-        class ws_load_link extends HTMLElement
+        export class ws_load_link extends HTMLElement
         {
               static get observedAttributes()
 	      {
@@ -62,7 +62,7 @@
 			  " <h5 class='m-0'>" +
 			  " <span class='text-white bg-secondary' data-langkey='Input link'>Input link</span>" +
 			  " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
-                          "         onclick='" + this.jload + "'><span data-langkey='Load'>Load</span></button>" +
+                           "         data-bind='click' data-action='load' data-code='" + this.jload + "'><span data-langkey='Load'>Load</span></button>" +
 			  " </h5>" +
 			  "</div>" +
 			  "<div class='card-body'>" +
@@ -77,9 +77,20 @@
                     this.innerHTML = o1 ;
 	      }
 
+	      bindElements ()
+	      {
+		    this.addEventListener('click', (e) => {
+			const el = e.target.closest('[data-bind="click"]');
+			if (!el) return;
+			e.preventDefault();
+			eval(el.getAttribute('data-code'));
+		    });
+	      }
+
 	      connectedCallback ()
 	      {
 		    this.render('connectedCallback') ;
+		    this.bindElements();
 	      }
 
 	      attributeChangedCallback (name, oldValue, newValue)
@@ -108,7 +119,4 @@
 	      }
         }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-load-link', ws_load_link) ;
-        }
 

@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.help.hi = {
+    export function i18n_hi_register_help(i18n) {
+
+
+
+        i18n.eltos.help.hi = {
 
 		'Welcome tutorial':		'आपका स्वागत है ट्यूटोरियल',
 		'help_01_01':		'स्वागत ट्यूटोरियल खोलें',
@@ -50,4 +54,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

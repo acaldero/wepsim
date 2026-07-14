@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.compiler.hi = {
+    export function i18n_hi_register_compiler(i18n) {
+
+
+
+        i18n.eltos.compiler.hi = {
 
 	   "PROBLEM AROUND LINE":  "Problem around line",
 		'NO TAG OR DIRECTIVE':		'उम्मीद टैग या निर्देश लेकिन यह बजाय टोकन: ',
@@ -123,4 +127,5 @@
 		'_last_':			'_last_'
 
     };
+    }
 

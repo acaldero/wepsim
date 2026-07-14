@@ -21,7 +21,10 @@
 
     // Translated thanks to Google translate
 
-    i18n.eltos.help.fr = {
+    export function i18n_fr_register_help(i18n) {
+
+
+        i18n.eltos.help.fr = {
 
 		"Welcome tutorial":				"Tutoriel de bienvenue",
 		"help_01_01":					"Ouvrez le tutoriel de bienvenue",
@@ -62,5 +65,6 @@
 		"Authors":					"L'équipe WepSIM",
 		"help_04_02":					"L'équipe WepSIM"
 
-    } ;
+    };
+    }
 

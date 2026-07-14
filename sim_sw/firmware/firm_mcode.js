@@ -18,12 +18,16 @@
  *
  */
 
+import { base_replaceAll } from '../../sim_core/sim_core_ctrl.js';
+import { frm_getComments, frm_getToken, frm_getTokenType, frm_isToken, frm_langError, frm_nextNative, frm_nextToken, frm_resetComments } from './lexical.js';
+import { i18n, i18n_get_TagFor } from '../../wepsim_i18n/i18n.js';
+import { simhw_sim_signal } from '../../sim_hw/sim_hw_index.js';
 
-function firm_mcode_write ( elto, labels_firm )
+export function firm_mcode_write ( elto, labels_firm )
 {
 	var o = "" ;
 	var i = 0;
-	var j = 0;
+	var j ;
 	var k = 0;
 
         // no microcode -> return empty
@@ -95,7 +99,7 @@ function firm_mcode_write ( elto, labels_firm )
  *  Load Firmware
  */
 
-function firm_mcode_signals_read ( context )
+export function firm_mcode_signals_read ( context )
 {
 	   // {
 	   //           (TA, R, BW=11, C1=1),
@@ -277,7 +281,7 @@ function firm_mcode_signals_read ( context )
                   } ;
 }
 
-function read_native ( context )
+export function read_native ( context )
 {
            var microprograma = [];
            var microcomments = [];

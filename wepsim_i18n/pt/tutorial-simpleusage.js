@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.tutorial_simpleusage.pt = {
+    export function i18n_pt_register_tutorial_simpleusage(i18n) {
+
+
+
+        i18n.eltos.tutorial_simpleusage.pt = {
 
 		'title_0':		'Experiência simples em WepSIM: microprogramação e programação',
 		'message_0':		'<center> <img alt = \'captura de tela do wepsim\' src = \'images/simulator/simulator011.jpg\' estilo = \'max-width: 100%; max-height: 40vh; \'> </center> <p> <h5> Este breve tutorial mostrará como: <ol> <li> <a href =\' # \'onclick =\' sim_tutorial_goframe ("simpleusage" , 0,1); \'> Edite seu microcódigo. </a> </li> <li> <a href=\'#\' onclick=\'sim_tutorial_goframe("simpleusage",0,3);\'> Edite sua montagem ( baseado no microcódigo anterior. </a> </li> <li> <a href=\'#\' onclick=\'sim_tutorial_goframe("simpleusage".0,5);\'> Execute a montagem + microcódigo na simulação. </a> </li> </ol> </h5>',
@@ -36,4 +40,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

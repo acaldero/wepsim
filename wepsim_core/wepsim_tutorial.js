@@ -18,14 +18,22 @@
  *
  */
 
+import { get_cfg } from '../sim_core/sim_cfg.js';
+import { simcore_voice_canSpeak, simcore_voice_speak } from '../sim_core/sim_core_voice.js';
+import { wsweb_select_main } from '../wepsim_web/wepsim_web_api.js';
+import { simcore_ga } from '../sim_core/sim_core_ga.js';
+import { i18n, i18n_get, i18n_update_tags } from '../wepsim_i18n/i18n.js';
 
-    //
+import bootbox from 'bootbox';
+import { ws_info } from '../sim_core/sim_adt_core.js';
+
+//
     // Tutorials
     //
 
-    ws_info.tutorials = {} ;
+    var tutbox ;
 
-    function sim_tutorial_goframe ( tutorial_name, from_step, to_step )
+    export function sim_tutorial_goframe ( tutorial_name, from_step, to_step )
     {
         //var ws_lang  = get_cfg('ws_idiom') ;
         var tutorial = ws_info.tutorials[tutorial_name] ;
@@ -50,7 +58,7 @@
         }
     }
 
-    function sim_tutorial_cancelframe ( )
+    export function sim_tutorial_cancelframe ( )
     {
 	var ws_mode = get_cfg('ws_mode');
         wsweb_select_main(ws_mode);
@@ -62,7 +70,7 @@
         }
     }
 
-    function sim_tutorial_showframe ( tutorial_name, step )
+    export function sim_tutorial_showframe ( tutorial_name, step )
     {
         var tutorial = ws_info.tutorials[tutorial_name] ;
 

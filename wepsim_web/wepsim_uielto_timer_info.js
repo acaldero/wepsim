@@ -17,14 +17,17 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
+import $ from 'jquery';
+import { ws_uielto } from './wepsim_uielto.js';
+import { simhw_active, simhw_internalState } from '../sim_hw/sim_hw_index.js';
+import { vue_appyBinding, vue_observable_ifnotjetdone } from '../sim_core/sim_core_values.js';
 
         /*
          *  I/O device (information)
          */
 
         /* jshint esversion: 6 */
-        class ws_io_info extends ws_uielto
+        export class ws_io_info extends ws_uielto
         {
 	      constructor ()
 	      {
@@ -52,7 +55,7 @@
 
 	      render_populate ( )
 	      {
-		    var  i = 0 ;
+		    var  i ;
                     var o1 = '' ;
                     var div_hash = '#stats_IO_' + this.name_str ;
 
@@ -125,7 +128,4 @@
 	      }
         }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-io-info', ws_io_info) ;
-        }
 

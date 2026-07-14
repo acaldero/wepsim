@@ -17,6 +17,13 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import * as bootstrap from 'bootstrap';
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { get_cfg } from '../sim_core/sim_cfg.js';
+import { simhw_active } from '../sim_hw/sim_hw_index.js';
+import { resolve_html_url, wepsim_help_set } from '../wepsim_core/wepsim_help.js';
+import { wsweb_dialog_open } from './wepsim_web_api.js';
 
 
         /*
@@ -24,7 +31,7 @@
          */
 
         /* jshint esversion: 6 */
-        class ws_uiscreen_classic extends ws_uielto
+        export class ws_uiscreen_classic extends ws_uielto
         {
               // constructor
 	      constructor ()
@@ -54,8 +61,10 @@
                     offcvs2.addEventListener('shown.bs.offcanvas',
                                              (event) => {
                                                  var content_name = event.target.getAttribute('data-ws-content') ;
-                                                 wepsim_offcanvas_helponhw('offcvs2', content_name) ;
-                                             }) ;
+                    wepsim_offcanvas_helponhw('offcvs2', content_name) ;
+                }) ;
+
+	      this.bindElements();
 	      }
 
 	      render_skel ( )
@@ -162,8 +171,7 @@
 			    '		      style="flex-grow:1;"' +
 			    '		      data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"' +
 			    '		      title="This button opens the \'state management\' dialog: it shows the current state, saves the current state, and shows the differences between two states."' +
-			    '		      onclick="wsweb_dialog_open(\'state\');' +
-			    '			       return false;">' +
+'		      data-bind="click" data-action="open-state">' +
                             '<em class="fas fa-camera"></em>' + '&nbsp;' +
                             '<span data-langkey="States">States</span></button>' +
 			    '	      <ws-ddown-sel class="col btn-group p-0 mx-1" style="flex-grow:2;"' +
@@ -211,18 +219,14 @@
                          '                 <ul class="dropdown-menu bg-help" ' +
                          '                     aria-labelledby="ddownAsmHelp1">' +
                          '                   <li><button class="btn dropdown-item bg-help" ' +
-                         '                               onclick="wsweb_dialog_open(\'help\');' +
-                         '                                wepsim_help_set(\'relative\', ' +
-                         '                                                \'simulator#help_assembly_format\');' +
-                         '                                return false;"' +
+'                               data-bind="click" data-action="open-help-asm-format"' +
                          '                   ><strong><span data-langkey="Assembly format">Assembly format</span></strong></button></li>' +
                          '                   <li><button class="btn dropdown-item bg-help" type="button" ' +
                          '                               data-bs-toggle="offcanvas" data-bs-target="#offcvs1" ' +
                          '                               aria-controls="offcvs1"' +
                          '                   ><strong><span data-langkey="Instruction summary">Instruction summary</span></strong></button></li>' +
                          '                   <li><button class="btn dropdown-item bg-help" ' +
-                         '                               onclick="wsweb_dialog_open(\'help\');' +
-                         '                                        return false;"' +
+'                               data-bind="click" data-action="open-help"' +
                          '                   ><strong><span data-langkey="Help index">Help index</span></strong></button></li>' +
                          '                 </ul>' +
                          '               </div>' +
@@ -293,34 +297,20 @@
                          '                 <ul class="dropdown-menu bg-help" ' +
                          '                     aria-labelledby="ddownMicroHelp1">' +
                          '                   <li><button class="btn dropdown-item bg-help" ' +
-                         '                               onclick="wsweb_dialog_open(\'help\');' +
-                         '                                wepsim_help_set(\'relative\', ' +
-                         '                                                \'simulator#help_firmware_format\');' +
-                         '                                return false;"' +
+'                               data-bind="click" data-action="open-help-firmware-format"' +
                          '                   ><strong><span data-langkey="Firmware format">Firmware format</span></strong></button></li>' +
                          '                   <li><button class="btn dropdown-item bg-help" type="button" ' +
                          '                               data-bs-toggle="offcanvas" data-bs-target="#offcvs2" ' +
                          '                               aria-controls="offcvs2"' +
-                         '                               onclick="var offobj = null; ' +
-                         '                                        offobj = document.getElementById(\'offcvs2\');' +
-                         '                                        offobj.setAttribute(\'data-ws-content\', ' +
-                         '                                                            \'hardware_summary\');' +
-                         '                                        wepsim_offcanvas_show(\'offcvs2\');' +
-                         '                                        return false;"' +
+'                               data-bind="click" data-action="open-hw-summary"' +
                          '                   ><strong><span data-langkey="Hardware summary">Hardware summary</span></strong></button></li>' +
                          '                   <li><button class="btn dropdown-item bg-help" type="button" ' +
                          '                               data-bs-toggle="offcanvas" data-bs-target="#offcvs2" ' +
                          '                               aria-controls="offcvs2"' +
-                         '                               onclick="var offobj = null; ' +
-                         '                                        offobj = document.getElementById(\'offcvs2\');' +
-                         '                                        offobj.setAttribute(\'data-ws-content\', ' +
-                         '                                                            \'signals_summary\');' +
-                         '                                        wepsim_offcanvas_show(\'offcvs2\');' +
-                         '                                        return false;"' +
+'                               data-bind="click" data-action="open-signals-summary"' +
                          '                   ><strong><span data-langkey="Signals summary">Signals summary</span></strong></button></li>' +
                          '                   <li><button class="btn dropdown-item bg-help" ' +
-                         '                               onclick="wsweb_dialog_open(\'help\');' +
-                         '                                        return false;"' +
+'                               data-bind="click" data-action="open-help"' +
                          '                   ><strong><span data-langkey="Help index">Help index</span></strong></button></li>' +
                          '                 </ul>' +
                          '               </div>' +
@@ -346,16 +336,58 @@
                    // return HTML
                    return o1 ;
 	      }
+
+	      bindElements()
+	      {
+	          if (this._bindElementsDone) return;
+	          this._bindElementsDone = true;
+
+	          this.addEventListener('click', (event) => {
+	              var target = event.target.closest('[data-bind="click"]');
+	              if (!target) return;
+
+	              var action = target.getAttribute('data-action');
+	              switch (action) {
+	                  case 'open-state':
+	                      wsweb_dialog_open('state');
+	                      break;
+	                  case 'open-help-asm-format':
+	                      wsweb_dialog_open('help');
+	                      wepsim_help_set('relative', 'simulator#help_assembly_format');
+	                      break;
+	                  case 'open-help':
+	                      wsweb_dialog_open('help');
+	                      break;
+	                  case 'open-help-firmware-format':
+	                      wsweb_dialog_open('help');
+	                      wepsim_help_set('relative', 'simulator#help_firmware_format');
+	                      break;
+	                  case 'open-hw-summary':
+	                      var offobj = document.getElementById('offcvs2');
+	                      offobj.setAttribute('data-ws-content', 'hardware_summary');
+	                      wepsim_offcanvas_show('offcvs2');
+	                      break;
+	                  case 'open-signals-summary':
+	                      var offobj = document.getElementById('offcvs2');
+	                      offobj.setAttribute('data-ws-content', 'signals_summary');
+	                      wepsim_offcanvas_show('offcvs2');
+	                      break;
+	                  case 'toggle-offcanvas':
+	                      var oid = target.getAttribute('data-offcanvas');
+	                      if (oid) wepsim_offcanvas_toggleHV(oid);
+	                      break;
+	              }
+	          });
+	      }
         }
 
-        register_uielto('ws-screen-classic', ws_uiscreen_classic) ;
 
 
     //
     // General popover
     //
 
-    function wepsim_offcanvas_set_content ( offcanvas_id, title, with_close_btn, content, footer )
+    export function wepsim_offcanvas_set_content( offcanvas_id, title, with_close_btn, content, footer )
     {
         var o = '' ;
 
@@ -366,7 +398,7 @@
 
         o = '  <div class="offcanvas-header bg-secondary bg-opacity-25 border p-2 mt-5">' +
             '    <h5 class="offcanvas-title lh-1" ' +
-            '        onclick="wepsim_offcanvas_toggleHV(\'' + offcanvas_id + '\');"' +
+            '        data-bind="click" data-action="toggle-offcanvas" data-offcanvas="' + offcanvas_id + '"' +
             '        id="' + offcanvas_id + 'Label">' +
                   '<em class="fas fa-retweet me-2"></em>&nbsp;' +
                   title +
@@ -384,7 +416,7 @@
         $('#' + offcanvas_id).html(o) ;
     }
 
-    function wepsim_offcanvas_show ( offcanvas_id )
+    export function wepsim_offcanvas_show( offcanvas_id )
     {
         var jsObj = document.getElementById(offcanvas_id) ;
         var bsObj = bootstrap.Offcanvas.getOrCreateInstance(jsObj) ;
@@ -392,7 +424,7 @@
         bsObj.show() ;
     }
 
-    function wepsim_offcanvas_hide ( offcanvas_id )
+    export function wepsim_offcanvas_hide( offcanvas_id )
     {
         var jsObj = document.getElementById(offcanvas_id) ;
         var bsObj = bootstrap.Offcanvas.getOrCreateInstance(jsObj) ;
@@ -400,14 +432,14 @@
         bsObj.hide() ;
     }
 
-    function wepsim_offcanvas_toggleHV ( offcanvas_id )
+    export function wepsim_offcanvas_toggleHV( offcanvas_id )
     {
         $('#' + offcanvas_id).toggleClass('offcanvas-bottom').toggleClass('offcanvas-start') ;
     }
 
-    function wepsim_offcanvas_helponhw ( offcanvas_id, content_name )
+    export function wepsim_offcanvas_helponhw( offcanvas_id, content_name )
     {
-	 var c = '' ;
+	 var c ;
 
 	 if ("signals_summary" == content_name)
 	 {

@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.dialogs.kr = {
+    export function i18n_kr_register_dialogs(i18n) {
+
+
+
+        i18n.eltos.dialogs.kr = {
 
                 "Show/Hide ActionBar":                "ActionBar 표시 / 숨기기",
                 "Show/Hide Slider":                   "슬라이더 표시 / 숨기기",
@@ -46,4 +50,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

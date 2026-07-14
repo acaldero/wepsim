@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.compiler.en = {
+    export function i18n_en_register_compiler(i18n) {
+
+
+
+        i18n.eltos.compiler.en = {
 
            // assembly
 	   "PROBLEM AROUND LINE":  "Problem around line",
@@ -125,5 +129,6 @@
            "OC+EOC ALREADY USED":			"oc+eoc already used",
 
 	   "_last_":		     "_last_"
-    } ;
+    };
+    }
 

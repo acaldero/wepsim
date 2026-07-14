@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.help.es = {
+    export function i18n_es_register_help(i18n) {
+
+
+
+        i18n.eltos.help.es = {
 
 	"Welcome tutorial":		"Tutorial de bienvenida",
 	"help_01_01":			"Abre el tutorial de bienvenida",
@@ -60,5 +64,6 @@
 	"Authors":			"Equipo de WepSIM",
 	"help_04_02":			"Equipo de WepSIM"
 
-    } ;
+    };
+    }
 

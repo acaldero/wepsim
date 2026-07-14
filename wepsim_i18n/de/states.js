@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.states.de = {
+    export function i18n_de_register_states(i18n) {
+
+
+
+        i18n.eltos.states.de = {
 
 		'States':					'Zustände',
 		'state':					'shteti',
@@ -50,4 +54,5 @@
 
 		'_last_':					'_last_'
     };
+    }
 

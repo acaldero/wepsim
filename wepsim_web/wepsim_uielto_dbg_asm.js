@@ -17,14 +17,35 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto } from './wepsim_uielto.js';
+import { get_var } from '../sim_core/sim_core_values.js';
+import { get_cfg } from '../sim_core/sim_cfg.js';
+import { cfg_show_asmdbg_pc_delay, cfg_show_dbg_ir_delay } from '../sim_core/sim_cfg.js';
+import { get_simware } from '../sim_core/sim_adt_core.js';
+import { get_value } from '../sim_core/sim_core_values.js';
+import { simhw_internalState, simhw_sim_ctrlStates_get, simhw_sim_state } from '../sim_hw/sim_hw_index.js';
+import { simhw_sim_signals } from '../sim_hw/sim_hw_index.js';
+import { i18n_get, i18n_get_TagFor } from '../wepsim_i18n/i18n.js';
+import { quickcfg_html_header, quickcfg_html_onoff } from './wepsim_web_ui_quickcfg.js';
+import { sim_core_breakpointicon_get } from '../wepsim_core/wepsim_dbg_breakpointicons.js';
+import { simcore_record_append_new } from '../sim_core/sim_core_record.js';
+import { wepsim_execute_toggle_breakpoint } from '../wepsim_core/wepsim_execute.js';
+import { wepsim_config_button_pretoggle, wepsim_config_button_toggle } from './wepsim_web_ui_config.js';
+import { wepsim_quickcfg_init } from './wepsim_web_ui_quickcfg.js';
+import { wepsim_uicfg_apply } from './wepsim_web_simulator.js';
+import { WORD_BYTES } from '../sim_sw/assembly/datatypes.js';
+import { main_memory_getsrc, main_memory_getsrcbin } from '../sim_core/sim_adt_mainmemory.js';
+import { wepsim_popovers_hide } from './wepsim_web_ui_popover.js';
+import { wepsim_tooltips_closeAll } from './wepsim_web_ui_tooltip.js';
+
 
 
         /*
          *  DBG-MP
          */
-
         /* jshint esversion: 6 */
-        class ws_dbg_mp extends ws_uielto
+        export class ws_dbg_mp extends ws_uielto
         {
 	      constructor ()
 	      {
@@ -73,19 +94,38 @@
 		    $("#asm_debugger_container").scroll(function() {
 		       target.prop("scrollTop", this.scrollTop).prop("scrollLeft", this.scrollLeft);
 		    });
+
+                    this.bindElements() ;
 	      }
+
+              bindElements()
+              {
+                    this.addEventListener('click', function(ev) {
+                        var el = ev.target.closest('[data-bind="click"]');
+                        if (!el) return;
+                        switch (el.dataset.action) {
+                            case 'asm-set-breakpoint':
+                                asmdbg_set_breakpoint(el.dataset.addr);
+                                if (event.stopPropagation) event.stopPropagation();
+                                break;
+                            case 'popovers-hide':
+                                wepsim_popovers_hide(el.dataset.po);
+                                break;
+                            case 'tooltips-close':
+                                wepsim_tooltips_closeAll();
+                                break;
+                        }
+                    });
+              }
         }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-dbg-mp', ws_dbg_mp) ;
-        }
 
 
         //
         // show/hide Assembly elements/header
         //
 
-        function showhideAsmElements ( )
+        export function showhideAsmElements( )
         {
     	    var tlabel = [ "label", "addr", "hex", "ins", "pins" ] ;
 
@@ -101,7 +141,7 @@
     	    }
         }
 
-        function showhideAsmHeader ( )
+        export function showhideAsmHeader( )
         {
     	    var tlabel = [ "label", "addr", "hex", "ins", "pins" ] ;
 
@@ -117,7 +157,7 @@
 
         // Content
 
-        function default_asmdbg_content_horizontal_card ( index, datalangkey, content )
+        export function default_asmdbg_content_horizontal_card( index, datalangkey, content )
         {
     	    return "<div class='card m-3'>" +
     		   "  <div class='row g-0'>" +
@@ -133,7 +173,7 @@
     		   "</div>" ;
         }
 
-        function default_asmdbg_content_horizontal ( )
+        export function default_asmdbg_content_horizontal( )
         {
     	    var wsi = get_cfg('ws_idiom') ;
 
@@ -161,7 +201,7 @@
     	    return o ;
         }
 
-        function default_asmdbg_content_vertical_card ( index, datalangkey, content )
+        export function default_asmdbg_content_vertical_card( index, datalangkey, content )
         {
     	  return "<div class='card m-2 col-sm'>" +
     		 "  <div class='card-body h-50 py-0'>" +
@@ -173,7 +213,7 @@
     		 "</div>" ;
         }
 
-        function default_asmdbg_content_vertical ( )
+        export function default_asmdbg_content_vertical( )
         {
     	    var wsi = get_cfg('ws_idiom') ;
 
@@ -195,11 +235,11 @@
     	    return o ;
         }
 
-	function assembly2html ( mp, labels, seg )
+	export function assembly2html( mp, labels, seg )
 	{
 		var l = "" ;
-                var an = 0 ;
-                var as = "" ;
+                var an ;
+                var as ;
 
                 // prepare hashtable for address to labels...
                 var a2l = {} ;
@@ -220,19 +260,19 @@
                 for (l in seg)
 		{
                      if (".binary" == l) continue ;
-                     laddr = "0x" + seg[l].begin.toString(16) ;
+                     var laddr = "0x" + seg[l].begin.toString(16) ;
                      a2s[laddr] = l;
                 }
 
                 // prepare output...
-	        var a          = "" ;
-	        var p          = "" ;
-                var s3_val     = "" ;
+	        var a ;
+	        var p ;
+                var s3_val ;
 		var old_s3_val = '' ;
-		var o_tde = '' ;
-		var o_tdf = '' ;
+		var o_tde ;
+		var o_tdf ;
                 var n_ellipsis = 0 ;
-		var s_label = "" ;
+		var s_label ;
 
                 var o = "<center>" +
                         "<table data-role='table' class='table table-sm table-striped table-hover'>" +
@@ -304,7 +344,7 @@
                 return o ;
 	}
 
-	function assembly2html_data_row ( mp, l, s_label )
+	export function assembly2html_data_row( mp, l, s_label )
 	{
 	     // data value
 	     var s2_instr = main_memory_getsrc(mp, l) ;
@@ -343,7 +383,7 @@
              return o ;
 	}
 
-	function assembly2html_code_row ( mp, l, s_label )
+	export function assembly2html_code_row( mp, l, s_label )
 	{
 	     // instruction
 	     var s1_instr = mp[l].source ;
@@ -363,8 +403,7 @@
 		 s2_instr = '<span class="text-primary">' + s2_instr + '</span>' ;
 	     }
 
-	     var oclk = "    onclick='asmdbg_set_breakpoint(" + p + "); " +
-		        "             if (event.stopPropagation) event.stopPropagation();'" ;
+     var oclk = "    data-bind='click' data-action='asm-set-breakpoint' data-addr='" + p + "'" ;
 
 	     // join the pieces...
              var o = '' ;
@@ -405,7 +444,7 @@
 
         // Popovers
 
-        function wepsim_click_asm_columns ( name, lbl_id )
+        export function wepsim_click_asm_columns( name, lbl_id )
         {
             var label_name = "SHOWCODE_" + name ;
             var show_elto  = get_cfg(label_name) ;
@@ -420,7 +459,7 @@
 	    wepsim_config_button_toggle(label_name, show_elto, lbl_id) ;
         }
 
-        function wepsim_show_asm_columns_checked ( asm_po )
+        export function wepsim_show_asm_columns_checked( asm_po )
         {
     	     var wsi = get_cfg('ws_idiom') ;
 
@@ -430,44 +469,40 @@
 		     quickcfg_html_onoff('C0',
 					 i18n_get('dialogs', wsi, 'Show/Hide labels'),
                                                   i18n_get_TagFor('cfg', 'Off'),
-					 "wepsim_click_asm_columns(\'label\',\'C0\'); return false;",
                                          "(*) " + i18n_get_TagFor('cfg', 'On'),
-					 "wepsim_click_asm_columns(\'label\',\'C0\'); return false;") +
+                                         'asm-label') +
                      // <content>
                      quickcfg_html_header(i18n_get('dialogs', wsi, 'Show content')) +
 		     quickcfg_html_onoff('C2',
 					 i18n_get('dialogs', wsi, 'Show/Hide content'),
                                                   i18n_get_TagFor('cfg', 'Off'),
-					 "wepsim_click_asm_columns(\'hex\',\'C2\'); return false;",
                                          "(*) " + i18n_get_TagFor('cfg', 'On'),
-					 "wepsim_click_asm_columns(\'hex\',\'C2\'); return false;") +
+                                         'asm-hex') +
                      // <assembly>
                      quickcfg_html_header(i18n_get('dialogs', wsi, 'Show assembly')) +
 		     quickcfg_html_onoff('C3',
 					 i18n_get('dialogs', wsi, 'Show/Hide instruction'),
                                                   i18n_get_TagFor('cfg', 'Off'),
-					 "wepsim_click_asm_columns(\'ins\',\'C3\'); return false;",
                                          "(*) " + i18n_get_TagFor('cfg', 'On'),
-					 "wepsim_click_asm_columns(\'ins\',\'C3\'); return false;") +
+                                         'asm-ins') +
                      // <pseudo-instructions>
                      quickcfg_html_header(i18n_get('dialogs', wsi, 'Show pseudo-instructions')) +
 		     quickcfg_html_onoff('C4',
 					 i18n_get('dialogs', wsi, 'Show/Hide pseudo-instructions'),
                                                   i18n_get_TagFor('cfg', 'Off'),
-					 "wepsim_click_asm_columns(\'pins\',\'C4\'); return false;",
                                          "(*) " + i18n_get_TagFor('cfg', 'On'),
-					 "wepsim_click_asm_columns(\'pins\',\'C4\'); return false;") +
+                                         'asm-pins') +
                      // <close>
-                     '<button type="button" id="close" data-role="none" ' +
-                     '        class="btn btn-sm btn-danger w-100 p-0 mt-3" ' +
-                     '        onclick="wepsim_popovers_hide('+asm_po+');">' + i18n_get('dialogs', wsi, 'Close') +
+'<button type="button" id="close" data-role="none" ' +
+'        class="btn btn-sm btn-danger w-100 p-0 mt-3" ' +
+'        data-bind="click" data-action="popovers-hide" data-po="' + asm_po + '">' + i18n_get('dialogs', wsi, 'Close') +
     		 '</button>' +
                  '</span>' ;
 
              return o ;
         }
 
-	function instruction_oceoc2html ( firm_reference )
+	export function instruction_oceoc2html( firm_reference )
 	{
 	   var u_oc_eoc = '' ;
 
@@ -496,7 +531,7 @@
 	   return ' <li>' + firm_reference.name + ': <b>' + u_oc_eoc + '</b></li>\n' ;
         }
 
-	function instruction_fields2html ( firm_reference )
+	export function instruction_fields2html( firm_reference )
 	{
            var o = '' ;
 
@@ -516,7 +551,7 @@
            }
            else
 	   { // firmware v1
-	       for (var f=0; f<fields.length; f++)
+	       for (f=0; f<fields.length; f++)
                {
 	            o += ' <li>' + fields[f].name     + ': bits <b>' +
                                    fields[f].stopbit  + '</b> to <b>' +
@@ -527,7 +562,7 @@
            return o ;
         }
 
-	function instruction2tooltip ( mp, l )
+	export function instruction2tooltip( mp, l )
 	{
     	   var wsi = get_cfg('ws_idiom') ;
 
@@ -538,7 +573,7 @@
 	   var nwords         = parseInt(mp[l].firm_reference.nwords) ;
 
            // prepare data: ins_bin
-	   var next = 0 ;
+	   var next ;
 	   var ins_bin = parseInt(get_value(mp[l])).toString(2).padStart(32, "0") ; // mp[l].binary ... ;
 	   for (var iw=1; iw<nwords; iw++)
 	   {
@@ -586,7 +621,7 @@
 	   o += '</div>' ;
            o += '<button type=\"button\" id=\"close\" data-role=\"none\" ' +
                 '        class=\"btn btn-sm btn-danger w-100 p-0 mt-2\" ' +
-                '        onclick=wepsim_tooltips_closeAll();return false;>' +
+                '        data-bind="click" data-action="tooltips-close">' +
     		         i18n_get('dialogs', wsi, 'Close') +
     		'</button>' ;
 
@@ -595,9 +630,9 @@
 
         // execution bar
 
-        var show_asmdbg_pc_deferred = null;
+        export var show_asmdbg_pc_deferred = null;
 
-	function innershow_asmdbg_pc ( )
+	export function innershow_asmdbg_pc( )
 	{
 	    fullshow_asmdbg_pc();
 	    show_asmdbg_pc_deferred = null;
@@ -605,7 +640,7 @@
             return null ;
 	}
 
-	function wepsim_show_asmdbg_pc ( )
+	export function wepsim_show_asmdbg_pc( )
 	{
             if (get_cfg('DBG_delay') > 100) {
 	        return fullshow_asmdbg_pc();
@@ -618,9 +653,9 @@
             return null ;
 	}
 
-        var old_addr = 0;
+        export var old_addr = 0;
 
-	function fullshow_asmdbg_pc ( )
+	export function fullshow_asmdbg_pc( )
 	{
                 var o1 = null ;
 
@@ -641,7 +676,7 @@
                 }
 
                 // set default for old asmdbg_pc
-                var p = null ;
+                var p ;
                 if (typeof curr_mp[old_addr] !== "undefined")
                 {
                        o1 = $("#asmdbg" + old_addr_hex + " td") ;
@@ -691,7 +726,7 @@
 
         // breakpoints
 
-        function asmdbg_set_breakpoint ( addr )
+        export function asmdbg_set_breakpoint( addr )
         {
                 // skip if no instruction
                 var curr_mp = simhw_internalState('MP') ;
@@ -737,9 +772,9 @@
 
         // current instruction in draw
 
-        var show_dbg_ir_deferred = null;
+        export var show_dbg_ir_deferred = null;
 
-	function wepsim_show_dbg_ir ( decins )
+	export function wepsim_show_dbg_ir( decins )
 	{
             if (null !== show_dbg_ir_deferred) {
                 return ;
@@ -751,7 +786,7 @@
                                               }, cfg_show_dbg_ir_delay);
 	}
 
-	function fullshow_dbg_ir ( decins )
+	export function fullshow_dbg_ir( decins )
 	{
 	     // skip if no user interface is available
 	     if (typeof document === "undefined") {
@@ -777,7 +812,7 @@
 
         // load assembly in the debugger
 
-	function asmdbg_loadContent ( asmdbg_content )
+	export function asmdbg_loadContent( asmdbg_content )
 	{
             $("#asm_debugger").html(asmdbg_content);
 
@@ -811,7 +846,7 @@
             showhideAsmElements();
 	}
 
-	function asmdbg_update_assembly ( )
+	export function asmdbg_update_assembly( )
 	{
             var SIMWARE = get_simware() ;
             var curr_mp = simhw_internalState('MP') ;

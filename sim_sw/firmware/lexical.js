@@ -18,17 +18,19 @@
  *
  */
 
+import { i18n, i18n_get_TagFor } from '../../wepsim_i18n/i18n.js';
+import { simcore_ga } from '../../sim_core/sim_core_ga.js';
 
 /*
  *  Token management
  */
 
-function frm_nextToken ( context )
+export function frm_nextToken ( context )
 {
-	  var tok   = "" ;
-	  var first = "" ;
-	  var last  = "" ;
-          var token_type = "" ;
+	  var tok   ;
+	  var first ;
+	  var last  ;
+          var token_type ;
 
           // skip whitespaces
           while ( ("# \t\n\r".indexOf(context.text[context.t]) != -1) && (context.t < context.text.length) )
@@ -154,22 +156,22 @@ function frm_nextToken ( context )
           return context ;
 }
 
-function frm_getToken ( context )
+export function frm_getToken ( context )
 {
 	 return context.tokens[context.i] ;
 }
 
-function frm_getTokenType ( context )
+export function frm_getTokenType ( context )
 {
 	 return context.token_types[context.i] ;
 }
 
-function frm_isToken ( context, text )
+export function frm_isToken ( context, text )
 {
          return (frm_getToken(context) == text.trim()) ;
 }
 
-function frm_isToken_arr ( context, arr )
+export function frm_isToken_arr ( context, arr )
 {
          for (var i=0; i<arr.length; i++)
          {
@@ -186,7 +188,7 @@ function frm_isToken_arr ( context, arr )
  *  Error handler
  */
 
-function frm_langError ( context, msgError )
+export function frm_langError ( context, msgError )
 {
         // detect lines
 	var line1 = 0 ;
@@ -233,24 +235,24 @@ function frm_langError ( context, msgError )
         return context;
 }
 
-function frm_getLabelContext ( context )
+export function frm_getLabelContext ( context )
 {
         return { t: context.t, line: context.line, newlines: context.newlines.slice() } ;
 }
 
-function frm_setLabelContext ( context, labelContext )
+export function frm_setLabelContext ( context, labelContext )
 {
         context.t = labelContext.t ;
         context.line = labelContext.line ;
         context.newlines = labelContext.newlines ;
 }
 
-function frm_getComments ( context )
+export function frm_getComments ( context )
 {
         return context.comments.join('\n') ;
 }
 
-function frm_resetComments ( context )
+export function frm_resetComments ( context )
 {
         context.comments = [] ;
 }
@@ -262,10 +264,10 @@ function frm_resetComments ( context )
 
 // TODO: add some checking of this code before running (like an anti-virus)
 
-function frm_nextNative ( context )
+export function frm_nextNative ( context )
 {
 	 var first = context.t ;
-	 var last  = context.t ;
+	 var last  ;
 
 	 // to detect blocks inside blocks -> { if () {} }
 	 var braces = 1 ;

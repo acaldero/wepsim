@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.tutorial_simpleusage.kr = {
+    export function i18n_kr_register_tutorial_simpleusage(i18n) {
+
+
+
+        i18n.eltos.tutorial_simpleusage.kr = {
 
                  "title_0":     "간단한 WepSIM 경험 : 마이크로 프로그래밍 및 프로그래밍",
                  "message_0":   "<center><img alt='wepsim screenshot' src='images/simulator/simulator011.jpg' style='max-width:100%; max-height:40vh;'></center>" +
@@ -90,4 +94,5 @@
                                 "</h5>"
 
     };
+    }
 

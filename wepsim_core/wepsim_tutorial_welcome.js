@@ -18,8 +18,16 @@
  *
  */
 
+import { load_from_example_firmware } from './wepsim_example.js';
+import { ws_info } from '../sim_core/sim_adt_core.js';
+import { simcore_do_nothing_handler } from '../sim_core/sim_api_core.js';
 
-    ws_info.tutorials.welcome = [
+export function wepsim_register_tutorial_welcome()
+{
+	if (ws_info.tutorials === undefined) {
+		ws_info.tutorials = {};
+	}
+ws_info.tutorials.welcome = [
 				  {
 				     id:          "welcome",
 				     title:       "<span data-langkey='title_0'>title 0</span>",
@@ -72,4 +80,5 @@
 				     wait_next:   100
 				  }
                                 ] ;
+}
 

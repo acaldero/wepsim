@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.tour_intro.en = {
+    export function i18n_en_register_tour_intro(i18n) {
+
+
+
+        i18n.eltos.tour_intro.en = {
 
 			"step1":  "WepSIM helps to better understand how a computer works: " +
                                   "it is visual, interactive, integrates from signals up to interruptions, system calls, exceptions, etc. <br> " +
@@ -50,5 +54,6 @@
                         "step6":  "Congrats! You know the key elements in the WepSIM interface.<br>" +
                                   "From the 'Help' dialog you can access the 'Welcome tutorial' to continue learning.<br>"
 
-    } ;
+    };
+    }
 

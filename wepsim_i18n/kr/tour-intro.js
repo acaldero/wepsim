@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.tour_intro.kr = {
+    export function i18n_kr_register_tour_intro(i18n) {
+
+
+
+        i18n.eltos.tour_intro.kr = {
 
                         "step1":  "WepSIM을 사용하면 컴퓨터 작동 방식을 더 잘 이해할 수 있습니다." +
                                   "시각적이며 대화 형이며 신호에서 중단, 시스템 호출, 예외 등을 통합합니다." +
@@ -50,5 +54,6 @@
                         "step6":  "축하합니다! WepSIM 인터페이스의 핵심 요소를 알고 계십니다. <br>" +
                                   " '도움말'대화 상자에서 '환영 자습서'에 액세스하여 학습을 계속할 수 있습니다. <br>"
 
-                  } ;
+                  };
+                  }
 

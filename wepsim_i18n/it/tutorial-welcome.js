@@ -21,7 +21,10 @@
 
     // Translated thanks to Google translate
 
-    i18n.eltos.tutorial_welcome.it = {
+    export function i18n_it_register_tutorial_welcome(i18n) {
+
+
+        i18n.eltos.tutorial_welcome.it = {
 
 		'title_0':		'Benvenuto nel simulatore WepSIM!',
 		'message_0':		'<center> <img alt = \'screenshot di wepsim\' src = \'images/simulator/simulator012.jpg\' style = \'max-width: 100%; max-height: 40vh; \'> </center> <p> <h5> Questo breve tutorial ti mostrerà come: <ol> <li> <a href =\' # \'onclick =\' sim_tutorial_goframe ("benvenuto" , 0,1); \'> Carica un esempio. </a> </li> <li> <a href=\'#\' onclick=\'sim_tutorial_goframe("welcome",0,2);\'> Esegui un esempio. </a> </li> <li> <a href=\'#\' onclick=\'sim_tutorial_goframe("welcome",0,3);\'> Configura la simulazione. </a> </li> <li> <a href = \'#\' onclick = \'sim_tutorial_goframe ("benvenuto", 0,4); "> Richiedi assistenza. </a> </li> </ol> </h5>',
@@ -39,4 +42,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

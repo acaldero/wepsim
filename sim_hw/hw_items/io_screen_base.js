@@ -18,15 +18,18 @@
  *
  */
 
+import { get_value, set_value } from '../../sim_core/sim_core_values.js';
+import { simcore_sound_playNote } from '../../sim_core/sim_core_sound.js';
+import { get_screen_content, set_screen_content } from '../../sim_core/sim_core_ui.js';
 
 /*
  *  SCREEN
  */
 
-var DDR_ID = 0x1000 ;
-var DSR_ID = 0x1004 ;
+export var DDR_ID = 0x1000 ;
+export var DSR_ID = 0x1004 ;
 
-function io_screen_base_register ( sim_p )
+export function io_screen_base_register ( sim_p )
 {
         sim_p.components.SCREEN = {
 		                  name: "SCREEN",
@@ -47,8 +50,8 @@ function io_screen_base_register ( sim_p )
 					          var sim_lines  = sim_screen.trim().split("\n") ;
 					          for (var i=0; i<sim_lines.length; i++)
 					          {
-					               value = sim_lines[i] ;
-           					       if (value != "") {
+					               let value = sim_lines[i] ;
+						       if (value != "") {
 							   vec.SCREEN[i] = {"type":  "screen",
 								            "default_value": "",
 								            "id":    i,

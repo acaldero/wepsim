@@ -18,13 +18,17 @@
  *
  */
 
+import { i18n, i18n_get_TagFor } from '../wepsim_i18n/i18n.js';
+import { wsasm_prepare_context } from './assembly/compiler1_prepare_wepsim.js';
+import { wsasm_obj2bin, wsasm_obj2src, wsasm_prepare_source, wsasm_src2obj } from './assembly/compiler2_asm_obj.js';
+import { wsasm_obj2mem } from './assembly/compiler3_obj2mem_wepsim.js';
 
 /* jshint esversion: 9 */
 
 
-function wsasm_src2mem ( datosCU, asm_source, options )
+export function wsasm_src2mem ( datosCU, asm_source, options )
 {
-     var context = null ;
+     var context ;
      var ret = {
                   error: i18n_get_TagFor('compiler', 'UNKNOWN 2')
                } ;
@@ -66,9 +70,9 @@ function wsasm_src2mem ( datosCU, asm_source, options )
      return ret ;
 }
 
-function wsasm_src2src ( datosCU, text, options )
+export function wsasm_src2src ( datosCU, text, options )
 {
-     var context = null ;
+     var context ;
      var ret = {
                   error: i18n_get_TagFor('compiler', 'UNKNOWN 2')
                } ;
@@ -110,9 +114,9 @@ function wsasm_src2src ( datosCU, text, options )
      return ret ;
 }
 
-function wsasm_src2binsrc ( datosCU, text, options )
+export function wsasm_src2binsrc ( datosCU, text, options )
 {
-     var context = null ;
+     var context ;
      var ret = {
                   error: i18n_get_TagFor('compiler', 'UNKNOWN 2')
                } ;

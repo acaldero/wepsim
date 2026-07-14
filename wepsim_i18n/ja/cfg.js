@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.cfg.ja = {
+    export function i18n_ja_register_cfg(i18n) {
+
+
+
+        i18n.eltos.cfg.ja = {
 
 		'General':							'全般',
 		'Idiom for help, examples, etc.':				'助けのための慣用句、例など',
@@ -71,4 +75,5 @@
 		'_last_':							'_last_'
 
     };
+    }
 

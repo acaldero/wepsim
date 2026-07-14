@@ -17,14 +17,16 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-
+import $ from 'jquery';
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { uipacker_ddown_info_set_select } from './wepsim_uipacker_ddown_info.js';
+import { wsweb_select_refresh, wsweb_set_details } from './wepsim_web_api.js';
         /*
          *  Drowndown (select part)
          */
 
         /* jshint esversion: 6 */
-        class ws_ddown_sel extends ws_uielto
+        export class ws_ddown_sel extends ws_uielto
         {
               // constructor
 	      constructor ()
@@ -56,8 +58,7 @@
                          '	  data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"' +
                          '	  title="This button refresh the details (and might move the scrollbar), <br>the dropdown on the right changes the element to show its details."' +
                          '	  id="select5b"' +
-                         '	  onclick="wsweb_select_refresh();' +
-                         '		   return false;">Refresh</button>' +
+                          '	  data-bind="click" data-action="select-refresh">Refresh</button>' +
                          '<button id="dd2" type="button" ' +
                          '        class="btn bg-body-tertiary dropdown-toggle dropdown-toggle-split border border-secondary border border-secondary"' +
                          '	  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
@@ -75,7 +76,7 @@
 	      render_populate ( )
 	      {
                    // render ddown elements
-                   var u1 = '' ;
+                   var u1 ;
                    var o1 = '<span class="row w-100">' ;
                    for (var k=0; k<2; k++)
                    {
@@ -151,67 +152,68 @@
 
                    this.ni = {
 				 all: ' <a class="dropdown-item" href="#" id="s5b_11" value="11"' +
-				      '	 onclick="wsweb_set_details(\'REGISTER_FILE\');' +
-				      '		  return false;"><span class="bg-dark text-white">CPU</span>&nbsp;<span data-langkey=\'Registers\'>Registers</span></a>',
+				      ' data-bind="click" data-action="set-details" data-detail="REGISTER_FILE"><span class="bg-dark text-white">CPU</span>&nbsp;<span data-langkey=\'Registers\'>Registers</span></a>',
 				  mc: ' <a class="dropdown-item wsx_microcode" href="#" id="s5b_16" value="16"' +
-				      '	 onclick="wsweb_set_details(\'CONTROL_MEMORY\');' +
-				      '		  return false;"><span class="bg-dark text-white">CPU</span>&nbsp;<span data-langkey=\'Control Memory\'>Control Memory</span></a>',
+				      ' data-bind="click" data-action="set-details" data-detail="CONTROL_MEMORY"><span class="bg-dark text-white">CPU</span>&nbsp;<span data-langkey=\'Control Memory\'>Control Memory</span></a>',
 				 cpu: ' <a class="dropdown-item" href="#" id="s5b_17" value="17"' +
-				      '	 onclick="wsweb_set_details(\'CPU_STATS\');' +
-				      '		  return false;"><span class="bg-dark text-white">CPU</span>&nbsp;<span data-langkey=\'Stats\'>Stats</span></a>',
+				      ' data-bind="click" data-action="set-details" data-detail="CPU_STATS"><span class="bg-dark text-white">CPU</span>&nbsp;<span data-langkey=\'Stats\'>Stats</span></a>',
 				  mp: ' <a class="dropdown-item" href="#" id="s5b_14" value="14"' +
-				      '	 onclick="wsweb_set_details(\'MEMORY\');' +
-				      '		  return false;"><span class="bg-dark text-white">MM</span>&nbsp;<span data-langkey=\'Memory\'>Memory</span></a>',
+				      ' data-bind="click" data-action="set-details" data-detail="MEMORY"><span class="bg-dark text-white">MM</span>&nbsp;<span data-langkey=\'Memory\'>Memory</span></a>',
 			       mpcfg: '      <a class="dropdown-item" href="#" id="s5b_18" value="18"' +
-				      '	 onclick="wsweb_set_details(\'MEMORY_CONFIG\');' +
-				      '		  return false;"><span class="bg-dark text-white">MM</span>&nbsp;<span data-langkey=\'Configuration\'>Configuration</span></a>',
+				      ' data-bind="click" data-action="set-details" data-detail="MEMORY_CONFIG"><span class="bg-dark text-white">MM</span>&nbsp;<span data-langkey=\'Configuration\'>Configuration</span></a>',
 				  cm: ' <a class="dropdown-item wsx_cache" href="#" id="s5b_28" value="28"' +
-				      '	 onclick="wsweb_set_details(\'CACHE\');' +
-				      '		  return false;"><span class="bg-dark text-white">CM</span>&nbsp;<span data-langkey=\'Memory\'>Memory</span> <span class="badge text-bg-secondary py-0 px-1">beta</span> </a>',
+				      ' data-bind="click" data-action="set-details" data-detail="CACHE"><span class="bg-dark text-white">CM</span>&nbsp;<span data-langkey=\'Memory\'>Memory</span> <span class="badge text-bg-secondary py-0 px-1">beta</span> </a>',
 			       cmcfg: ' <a class="dropdown-item wsx_cache" href="#" id="s5b_29" value="29"' +
-				      '	 onclick="wsweb_set_details(\'CACHE_CONFIG\');' +
-				      '		  return false;"><span class="bg-dark text-white">CM</span>&nbsp;<span data-langkey=\'Configuration\'>Configuration</span> <span class="badge text-bg-secondary py-0 px-1">beta</span> </a>',
+				      ' data-bind="click" data-action="set-details" data-detail="CACHE_CONFIG"><span class="bg-dark text-white">CM</span>&nbsp;<span data-langkey=\'Configuration\'>Configuration</span> <span class="badge text-bg-secondary py-0 px-1">beta</span> </a>',
 				 con: '      <a class="dropdown-item" href="#" id="s5b_12" value="12"' +
-				      '	 onclick="wsweb_set_details(\'SCREEN\');' +
-				      '		  return false;"><span class="bg-dark text-white">Dev</span>&nbsp;<span data-langkey=\'Keyboard+Display\'>Keyboard+Display</span></a>',
+				      ' data-bind="click" data-action="set-details" data-detail="SCREEN"><span class="bg-dark text-white">Dev</span>&nbsp;<span data-langkey=\'Keyboard+Display\'>Keyboard+Display</span></a>',
 				  io: '      <a class="dropdown-item" href="#" id="s5b_15" value="15"' +
-				      '	 onclick="wsweb_set_details(\'IO_STATS\');' +
-				      '		  return false;"><span class="bg-dark text-white">Dev</span>&nbsp;<span data-langkey=\'Timer Stats\'>Timer Stats</span></a>',
+				      ' data-bind="click" data-action="set-details" data-detail="IO_STATS"><span class="bg-dark text-white">Dev</span>&nbsp;<span data-langkey=\'Timer Stats\'>Timer Stats</span></a>',
 			       iocfg: '      <a class="dropdown-item" href="#" id="s5b_19" value="19"' +
-				      '	 onclick="wsweb_set_details(\'IO_CONFIG\');' +
-				      '		  return false;"><span class="bg-dark text-white">Dev</span>&nbsp;<span data-langkey=\'Timer Configuration\'>Timer Config.</span></a>',
+				      ' data-bind="click" data-action="set-details" data-detail="IO_CONFIG"><span class="bg-dark text-white">Dev</span>&nbsp;<span data-langkey=\'Timer Configuration\'>Timer Config.</span></a>',
 			       iol3d: '      <a class="dropdown-item" href="#" id="s5b_25" value="25"' +
-				      '	 onclick="wsweb_set_details(\'3DLED\');' +
-				      '		  return false;"><span class="bg-dark text-white">Dev</span>&nbsp;<span data-langkey=\'3D-Led\'>3D-Led</span></a>',
+				      ' data-bind="click" data-action="set-details" data-detail="3DLED"><span class="bg-dark text-white">Dev</span>&nbsp;<span data-langkey=\'3D-Led\'>3D-Led</span></a>',
 			       ioldm: '      <a class="dropdown-item" href="#" id="s5b_27" value="27"' +
-				      '	 onclick="wsweb_set_details(\'LEDMATRIX\');' +
-				      '		  return false;"><span class="bg-dark text-white">Dev</span>&nbsp;<span data-langkey=\'Led-Matrix\'>Led-Matrix</span></a>',
+				      ' data-bind="click" data-action="set-details" data-detail="LEDMATRIX"><span class="bg-dark text-white">Dev</span>&nbsp;<span data-langkey=\'Led-Matrix\'>Led-Matrix</span></a>',
 			       sound: '      <a class="dropdown-item" href="#" id="s5b_30" value="30"' +
-				      '	 onclick="wsweb_set_details(\'SOUND\');' +
-				      '		  return false;"><span class="bg-dark text-white">Dev</span>&nbsp;<span data-langkey=\'Sound\'>Sound</span> <span class="badge text-bg-secondary py-0 px-1">beta</span></a>',
+				      ' data-bind="click" data-action="set-details" data-detail="SOUND"><span class="bg-dark text-white">Dev</span>&nbsp;<span data-langkey=\'Sound\'>Sound</span> <span class="badge text-bg-secondary py-0 px-1">beta</span></a>',
 
 			       ed_hw: '      <a class="dropdown-item" href="#" id="s5b_22" value="22"' +
-				      '	 onclick="wsweb_set_details(\'HARDWARE\');' +
-				      '		  return false;"><em class="fas fa-microchip"></em>&nbsp;Hardware</a>',
+				      ' data-bind="click" data-action="set-details" data-detail="HARDWARE"><em class="fas fa-microchip"></em>&nbsp;Hardware</a>',
 
 			       ed_mc: '      <a class="dropdown-item wsx_microcode" href="#" id="s5b_20" value="20"' +
-				      '	 onclick="wsweb_set_details(\'FRM_EDITOR\');' +
-				      '		  return false;"><span class="bg-dark text-white">Sim</span>&nbsp;MicroCode</a>',
+				      ' data-bind="click" data-action="set-details" data-detail="FRM_EDITOR"><span class="bg-dark text-white">Sim</span>&nbsp;MicroCode</a>',
 			       ed_mp: '      <a class="dropdown-item" href="#" id="s5b_21" value="21"' +
-				      '	 onclick="wsweb_set_details(\'ASM_EDITOR\');' +
-				      '		  return false;"><span class="bg-dark text-white">Sim</span>&nbsp;Assembly</a>'
-                             } ;
+				      ' data-bind="click" data-action="set-details" data-detail="ASM_EDITOR"><span class="bg-dark text-white">Sim</span>&nbsp;Assembly</a>'
+                              } ;
+	      }
+
+	      bindElements ()
+	      {
+		    this.addEventListener('click', (e) => {
+			const el = e.target.closest('[data-bind="click"]') ;
+			if (!el) return ;
+			e.preventDefault() ;
+
+			switch (el.dataset.action) {
+			    case 'select-refresh':
+				wsweb_select_refresh() ;
+				break ;
+			    case 'set-details':
+				wsweb_set_details(el.dataset.detail) ;
+				break ;
+			}
+		    }) ;
 	      }
         }
 
-        register_uielto('ws-ddown-sel', ws_ddown_sel) ;
 
 
         //
         // set programmatically the selected option (sel part)
         //
 
-        function uipacker_ddown_sel_set_select ( opt )
+        export function uipacker_ddown_sel_set_select( opt )
         {
             // set button label...
             var ed=$('#s5b_' + opt).html() ;

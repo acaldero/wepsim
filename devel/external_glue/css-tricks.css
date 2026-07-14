@@ -29,16 +29,16 @@
  * Modal
  */
 
-@include media-breakpoint-only(sm) {
+@media (min-width: 576px) and (max-width: 767.98px) {
        .modal-lg { max-width: 95vw !important;  }
 }
-@include media-breakpoint-only(md) {
+@media (min-width: 768px) and (max-width: 991.98px) {
        .modal-lg { max-width: 90vw !important;  }
 }
-@include media-breakpoint-up(lg) {
+@media (min-width: 992px) {
        .modal-lg { max-width: 85vw !important;  }
 }
-@include media-breakpoint-up(xl) {
+@media (min-width: 1200px) {
        .modal-lg { max-width: 80vw !important;  }
 }
 
@@ -73,7 +73,7 @@
         max-height: 55vh;
  }
 
-// bootbox for bootstrap 4 trick
+/* bootbox for bootstrap 4 trick */
 .bootbox .modal-header h5 {
 	 order: 0;
 }

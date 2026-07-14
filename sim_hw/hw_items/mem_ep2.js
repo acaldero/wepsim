@@ -18,12 +18,17 @@
  *
  */
 
+import { main_memory_extractvalues, main_memory_get_program_counter, main_memory_getvalue, main_memory_set, main_memory_updatevalues } from '../../sim_core/sim_adt_mainmemory.js';
+import { show_main_memory } from '../../sim_core/sim_core_ui.js';
+import { get_value, get_var } from '../../sim_core/sim_core_values.js';
+import { cache_memory_access } from '../../sim_core/sim_adt_cachememory.js';
+import { get_cfg } from '../../sim_core/sim_cfg.js';
 
 /*
  *  Memory
  */
 
-function mem_ep2_register ( sim_p )
+export function mem_ep2_register ( sim_p )
 {
         sim_p.components.MEMORY = {
                                   name: "MEMORY",
@@ -39,8 +44,8 @@ function mem_ep2_register ( sim_p )
                                                   if (typeof vec.MEMORY == "undefined")
                                                       vec.MEMORY = {} ;
 
-                                                  var key = 0 ;
-                                                  var value = 0 ;
+                                                  var key ;
+                                                  var value ;
                                                   for (var index in sim_p.internal_states.MP)
                                                   {
                                                        value = main_memory_getvalue(sim_p.internal_states.MP,
@@ -78,9 +83,10 @@ function mem_ep2_register ( sim_p )
                                                   return false ;
                                              },
                                   get_state: function ( pos ) {
-                                                  var index = parseInt(pos) ;
-                                                  var value = main_memory_getvalue(sim_p.internal_states.MP,
-                                                                                   elto) ;
+                                                   var index = parseInt(pos) ;
+                                                   let elto = index ;
+                                                   var value = main_memory_getvalue(sim_p.internal_states.MP,
+                                                                                    elto) ;
                                                   if (typeof value === "undefined") {
                                                       return null ;
                                                   }
@@ -279,14 +285,15 @@ function mem_ep2_register ( sim_p )
                                                    },
                                            verbal: function (s_expr)
                                                    {
-					              var verbal = "" ;
+					              var verbal ;
 
 						      var address = sim_p.states [s_expr[1]].value;
                                                       var dbvalue = sim_p.states [s_expr[2]].value;
                                                       var bw      = sim_p.signals[s_expr[3]].value;
-                                                      var clk     = get_value(sim_p.states[s_expr[5]]) ;
+                                                       var clk     = get_value(sim_p.states[s_expr[5]]) ;
 
                                                       // bit-width
+                                                      let bw_type ;
 						      switch (bw)
 					              {
 					                 case 0: bw_type = "byte" ;
@@ -410,15 +417,16 @@ function mem_ep2_register ( sim_p )
                                                    },
                                            verbal: function (s_expr)
                                                    {
-					              var verbal = "" ;
+					              var verbal ;
 
 						      var address = get_value(sim_p.states [s_expr[1]]) ;
                                                       var dbvalue = get_value(sim_p.states [s_expr[2]]) ;
                                                       var bw      = get_value(sim_p.signals[s_expr[3]]) ;
                                                       var se      = get_value(sim_p.signals[s_expr[4]]) ;
-                                                      var clk     = get_value(sim_p.states [s_expr[5]]) ;
+                                                       var clk     = get_value(sim_p.states [s_expr[5]]) ;
 
                                                       // bit-width
+                                                      let bw_type ;
 						      switch (bw)
 					              {
 					                 case 0: bw_type = "byte" ;

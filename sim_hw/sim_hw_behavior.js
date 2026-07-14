@@ -18,12 +18,14 @@
  *
  */
 
+import { simhw_sim_signal, simhw_sim_signals, simhw_sim_state, simhw_sim_states, simhw_syntax_behavior } from './sim_hw_index.js';
+import { ws_alert } from '../sim_core/sim_core_ui.js';
 
-        /*
+/*
          *  Behavior
          */
 
-        function check_behavior ( )
+        export function check_behavior ( )
         {
             // 1.- check if no signals are defined...
             if (0 == simhw_sim_signals().length) {
@@ -95,17 +97,18 @@
          *  work with behaviors
          */
 
-        var jit_behaviors   = false ;
-        var jit_verbals     = false ;
+        export var jit_behaviors   = false ;
+        export var jit_verbals     = false ;
+        export var jit_fire_dep    = {};
 
         // behaviors
-        function compile_behaviors ()
+        export function compile_behaviors ()
         {
             var jit_bes = "";
             jit_fire_dep = {};
 
-	    var  sig_obj = null ;
-	    var expr_obj = null ;
+	    var  sig_obj ;
+	    var expr_obj ;
 
             for (var sig in simhw_sim_signals())
             {
@@ -169,7 +172,7 @@
             jit_behaviors = true ;
         }
 
-        function compute_behavior ( input_behavior )
+        export function compute_behavior ( input_behavior )
         {
             // 1.- Split several behaviors, e.g.: "MV D1 O1; MV D2 O2"
             var s_exprs = input_behavior.split(";");
@@ -189,14 +192,14 @@
             }
         }
 
-        function compute_general_behavior ( name )
+        export function compute_general_behavior ( name )
         {
             if (jit_behaviors)
                  simhw_syntax_behavior(name).operation();
             else compute_behavior(name) ;
         }
 
-        function compute_signal_behavior ( signal_name, signal_value )
+        export function compute_signal_behavior ( signal_name, signal_value )
         {
             if (jit_behaviors)
                  simhw_sim_signal(signal_name).behavior_fn[signal_value]();
@@ -204,7 +207,7 @@
         }
 
         // verbals
-        function compile_verbals ()
+        export function compile_verbals ()
         {
             var jit_vbl = "";
 
@@ -242,7 +245,7 @@
             jit_verbals = true ;
         }
 
-        function compute_verbal ( input_behavior )
+        export function compute_verbal ( input_behavior )
         {
 	    var verbal = "" ;
 
@@ -266,10 +269,10 @@
             return verbal ;
         }
 
-        function compute_signal_verbals ( signal_name, signal_value )
+        export function compute_signal_verbals ( signal_name, signal_value )
         {
             var verbal  = "" ;
-            var sig_ref = null ;
+            var sig_ref ;
 
             // check params...
             sig_ref = simhw_sim_signal(signal_name) ;

@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.dialogs.ru = {
+    export function i18n_ru_register_dialogs(i18n) {
+
+
+
+        i18n.eltos.dialogs.ru = {
 
 		'Show/Hide ActionBar':			'Показать / Скрыть ActionBar',
 		'Show/Hide Slider':			'Показать / Скрыть слайдер',
@@ -43,4 +47,5 @@
 		'_last_':				'_last_'
 
     };
+    }
 

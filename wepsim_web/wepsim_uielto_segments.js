@@ -17,14 +17,17 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { simhw_internalState } from '../sim_hw/sim_hw_index.js';
+
 
 
         /*
          *  Segments
          */
-
         /* jshint esversion: 6 */
-        class ws_segments extends ws_uielto
+        export class ws_segments extends ws_uielto
         {
               // constructor
 	      constructor ()
@@ -73,14 +76,13 @@
 	      }
         }
 
-        register_uielto('ws-segments', ws_segments) ;
 
 
         /*
          *  obj2html
          */
 
-        function uielto_segments2html ( segments )
+        export function uielto_segments2html( segments )
         {
 	   var o1 = "<br>" ;
 
@@ -106,7 +108,7 @@
 	         " <td>" +
 	         " <table style='border-style: solid; border-width:0px; width:100%; height:100%'>" ;
 
-           var sx = "" ;
+           var sx ;
            var sp = "" ;
 	   for (skey in segments)
 	   {

@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.dialogs.ja = {
+    export function i18n_ja_register_dialogs(i18n) {
+
+
+
+        i18n.eltos.dialogs.ja = {
 
 		'Show/Hide ActionBar':			'アクションバーの表示/非表示',
 		'Show/Hide Slider':			'スライダーの表示/非表示',
@@ -43,4 +47,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.compiler.es = {
+    export function i18n_es_register_compiler(i18n) {
+
+
+
+        i18n.eltos.compiler.es = {
 
 	        "PROBLEM AROUND LINE":          "Problema entorno a la línea",
 		'NO TAG OR DIRECTIVE':		'No es una etiqueta (ej.: tag1:) o directiva (ej.: .data) válida, se encontró: ',
@@ -123,4 +127,5 @@
 	   '_last_':		     '_last_'
 
     };
+    }
 

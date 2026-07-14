@@ -18,6 +18,10 @@
  *
  */
 
+import { BYTE_LENGTH, WORD_BYTES, WORD_LENGTH } from './datatypes.js';
+
+import { main_memory_set } from '../../sim_core/sim_adt_mainmemory.js';
+import { wsasm_get_datatype_size, wsasm_has_datatype_attr } from './directives.js';
 
 /* jshint esversion: 9 */
 
@@ -33,7 +37,7 @@
 //   * wsasm_writememory_and_accumulate_part_endian ( ret_mp, gen, obj_i, valuebin, n_bytes, j_byte )
 //
 
-function wsasm_writememory_if_word ( mp, gen, track_source, track_comments )
+export function wsasm_writememory_if_word ( mp, gen, track_source, track_comments )
 {
         // check if a full word is present...
         if (gen.byteWord < WORD_BYTES) {
@@ -65,7 +69,7 @@ function wsasm_writememory_if_word ( mp, gen, track_source, track_comments )
         gen.is_assembly    = false ;
 }
 
-function wsasm_writememory_and_accumulate ( mp, gen, valuebin )
+export function wsasm_writememory_and_accumulate ( mp, gen, valuebin )
 {
         wsasm_writememory_if_word(mp, gen, [], []) ;
 
@@ -73,7 +77,7 @@ function wsasm_writememory_and_accumulate ( mp, gen, valuebin )
         gen.byteWord     += 1 ;
 }
 
-function wsasm_zeropadding_and_writememory ( mp, gen )
+export function wsasm_zeropadding_and_writememory ( mp, gen )
 {
         if (0 == gen.byteWord) {
             return ;
@@ -89,7 +93,7 @@ function wsasm_zeropadding_and_writememory ( mp, gen )
         wsasm_writememory_if_word(mp, gen, [], []) ;
 }
 
-function wsasm_writememory_and_accumulate_part ( mp, gen, valuebin, track_source_j, track_source, track_comments )
+export function wsasm_writememory_and_accumulate_part ( mp, gen, valuebin, track_source_j, track_source, track_comments )
 {
         wsasm_writememory_if_word(mp, gen, track_source, track_comments) ;
 
@@ -101,9 +105,9 @@ function wsasm_writememory_and_accumulate_part ( mp, gen, valuebin, track_source
 	}
 }
 
-function wsasm_writememory_and_accumulate_part_endian ( ret_mp, gen, obj_i, valuebin, n_bytes, j_byte )
+export function wsasm_writememory_and_accumulate_part_endian ( ret_mp, gen, obj_i, valuebin, n_bytes, j_byte )
 {
-	var b_index = 0 ;
+	var b_index ;
 
         switch (obj_i.endian)
 	{
@@ -138,18 +142,18 @@ function wsasm_writememory_and_accumulate_part_endian ( ret_mp, gen, obj_i, valu
   *  Public API (see README.md for more information)
   */
 
-function wsasm_obj2mem  ( ret )
+export function wsasm_obj2mem  ( ret )
 {
 	 var addr      = '' ;
-         var n_bytes   = 0 ;
-         var valuebin  = '' ;
-         var candidate = null ;
+         var n_bytes   ;
+         var valuebin  ;
+         var candidate ;
 
          var seg_name_old    = '' ;
          var seg_name        = '' ;
          var last_assig_word = {} ;
-         var word_1 = 0 ;
-         var word_2 = 0 ;
+         var word_1 ;
+         var word_2 ;
 
          var gen = {} ;
          gen.byteWord       = 0 ;
@@ -290,7 +294,7 @@ function wsasm_obj2mem  ( ret )
          wsasm_zeropadding_and_writememory(ret.mp, gen) ;
 
          // copy back the last asigned address
-         for (var seg_name in ret.seg)
+         for (seg_name in ret.seg)
          {
               ret.seg[seg_name].loaded = false ;
 

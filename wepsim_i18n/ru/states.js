@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.states.ru = {
+    export function i18n_ru_register_states(i18n) {
+
+
+
+        i18n.eltos.states.ru = {
 
 		'States':				'состояния',
 		'state':				'государство',
@@ -51,4 +55,5 @@
 		'_last_':				'_last_'
 
     };
+    }
 

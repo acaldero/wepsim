@@ -19,11 +19,15 @@
  *
  */
 
+import { simhw_sim_ctrlStates_get } from '../../sim_hw/sim_hw_index.js';
+import { frm_langError } from './lexical.js';
+import { i18n, i18n_get_TagFor } from '../../wepsim_i18n/i18n.js';
+import { firm_instruction_compute_opcode_pattern } from './firm_fields_v1.js';
 
-function find_first_oceoc_v1 ( context, curr_instruction, first_oc, last_oc )
+export function find_first_oceoc_v1 ( context, curr_instruction, first_oc, last_oc )
 {
-           var k = 0 ;
-           var m = 0 ;
+           var k ;
+           var m ;
            var xr_info = simhw_sim_ctrlStates_get() ;
            var eoc_len = xr_info.ir.default_eltos.eoc[0].length ;
 
@@ -43,7 +47,7 @@ function find_first_oceoc_v1 ( context, curr_instruction, first_oc, last_oc )
 	   }
 
            // find first free 'oc-eoc' code
-	   for (j=first_oc; j<last_oc; j++)
+	   for (var j=first_oc; j<last_oc; j++)
 	   {
                 // new initial oc...
 		ret.label_oc = j.toString(2).padStart(6, "0") ;
@@ -81,8 +85,8 @@ function find_first_oceoc_v1 ( context, curr_instruction, first_oc, last_oc )
                 }
 
                 // new initial oc-eoc...
-                first_eoc = 0 ;
-                last_eoc  = (1 << eoc_len) - 1 ; // Math.pow(2, eoc_len) - 1 ;
+                var first_eoc = 0 ;
+                var last_eoc  = (1 << eoc_len) - 1 ; // Math.pow(2, eoc_len) - 1 ;
 		for (k=first_eoc; k<last_eoc; k++)
 		{
 		     ret.label_eoc = k.toString(2).padStart(eoc_len, "0") ;
@@ -103,10 +107,10 @@ function find_first_oceoc_v1 ( context, curr_instruction, first_oc, last_oc )
            return ret ;
 }
 
-function resolve_pending_oceoc_v1 ( context )
+export function resolve_pending_oceoc_v1 ( context )
 {
            var ret = {} ;
-           var i = 0 ;
+           var i ;
 
            var     xr_info = simhw_sim_ctrlStates_get() ;
 	   var all_ones_oc = "1".repeat(xr_info.ir.default_eltos.oc.length) ;
@@ -120,7 +124,7 @@ function resolve_pending_oceoc_v1 ( context )
 	   var last_oc = (1 << ir_oc_length) - 1 ; // Math.pow(2, ir_oc_length) - 1 ;
 	   var last_oc_str = last_oc.toString(2) ;
 
-	   var curr_instruction = null ;
+	   var curr_instruction ;
 	   for (i=0; i<context.instrucciones.length; i++)
 	   {
 		curr_instruction = context.instrucciones[i] ;

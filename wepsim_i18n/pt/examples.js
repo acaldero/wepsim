@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.examples.pt = {
+    export function i18n_pt_register_examples(i18n) {
+
+
+
+        i18n.eltos.examples.pt = {
 
 		'addv + seqv.':			'addv + seqv.',
 		'Alloc.s':			'Alloc.s',
@@ -83,4 +87,5 @@
 		'_last_':			'_last_'
 
     };
+    }
 

@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.states.es = {
+    export function i18n_es_register_states(i18n) {
+
+
+
+        i18n.eltos.states.es = {
 			"States": 			     		"Estados",
 			'state':					'estado',
 			"Current":  			                "Actual",
@@ -51,5 +55,6 @@
 			"Session to be restore":			"Sesi&oacute;n a restaurar",
 
 		        "_last_":					"_last_"
-                  } ;
+                  };
+                  }
 

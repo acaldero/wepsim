@@ -21,7 +21,10 @@
 
     // Tranlation thanks to https://github.com/shiptux
 
-    i18n.eltos.states.zh_cn = {
+    export function i18n_zh_cn_register_states(i18n) {
+
+
+        i18n.eltos.states.zh_cn = {
 
 		'States':					'状态',
 		'state':					'状态',
@@ -53,4 +56,5 @@
 		'_last_':					'_last_'
 
     };
+    }
 

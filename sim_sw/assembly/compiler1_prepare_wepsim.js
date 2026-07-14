@@ -18,6 +18,12 @@
  *
  */
 
+import { BYTE_LENGTH, WORD_BYTES, WORD_LENGTH } from './datatypes.js';
+
+import { simhw_sim_ctrlStates_get } from '../../sim_hw/sim_hw_index.js';
+import { wsasm_make_signature_user, wsasm_order2index_startstop } from './compiler2_asm_obj.js';
+import { base_replaceAll } from '../../sim_core/sim_core_ctrl.js';
+import { wsasm_expand_options } from './compiler_options.js';
 
 /* jshint esversion: 9 */
 
@@ -29,7 +35,7 @@
 //   * wsasm_prepare_context_pseudoinstructions ( context, CU_data )
 //
 
-function wsasm_prepare_oc ( elto, aux )
+export function wsasm_prepare_oc ( elto, aux )
 {
 	elto.oc = {
                      value:         '',    // "begin {...}" has no 'co/oc' field
@@ -81,7 +87,7 @@ function wsasm_prepare_oc ( elto, aux )
         return elto ;
 }
 
-function wsasm_prepare_eoc ( elto, aux )
+export function wsasm_prepare_eoc ( elto, aux )
 {
 	elto.eoc = {
                       value:         '',    // "begin {...}" has no 'cop/eoc' field
@@ -91,9 +97,6 @@ function wsasm_prepare_eoc ( elto, aux )
 
         // elto.eoc.value
 	if (typeof aux.eoc !== "undefined") {
-	     elto.eoc.value = aux.eoc ;
-        }
-	else if (typeof aux.eoc !== "undefined") {
 	     elto.eoc.value = aux.eoc ;
         }
 
@@ -138,16 +141,17 @@ function wsasm_prepare_eoc ( elto, aux )
         return elto ;
 }
 
-function wsasm_prepare_context_firmware ( context, CU_data )
+export function wsasm_prepare_context_firmware ( context, CU_data )
 {
-           let elto = null ;
-	   let aux  = null ;
-           let start_bit = [] ;
-           let stop_bit  = [] ;
+           let elto ;
+	   let aux  ;
+           let start_bit ;
+           let stop_bit  ;
            let lower_bit = 0 ;
            let w_n_bits  = 0 ;
            let w_index   = 0 ;
-           let n_bits    = 0 ;
+           let n_bits    ;
+           var om ;
 
 	   // Fill firmware
 	   for (let i=0; i<CU_data.firmware.length; i++)
@@ -240,11 +244,11 @@ function wsasm_prepare_context_firmware ( context, CU_data )
 	   return context ;
 }
 
-function wsasm_prepare_context_pseudoinstructions ( context, CU_data )
+export function wsasm_prepare_context_pseudoinstructions ( context, CU_data )
 {
-           let elto    = null ;
-	   let initial = null ;
-	   let finish  = null ;
+           let elto    ;
+	   let initial ;
+	   let finish  ;
 
 	   // Fill pseudoinstructions
 	   for (let i=0; i<CU_data.pseudoInstructions.length; i++)
@@ -291,11 +295,11 @@ function wsasm_prepare_context_pseudoinstructions ( context, CU_data )
 	   return context ;
 }
 
-function wsasm_prepare_registers ( context, CU_data )
+export function wsasm_prepare_registers ( context, CU_data )
 {
-	   var cu_data_rf_i = null ;
-	   var context_rf_i = null ;
-           var assoc_name   = '' ;
+	   var cu_data_rf_i ;
+	   var context_rf_i ;
+           var assoc_name   ;
 
            for (let key in CU_data.registers)
            {
@@ -304,7 +308,7 @@ function wsasm_prepare_registers ( context, CU_data )
 		context_rf_i = {} ;
 		context_rf_i.name = key ;
 		context_rf_i.registers = [] ;
-	        for (j=0; j<cu_data_rf_i.registers.length; j++)
+	        for (let j=0; j<cu_data_rf_i.registers.length; j++)
 	        {
 	     	     if (typeof cu_data_rf_i.registers[j] === 'undefined') {
                          continue ;
@@ -326,7 +330,7 @@ function wsasm_prepare_registers ( context, CU_data )
   *  Public API (see README.md for more information)
   */
 
-function wsasm_prepare_context ( CU_data, options )
+export function wsasm_prepare_context ( CU_data, options )
 {
 	   // Check arguments
            if (typeof CU_data == "undefined") {

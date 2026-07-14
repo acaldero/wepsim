@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.states.sv = {
+    export function i18n_sv_register_states(i18n) {
+
+
+
+        i18n.eltos.states.sv = {
 
 		'States':				'stater',
 		'state':				'stat',
@@ -51,4 +55,5 @@
 		'_last_':				'_last_'
 
     };
+    }
 

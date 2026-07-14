@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.tutorial_simpleusage.ja = {
+    export function i18n_ja_register_tutorial_simpleusage(i18n) {
+
+
+
+        i18n.eltos.tutorial_simpleusage.ja = {
 
 		'title_0':		'簡単なWepSIMの経験：マイクロプログラミングとプログラミング',
 		'message_0':		'<center> <img alt = \'wepsim screenshot\' src = \'images/simulator/simulator011.jpg\' style = \'max-width: 100％; max-height: 40vh; \'> </center> <p> <h5>この簡単なチュートリアルでは、以下の方法について説明します。<ol> <li> <a href =\'＃ \'onclick =\' sim_tutorial_goframe（ "simpleusage" 、> 0,1）; \'>マイクロコードを編集します。</a> </li> <li> <a href=\'#\' onclick=\'sim_tutorial_goframe("simpleusage",0,3);\'>アセンブリを編集します（） </a> </li> <li> <a href=\'#\'onclick=\'sim_tutorial_goframe("simpleusage",0,5);\'>シミュレーションでアセンブリ+マイクロコードを実行します。 </a> </li></ol> </h5>',
@@ -36,4 +40,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

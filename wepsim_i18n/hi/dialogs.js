@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.dialogs.hi = {
+    export function i18n_hi_register_dialogs(i18n) {
+
+
+
+        i18n.eltos.dialogs.hi = {
 
 		'Show/Hide ActionBar':		'दिखाएँ / छिपाएँ ActionBar',
 		'Show/Hide Slider':		'स्लाइडर दिखाएँ / छिपाएँ',
@@ -42,4 +46,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

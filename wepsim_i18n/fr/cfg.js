@@ -21,7 +21,10 @@
 
     // Translated thanks to Google translate
 
-    i18n.eltos.cfg.fr = {
+    export function i18n_fr_register_cfg(i18n) {
+
+
+        i18n.eltos.cfg.fr = {
 
 		"General":						"Général",
 		"Idiom for help, examples, etc.":			"Idiome pour l'aide, exemples, etc.",
@@ -72,5 +75,6 @@
 		'Off':							'Éteint',
 		"_last_":						"_last_"
 
-    } ;
+    };
+    }
 

@@ -18,8 +18,11 @@
  *
  */
 
+import { ws_info } from '../sim_core/sim_adt_core.js';
 
-    ws_info.breakpoint_icon_list = {
+export function wepsim_register_breakpoint_icons()
+{
+ws_info.breakpoint_icon_list = {
                     "classic": 		{ type: "classic",      addclass: "no-dark-mode",  origin: "https://www.optikunde.de/farbe/rot.php" },
                     "pushpin": 		{ type: "classic",      addclass: "no-dark-mode",  origin: "http://clipart-library.com/red-push-pin.html" },
                     "cat1": 		{ type: "pets",         addclass: "no-dark-mode",  origin: "" },
@@ -47,11 +50,12 @@
                     "t800b": 		{ type: "films",        addclass: "no-dark-mode",  origin: "https://www.pngegg.com/en/png-buhsk" },
                     "t1000a": 		{ type: "films",        addclass: "no-dark-mode",  origin: "https://i0.pngocean.com/files/328/174/569/the-terminator-sticker-t-1000-telegram-world-of-tanks-suren-mnatsakanyan-street.jpg" }
     } ;
+}
 
 
-    function sim_core_breakpointicon_get ( icon_name )
+    export function sim_core_breakpointicon_get ( icon_name )
     {
-	  var icon_obj = null ;
+	  var icon_obj ;
 
 	  icon_obj = ws_info.breakpoint_icon_list[icon_name] ;
 	  if (typeof icon_obj === "undefined") {

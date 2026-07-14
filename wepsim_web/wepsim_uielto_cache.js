@@ -17,14 +17,21 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { get_var } from '../sim_core/sim_core_values.js';
+import { vue_observable_ifnotjetdone, vue_appyBinding } from '../sim_core/sim_core_values.js';
+import { simhw_active, simhw_internalState } from '../sim_hw/sim_hw_index.js';
+
+import { wsweb_set_details_select } from './wepsim_web_api.js';
+
 
 
         /*
          *  Cache Memory
          */
-
         /* jshint esversion: 6 */
-        class ws_cachememory extends ws_uielto
+        export class ws_cachememory extends ws_uielto
         {
               // constructor
 	      constructor ()
@@ -74,16 +81,31 @@
 		         wepsim_show_cache_vueinit(i+1, cm_ref[i]) ;
 		    }
 	      }
+
+              bindElements()
+              {
+                    this.addEventListener('click', function(ev) {
+                          var el = ev.target.closest('[data-action]');
+                          if (!el) return;
+                          switch (el.dataset.action) {
+                                case 'cache-config':
+                                      wsweb_set_details_select(29);
+                                      break;
+                                case 'refresh-cache':
+                                      wepsim_show_cache_memory_i(parseInt(el.dataset.level));
+                                      break;
+                          }
+                    });
+              }
         }
 
-        register_uielto('ws-cachememory', ws_cachememory) ;
 
 
         /*
          *  Auxiliar function for Cache Memory UI
          */
 
-        function wepsim_show_cache_stats ( level, memory )
+        export function wepsim_show_cache_stats( level, memory )
         {
             var o1 = "" ;
             var p1 = "cache_l" + level + "_stats_" ;
@@ -141,7 +163,7 @@
             return o1 ;
         }
 
-        function wepsim_show_cache_cfg ( level, memory )
+        export function wepsim_show_cache_cfg( level, memory )
         {
             // cache configuration...
             var t_sz = get_var(memory.cfg.tag_size) ;
@@ -153,7 +175,7 @@
             var    cm_level = get_var(memory.cfg.level) ;
 
             // cache type and field sizes...
-            var cm_type = '' ;
+            var cm_type ;
             var p1 = "<table class='table table-bordered table-hover table-sm w-auto mt-1 mb-2'>" ;
 
             if (0 == s_sz) {
@@ -183,15 +205,15 @@
             return o1 ;
         }
 
-        function wepsim_show_cache_content ( level, memory )
+        export function wepsim_show_cache_content( level, memory )
         {
             var o1 = "" ;
-            var elto_set_bin = '' ;
-            var elto_tag_bin = '' ;
+            var elto_set_bin ;
+            var elto_tag_bin ;
 
 	    // sets/tags
-            var ks = null ;
-	    var kt = null ;
+            var ks ;
+	    var kt ;
 
             ks = Object.keys(memory.sets) ;
 	    for (const elto_set of ks)
@@ -228,7 +250,7 @@
             return o1 ;
         }
 
-        function wepsim_show_cache_memory_i ( level )
+        export function wepsim_show_cache_memory_i( level )
         {
               // check arguments
               var cm_ref = simhw_internalState('CM') ;
@@ -238,7 +260,7 @@
               if (typeof cm_i == "undefined") return ;
 
               // (1/3) update stats
-              o1 = wepsim_show_cache_stats(level, cm_i) ;
+              var o1 = wepsim_show_cache_stats(level, cm_i) ;
               $("#cm-info-stat-ph-" + level).html(o1) ;
 
               // (2/3) update configuration
@@ -254,9 +276,9 @@
         }
 
 
-        function wepsim_show_cache_memory_skel ( cache_memory )
+        export function wepsim_show_cache_memory_skel( cache_memory )
         {
-              var o1 = "" ;
+              var o1 ;
 
               if ( (typeof cache_memory == "undefined") || (Object.keys(cache_memory).length == 0) )
               {
@@ -265,8 +287,8 @@
                          "<br>" +
                          "No cache memory was already defined.<br>" +
                          "Please use the " +
-		         "<span class='btn btn-sm btn-info text-white py-0' " +
-                         "      onclick='wsweb_set_details_select(29);'>cache configuration</span> first." +
+		 '<span class=\'btn btn-sm btn-info text-white py-0\' ' +
+                         '      data-bind="click" data-action="cache-config">cache configuration</span> first.' +
                          "<br>" +
                          "<div class='vr' style='width:3px'></div>" +
                          "<h5><span data-langkey='Memory'>Memory</span></h5>" ;
@@ -295,9 +317,8 @@
                     "<div class='row'>" +
 		    "<span class='col-auto h5 m-0'>Cache-" + (i+1) + "</span>" +
 		    "<div  class='col'>" +
-		    "<span class='btn btn-sm btn-info text-white py-0' " +
-		    "      onclick='wepsim_show_cache_memory_i(" + (i+1) + ");'" +
-		    ">Refresh</span>" +
+		    '<span class=\'btn btn-sm btn-info text-white py-0\' ' +
+		    '      data-bind="click" data-action="refresh-cache" data-level="' + (i+1) + '">Refresh</span>' +
 		    "</div>" +
 		    "</div>" +
 		    "</div>" +                     // </header row>
@@ -361,7 +382,7 @@
               return o1 ;
         }
 
-        function wepsim_show_cache_vueinit ( level, memory )
+        export function wepsim_show_cache_vueinit( level, memory )
         {
            var p1 = "#cache_l" + level + "_stats_" ;
 
@@ -503,7 +524,7 @@
          *  Cache Memory API
          */
 
-        function wepsim_show_cache_memory ( cache_memory )
+        export function wepsim_show_cache_memory( cache_memory )
         {
               var o1 = wepsim_show_cache_memory_skel(cache_memory) ;
               $("#memory_CACHE").html(o1) ;

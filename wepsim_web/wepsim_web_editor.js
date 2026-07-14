@@ -19,6 +19,42 @@
  */
 
 
+import CodeMirror from 'codemirror';
+import 'codemirror/addon/fold/foldcode';
+import 'codemirror/addon/fold/foldgutter';
+import 'codemirror/addon/fold/brace-fold';
+import 'codemirror/addon/fold/xml-fold';
+import 'codemirror/addon/fold/indent-fold';
+import 'codemirror/addon/fold/markdown-fold';
+import 'codemirror/addon/fold/comment-fold';
+import 'codemirror/addon/selection/active-line';
+import 'codemirror/addon/edit/matchbrackets';
+import 'codemirror/addon/edit/closebrackets';
+import 'codemirror/addon/display/autorefresh';
+import 'codemirror/addon/hint/show-hint';
+import 'codemirror/addon/hint/xml-hint';
+import 'codemirror/addon/hint/html-hint';
+import 'codemirror/addon/dialog/dialog';
+import 'codemirror/addon/search/search';
+import 'codemirror/addon/search/searchcursor';
+import 'codemirror/addon/search/jump-to-line';
+import 'codemirror/mode/xml/xml';
+import 'codemirror/mode/javascript/javascript';
+import 'codemirror/mode/css/css';
+import 'codemirror/mode/htmlmixed/htmlmixed';
+import $ from 'jquery';
+import { get_cfg } from '../sim_core/sim_cfg.js';
+import { get_simware, set_simware } from '../sim_core/sim_adt_core.js';
+import { i18n_get } from '../wepsim_i18n/i18n.js';
+import { simcore_compile_firmware, simcore_reset } from '../sim_core/sim_api_core.js';
+import { update_memories, wait_if_uievents } from '../sim_core/sim_core_ctrl.js';
+import { wepsim_notify_close, wepsim_notify_error, wepsim_notify_success } from '../wepsim_core/wepsim_notify.js';
+import { wsweb_dlg_alert } from '../wepsim_core/wepsim_dialog.js';
+import { asmdbg_update_assembly } from './wepsim_uielto_dbg_asm.js';
+import { inputasm, inputfirm, sim_change_workspace } from './wepsim_web_simulator.js';
+import { wsasm_src2mem } from '../sim_sw/assembly.js';
+
+
     //
     // WepSIM API
     //
@@ -27,7 +63,7 @@
      *  Editor
      */
 
-    function sim_cfg_editor_theme ( editor )
+    export function sim_cfg_editor_theme( editor )
     {
 	    var theme = get_cfg('editor_theme') ;
 
@@ -41,7 +77,7 @@
 	    editor.setOption('theme', theme);
     }
 
-    function sim_cfg_editor_mode ( editor )
+    export function sim_cfg_editor_mode( editor )
     {
 	    var edt_mode = get_cfg('editor_mode');
 
@@ -56,7 +92,7 @@
             }
     }
 
-    function sim_cm_get_firmcfg ( )
+    export function sim_cm_get_firmcfg( )
     {
 	    return {
 			value: "\n\n\n\n\n\n\n\n\n\n\n\n",
@@ -72,7 +108,7 @@
 		   } ;
     }
 
-    function sim_cm_get_asmcfg ( )
+    export function sim_cm_get_asmcfg( )
     {
 	    return {
 			value: "\n\n\n\n\n\n\n\n\n\n\n\n",
@@ -102,7 +138,7 @@
 		   } ;
     }
 
-    function sim_init_editor ( editor_id, editor_cfg )
+    export function sim_init_editor( editor_id, editor_cfg )
     {
 /*
             var view = new EditorView({
@@ -154,7 +190,7 @@
 
     // Error dialog
 
-    function goError ( editor, pos )
+    export function goError( editor, pos )
     {
          editor.setCursor({ line: pos-1, ch: 0 }) ;
          var marked = editor.addLineClass(pos-1, 'background', 'CodeMirror-selected') ;
@@ -167,19 +203,19 @@
    	 editor.scrollTo(null, t - middleHeight - 5) ;
     }
 
-    function showError ( Msg, editor )
+    export function showError( Msg, editor )
     {
-            var errorMsg = Msg.replace(/\t/g,' ').replace(/   /g,' ');
+            var errorMsg = Msg.replace(/\t/g,' ').replace(/ {3}/g,' ');
 
             var pos = errorMsg.match(/Problem around line \d+/);
             var lineMsg = '' ;
             if (null !== pos) {
                 pos = parseInt(pos[0].match(/\d+/)[0]);
-                lineMsg += '<button type="button" class="btn btn-danger" ' +
-                           '        onclick="wepsim_notify_close(); ' +
-                           '                 goError(' + editor + ', ' + pos + ');">' +
-                           ' Go line ' + pos +
-                           '</button>&nbsp;' ;
+                    lineMsg += '<button type="button" class="btn btn-danger" ' +
+                               '        data-bind="click" data-action="go-error"' +
+                               '        data-editor="' + editor + '" data-pos="' + pos + '">' +
+                               ' Go line ' + pos +
+                               '</button>&nbsp;' ;
             }
 
             wepsim_notify_error('<strong>ERROR</strong>',
@@ -190,13 +226,13 @@
 		                '<center>' +
 		                lineMsg +
                                 '<button type="button" class="btn btn-danger" ' +
-                                '        onclick="wepsim_notify_close();"><span data-langkey="Close">Close</span></button>' +
+                                '        data-bind="click" data-action="notify-close"><span data-langkey="Close">Close</span></button>' +
                                 '</center>') ;
     }
 
     // Show binaries
 
-    function wepsim_get_binary_code ( )
+    export function wepsim_get_binary_code( )
     {
          // compile if needed
 	 if (false == inputasm.is_compiled)
@@ -224,7 +260,7 @@
 	 return get_simware() ;
     }
 
-    function wepsim_get_binary_microcode ( )
+    export function wepsim_get_binary_microcode( )
     {
          // microcompile if needed
 	 if (false == inputfirm.is_compiled)
@@ -248,7 +284,7 @@
      * Microcompile and compile
      */
 
-    function wepsim_compile_assembly ( textToCompile )
+    export function wepsim_compile_assembly( textToCompile )
     {
         // get SIMWARE.firmware
         var SIMWARE = get_simware() ;
@@ -281,7 +317,7 @@
         return true;
     }
 
-    function wepsim_compile_firmware ( textToMCompile )
+    export function wepsim_compile_firmware( textToMCompile )
     {
 	var ret = simcore_compile_firmware(textToMCompile) ;
 	if (false === ret.ok)
@@ -296,5 +332,26 @@
 
 	simcore_reset() ;
         return true;
+    }
+
+    export function bindElements()
+    {
+        this.addEventListener('click', (e) => {
+            const el = e.target.closest('[data-bind="click"]') ;
+            if (!el) return ;
+            e.preventDefault() ;
+
+            switch (el.dataset.action) {
+                case 'notify-close':
+                    wepsim_notify_close() ;
+                    break ;
+                case 'go-error': {
+                    var edt = (el.dataset.editor === 'inputasm') ? inputasm : inputfirm ;
+                    wepsim_notify_close() ;
+                    goError(edt, parseInt(el.dataset.pos)) ;
+                    break ;
+                }
+            }
+        }) ;
     }
 

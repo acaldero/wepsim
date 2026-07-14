@@ -24,11 +24,16 @@
  *  Port of io_clk_base.js for the 5-stage pipeline CPU (rvpipe)
  */
 
+import { get_value, set_value, get_var, set_var } from '../../sim_core/sim_core_values.js';
+import { get_reference } from '../sim_hw_values.js';
+import { simhw_sim_state, simhw_sim_signal, simhw_internalState_get } from '../sim_hw_index.js';
+import { signal_apply_behaviour } from '../sim_hw_signal.js';
+
 const IO_CLK_IOSR_ID = 0x1100;
 const IO_CLK_IOCR_ID = 0x1104;
 const IO_CLK_IODR_ID = 0x1108;
 
-function io_clk_rvpipe_register(sim_p: Simulator): Simulator {
+export function io_clk_rvpipe_register(sim_p: Simulator): Simulator {
     const DEBUG = false;
     sim_p.components["IO"] = {
         name: "IO",

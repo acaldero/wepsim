@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.hw.zh_cn = {
+    export function i18n_zh_cn_register_hw(i18n) {
+
+
+
+        i18n.eltos.hw.zh_cn = {
 
         "Component":                                "Component",
         "Element":                                  "Element",
@@ -384,5 +388,6 @@
 
 	"_last_":				    "_last_"
 
-    } ;
+    };
+    }
 

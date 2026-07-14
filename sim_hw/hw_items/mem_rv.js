@@ -18,12 +18,17 @@
  *
  */
 
+import { main_memory_fusionvalues, main_memory_get_program_counter, main_memory_getvalue, main_memory_set } from '../../sim_core/sim_adt_mainmemory.js';
+import { show_main_memory } from '../../sim_core/sim_core_ui.js';
+import { get_value, get_var, set_value } from '../../sim_core/sim_core_values.js';
+import { cache_memory_access } from '../../sim_core/sim_adt_cachememory.js';
+import { get_cfg } from '../../sim_core/sim_cfg.js';
 
 /*
  *  Memory
  */
 
-function mem_rv_register ( sim_p )
+export function mem_rv_register ( sim_p )
 {
         sim_p.components.MEMORY = {
 		                  name: "MEMORY",
@@ -39,8 +44,8 @@ function mem_rv_register ( sim_p )
                                                   if (typeof vec.MEMORY == "undefined")
                                                       vec.MEMORY = {} ;
 
-						  var key = 0 ;
-						  var value = 0 ;
+						  var key ;
+						  var value ;
 					          for (var index in sim_p.internal_states.MP)
 						  {
                                                        value = main_memory_getvalue(sim_p.internal_states.MP,
@@ -78,9 +83,10 @@ function mem_rv_register ( sim_p )
                                                   return false ;
 				             },
 		                  get_state: function ( pos ) {
-						  var index = parseInt(pos) ;
-                                                  var value = main_memory_getvalue(sim_p.internal_states.MP,
-                                                                                   elto) ;
+                                                   var index = parseInt(pos) ;
+                                                   let elto = index ;
+                                                   var value = main_memory_getvalue(sim_p.internal_states.MP,
+                                                                                    elto) ;
                                                   if (typeof value === "undefined") {
 					              return null ;
 					          }
@@ -188,7 +194,8 @@ function mem_rv_register ( sim_p )
                                         operation: function (s_expr)
                                                    {
 						      var address = "0x" + get_value(sim_p.states[s_expr[1]]).toString(16);
-                                                      var dbvalue = get_value(sim_p.states[s_expr[2]]);
+                                                    //   var dbvalue = get_value(sim_p.states[s_expr[2]]);
+                                                      var dbvalue ;
                                                       var bw      = sim_p.signals[s_expr[3]].value;
                                                       var clk     = get_value(sim_p.states[s_expr[4]]) ;
 
@@ -243,7 +250,7 @@ function mem_rv_register ( sim_p )
                                                    },
                                            verbal: function (s_expr)
                                                    {
-					              var verbal = "" ;
+					              var verbal ;
 
 						      var address = "0x" + get_value(sim_p.states[s_expr[1]]).toString(16);
                                                       var dbvalue = get_value(sim_p.states[s_expr[2]]);
@@ -263,8 +270,8 @@ function mem_rv_register ( sim_p )
 
                                                       var verbose = get_cfg('verbal_verbose') ;
                                                       if (verbose !== 'math') {
-                                                          verbal = "Try to read a " + bw_type + " from memory " +
-							           "at address "  + address + " with value 0x" + value.toString(16) + ". " ;
+                                    //                       verbal = "Try to read a " + bw_type + " from memory " +
+							        //    "at address "  + address + " with value 0x" + value.toString(16) + ". " ;
                                                       }
 
                                                       verbal = "Memory output = 0x" + value.toString(16) +
@@ -306,14 +313,14 @@ function mem_rv_register ( sim_p )
                  				      }
 
                                                       // BW -> See Tables in Help
-                                                      if (bw == 1) {
-                                                          var byte_s = 0x0000;
-                                                          value = main_memory_fusionvalues(value, dbvalue, byte_s) ;
-                                                      } else if (bw == 2) {
-                                                          var byte_s = 0x0004;
-                                                          value = main_memory_fusionvalues(value, dbvalue, byte_s) ;
-                                                      } else {
-                                                          var byte_s = 0x000C;
+                                                       if (bw == 1) {
+                                                           var byte_s = 0x0000;
+                                                           value = main_memory_fusionvalues(value, dbvalue, byte_s) ;
+                                                       } else if (bw == 2) {
+                                                           byte_s = 0x0004;
+                                                           value = main_memory_fusionvalues(value, dbvalue, byte_s) ;
+                                                       } else {
+                                                           byte_s = 0x000C;
                                                           value = main_memory_fusionvalues(value, dbvalue, byte_s) ;
                                                       }
 
@@ -349,7 +356,7 @@ function mem_rv_register ( sim_p )
                                                    },
                                            verbal: function (s_expr)
                                                    {
-					              var verbal = "" ;
+					              var verbal;
 
 						      var address = "0x" + get_value(sim_p.states[s_expr[1]]).toString(16);
                                                       var dbvalue = get_value(sim_p.states[s_expr[2]]);
@@ -369,8 +376,8 @@ function mem_rv_register ( sim_p )
 
                                                       var verbose = get_cfg('verbal_verbose') ;
                                                       if (verbose !== 'math') {
-                                                          verbal = "Try to write a " + bw_type + " to memory " +
-							           "at address "  + address + " with value " + value.toString(16) + ". " ;
+                                    //                       verbal = "Try to write a " + bw_type + " to memory " +
+							        //    "at address "  + address + " with value " + value.toString(16) + ". " ;
                                                       }
 
                                                       verbal = "Memory[" + address + "] = " + "0x" + value.toString(16) +

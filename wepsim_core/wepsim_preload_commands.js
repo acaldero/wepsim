@@ -18,8 +18,20 @@
  *
  */
 
+import LZString from 'lz-string';
+import { cfgset_load, get_cfg } from '../sim_core/sim_cfg.js';
+import { wsweb_assembly_compile, wsweb_change_show_asmdbg, wsweb_change_show_processor, wsweb_do_action, wsweb_firmware_compile, wsweb_select_main, wsweb_set_details } from '../wepsim_web/wepsim_web_api.js';
+import { inputasm, inputfirm, wepsim_uicfg_restore } from '../wepsim_web/wepsim_web_simulator.js';
+import { load_from_example_firmware, wepsim_example_load, wepsim_example_loadSet, wepsim_example_reset } from './wepsim_example.js';
+import { wepsim_checkpoint_backup_load, wepsim_checkpoint_loadURI } from './wepsim_checkpoint.js';
+import { cache_memory_init_cm } from '../sim_core/sim_adt_cachememory.js';
+import { simhw_internalState_reset } from '../sim_hw/sim_hw_index.js';
+import { wepsim_show_cache_memory_config } from '../wepsim_web/wepsim_uielto_cache_config.js';
+import { ws_info } from '../sim_core/sim_adt_core.js';
 
-    ws_info.preload_tasks = [
+export function wepsim_register_preload_tasks()
+{
+ws_info.preload_tasks = [
 
 	 // parameter: mode
 	 {
@@ -103,7 +115,7 @@
 	    'name':   'mc',
 	    'action': function( hash )
 		      {
-			 var result_txt = '' ;
+			 var result_txt ;
                          var mc_code    = '' ;
 
                          try
@@ -138,7 +150,7 @@
 	    'name':   'asm',
 	    'action': function( hash )
 		      {
-			 var result_txt = '' ;
+			 var result_txt ;
                          var asm_code   = '' ;
 
                          try
@@ -209,7 +221,7 @@
 	    'name':   'cache',
 	    'action': function( hash )
 		      {
-			 var result_txt  = '' ;
+			 var result_txt ;
                          var cm_cfg_json = '[]' ;
 
                          try
@@ -233,12 +245,10 @@
 			    result_txt  = ' could not be loaded' ;
                          }
 
-			 var cm = [] ;
-			 var cm_cfg = [] ;
 			 if ('[]' != cm_cfg_json)
                          {
-			     cm_cfg = JSON.parse(cm_cfg_json) ;
-			     cm = cache_memory_init_cm(cm_cfg) ;
+			     let cm_cfg = JSON.parse(cm_cfg_json) ;
+			     let cm = cache_memory_init_cm(cm_cfg) ;
 			     simhw_internalState_reset('CM_cfg', cm_cfg) ;
 			     simhw_internalState_reset('CM',     cm) ;
 			     wepsim_show_cache_memory_config() ;
@@ -253,7 +263,7 @@
 	    'name':   'checkpoint',
 	    'action': function( hash )
 		      {
-			  uri_obj = new URL(hash.checkpoint) ;
+			  var uri_obj = new URL(hash.checkpoint) ;
 			  wepsim_checkpoint_loadURI(uri_obj) ;
 		      }
 	 },
@@ -262,7 +272,7 @@
 	 // in wepsim_preload_fromHash
 	 {
 	    'name':   'notify',
-	    'action': function( hash )
+	    'action': function( )
 		      {
 			 return '' ;
 		      }
@@ -272,11 +282,12 @@
 	 // in wepsim_preload_get2hash
 	 {
 	    'name':   'preload',
-	    'action': function( hash )
+	    'action': function( )
 		      {
 			 return '' ;
 		      }
 	 }
 
      ] ;
+}
 

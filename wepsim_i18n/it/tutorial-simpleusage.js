@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.tutorial_simpleusage.it = {
+    export function i18n_it_register_tutorial_simpleusage(i18n) {
+
+
+
+        i18n.eltos.tutorial_simpleusage.it = {
 
 		'title_0':		'Semplice esperienza WepSIM: microprogrammazione e programmazione',
 		'message_0':		'<center> <img alt = \'screenshot di wepsim\' src = \'images/simulator/simulator011.jpg\' style = \'max-width: 100%; max-height: 40vh; \'> </center> <p> <h5> Questo breve tutorial ti mostrerà come: <ol> <li> <a href =\' # \'onclick =\' sim_tutorial_goframe ("simpleusage" , 0,1); \'> Modifica il tuo microcodice. </a> </li> <li> <a href=\'#\' onclick=\'sim_tutorial_goframe("simpleusage",0,3);\'> Modifica il tuo assembly ( in base al microcodice precedente). </a> </li> <li> <a href=\'#\' onclick=\'sim_tutorial_goframe("simpleusage",0,5);\'> Esegui l\'assembly + microcode nella simulazione. </a> </li> </ol> </h5>',
@@ -37,4 +41,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

@@ -17,14 +17,27 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto } from './wepsim_uielto.js';
+import { get_cfg, cfg_show_control_memory_delay } from '../sim_core/sim_cfg.js';
+import { get_simware } from '../sim_core/sim_adt_core.js';
+import { get_value } from '../sim_core/sim_core_values.js';
+import { vue_observable_ifnotjetdone, vue_appyBinding } from '../sim_core/sim_core_values.js';
+import { simhw_internalState, simhw_sim_ctrlStates_get, simhw_sim_state } from '../sim_hw/sim_hw_index.js';
+import { control_memory_lineToString, control_memory_set } from '../sim_core/sim_adt_ctrlmemory.js';
+import { element_scroll_setRelative } from '../sim_core/sim_core_ui.js';
+import { sim_core_breakpointicon_get } from '../wepsim_core/wepsim_dbg_breakpointicons.js';
+import { simcore_record_append_new } from '../sim_core/sim_core_record.js';
+import { wepsim_execute_toggle_microbreakpoint } from '../wepsim_core/wepsim_execute.js';
+import { wepsim_notify_do_notify } from '../wepsim_core/wepsim_notify.js';
+
 
 
         /*
          *  DBG-MC
          */
-
         /* jshint esversion: 6 */
-        class ws_dbg_mc extends ws_uielto
+        export class ws_dbg_mc extends ws_uielto
         {
 	      constructor ()
 	      {
@@ -40,19 +53,36 @@
                              "</div>" ;
 
 		    this.innerHTML = o1 ;
+		    this.bindElements() ;
 	      }
+
+              bindElements()
+              {
+                    this.addEventListener('click', function(ev) {
+                        var el = ev.target.closest('[data-bind="click"]');
+                        if (!el) return;
+                        switch (el.dataset.action) {
+                            case 'set-breakpoint':
+                                dbg_set_breakpoint(el.dataset.addr);
+                                if (event.stopPropagation) event.stopPropagation();
+                                break;
+                            case 'vue-set-breakpoint':
+                                var key = el.getAttribute('data-info');
+                                dbg_set_breakpoint(key);
+                                if (event.stopPropagation) event.stopPropagation();
+                                break;
+                        }
+                    });
+              }
         }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-dbg-mc', ws_dbg_mc) ;
-        }
 
 
         //
         //  Breakpoints and show_dbg_mpc
         //
 
-        function dbg_set_breakpoint ( addr )
+        export function dbg_set_breakpoint( addr )
         {
                 // toggle
                 var hexaddr  = "0x" + parseInt(addr).toString(16) ;
@@ -76,7 +106,7 @@
                                           'dbg_set_breakpoint(' + addr + ');\n') ;
         }
 
-        function dbg_set_breakpoint_ui ( addr, bp_state )
+        export function dbg_set_breakpoint_ui( addr, bp_state )
         {
                 var o1_content = "&nbsp;" ;
                 if (false == bp_state) {
@@ -88,7 +118,7 @@
                 o1.innerHTML = o1_content ;
         }
 
-	function wepsim_show_dbg_mpc ( )
+	export function wepsim_show_dbg_mpc( )
 	{
 	        var maddr_name = simhw_sim_ctrlStates_get().mpc.state ;
 	        var reg_maddr  = get_value(simhw_sim_state(maddr_name)) ;
@@ -101,9 +131,9 @@
         //  Control Memory UI
         //
 
-        var show_control_memory_deferred = null;
+        export var show_control_memory_deferred = null;
 
-        function wepsim_show_control_memory ( memory, index, redraw )
+        export function wepsim_show_control_memory( memory, index, redraw )
         {
             if (null !== show_control_memory_deferred) {
                 return;
@@ -117,7 +147,7 @@
                                                       }, cfg_show_control_memory_delay);
         }
 
-        function hard_refresh_control_memory ( memory, index, redraw )
+        export function hard_refresh_control_memory( memory, index, redraw )
         {
 	    var o1 = "" ;
             var SIMWARE = get_simware() ;
@@ -147,12 +177,12 @@
             old_mc_addr = index;
         }
 
-        var old_mc_addr = 0;
+        export var old_mc_addr = 0;
 
-        function light_refresh_control_memory ( memory, index )
+        export function light_refresh_control_memory( memory, index )
         {
 	    // if not visible -> skip
-            o1 = $("#memory_MC") ;
+            var o1 = $("#memory_MC") ;
             if (o1.is(':visible') == false) {
 		return ;
             }
@@ -178,7 +208,7 @@
             }
         }
 
-        function control_memory_showrow ( memory, key, is_current, revlabels )
+        export function control_memory_showrow( memory, key, is_current, revlabels )
         {
 	        var o1 = "" ;
 
@@ -204,16 +234,12 @@
 
                 // trpin + wcolor
                 var trpin  = "&nbsp;" ;
-                var jscode = "" ;
                 if (typeof memory[key] !== "undefined")
 	        {
 		    if (true == memory[key].breakpoint) {
                         var icon_theme = get_cfg('ICON_theme') ;
                         trpin = sim_core_breakpointicon_get(icon_theme) ;
 		    }
-
-                    jscode = "dbg_set_breakpoint(" + key + "); " +
-                             "if (event.stopPropagation) event.stopPropagation();" ;
 		}
 
                 // wcolor
@@ -224,7 +250,7 @@
 
 		o1 += "<tr id='maddr" + key + "' class='d-flex' " +
                       "    style='font-size:small;' " +
-		      "    onclick='" + jscode + "'>" +
+                      "    data-bind='click' data-action='set-breakpoint' data-addr='" + key + "'>" +
 		      "<td             class='col-3 col-md-2 py-0 " + wcolor + "' align='right'>" + maddr + "</td>" +
 		      "<td width='1%'  class='col-auto py-0 px-0  " + wcolor + "' id='mcpin" + key + "'>" + trpin + "</td>" +
 		      "<td             class='col py-0            " + wcolor + "'>" + value + "</td>" +
@@ -244,7 +270,7 @@
         // * control_memory_init_vue ( redraw ) { ... f_computed_elements = ... try to avoid full for-loop }
         //
 
-        function ctrmem_init_vue_computed_value_init ( elto )
+        export function ctrmem_init_vue_computed_value_init( elto )
         {
 	       var SIMWARE = get_simware() ;
 	       var key_hex = '0x' + parseInt(elto.key).toString(16) ;
@@ -280,7 +306,7 @@
 	       return elto.ui ;
         }
 
-        function ctrmem_init_vue_computed_value_update ( elto )
+        export function ctrmem_init_vue_computed_value_update( elto )
         {
                // ui-breakpoint-icon
 	       var icon_theme = get_cfg('ICON_theme') ;
@@ -307,7 +333,7 @@
 	       return elto.ui ;
         }
 
-        function control_memory_init_vue ( redraw )
+        export function control_memory_init_vue( redraw )
         {
             var memory     = simhw_internalState('MC') ;
 	    var maddr_name = simhw_sim_ctrlStates_get().mpc.state ;
@@ -325,9 +351,7 @@
                      "    :id='elto.ui.id_row' class='d-flex' " +
                      "    :data-info='elto.key' v-bind:key='elto.key' " +
                      "    :style='elto.ui.style_obj' " +
-	 	     "    onclick='var key = this.getAttribute(\"data-info\"); " +
-                     "             dbg_set_breakpoint(key); " +
-                     "             if (event.stopPropagation) event.stopPropagation();'>" +
+" 	 	     data-bind='click' data-action='vue-set-breakpoint'>" +
  	             "<td class='col-3 col-md-2 py-0' align='right' v-html='elto.ui.labels_str'></td>" +
 	             "<td class='col-auto py-0 px-0'  width='1%'    v-html='elto.ui.b_icon'></td>" +
 	             "<td class='col py-0'>{{ elto.ui.value_str }}</td>" +

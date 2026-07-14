@@ -18,12 +18,17 @@
  *
  */
 
+import $ from 'jquery';
+import { simcore_voice_speak } from '../sim_core/sim_core_voice.js';
+import { simcore_notifications_add } from '../sim_core/sim_core_notify.js';
+import { get_cfg } from '../sim_core/sim_cfg.js';
+import { simcore_record_append_new } from '../sim_core/sim_core_record.js';
 
-    /*
+/*
      * API - one notification
      */
 
-    function wepsim_notify_show_notify ( ntf_title, ntf_message, ntf_type, ntf_delay )
+    export function wepsim_notify_show_notify ( ntf_title, ntf_message, ntf_type, ntf_delay )
     {
 	    if (typeof document == "undefined")
 	    {
@@ -50,7 +55,7 @@
             var ale1_div_class   = "alert alert-" + ntf_type + " shadow border border-tertiary" ;
 
 	    // create the alert div
-            var btn1   = $('<button type="button" class="' + btn1_close_class + '" onclick="wepsim_notify_close(); return false;">') ;
+            var btn1   = $('<button type="button" class="' + btn1_close_class + '" data-bind="click" data-action="notify-close">') ;
 	    var alert1 = $('<div class="' + ale1_div_class + '">') ;
 	    ac.prepend(alert1.append(btn1.append("")).append(ntf_message)) ;
 
@@ -66,7 +71,7 @@
     }
 
 
-    function wepsim_notify_do_notify ( ntf_title, ntf_message, ntf_type, ntf_delay )
+    export function wepsim_notify_do_notify ( ntf_title, ntf_message, ntf_type, ntf_delay )
     {
 	    var title_text = ntf_title ;
 	    var mesg_text  = ntf_message ;
@@ -84,22 +89,22 @@
             wepsim_notify_show_notify(title_text, mesg_text, ntf_type, ntf_delay) ;
     }
 
-	    function wepsim_notify_success ( ntf_title, ntf_message )
+	    export function wepsim_notify_success ( ntf_title, ntf_message )
 	    {
 		 return wepsim_notify_do_notify(ntf_title, ntf_message, 'success', get_cfg('NOTIF_delay')) ;
 	    }
 
-	    function wepsim_notify_error ( ntf_title, ntf_message )
+	    export function wepsim_notify_error ( ntf_title, ntf_message )
 	    {
 		 return wepsim_notify_do_notify(ntf_title, ntf_message, 'danger', 0) ;
 	    }
 
-	    function wepsim_notify_warning ( ntf_title, ntf_message )
+	    export function wepsim_notify_warning ( ntf_title, ntf_message )
 	    {
 		 return wepsim_notify_do_notify(ntf_title, ntf_message, 'warning', get_cfg('NOTIF_delay')) ;
 	    }
 
-    function wepsim_notify_close ( )
+    export function wepsim_notify_close ( )
     {
             $(".alert").alert('close') ;
 

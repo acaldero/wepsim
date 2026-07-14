@@ -17,14 +17,26 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { ws_info } from '../sim_core/sim_adt_core.js';
+import { get_value } from '../sim_core/sim_core_values.js';
+import { simhw_active, simhw_sim_state } from '../sim_hw/sim_hw_index.js';
+import { simcore_ga } from '../sim_core/sim_core_ga.js';
+import { simcore_simstate_current2state, simcore_simstate_state2checklist, simcore_simstate_checkreport2html, simcore_simstate_diff_results, simcore_simstate_checklist2state } from '../sim_core/sim_api_stateshots.js';
+import { wepsim_state_get_clk, wepsim_state_history_add, wepsim_state_history_reset } from '../wepsim_core/wepsim_state.js';
+import { wepsim_notify_success } from '../wepsim_core/wepsim_notify.js';
+
+import { wepsim_popovers_hide, wepsim_popover_hide } from './wepsim_web_ui_popover.js';
+import { wepsim_clipboard_CopyFromTextarea, wepsim_clipboard_CopyFromDiv, get_clipboard_copy } from '../wepsim_core/wepsim_clipboard.js';
+
 
 
         /*
          *  States
          */
-
         /* jshint esversion: 6 */
-        class ws_states extends ws_uielto
+        export class ws_states extends ws_uielto
         {
               // constructor
               constructor ()
@@ -58,30 +70,87 @@
                         wepsim_dialog_current_state() ;
                     }
               }
+
+              bindElements ()
+              {
+                    this.addEventListener('click', (e) => {
+                        var el = e.target.closest('[data-bind="click"]');
+                        if (!el) return;
+                        e.preventDefault();
+
+                        switch (el.dataset.action) {
+                            case 'state-add':
+                                wepsim_state_history_add();
+                                wepsim_notify_success('<strong>INFO</strong>', 'Added !.');
+                                wepsim_state_history_list();
+                                wepsim_dialog_current_state();
+                                $('#states3').collapse('show');
+                                break;
+                            case 'state-copy-current':
+                                wepsim_clipboard_CopyFromTextarea('end_state1');
+                                wepsim_state_results_empty();
+                                var curr_tag = $('#curr_clk_maddr').html();
+                                $('#s_clip').html(curr_tag);
+                                break;
+                            case 'state-check-current':
+                                var txt_chklst1 = get_clipboard_copy();
+                                var obj_exp1    = simcore_simstate_checklist2state(txt_chklst1);
+                                var txt_chklst2 = $('#end_state1').val();
+                                var obj_exp2    = simcore_simstate_checklist2state(txt_chklst2);
+                                var ref_tag     = $('#curr_clk_maddr').html();
+                                $('#s_ref').html(ref_tag);
+                                wepsim_dialog_check_state(obj_exp1, obj_exp2);
+                                $('#check_results_scroll1').collapse('show');
+                                break;
+                            case 'state-history-reset':
+                                wepsim_state_history_reset();
+                                wepsim_notify_success('<strong>INFO</strong>', 'Removed all !.');
+                                wepsim_state_history_list();
+                                break;
+                            case 'state-diff-copy':
+                                wepsim_clipboard_CopyFromDiv('check_results_scroll1');
+                                break;
+                            case 'state-popover-close':
+                                wepsim_popover_hide(el.dataset.popoverId);
+                                break;
+                            case 'state-copy-history':
+                                wepsim_state_results_empty();
+                                $('#collapse_' + el.dataset.stateId).collapse('show');
+                                wepsim_clipboard_CopyFromDiv('state_' + el.dataset.stateId);
+                                $('#collapse_' + el.dataset.stateId).collapse('hide');
+                                $('#s_clip').html(el.dataset.titleShort);
+                                $('#s_ref').html('reference');
+                                break;
+                            case 'state-check-history':
+                                var txt_chklst1 = get_clipboard_copy();
+                                var obj_exp1    = simcore_simstate_checklist2state(txt_chklst1);
+                                var txt_chklst2 = $('#ta_state_' + el.dataset.stateId).val();
+                                var obj_exp2    = simcore_simstate_checklist2state(txt_chklst2);
+                                wepsim_dialog_check_state(obj_exp1, obj_exp2);
+                                $('#s_ref').html(el.dataset.titleShort);
+                                $('#check_results_scroll1').collapse('show');
+                                break;
+                        }
+                    });
+              }
         }
 
-        register_uielto('ws-states', ws_states) ;
 
 
         /*
          *  States
          */
 
-        function current_state_html ( )
+        export function current_state_html( )
         {
-             o = "" ;
+             var o = "" ;
 
              o += "<div class='card mb-2 border-secondary'>" +
                   "  <div class='card-header text-white bg-dark p-1' id='state_header_1'>" +
                   "    <h5 class='m-0'>" +
                   "            <a data-bs-toggle='collapse' href='#states3' class='btn btn-sm fs-5 float-start p-0'><span class='text-white bg-dark' data-langkey='Current State'>Current State</span></a>:&nbsp;" +
                   "            <span class='btn bg-body-tertiary text-primary border-secondary btn-sm float-end'" +
-                  "                  onclick='wepsim_state_history_add();" +
-                  "                           wepsim_notify_success(\"<strong>INFO</strong>\", \"Added !.\");" +
-                  "                           wepsim_state_history_list();" +
-                  "                           wepsim_dialog_current_state();" +
-                  "                           $(\"#states3\").collapse(\"show\");" +
-                  "                           return false;'" +
+"                  data-bind='click' data-action='state-add'" +
                   "                  data-inline='true'><span data-langkey='Add'>Add</span> <span class='d-none d-sm-inline-flex'><span data-langkey=\"'Current State' to History\">'Current State' to History</span></span></span>" +
                   "    </h5>" +
                   "  </div>" +
@@ -104,21 +173,10 @@
                   "                <div class='btn-group float-start' role='group' " +
                   "                  aria-label='State information for now'>" +
                   "                          <button class='btn btn-outline-secondary btn-sm col-auto float-end'" +
-                  "                                  onclick='wepsim_clipboard_CopyFromTextarea(\"end_state1\");" +
-                  "                                           wepsim_state_results_empty();" +
-                  "                                           var curr_tag = $(\"#curr_clk_maddr\").html();" +
-                  "                                           $(\"#s_clip\").html(curr_tag);" +
-                  "                                           return false;'" +
+"                                  data-bind='click' data-action='state-copy-current'" +
                   "                                  data-inline='true'><span data-langkey='Copy'>Copy</span><span class='d-none d-sm-inline-flex'>&nbsp;<span data-langkey='to clipboard'>to clipboard</span></span></button>" +
                   "                          <button class='btn btn-outline-secondary btn-sm col-auto float-end'" +
-                  "                                  onclick='var txt_chklst1 = get_clipboard_copy();" +
-                  "                                           var obj_exp1    = simcore_simstate_checklist2state(txt_chklst1);" +
-                  "                                           var txt_chklst2 = $(\"#end_state1\").val();" +
-                  "                                           var obj_exp2    = simcore_simstate_checklist2state(txt_chklst2);" +
-                  "                                           var ref_tag     = $(\"#curr_clk_maddr\").html();" +
-                  "                                           $(\"#s_ref\").html(ref_tag);" +
-                  "                                           wepsim_dialog_check_state(obj_exp1, obj_exp2);" +
-                  "                                           $(\"#check_results_scroll1\").collapse(\"show\");'" +
+"                                  data-bind='click' data-action='state-check-current'" +
                   "                                  type='button'><span data-langkey='Check'>Check</span> <span class='d-none d-md-inline-flex'><span data-langkey='differences with clipboard state'>differences with clipboard state</span></span></button>" +
                   "                          <button class='btn btn-outline-secondary btn-sm col-auto float-end'" +
                   "                                  data-bs-toggle='collapse' data-bs-target='#collapse_X'>&plusmn; <span data-langkey='Show'>Show</span></button>" +
@@ -160,9 +218,9 @@
              return o ;
         }
 
-        function state_history_html ( )
+        export function state_history_html( )
         {
-             o = "" ;
+             var o = "" ;
 
              o += "<div class='card mb-2 border-secondary'>" +
                   "  <div class='card-header text-white bg-dark p-1' id='state_header_2'>" +
@@ -177,10 +235,7 @@
                   "            </button>" +
                   "            <div class='dropdown-menu' aria-labelledby='resetyn2'>" +
                   "             <a class='dropdown-item py-2 bg-body text-danger' type='button' " +
-                  "                onclick='wepsim_state_history_reset();" +
-                  "                         wepsim_notify_success(\"<strong>INFO</strong>\", \"Removed all !.\");" +
-                  "                         wepsim_state_history_list() ;" +
-                  "                         return false;'" +
+"                data-bind='click' data-action='state-history-reset'" +
                   "                 ><span data-langkey='Yes'>Yes</span></a>" +
                   "              <div class='dropdown-divider'></div>" +
                   "              <a class='dropdown-item py-2 bg-body text-info' type='button' " +
@@ -206,17 +261,16 @@
              return o ;
         }
 
-        function state_differences_html ( )
+        export function state_differences_html( )
         {
-             o = "" ;
+             var o = "" ;
 
              o += "<div class='card mb-1 border-secondary'>" +
                   "  <div class='card-header text-white bg-dark p-1' id='state_header_3'>" +
                   "    <h5 class='m-0'>" +
                   "            <a data-bs-toggle='collapse' href='#check_results_scroll1' class='btn btn-sm fs-5 float-start p-0'><span class='text-white bg-dark' data-langkey='Differences'>Differences</span></a>:" +
                   "            <span class='btn bg-body-tertiary text-primary border-secondary btn-sm float-end'" +
-                  "                  onclick='wepsim_clipboard_CopyFromDiv(\"check_results_scroll1\");" +
-                  "                           return false;'" +
+"                  data-bind='click' data-action='state-diff-copy'" +
                   "                  data-inline='true'>" +
                   "                  <span data-langkey='Copy'>Copy</span>" +
                   "                  <span class='d-none d-sm-inline-flex'>&nbsp;<span data-langkey='to clipboard'>to clipboard</span></span>" +
@@ -252,7 +306,7 @@
         // State: History
         //
 
-        function wepsim_state_history_empty ( )
+        export function wepsim_state_history_empty( )
         {
              var empty_history = '<div class="pt-2"></div>' +
                                  '<span class="bg-warning text-dark bg-opacity-75">' +
@@ -262,7 +316,7 @@
              $('#history1').html(empty_history) ;
         }
 
-        function wepsim_state_history_list ( )
+        export function wepsim_state_history_list( )
         {
              if (0 == ws_info.state_history.length)
              {
@@ -274,9 +328,9 @@
 
              wepsim_popovers_hide("[data-bs-toggle=popover4]") ;
 
-             var  t = 0 ;
-             var it = '' ;
-             var tt = '' ;
+             var  t ;
+             var it ;
+             var tt ;
              var vr = '' ;
              var  o = '' ;
              for (var i=ws_info.state_history.length-1; i>=0; i--)
@@ -290,12 +344,12 @@
                       '<b>was inserted at:</b><br>' +
                       'Date: ' + t.getFullYear() + '-' + (t.getMonth()+1) + '-' + t.getDate() + '<br>' +
                       'Hour: ' + t.getHours()    + ':' + t.getMinutes()   + ':' + t.getSeconds() + '-' + t.getMilliseconds() + '<br>' +
-                      '<button type="button" id="close" data-role="none" ' +
-                      '        class="btn btn-sm btn-danger w-100 p-0" ' +
-                      '        onclick="wepsim_popover_hide("' + it + '");"><span data-langkey="Close">Close</span></button>' +
+                       '<button type="button" id="close" data-role="none" ' +
+                       '        class="btn btn-sm btn-danger w-100 p-0" ' +
+                       '        data-bind="click" data-action="state-popover-close" data-popover-id="' + it + '"><span data-langkey="Close">Close</span></button>' +
                       '</div>' ;
 
-                 vrow = '' ;
+                 var vrow = '' ;
                  if (i != 0)
                      vrow = '<div class="row h-100"><div class="col border-end border-secondary">&nbsp;</div><div class="col">&nbsp;</div></div>' ;
 
@@ -311,22 +365,13 @@
                       '       </div>' +
                       '       <div class="col py-2 ps-0">' +
                       '             <div class="btn-group float-none" role="group" aria-label="State information for ' + it + '">' +
-                      '                   <button class="btn btn-outline-secondary btn-sm col-auto float-end"' +
-                      '                           onclick="wepsim_state_results_empty();  ' +
-                      '                                    $(\'#collapse_' + i + '\').collapse(\'show\'); ' +
-                      '                                    wepsim_clipboard_CopyFromDiv(\'state_' + i + '\');  ' +
-                      '                                    $(\'#collapse_' + i + '\').collapse(\'hide\'); ' +
-                      '                                    $(\'#s_clip\').html(\'' + ws_info.state_history[i].title_short + '\'); ' +
-                      '                                    $(\'#s_ref\').html(\'reference\'); " ' +
+`                   <button class="btn btn-outline-secondary btn-sm col-auto float-end"` +
+"                           data-bind='click' data-action='state-copy-history'" +
+"                           data-state-id='" + i + "' data-title-short='" + ws_info.state_history[i].title_short + "'" +
                       '                           type="button"><span data-langkey="Copy">Copy</span><span class="d-none d-sm-inline-flex">&nbsp;<span data-langkey="to clipboard">to clipboard</span></span></button>' +
-                      '                   <button class="btn btn-outline-secondary btn-sm col-auto float-end"' +
-                      '                           onclick="var txt_chklst1 = get_clipboard_copy();' +
-                      '                                    var obj_exp1    = simcore_simstate_checklist2state(txt_chklst1);' +
-                      '                                    var txt_chklst2 = $(\'#ta_state_'+i+'\').val();' +
-                      '                                    var obj_exp2    = simcore_simstate_checklist2state(txt_chklst2);' +
-                      '                                    wepsim_dialog_check_state(obj_exp1, obj_exp2);' +
-                      '                                    $(\'#s_ref\').html(\'' + ws_info.state_history[i].title_short + '\'); ' +
-                      '                                    $(\'#check_results_scroll1\').collapse(\'show\');"' +
+"                   <button class=\"btn btn-outline-secondary btn-sm col-auto float-end\"" +
+"                           data-bind='click' data-action='state-check-history'" +
+"                           data-state-id='" + i + "' data-title-short='" + ws_info.state_history[i].title_short + "'" +
                       '                           type="button"><span data-langkey="Check">Check</span> <span class="d-none d-md-inline-flex">differences with clipboard state</span></button>' +
                       '                   <button class="btn btn-outline-secondary btn-sm col-auto float-end"' +
                       '                                data-bs-toggle="collapse" data-bs-target="#collapse_'+i+'">&plusmn; <span data-langkey="Show">Show</span></button>' +
@@ -352,7 +397,7 @@
         // State: Current State
         //
 
-        function wepsim_dialog_current_state ( )
+        export function wepsim_dialog_current_state( )
         {
              // current clk+maddr
              var ret = wepsim_state_get_clk() ;
@@ -368,7 +413,7 @@
 
              // ga
              var neltos  = 0 ;
-             var nceltos = 0 ;
+             var nceltos ;
              var ga_str  = "" ;
              for (var component in state_obj)
              {
@@ -390,7 +435,7 @@
         // State: Differences
         //
 
-        function wepsim_dialog_check_reset ( )
+        export function wepsim_dialog_check_reset( )
         {
             $('#end_state1').val('') ;
             $('#end_state1').tokenfield('setTokens', []) ;
@@ -399,7 +444,7 @@
             return true ;
         }
 
-        function wepsim_state_results_empty ( )
+        export function wepsim_state_results_empty( )
         {
     	     var empty_results = '<span class="bg-warning text-dark bg-opacity-75">' +
                                  '&lt;Empty (only modified values are shown)&gt;' +
@@ -410,12 +455,12 @@
               $('#s_ref').html('reference');
         }
 
-        function wepsim_dialog_check_state ( obj_chklst_expected, obj_chklst_current )
+        export function wepsim_dialog_check_state( obj_chklst_expected, obj_chklst_current )
         {
             var obj_result = simcore_simstate_diff_results(obj_chklst_expected, obj_chklst_current) ;
 
             // dialog
-            var msg = "" ;
+            var msg ;
             if (0 == obj_result.errors)
                      msg = "&emsp;<br><span style='background-color:#7CFC00'>" +
                        "<span data-langkey='Meets the specified requirements'>Meets the specified requirements</span>" +

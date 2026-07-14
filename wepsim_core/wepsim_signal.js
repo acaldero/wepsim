@@ -18,37 +18,43 @@
  *
  */
 
+import $ from 'jquery';
+import { simhw_short_name, simhw_sim_signal, simhw_sim_signals, simhw_sim_states } from '../sim_hw/sim_hw_index.js';
+import { compute_signal_verbals } from '../sim_hw/sim_hw_behavior.js';
+import { simcore_record_captureInit, simcore_record_append_new } from '../sim_core/sim_core_record.js';
+import { propage_signal_update } from '../sim_core/sim_core_ctrl.js';
+import { wepsim_config_dialog_dropdown } from '../wepsim_web/wepsim_web_ui_config.js';
+import { wsweb_dialogbox_close_updatesignal, wsweb_scroll_record } from '../wepsim_web/wepsim_web_api.js';
+import { wsweb_dlg_open } from './wepsim_dialog.js';
+import { update_signal_loadhelp } from './wepsim_help.js';
 
-        function wepsim_update_signal_dialog_title ( key )
+/* global vis */
+
+        export function wepsim_update_signal_dialog_title( key )
         {
-	        var b_btns  = key + ': ' +
-			      '<button onclick="$(\'#bot_signal\').carousel(0);" ' +
+		var b_btns  = key + ': ' +
+			      '<button data-bind="click" data-action="signal-carousel-value"' +
 			      '        type="button" class="btn btn-info">Value</button>' +
-			      '<button onclick="$(\'#bot_signal\').carousel(1); ' +
-                              '                 var shval = $(\'#ask_shard\').val(); ' +
-                              '                 var shkey = $(\'#ask_skey\').val(); ' +
-                              '                 update_signal_loadhelp(\'#help2\', shval, shkey);" ' +
+			      '<button data-bind="click" data-action="signal-carousel-help"' +
 			      '        type="button" class="btn btn-success">Help</button>' ;
 
                 return wepsim_config_dialog_dropdown("success",
 						     b_btns,
-						     'var shval = $(\'#ask_shard\').val(); ' +
-						     'var shkey = $(\'#ask_skey\').val(); ' +
-						     'update_signal_loadhelp(\'#help2\', shval, shkey);"') ;
+						     "") ;
         }
 
-        function wepsim_update_signal_dialog_body ( key, signal_obj )
+        export function wepsim_update_signal_dialog_body( key, signal_obj )
         {
 		// update signal
 		var checkvalue  = (signal_obj.value >>> 0) ;
-		var str_bolded  = '' ;
-		var str_checked = '' ;
+		var str_bolded  ;
+		var str_checked ;
 		var input_help  = '' ;
-		var behav_raw   = '' ;
-		var behav_str   = '' ;
+		var behav_raw   ;
+		var behav_str   ;
 		var notif       = '' ;
-		var n10 = 0;
-		var n2  = 0;
+		var n10 ;
+		var n2  ;
 
 		var nvalues = 1 << signal_obj.nbits ; // Math.pow(2, signal_obj.nbits) ;
 		if (signal_obj.behavior.length == nvalues)
@@ -131,7 +137,7 @@
 			 '</div>' ;
         }
 
-        function wepsim_update_signal_dialog ( key )
+        export function wepsim_update_signal_dialog( key )
         {
 		// check signal
 		var signal_obj = simhw_sim_signal(key) ;
@@ -162,7 +168,7 @@
 					callback:   function ()
 						    {
 							key        = $('#ask_skey').val();
-							user_input = $("input[name='ask_svalue']:checked").val();
+							var user_input = $("input[name='ask_svalue']:checked").val();
 							if (typeof user_input == "undefined") {
 							   user_input = $("input[name='ask_svalue']").val();
 							}
@@ -199,6 +205,15 @@
 				    // uicfg and events
 				    wsweb_scroll_record('#scroller-signal') ;
 				    simcore_record_captureInit() ;
+
+				    // bind idiom change to reload signal help
+				    $('#dlg_updatesignal').on('change',
+				        '[data-action="idiom-change"]',
+				        function() {
+					    var shval = $('#ask_shard').val();
+					    var shkey = $('#ask_skey').val();
+					    update_signal_loadhelp('#help2', shval, shkey);
+					});
 				 },
 			size:    'large'
                 } ;
@@ -206,7 +221,7 @@
 		return wsweb_dlg_open(dlg_obj) ;
         }
 
-        function wepsim_update_signal_quick ( key )
+        export function wepsim_update_signal_quick( key )
         {
 		// check signal
 		var signal_obj = simhw_sim_signal(key) ;
@@ -222,7 +237,7 @@
                 wepsim_update_signal_with_value(key, user_input) ;
         }
 
-        function wepsim_update_signal_with_value ( key, value )
+        export function wepsim_update_signal_with_value( key, value )
         {
                 // update signal
 		simhw_sim_signal(key).value = value ;
@@ -235,9 +250,9 @@
 
         // Show signal dependencies
 
-        var jit_dep_network = null ;
+        export var jit_dep_network = null ;
 
-        function show_visgraph ( jit_fire_dep, jit_fire_order )
+        export function show_visgraph( jit_fire_dep, jit_fire_order )
         {
 	    var sig = {} ;
             var tmp_hash  = {} ;

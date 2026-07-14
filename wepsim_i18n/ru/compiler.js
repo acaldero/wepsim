@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.compiler.ru = {
+    export function i18n_ru_register_compiler(i18n) {
+
+
+
+        i18n.eltos.compiler.ru = {
 
 	        "PROBLEM AROUND LINE":          "Проблема вокруг линии",
 		'NO TAG OR DIRECTIVE':		'Ожидаемый тег или директива, но нашел этот маркер вместо этого: ',
@@ -123,4 +127,5 @@
 		'_last_':			'_last_'
 
     };
+    }
 

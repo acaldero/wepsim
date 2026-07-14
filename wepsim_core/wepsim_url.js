@@ -18,12 +18,16 @@
  *
  */
 
+import $ from 'jquery';
+import { wepsim_notify_do_notify, wepsim_notify_error, wepsim_notify_success } from './wepsim_notify.js';
+import { get_cfg, is_cordova, is_mobile } from '../sim_core/sim_cfg.js';
+import { ws_alert } from '../sim_core/sim_core_ui.js';
 
-    /*
+/*
      * File API
      */
 
-    function wepsim_file_saveTo ( textToWrite, fileNameToSaveAs )
+    export function wepsim_file_saveTo ( textToWrite, fileNameToSaveAs )
     {
         // checks
         window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem ;
@@ -38,7 +42,7 @@
                                 "Error found " +  error.toString()) ;
 	} ;
 
-	var okHandler = function(msg) {
+	var okHandler = function(_msg) {
 	    wepsim_notify_success('<strong>INFO</strong>',
                                   'Successful file write request: ' + fileNameToSaveAs);
 	} ;
@@ -64,8 +68,8 @@
 
         var grandedBytes = 2*1024*1024 ;
 
-	var onQuotaFs = function(grantedBytes) {
-            window.requestFileSystem(PERSISTENT, grandedBytes, onInitFs, koHandler) ;
+	var onQuotaFs = function(_grantedBytes) {
+            window.requestFileSystem(window.PERSISTENT, grandedBytes, onInitFs, koHandler) ;
 	} ;
 
         navigator.webkitPersistentStorage.requestQuota(grandedBytes, onQuotaFs, koHandler) ;
@@ -77,7 +81,7 @@
      * URL API
      */
 
-    function wepsim_file_loadFrom ( fileToLoad, functionOnLoad )
+    export function wepsim_file_loadFrom ( fileToLoad, functionOnLoad )
     {
         // checks
         if (typeof fileToLoad === "undefined") {
@@ -105,7 +109,7 @@
         return true ;
     }
 
-    function wepsim_file_downloadTo ( textToWrite, fileNameToSaveAs )
+    export function wepsim_file_downloadTo ( textToWrite, fileNameToSaveAs )
     {
 	    var windowURL      = (window.webkitURL || window.URL) ;
             var textFileAsBlob = new Blob([textToWrite], { type: 'text/plain' }) ;
@@ -131,7 +135,7 @@
      *  Auxiliar API
      */
 
-    function getURLTimeStamp ( )
+    export function getURLTimeStamp ( )
     {
                 return Date.now() ;
 
@@ -147,7 +151,7 @@
 */
     }
 
-    function fetchURL ( f_url )
+    export function fetchURL ( f_url )
     {
 		// on-line: try the fresh version
 		if (navigator.onLine) {
@@ -163,9 +167,9 @@
      *  Combined API
      */
 
-    function wepsim_save_to_file ( textToWrite, fileNameToSaveAs )
+    export function wepsim_save_to_file ( textToWrite, fileNameToSaveAs )
     {
-        var ret = false ;
+        var ret ;
 
 	if (is_cordova())
              ret =     wepsim_file_saveTo(textToWrite, fileNameToSaveAs) ;
@@ -174,7 +178,7 @@
         return ret ;
     }
 
-    function wepsim_load_from_url ( url, do_next )
+    export function wepsim_load_from_url ( url, do_next )
     {
 	if (false === is_mobile())
 	{
@@ -212,10 +216,10 @@
 	}
     }
 
-    function wepsim_url_getJSON ( url_json )
+    export function wepsim_url_getJSON ( url_json )
     {
-       var jstr = {} ;
-       var jobj = [] ;
+       var jstr ;
+       var jobj ;
 
        try {
            jstr = $.getJSON({'url': url_json, 'async': false}) ;
@@ -229,7 +233,7 @@
        return jobj ;
     }
 
-    function wepsim_url_json ( json_url, do_after )
+    export function wepsim_url_json ( json_url, do_after )
     {
 	    // preload json_url only if file_size(json_url) < max_json_size bytes
 	    var xhr = new XMLHttpRequest() ;
@@ -247,7 +251,7 @@
 
                     var max_json_size = get_cfg('max_json_size') ;
 		    if (size < max_json_size) {
-	                $.getJSON(json_url, do_after).fail(function(e) {
+	                $.getJSON(json_url, do_after).fail(function(_e) {
 				                              wepsim_notify_do_notify('getJSON',
 									              'There was some problem for getting ' + json_url,
 									              'warning',

@@ -17,20 +17,26 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { check_behavior, compile_behaviors, compile_verbals, jit_fire_dep } from './sim_hw_behavior.js';
+import { firedep_to_fireorder } from './sim_hw_signal.js';
+import { compute_references } from './sim_hw_values.js';
+import { simcore_hardware_import } from '../sim_core/sim_api_core.js';
+import { get_cfg } from '../sim_core/sim_cfg.js';
+import { wepsim_url_getJSON } from '../wepsim_core/wepsim_url.js';
 
-
-        /*
+/*
          *  Simulated Hardware: add & active
          */
 
-        var sim = {
+        export var sim = {
 		     systems: [],
 		     active:  null,
 		     index:   0,
 	          } ;
 
 
-        function simhw_add ( newElto )
+        export function simhw_add ( newElto )
         {
             // 1.- add a new element
             var found = -1 ;
@@ -62,12 +68,12 @@
             compile_verbals() ;
         }
 
-        function simhw_getActive ( )
+        export function simhw_getActive ( )
         {
             return sim.index ;
         }
 
-        function simhw_setActive ( newActive )
+        export function simhw_setActive ( newActive )
         {
 	    if ( (newActive >= 0) &&
                  (sim.systems.length >= newActive) )
@@ -83,7 +89,7 @@
             compile_verbals() ;
         }
 
-        function simhw_getIdByName ( short_name )
+        export function simhw_getIdByName ( short_name )
         {
             for (var m=0; m<sim.systems.length; m++)
             {
@@ -95,7 +101,7 @@
             return -1 ;
         }
 
-        function simhw_getObjByName ( short_name )
+        export function simhw_getObjByName ( short_name )
         {
             for (var m=0; m<sim.systems.length; m++)
             {
@@ -112,43 +118,43 @@
          *  Simulated Hardware: getter/setter
          */
 
-        function simhw_active ( )
+        export function simhw_active ( )
         {
             return sim.active ;
         }
 
         // name
 
-        function simhw_short_name ( )
+        export function simhw_short_name ( )
         {
             return sim.active.sim_short_name ;
         }
 
         // sim_signals
 
-        function simhw_sim_signals ( )
+        export function simhw_sim_signals ( )
         {
             return sim.active.signals ;
         }
 
-        function simhw_sim_signal ( id )
+        export function simhw_sim_signal ( id )
         {
             return sim.active.signals[id] ;
         }
 
         // sim_states
 
-        function simhw_sim_states ( )
+        export function simhw_sim_states ( )
         {
             return sim.active.states ;
         }
 
-        function simhw_sim_state ( id )
+        export function simhw_sim_state ( id )
         {
             return sim.active.states[id] ;
         }
 
-        function simhw_sim_state_getref ( id )
+        export function simhw_sim_state_getref ( id )
         {
             var parts = id.split(".") ;
 
@@ -156,6 +162,7 @@
                 return simhw_sim_state(id) ;
             }
 
+            let s_ref;
             if (parts.length > 2)
                  s_ref = simhw_sim_states().BR[parts[1]][parts[2]] ;
             else s_ref = simhw_sim_states().BR[parts[1]] ;
@@ -165,53 +172,53 @@
 
         // syntax_behaviours
 
-        function simhw_syntax_behaviors ( )
+        export function simhw_syntax_behaviors ( )
         {
             return sim.active.behaviors ;
         }
 
-        function simhw_syntax_behavior ( id )
+        export function simhw_syntax_behavior ( id )
         {
             return sim.active.behaviors[id] ;
         }
 
         // sim_components
 
-        function simhw_sim_components ( )
+        export function simhw_sim_components ( )
         {
             return sim.active.components ;
         }
 
-        function simhw_sim_component ( id )
+        export function simhw_sim_component ( id )
         {
             return sim.active.components[id] ;
         }
 
         // InternalState
 
-        function simhw_internalState ( name )
+        export function simhw_internalState ( name )
         {
             return sim.active.internal_states[name] ;
         }
 
-        function simhw_internalState_get ( name, id )
+        export function simhw_internalState_get ( name, id )
         {
             return sim.active.internal_states[name][id] ;
         }
 
-        function simhw_internalState_set ( name, id, val )
+        export function simhw_internalState_set ( name, id, val )
         {
             sim.active.internal_states[name][id] = val ;
         }
 
-        function simhw_internalState_reset ( name, val )
+        export function simhw_internalState_reset ( name, val )
         {
             sim.active.internal_states[name] = val ;
         }
 
         // ctrl_states
 
-        function simhw_sim_ctrlStates_get ( )
+        export function simhw_sim_ctrlStates_get ( )
         {
             return sim.active.ctrl_states ;
         }
@@ -221,10 +228,10 @@
      *  Simulated Hardware: available set
      */
 
-    var ws_hw_hash = {} ;
-    var ws_hw_set  = [] ;
+    export var ws_hw_hash = {} ;
+    export var ws_hw_set  = [] ;
 
-    function simhw_hwset_init ( )
+    export function simhw_hwset_init ( )
     {
          var url_list = get_cfg('hw_url') ;
 
@@ -239,14 +246,14 @@
          return ws_hw_hash ;
     }
 
-    function simhw_hwset_getSet ( )
+    export function simhw_hwset_getSet ( )
     {
          return ws_hw_hash ;
     }
 
-    function simhw_hwset_loadAll ( )
+    export function simhw_hwset_loadAll ( )
     {
-         var jobj = {} ;
+         var jobj ;
 
          // try to load each one
          for (var i=0; i<ws_hw_set.length; i++)
@@ -258,7 +265,7 @@
          return true ;
     }
 
-    function simhw_hwset_load ( p_name )
+    export function simhw_hwset_load ( p_name )
     {
          if (typeof ws_hw_hash[p_name] === "undefined") {
              return false ;

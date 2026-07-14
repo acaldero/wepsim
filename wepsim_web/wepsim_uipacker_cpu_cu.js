@@ -17,6 +17,17 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto } from './wepsim_uielto.js';
+import { get_cfg } from '../sim_core/sim_cfg.js';
+import { hash_detail2action, hash_signal2action } from './wepsim_web_api.js';
+import { i18n_update_tags } from '../wepsim_i18n/i18n.js';
+import { refresh } from '../sim_core/sim_core_ui.js';
+import { simcore_init_eventlistener } from '../sim_core/sim_api_core.js';
+import { simhw_active } from '../sim_hw/sim_hw_index.js';
+import { wait_if_uievents } from '../sim_core/sim_core_ctrl.js';
+import { wepsim_quickcfg_init } from './wepsim_web_ui_quickcfg.js';
+import { wepsim_svg_reload } from './wepsim_uielto_cpusvg.js';
 
 
         /*
@@ -24,7 +35,7 @@
          */
 
         /* jshint esversion: 6 */
-        class ws_cpucu_got extends ws_uielto
+        export class ws_cpucu_got extends ws_uielto
         {
 	      constructor ()
 	      {
@@ -90,16 +101,13 @@
 	      }
         }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-cpucu_got', ws_cpucu_got) ;
-        }
 
 
         /*
          *  Auxiliar to init_x & show_x
          */
 
-        function show_cpuview_view ( )
+        export function show_cpuview_view( )
         {
             var show_as_graph = get_cfg('CPUCU_show_graph') ;
 
@@ -117,19 +125,19 @@
                        }, 100);
         }
 
-		function eventhandler_load_svg_p_initlisteners ( )
+		export function eventhandler_load_svg_p_initlisteners( )
 		{
 		    simcore_init_eventlistener("svg_p", hash_detail2action, hash_signal2action) ;
 		    refresh() ;
 		}
 
-		function eventhandler_load_svg_cu_initlisteners ( )
+		export function eventhandler_load_svg_cu_initlisteners( )
 		{
 	    	    simcore_init_eventlistener("svg_cu", hash_detail2action, hash_signal2action) ;
 		    refresh() ;
 		}
 
-        function cpucu_show_graph ( )
+        export function cpucu_show_graph( )
         {
             var ahw = simhw_active() ;
             if ( (typeof ahw == "undefined") || (ahw == null) )
@@ -155,7 +163,7 @@
             }
         }
 
-        function cpucu_show_table ( eltos_to_show )
+        export function cpucu_show_table( eltos_to_show )
         {
 	    $("#infohw1").attr('components', '') ;
 	    $("#infohw1").attr('components', eltos_to_show) ;

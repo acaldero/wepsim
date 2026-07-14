@@ -18,12 +18,16 @@
  *
  */
 
+import $ from 'jquery';
+import { simcore_record_append_new } from '../sim_core/sim_core_record.js';
+import { get_cfg, is_mobile } from '../sim_core/sim_cfg.js';
+import { simcore_ga } from '../sim_core/sim_core_ga.js';
 
-    /*
+/*
      * Help
      */
 
-    function wepsim_help_set ( type, ref )
+    export function wepsim_help_set ( type, ref )
     {
 	    $('#help1_ref').attr('components', type + ':' + ref) ;
 
@@ -37,9 +41,9 @@
      * Help URI
      */
 
-    function request_html_url ( r_url )
+    export function request_html_url ( r_url )
     {
-        var robj = null ;
+        var robj ;
 
 	if (false === is_mobile())
         {
@@ -55,7 +59,7 @@
         return robj ;
     }
 
-    function update_div_frompartialhtml ( helpdiv, key, data )
+    export function update_div_frompartialhtml ( helpdiv, key, data )
     {
 		var default_content = '<br>Sorry, No more details available for this element.<p>\n' ;
 
@@ -79,7 +83,7 @@
 		$(helpdiv).html(help_content) ;
     }
 
-    function resolve_html_url ( helpdiv, r_url, key, update_div )
+    export function resolve_html_url ( helpdiv, r_url, key, update_div )
     {
         return request_html_url(r_url).then(function (data) {
 		    if (typeof data == "object") {
@@ -95,7 +99,7 @@
 	       }) ;
     }
 
-    function update_signal_loadhelp ( helpdiv, simhw, key )
+    export function update_signal_loadhelp ( helpdiv, simhw, key )
     {
 	 var curr_idiom = get_cfg('ws_idiom') ;
 
@@ -105,7 +109,7 @@
          simcore_ga('help', 'help.signal', 'help.signal.' + simhw + '.' + key);
     }
 
-    function update_checker_loadhelp ( helpdiv, key )
+    export function update_checker_loadhelp ( helpdiv, key )
     {
          var curr_idiom = get_cfg('ws_idiom') ;
   	 var help_base = 'help/simulator-' + curr_idiom + '.html' ;

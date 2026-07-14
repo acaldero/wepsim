@@ -18,8 +18,9 @@
  *
  */
 
+import { i18n, i18n_get_TagFor } from '../wepsim_i18n/i18n.js';
 
-        function simhwelto_prepare_hash ( ahw )
+export function simhwelto_prepare_hash ( ahw )
         {
 	    // build element hash
             ahw.elements_hash = {} ;
@@ -28,7 +29,7 @@
             ahw.elements_hash.by_belong = {} ;
 	    for (var e in ahw.elements)
 	    {
-                 elto = ahw.elements[e] ;
+                 let elto = ahw.elements[e] ;
                  elto.key = e ;
 
                  if (typeof ahw.elements_hash.by_belong[elto.belongs] == "undefined") {
@@ -42,10 +43,10 @@
             return ahw.elements_hash ;
         }
 
-        function simhwelto_show_components ( ahw )
+        export function simhwelto_show_components ( ahw )
         {
 	    var o = '' ;
-	    var e = '' ;
+	    var e ;
 
 	    // header row...
 	    o += i18n_get_TagFor('hw',    'Component').padEnd(10, ' ') + ';' +
@@ -60,7 +61,7 @@
 	         for (var j=0; j<ahw.elements_hash.by_belong[b].length; j++)
 	         {
 		         // new row
-                         elto = ahw.elements_hash.by_belong[b][j] ;
+                         let elto = ahw.elements_hash.by_belong[b][j] ;
 
 			 // 1) component
 			 o += b.padEnd(10, ' ') + ';' ;
@@ -70,14 +71,14 @@
 
 			 // 3) list of input states
                          e = '' ;
-			 for (i=0; i<elto.states_inputs.length; i++) {
+			 for (let i=0; i<elto.states_inputs.length; i++) {
 			      e += elto.states[elto.states_inputs[i]].ref + ' ' ;
 			 }
 			 o += e.padEnd(20, ' ') + ';' ;
 
 			 // 4) list of output states
                          e = '' ;
-			 for (i=0; i<elto.states_outputs.length; i++) {
+			 for (let i=0; i<elto.states_outputs.length; i++) {
 			      e += elto.states[elto.states_outputs[i]].ref + ' ' ;
 			 }
 			 o += e.padEnd(20, ' ') + ';' ;
@@ -95,9 +96,9 @@
             return o ;
         }
 
-	function simhwelto_describe_component_enum_aux ( elto_path, array_eltos, hash_eltos, enum_name, str_enditem )
+	export function simhwelto_describe_component_enum_aux ( elto_path, array_eltos, hash_eltos, enum_name, str_enditem )
 	{
-           var o = '', k = '', v = '';
+           var o = '', k, v ;
 
            // enumerate...
 	   for (var i=0; i<array_eltos.length; i++)
@@ -125,7 +126,7 @@
 	   return o ;
 	}
 
-	function simhwelto_describe_component_enum ( elto_path, array_eltos, hash_eltos, enum_name )
+	export function simhwelto_describe_component_enum ( elto_path, array_eltos, hash_eltos, enum_name )
 	{
 	   var o = "" ;
 
@@ -139,7 +140,7 @@
 	   return o ;
 	}
 
-	function simhwelto_describe_component ( elto_path, elto, format )
+	export function simhwelto_describe_component ( elto_path, elto, format )
 	{
 	   var o = "" ;
 

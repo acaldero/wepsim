@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.help.ru = {
+    export function i18n_ru_register_help(i18n) {
+
+
+
+        i18n.eltos.help.ru = {
 
 		'Welcome tutorial':		'Добро пожаловать учебник',
 		'help_01_01':		'Откройте приветственное руководство',
@@ -50,4 +54,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

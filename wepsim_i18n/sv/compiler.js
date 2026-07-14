@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.compiler.sv = {
+    export function i18n_sv_register_compiler(i18n) {
+
+
+
+        i18n.eltos.compiler.sv = {
 
 	        "PROBLEM AROUND LINE":          "Problem runt linjen",
 		'NO TAG OR DIRECTIVE':		'Förväntad tag eller direktiv, men tyckte att det här token istället: ',
@@ -123,4 +127,5 @@
 		'_last_':			'_last_'
 
     };
+    }
 

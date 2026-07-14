@@ -18,12 +18,22 @@
  *
  */
 
+import { board_base_register } from './hw_items/board_base.js';
+import { cpu_rv_register } from './hw_items/cpu_rv.js';
+import { mem_rv_register } from './hw_items/mem_rv.js';
+import { io_screen_base_register } from './hw_items/io_screen_base.js';
+import { io_keyboard_base_register } from './hw_items/io_keyboard_base.js';
+import { io_clk_base_register } from './hw_items/io_clk_base.js';
+import { io_l3d_base_register } from './hw_items/io_l3d_base.js';
+import { io_ldm_base_register } from './hw_items/io_ldm_base.js';
+import { io_sound_base_register } from './hw_items/io_sound_base.js';
+import { simhw_add } from './sim_hw_index.js';
 
-        /*
+/*
          *  RISC-V Processor
          */
 
-        var rv_def = {
+        export var rv_def = {
                        sim_name:            "RISC-V Processor",
                        sim_short_name:      "rv",
                        sim_img_processor:   "repo/hardware/rv/images/processor.svg",
@@ -41,16 +51,17 @@
                        events:              {}
 	             } ;
 
-            // registering elements
-                  board_base_register ( rv_def ) ;
-                      cpu_rv_register ( rv_def ) ;
-                      mem_rv_register ( rv_def ) ;
-              io_screen_base_register ( rv_def ) ;
-            io_keyboard_base_register ( rv_def ) ;
-                 io_clk_base_register ( rv_def ) ;
-                 io_l3d_base_register ( rv_def ) ;
-                 io_ldm_base_register ( rv_def ) ;
-               io_sound_base_register ( rv_def ) ;
+export function sim_hw_register_RV() {
+    board_base_register ( rv_def ) ;
+    cpu_rv_register ( rv_def ) ;
+    mem_rv_register ( rv_def ) ;
+    io_screen_base_register ( rv_def ) ;
+    io_keyboard_base_register ( rv_def ) ;
+    io_clk_base_register ( rv_def ) ;
+    io_l3d_base_register ( rv_def ) ;
+    io_ldm_base_register ( rv_def ) ;
+    io_sound_base_register ( rv_def ) ;
 
-            simhw_add(rv_def) ;
+    simhw_add(rv_def) ;
+}
 

@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.tutorial_welcome.ru = {
+    export function i18n_ru_register_tutorial_welcome(i18n) {
+
+
+
+        i18n.eltos.tutorial_welcome.ru = {
 
 		'title_0':		'Добро пожаловать в симулятор WepSIM!',
 		'message_0':		'<center> <img alt = \'скриншот wepsim\' src = \'images/simulator/simulator012.jpg\' style = \'max-width: 100%; max-height: 40vh; \'> </center> <p> <h5> Этот краткий учебник покажет, как: <ol> <li> <a href =\' # \'onclick =\' sim_tutorial_goframe ("welcome" , 0,1); \'> Загрузить пример. </a> </li> <li> <a href=\'#\' onclick=\'sim_tutorial_goframe("welcome",0,2);\'> Выполнить пример. </a> </li> <li> <a href=\'#\' onclick=\'sim_tutorial_goframe("welcome",0,3);\'> Настройте симуляцию. </a> </li> <li> <a href = \'#\' onclick = \'sim_tutorial_goframe ("welcome", 0,4);\'> Получить помощь. </a> </li> </ol> </h5>',
@@ -36,4 +40,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

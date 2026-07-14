@@ -21,7 +21,10 @@
 
     // Translated thanks to Google translate
 
-    i18n.eltos.tour_intro.fr = {
+    export function i18n_fr_register_tour_intro(i18n) {
+
+
+        i18n.eltos.tour_intro.fr = {
 
                         "step1":  "WepSIM aide à mieux comprendre le fonctionnement d'un ordinateur:" +
                                   "visuel, interactif, il intègre des signaux jusqu’aux interruptions, appels système, exceptions, etc. <br>" +
@@ -52,5 +55,6 @@
                         "step6":  "Félicitations! Vous connaissez les éléments clés de l'interface WepSIM. <br>" +
                                   "Dans la boîte de dialogue 'Aide', vous pouvez accéder au 'didacticiel de bienvenue' pour continuer à apprendre. <br>"
 
-                  } ;
+                  };
+                  }
 

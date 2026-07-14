@@ -24,7 +24,7 @@
          */
 
         /* jshint esversion: 6 */
-        class ws_save_file extends HTMLElement
+        export class ws_save_file extends HTMLElement
         {
               static get observedAttributes()
 	      {
@@ -67,7 +67,7 @@
 			  " <h5 class='m-0'>" +
 			  " <span class='text-white bg-secondary' data-langkey='Output file'>Output file</span>" +
 			  " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
-                          "         onclick='" + this.jsave + "'><span data-langkey='Save'>Save</span></button>" +
+                           "         data-bind='click' data-action='save' data-code='" + this.jsave + "'><span data-langkey='Save'>Save</span></button>" +
 		       // " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
                        // "         onclick='" + this.jshare + "'><span data-langkey='Share'>Share</span></button>" +
 			  " </h5>" +
@@ -84,9 +84,20 @@
                     this.innerHTML = o1 ;
 	      }
 
+	      bindElements ()
+	      {
+		    this.addEventListener('click', (e) => {
+			const el = e.target.closest('[data-bind="click"]');
+			if (!el) return;
+			e.preventDefault();
+			eval(el.getAttribute('data-code'));
+		    });
+	      }
+
 	      connectedCallback ()
 	      {
 		    this.render('connectedCallback') ;
+		    this.bindElements();
 	      }
 
 	      attributeChangedCallback (name, oldValue, newValue)
@@ -125,7 +136,4 @@
 	      }
         }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-save-file', ws_save_file) ;
-        }
 

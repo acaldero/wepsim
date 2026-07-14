@@ -18,22 +18,25 @@
  *
  */
 
+import { get_var } from './sim_core_values.js';
+import $ from 'jquery';
+import Vuex from 'vuex';
 
-        /*
+/*
          *  API REST: public API
          */
 
-        var simcore_rest = {} ;
+        export var simcore_rest = {} ;
 
 
         // reset
-        function simcore_rest_reset ( )
+        export function simcore_rest_reset ( )
         {
             simcore_rest = {} ;
         }
 
         // add
-        function simcore_rest_add ( name, description )
+        export function simcore_rest_add ( name, description )
         {
 	    simcore_rest[name] = {
 		                    endpoint:     description.endpoint,
@@ -44,19 +47,19 @@
         }
 
         // list
-        function simcore_rest_list ( )
+        export function simcore_rest_list ( )
         {
             return simcore_rest ;
         }
 
         // get
-        function simcore_rest_get ( name )
+        export function simcore_rest_get ( name )
         {
             return simcore_rest[name] ;
         }
 
         // invoke
-        function simcore_rest_call ( name, method, uri, data )
+        export function simcore_rest_call ( name, method, uri, data )
         {
 	    // check API rest
             var rest_info = simcore_rest[name] ;
@@ -66,7 +69,8 @@
 
 	    // check endpoint
 	    var api_endpoint = rest_info.endpoint ;
-            if (api_endpoint instanceof Vuex.Store) {
+            if (api_endpoint instanceof Vuex.Store ||
+                (api_endpoint && typeof api_endpoint === 'object' && 'value' in api_endpoint)) {
 	        api_endpoint = get_var(api_endpoint) ;
             }
 

@@ -17,14 +17,19 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { get_simware } from '../sim_core/sim_adt_core.js';
+import { get_value } from '../sim_core/sim_core_values.js';
+import { WORD_BYTES } from '../sim_sw/assembly/datatypes.js';
+
 
 
         /*
          *  Main Memory
          */
-
         /* jshint esversion: 6 */
-        class ws_bin_asm extends ws_uielto
+        export class ws_bin_asm extends ws_uielto
         {
               // constructor
 	      constructor ()
@@ -41,6 +46,7 @@
 
                     // render current element
                     this.render_skel() ;
+                    this.bindElements() ;
                     this.render_populate() ;
               }
 
@@ -82,17 +88,16 @@
 	      }
         }
 
-        register_uielto('ws-bin_asm', ws_bin_asm) ;
 
 
         /*
          *  obj2html
          */
 
-	function labels_asmhtml_aux ( slebal, c )
+	export function labels_asmhtml_aux( slebal, c )
 	{
 	     var clabel = "" ;
-	     var wadd   = "" ;
+	     var wadd   ;
 
              for (var j=3; j>=0; j--)
              {
@@ -109,7 +114,7 @@
 	     return clabel ;
 	}
 
-	function mp2html ( mp, labels, seg )
+	export function mp2html( mp, labels, seg )
 	{
                 // auxiliar for search label
                 var slebal = {} ;
@@ -166,8 +171,8 @@
 			 "<th class='border border-0' align='right'>&nbsp;&nbsp;segment</th>" +
 			 "</tr>" ;
 
-	   	var color = "white" ;
-	   	var sname = "" ;
+	   	var color ;
+	   	var sname ;
 	        for (var skey in seg)
 	        {
                      // tip: ".binary" is a segment section but not a memory segment,
@@ -180,18 +185,18 @@
                           else sname = "" ; // skip ".binary" segment as memory segment name
                      }
 
-                     c_begin =  slimits[skey].m_begin ;
-                     c_end   =  slimits[skey].m_end ;
+                     var c_begin =  slimits[skey].m_begin ;
+                     var c_end   =  slimits[skey].m_end ;
 		     color   =  slimits[skey].color ;
 
-                     rows    =  0 ;
+                     var rows    =  0 ;
                      var x   =  "" ;
-                     var p   =  "" ;
-                     var v   =  0 ;
+                     var p   ;
+                     var v   ;
 
 		     for (var i=c_begin; i<=c_end; i++)
 		     {
-                             c = "0x" + i.toString(16) ;
+                             var c = "0x" + i.toString(16) ;
                              if (typeof mp[c] == "undefined") {
                                  continue;
                              }
@@ -242,7 +247,7 @@
 		return o;
 	}
 
-	function mp2bin ( mp, labels, seg )
+	export function mp2bin( mp, labels, seg )
 	{
                 // auxiliar for search
                 var slebal = {} ;

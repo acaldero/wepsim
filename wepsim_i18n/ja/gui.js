@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.gui.ja = {
+    export function i18n_ja_register_gui(i18n) {
+
+
+
+        i18n.eltos.gui.ja = {
 
 		'Loading WepSIM...':		'WepSIMを読み込んでいます...',
 		'About':			'について',
@@ -143,4 +147,5 @@
 		'_last_':			'_last_'
 
     };
+    }
 

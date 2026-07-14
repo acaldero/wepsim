@@ -19,19 +19,31 @@
  */
 
 
-    //
-    // WepSIM Dialog
-    //
+import $ from 'jquery';
+import { get_cfg, cfgset_getSet, cfgset_load, reset_cfg } from '../sim_core/sim_cfg.js';
+import { ws_info } from '../sim_core/sim_adt_core.js';
+import { i18n_get, i18n_update_tags } from '../wepsim_i18n/i18n.js';
+import { simcore_record_append_pending, simcore_record_captureInit } from '../sim_core/sim_core_record.js';
+import { wait_if_uievents } from '../sim_core/sim_core_ctrl.js';
+import { wepsim_checkpoint_listCache, wepsim_checkpoint_loadFromCache, wepsim_checkpoint_clearCache } from '../wepsim_core/wepsim_checkpoint.js';
+import { wepsim_config_dialog_title } from './wepsim_web_ui_config.js';
+import { wepsim_get_binary_code, wepsim_get_binary_microcode } from './wepsim_web_editor.js';
+import { wepsim_help_set } from '../wepsim_core/wepsim_help.js';
+import { wepsim_tooltips_hide } from './wepsim_web_ui_tooltip.js';
+import { wepsim_uicfg_apply, wepsim_uicfg_restore } from './wepsim_web_simulator.js';
+import { wsweb_dialog_close, wsweb_dialog_open, wsweb_record_reset, wsweb_scroll_record } from './wepsim_web_api.js';
+import { table_examplesets_html } from './wepsim_uielto_index_examples.js';
+import { wepsim_notify_success } from '../wepsim_core/wepsim_notify.js';
 
-    wsweb_dialogs = {
+
+    export var wsweb_dialogs = {
 
          load_save_assembly: {
             id:        "lssvasm",
 	    title:     function() {
                           return wepsim_config_dialog_title("Load/Save Assembly",
                                                             "secondary",
-							    "var ws_idiom = get_cfg('ws_idiom');" +
-							    "i18n_update_tags('dialogs', ws_idiom);") ;
+                                                            "dialogs") ;
 		       },
             body:      function() {
 		         return "<div id='scroller-lssvasm' class='container-fluid p-0' " +
@@ -101,8 +113,7 @@
 	    title:     function() {
                           return wepsim_config_dialog_title("Load/Save Assembly",
                                                             "secondary",
-							    "var ws_idiom = get_cfg('ws_idiom');" +
-							    "i18n_update_tags('dialogs', ws_idiom);") ;
+                                                            "dialogs") ;
 		       },
             body:      function() {
 		         return "<div id='scroller-lssvasm-link' class='container-fluid p-0' " +
@@ -152,8 +163,7 @@
 	    title:    function() {
                           return wepsim_config_dialog_title("Load/Save Firmware",
                                                             "secondary",
-							    "var ws_idiom = get_cfg('ws_idiom');" +
-							    "i18n_update_tags('dialogs', ws_idiom);") ;
+							    "dialogs") ;
 		      },
             body:     function() {
 		         return "<div id='scroller-lssvfir' class='container-fluid p-0' " +
@@ -225,8 +235,7 @@
 	    title:    function() {
                           return wepsim_config_dialog_title("Load/Save Firmware",
                                                             "secondary",
-							    "var ws_idiom = get_cfg('ws_idiom');" +
-							    "i18n_update_tags('dialogs', ws_idiom);") ;
+							    "dialogs") ;
 		      },
             body:     function() {
 		         return "<div id='scroller-lssvfir-link' class='container-fluid p-0' " +
@@ -279,8 +288,7 @@
 	    title:     function() {
                           return wepsim_config_dialog_title("Flash Assembly",
                                                             "secondary",
-							    "var ws_idiom = get_cfg('ws_idiom');" +
-							    "i18n_update_tags('dialogs', ws_idiom);") ;
+                                                            "dialogs") ;
 		       },
             body:      function() {
 		         return "<div id='scroller-flashasm' class='container-fluid p-0' " +
@@ -319,8 +327,7 @@
 	    title:     function() {
                           return wepsim_config_dialog_title("Flash FPGA",
                                                             "secondary",
-							    "var ws_idiom = get_cfg('ws_idiom');" +
-							    "i18n_update_tags('dialogs', ws_idiom);") ;
+							    "dialogs") ;
 		       },
             body:      function() {
 		         return "<div id='scroller-flashfpga' class='container-fluid p-0' " +
@@ -360,8 +367,7 @@
 	    title:   function() {
                           return wepsim_config_dialog_title("Binary",
                                                             "secondary",
-							    "var ws_idiom = get_cfg('ws_idiom');" +
-							    "i18n_update_tags('dialogs', ws_idiom);") ;
+							    "dialogs") ;
 		     },
             body:    function() {
 		        return "<div id='scroller-bin2a' class='container-fluid p-1'>" +
@@ -408,8 +414,7 @@
 	    title:   function() {
                           return wepsim_config_dialog_title("Binary",
                                                             "secondary",
-							    "var ws_idiom = get_cfg('ws_idiom');" +
-							    "i18n_update_tags('dialogs', ws_idiom);") ;
+							    "dialogs") ;
 		     },
             body:    function() {
 		        return "<div id='scroller-bin2b' class='container-fluid p-1'>" +
@@ -457,8 +462,7 @@
 	    title:    function() {
                           return wepsim_config_dialog_title("About WepSIM",
                                                             "secondary",
-							    "var ws_idiom = get_cfg('ws_idiom');" +
-							    "i18n_update_tags('dialogs', ws_idiom);") ;
+                                                            "dialogs") ;
 		      },
             body:    function() {
 		        return "<div id='scroller-about1' " +
@@ -495,8 +499,7 @@
 	    title:    function() {
                           return wepsim_config_dialog_title("Notifications",
                                                             "secondary",
-							    "var ws_idiom = get_cfg('ws_idiom');" +
-							    "i18n_update_tags('cfg');") ;
+							    "cfg") ;
 		      },
             body:     function() {
 		         return "<ws-notifications></ws-notifications>" ;
@@ -534,8 +537,7 @@
 	    title:    function() {
                           return wepsim_config_dialog_title("Examples",
                                                             "primary",
-							    "var ws_idiom = get_cfg('ws_idiom');" +
-							    "i18n_update_tags('examples', ws_idiom);") ;
+							    "examples") ;
 		      },
             body:    function() {
                         return "<ws-examples id='examples1'></ws-examples>" ;
@@ -586,8 +588,7 @@
 	    title:    function() {
                           return wepsim_config_dialog_title("Configuration",
                                                             "primary",
-							    "var ws_idiom = get_cfg('ws_idiom');" +
-							    "i18n_update_tags('cfg', ws_idiom);") ;
+							    "cfg") ;
 		      },
             body:    function() {
                           return "<ws-config id='config2'></ws-config>" ;
@@ -649,16 +650,11 @@
                                  o1 = '<div class="list-group overflow-y-auto h-100">' ;
                                  for (var e_cfg in e_cfgs)
                                  {
-                                      o1 += '<a  href="#" ' +
-                                            '    class="list-group-item list-group-item-action" ' +
-                                            '    onclick="cfgset_load(\'' + e_cfg + '\') ;' +
-                                            '             wepsim_notify_success(\'<strong>INFO</strong>\',' +
-                                            '                                   \'Configuration loaded!.\') ;' +
-                                            '             wepsim_uicfg_restore() ;' +
-                                            '             wsweb_dialog_open(\'config\');' +
-                                            '             return false;">' +
-                                            '<span data-langkey="' + e_cfg + '">' + e_cfg + '</span>' +
-                                            '</a>' ;
+									o1 += '<a  href="#" ' +
+								      '    class="list-group-item list-group-item-action" ' +
+								      '    data-bind="click" data-action="cfgset_load">' +
+								      '<span data-langkey="' + e_cfg + '">' + e_cfg + '</span>' +
+								      '</a>' ;
                                  }
                                  o1 += '</div>' ;
                              }
@@ -672,11 +668,7 @@
 				    '<br>' +
                                     '<button type="button" ' +
                                     '    class="text-danger btn border-secondary m-1 btn-block col-6 text-center" ' +
-                                    '    onclick="reset_cfg();' +
-                                    '             wepsim_notify_success(\'<strong>INFO</strong>\',' +
-                                    '                                   \'Configuration reset done!.\') ;' +
-                                    '             wsweb_dialog_open(\'config\');' +
-                                    '             return false;">' +
+                                    '    data-bind="click" data-action="reset_cfg">' +
                                     '<span data-langkey="Reset">Reset</span>' +
                                     '</button>' +
 				    '' +
@@ -713,8 +705,7 @@
 	    title:    function() {
                           return wepsim_config_dialog_title("Help",
                                                             "success",
-							    "var ws_idiom = get_cfg('ws_idiom');" +
-							    "i18n_update_tags('help', ws_idiom);") ;
+							    "help") ;
 		      },
             body:    function() {
                         return "<ws-help id='help1_ref'></ws-help>" ;
@@ -804,8 +795,7 @@
 	    title:    function() {
                           return wepsim_config_dialog_title("State",
                                                             "dark",
-							    "var ws_idiom = get_cfg('ws_idiom');" +
-							    "i18n_update_tags('dialog', ws_idiom);") ;
+							    "dialog") ;
 		      },
             body:    function() {
                         return "<ws-states></ws-states>" ;
@@ -839,8 +829,7 @@
 		title:   function() {
                              return wepsim_config_dialog_title("Checkpoint",
                                                                "secondary",
-							       "var ws_idiom = get_cfg('ws_idiom');" +
-							       "i18n_update_tags('dialog', ws_idiom);") ;
+							       "dialog") ;
 			 },
 		body:    function() {
                              var now = new Date().toLocaleString() ;
@@ -888,12 +877,7 @@
                                     "	  <h5 class='m-0'>" +
                                     "	    <span class='text-white bg-secondary' data-langkey='Browser cache'>Browser cache</span>" +
                                     "	    <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto'" +
-                                    "		    onclick='var ret = wepsim_checkpoint_loadFromCache(\"browserCacheElto\");" +
-                                    "			     wsweb_dialog_close(\"current_checkpoint\");" +
-                                    "			     if (ret.error)" +
-                                    "				  wepsim_notify_success(\"<strong>INFO</strong>\", ret.msg);" +
-                                    "			     else wepsim_notify_success(\"<strong>INFO</strong>\", \"Processing load request...\");" +
-                                    "			     return false;'><span data-langkey='Load'>Load</span></button>" +
+									"		    data-bind=\"click\" data-action=\"wepsim_checkpoint_loadFromCache\"><span data-langkey='Load'>Load</span></button>" +
                                     "		  <div class='dropdown float-end'>" +
                                     "		    <button class='btn bg-body-tertiary text-danger py-0 mx-1 float-end col-auto dropdown-toggle' " +
                                     "			    type='button' id='resetyn2' data-bs-toggle='dropdown' " +
@@ -902,9 +886,7 @@
                                     "		    </button>" +
                                     "		    <div class='dropdown-menu' aria-labelledby='resetyn2'>" +
                                     "		     <a class='dropdown-item py-2 bg-body text-danger' type='button' " +
-                                    "			onclick='wepsim_checkpoint_clearCache();" +
-                                    "				 wepsim_checkpoint_listCache(\"browserCacheList1\");" +
-                                    "				 return false;'" +
+									"			data-bind=\"click\" data-action=\"wepsim_checkpoint_clearCache\">" +
                                     "			 ><span data-langkey='Yes'>Yes</span></a>" +
                                     "		      <div class='dropdown-divider'></div>" +
                                     "		      <a class='dropdown-item py-2 bg-body text-info' type='button' " +
@@ -958,8 +940,7 @@
 	    title:    function() {
                           return wepsim_config_dialog_title("Reload",
                                                             "danger",
-							    "var ws_idiom = get_cfg('ws_idiom');" +
-							    "i18n_update_tags('dialogs', ws_idiom);") ;
+							    "dialogs") ;
 		      },
             body:    function() {
 		        var o = '<div id="scroller-reload1" class="row m-0">' +

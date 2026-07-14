@@ -17,14 +17,20 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import Vue from 'vue';
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { ws_info } from '../sim_core/sim_adt_core.js';
+import { wepsim_help_set } from '../wepsim_core/wepsim_help.js';
+import { wsweb_dialog_close } from './wepsim_web_api.js';
+
 
 
         /*
          *  About
          */
-
         /* jshint esversion: 6 */
-        class ws_about extends ws_uielto
+        export class ws_about extends ws_uielto
         {
               // constructor
 	      constructor ()
@@ -52,9 +58,7 @@
 			      "	<div class='form-group m-0'>" +
 			      "	   <label for='about_license' class='text-secondary'>License:</label>" +
 			      "	   <span class='text-primary'" +
-			      "                 onclick='wepsim_help_set('relative', 'about#');" +
-			      "		                 wsweb_dialog_close('about');" +
-			      "			         return false;'>GNU Lesser General Public 3</span>" +
+"                 data-bind='click' data-action='about-license'>GNU Lesser General Public 3</span>" +
 			      "	</div>" +
 			      "" +
 			      "	<div class='form-group'>" +
@@ -129,7 +133,22 @@
 					     data: { team: ws_info.wepsim_team }
 					  }) ;
 	      }
+
+	      bindElements ()
+	      {
+		    this.addEventListener('click', (e) => {
+			const el = e.target.closest('[data-bind="click"]') ;
+			if (!el) return ;
+			e.preventDefault() ;
+
+			switch (el.dataset.action) {
+			    case 'about-license':
+				wepsim_help_set('relative', 'about#') ;
+				wsweb_dialog_close('about') ;
+				break ;
+			}
+		    }) ;
+	      }
         }
 
-        register_uielto('ws-about', ws_about) ;
 

@@ -18,21 +18,27 @@
  *
  */
 
+import $ from 'jquery';
+import { wepsim_notify_success } from './wepsim_notify.js';
+import { ws_info } from '../sim_core/sim_adt_core.js';
 
-    /*
+/*
      * Copy to clipboard
      */
 
+export function wepsim_register_clipboard()
+{
     ws_info.clipboard_copy = '' ;
+}
 
-    function get_clipboard_copy ( )
+    export function get_clipboard_copy ( )
     {
         return ws_info.clipboard_copy ;
     }
 
     // credit for the SelectText function:
     // https://stackoverflow.com/questions/985272/selecting-text-in-an-element-akin-to-highlighting-with-your-mouse
-    function SelectText (element)
+    export function SelectText (element)
     {
         var doc = document
             , text = doc.getElementById(element)
@@ -54,7 +60,7 @@
         }
     }
 
-    function wepsim_clipboard_CopyFromDiv ( element_name )
+    export function wepsim_clipboard_CopyFromDiv ( element_name )
     {
 	    var msg = 'unsuccessful' ;
 
@@ -77,7 +83,7 @@
                                   'Copied ' + msg + '!.') ;
     }
 
-    function wepsim_clipboard_CopyFromTextarea ( element_name )
+    export function wepsim_clipboard_CopyFromTextarea ( element_name )
     {
 	    var msg = 'successful' ;
 

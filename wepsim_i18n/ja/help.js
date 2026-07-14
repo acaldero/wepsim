@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.help.ja = {
+    export function i18n_ja_register_help(i18n) {
+
+
+
+        i18n.eltos.help.ja = {
 
 		'Welcome tutorial':		'ようこそチュートリアル',
 		'help_01_01':		'ウェルカムチュートリアルを開く',
@@ -50,4 +54,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

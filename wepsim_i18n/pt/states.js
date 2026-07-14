@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.states.pt = {
+    export function i18n_pt_register_states(i18n) {
+
+
+
+        i18n.eltos.states.pt = {
 
 		'States':				'Estados',
 		'state':				'estado',
@@ -51,4 +55,5 @@
 		'_last_':				'_last_'
 
     };
+    }
 

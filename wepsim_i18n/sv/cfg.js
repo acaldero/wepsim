@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.cfg.sv = {
+    export function i18n_sv_register_cfg(i18n) {
+
+
+
+        i18n.eltos.cfg.sv = {
 
 		'General':							'Allmän',
 		'Idiom for help, examples, etc.':				'Idiom för hjälp, exempel etc.',
@@ -73,4 +77,5 @@
 		'_last_':							'_last_'
 
     };
+    }
 

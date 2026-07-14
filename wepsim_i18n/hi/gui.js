@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.gui.hi = {
+    export function i18n_hi_register_gui(i18n) {
+
+
+
+        i18n.eltos.gui.hi = {
 
 		'Loading WepSIM...':		'WepSIM लोड हो रहा है ...',
 		'About':			'के बारे में',
@@ -128,4 +132,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

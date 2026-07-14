@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.gui.es = {
+    export function i18n_es_register_gui(i18n) {
+
+
+
+        i18n.eltos.gui.es = {
 
 		"Loading WepSIM...": 		     		"Cargando WepSIM...",
                 "About":                                 	"Sobre",
@@ -147,5 +151,6 @@
 
 		'_last_':					'_last_'
 
-      } ;
+      };
+      }
 

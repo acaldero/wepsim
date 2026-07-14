@@ -23,7 +23,7 @@
  *   Directives
  */
 
-ws_directives = {
+export var ws_directives = {
                   // segments
                   ".kdata":     { name:".kdata",  kindof:"segment",  size:0, attrs:["data"]    },
 		  ".ktext":     { name:".ktext",  kindof:"segment",  size:0, attrs:["text"]    },
@@ -54,7 +54,7 @@ ws_directives = {
  * API
  */
 
-function wsasm_is_directive_kindof ( text, kindof )
+export function wsasm_is_directive_kindof ( text, kindof )
 {
         if (typeof ws_directives[text] === "undefined")
         {
@@ -65,22 +65,22 @@ function wsasm_is_directive_kindof ( text, kindof )
         return (ws_directives[text].kindof == kindof) ;
 }
 
-function wsasm_is_directive ( text )
+export function wsasm_is_directive ( text )
 {
 	return (typeof ws_directives[text] !== "undefined");
 }
 
-function wsasm_is_directive_segment ( text )
+export function wsasm_is_directive_segment ( text )
 {
         return wsasm_is_directive_kindof(text, 'segment') ;
 }
 
-function wsasm_is_directive_datatype ( text )
+export function wsasm_is_directive_datatype ( text )
 {
         return wsasm_is_directive_kindof(text, 'datatype') ;
 }
 
-function wsasm_get_datatype_size ( datatype )
+export function wsasm_get_datatype_size ( datatype )
 {
 	if (typeof ws_directives[datatype] === "undefined")
         {
@@ -91,7 +91,7 @@ function wsasm_get_datatype_size ( datatype )
 	return ws_directives[datatype].size ;
 }
 
-function wsasm_has_datatype_attr ( datatype, attr )
+export function wsasm_has_datatype_attr ( datatype, attr )
 {
         if (typeof ws_directives[datatype] === "undefined")
         {

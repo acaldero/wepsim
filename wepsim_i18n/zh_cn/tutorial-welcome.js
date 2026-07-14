@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.tutorial_welcome.zh_cn = {
+    export function i18n_zh_cn_register_tutorial_welcome(i18n) {
+
+
+
+        i18n.eltos.tutorial_welcome.zh_cn = {
 
 		'title_0':		'欢迎来到WepSIM模拟器！',
 		'message_0':		'<center> <img alt =\'wepsim screenshot\'src =\'images/simulator/simulator012.jpg\'style =\'max-width：100％; max-height：40vh;\'> </center> <p> <h5>这个简短的教程将向您展示如何：<ol> <li> <a href =\'＃\'onclick =\'sim_tutorial_goframe（“welcome” ，0,1）;\'>加载示例。</a> </li> <li> <a href=\'#\' onclick=\'sim_tutorial_goframe("welcome",0,2);\'>执行示例。 </a> </li> <li> <a href=\'#\' onclick=\'sim_tutorial_goframe("welcome",0,3);\'>配置模拟。</a> </li> <li> <a href =\'＃\'onclick =\'sim_tutorial_goframe（“welcome”，0,4）;\'>获取帮助。</a> </li> </ol> </h5>',
@@ -36,4 +40,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

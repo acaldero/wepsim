@@ -18,8 +18,10 @@
  *
  */
 
+import { frm_getToken, frm_isToken, frm_nextToken } from './lexical.js';
+import { firm_mcode_signals_read, read_native } from './firm_mcode.js';
 
-function firm_begin_read ( context )
+export function firm_begin_read ( context )
 {
 	// *begin {
 	//            (XX, Y, BW=11),
@@ -55,9 +57,9 @@ function firm_begin_read ( context )
 	    context.etiquetas[context.contadorMC] = "fetch" ;
 	}
 
-	if (true == instruccionAux.is_native)
-	     ret = read_native(context) ;
-	else ret = firm_mcode_signals_read(context) ;
+	var ret = (instruccionAux.is_native)
+		    ? read_native(context)
+		    : firm_mcode_signals_read(context) ;
 
 	if (typeof ret.error != "undefined") {
 	    return ret ;

@@ -19,11 +19,15 @@
  *
  */
 
+import { simhw_sim_ctrlStates_get } from '../../sim_hw/sim_hw_index.js';
+import { frm_langError } from './lexical.js';
+import { i18n, i18n_get_TagFor } from '../../wepsim_i18n/i18n.js';
+import { firm_instruction_get_opcode_pattern } from './firm_fields_v2.js';
 
-function find_first_oceoc_v2 ( context, curr_instruction, first_oc, last_oc )
+export function find_first_oceoc_v2 ( context, curr_instruction, first_oc, last_oc )
 {
-           var k = 0 ;
-           var m = 0 ;
+           var k ;
+           var m ;
            var xr_info = simhw_sim_ctrlStates_get() ;
            var eoc_len = xr_info.ir.default_eltos.eoc[0].length ;
 
@@ -43,7 +47,7 @@ function find_first_oceoc_v2 ( context, curr_instruction, first_oc, last_oc )
 	   }
 
            // find first free 'oc-eoc' code
-	   for (j=first_oc; j<last_oc; j++)
+	   for (var j=first_oc; j<last_oc; j++)
 	   {
                 // new initial oc...
 		ret.label_oc = j.toString(2).padStart(6, "0") ;
@@ -81,8 +85,8 @@ function find_first_oceoc_v2 ( context, curr_instruction, first_oc, last_oc )
                 }
 
                 // new initial oc-eoc...
-                first_eoc = 0 ;
-                last_eoc  = (1 << eoc_len) - 1 ; // Math.pow(2, eoc_len) - 1 ;
+                var first_eoc = 0 ;
+                var last_eoc  = (1 << eoc_len) - 1 ; // Math.pow(2, eoc_len) - 1 ;
 		for (k=first_eoc; k<last_eoc; k++)
 		{
 		     ret.label_eoc = k.toString(2).padStart(eoc_len, "0") ;
@@ -103,16 +107,16 @@ function find_first_oceoc_v2 ( context, curr_instruction, first_oc, last_oc )
            return ret ;
 }
 
-function resolve_pending_oceoc_v2 ( context )
+export function resolve_pending_oceoc_v2 ( context )
 {
            var ret = {} ;
-           var i = 0 ;
+           var i ;
 
-	   var all_oc_ones_str = "" ;
-	   var last_oc  = 0 ;
+	   var all_oc_ones_str ;
+	   var last_oc ;
 	   var first_oc = 0 ;
 
-	   var curr_instruction = null ;
+	   var curr_instruction ;
 	   for (i=0; i<context.instrucciones.length; i++)
 	   {
 		curr_instruction = context.instrucciones[i] ;

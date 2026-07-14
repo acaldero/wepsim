@@ -18,21 +18,23 @@
  *
  */
 
+import { treatControlSequences } from '../../sim_core/sim_core_decode.js';
+import { uint_to_float32 } from '../../sim_core/sim_core_ui.js';
 
 /*
  *  Constants
  */
 
-    BYTE_LENGTH = 8 ;
-    WORD_BYTES  = 4 ;
-    WORD_LENGTH = WORD_BYTES * BYTE_LENGTH ;
+    export var BYTE_LENGTH = 8 ;
+    export var WORD_BYTES  = 4 ;
+    export var WORD_LENGTH = WORD_BYTES * BYTE_LENGTH ;
 
 
 /*
  *  Datatypes
  */
 
-function isDecimal ( n )
+export function isDecimal ( n )
 {
         var ret = {
                      'number':    0,
@@ -60,7 +62,7 @@ function isDecimal ( n )
         return ret ;
 }
 
-function isOctal ( n )
+export function isOctal ( n )
 {
         var ret = {
                      'number':    0,
@@ -80,7 +82,7 @@ function isOctal ( n )
         return ret ;
 }
 
-function isHex ( n )
+export function isHex ( n )
 {
         var ret = {
                      'number':    0,
@@ -104,7 +106,7 @@ function isHex ( n )
         return ret ;
 }
 
-function isChar ( n )
+export function isChar ( n )
 {
         var ret = {
                      'number':    0,
@@ -134,7 +136,7 @@ function isChar ( n )
 	return ret ;
 }
 
-function isFloat ( n )
+export function isFloat ( n )
 {
         var ret = {
                      'number':    0.0,
@@ -160,16 +162,16 @@ function isFloat ( n )
  *  API Functions
  */
 
-function dt_get_decimal_value ( possible_value )
+export function dt_get_decimal_value ( possible_value )
 {
-        var ret = {
-                     'number':    0,
-                     'isDecimal': true,
-                     'format':    ''
-                  } ;
+        // var ret = {
+        //              'number':    0,
+        //              'isDecimal': true,
+        //              'format':    ''
+        //           } ;
 
         // check if Octal value: 072
-   	ret = isOctal(possible_value) ;
+   	var ret = isOctal(possible_value) ;
         if (ret.isDecimal) {
             return ret ;
         }
@@ -195,9 +197,9 @@ function dt_get_decimal_value ( possible_value )
         return ret ;
 }
 
-function dt_get_imm_value ( value )
+export function dt_get_imm_value ( value )
 {
-        var ret1 = { } ;
+        var ret1 ;
         var ret  = {
                       'number':    0,
                       'isDecimal': false,
@@ -219,10 +221,10 @@ function dt_get_imm_value ( value )
         return ret ;
 }
 
-function dt_binary2format ( valbin, format )
+export function dt_binary2format ( valbin, format )
 {
         var val = parseInt(valbin, 2) ;
-        var ret = 0 ; // ret = val.toString(10) ;
+        var ret ; // ret = val.toString(10) ;
 
         switch (format)
         {

@@ -18,12 +18,17 @@
  *
  */
 
+import { firm_fields_v2_write, firm_instruction_read_fields_v2 } from './firm_fields_v2.js';
+import { firm_fields_v1_write, firm_instruction_read_flexible_fields } from './firm_fields_v1.js';
+import { firm_mcode_signals_read, firm_mcode_write, read_native } from './firm_mcode.js';
+import { frm_getToken, frm_isToken, frm_langError, frm_nextToken } from './lexical.js';
+import { i18n, i18n_get_TagFor } from '../../wepsim_i18n/i18n.js';
 
-function firm_instruction_write ( context, elto, labels_firm )
+export function firm_instruction_write ( context, elto, labels_firm )
 {
 	var o = "" ;
         var j = 0 ;
-        var k = 0 ;
+        var k ;
 
         // no firmware -> return empty section
 	if (typeof elto == "undefined") {
@@ -34,7 +39,7 @@ function firm_instruction_write ( context, elto, labels_firm )
 	o += elto.name + ' ' ;
         if (typeof elto.fields != "undefined")
         {
-            for (var k=0; k<elto.fields.length; k++)
+            for (k=0; k<elto.fields.length; k++)
             {
 	       if (elto.fields[k].indirect)
 	            o += '(' + elto.fields[k].name + ') ' ;
@@ -85,9 +90,9 @@ function firm_instruction_write ( context, elto, labels_firm )
 }
 
 
-function firm_instruction_read ( context, xr_info, all_ones_oc )
+export function firm_instruction_read ( context, xr_info, all_ones_oc )
 {
-       var ret = {};
+       var ret ;
 
 // *li reg val {*
 //             co=000000,
@@ -121,9 +126,9 @@ function firm_instruction_read ( context, xr_info, all_ones_oc )
 			        i18n_get_TagFor('compiler', 'NOT VALID FOR') + re_name) ;
        }
 
-       var firma = "";
+       var firma ;
        var firmaGlobal= "";
-       var firmaUsuario= "";
+       var firmaUsuario ;
 
        firma = frm_getToken(context)  + ',';
        firmaUsuario = frm_getToken(context) + " ";
@@ -200,7 +205,7 @@ function firm_instruction_read ( context, xr_info, all_ones_oc )
 
 		   if ( !frm_isToken(context, ",") && !frm_isToken(context, "(") && !frm_isToken(context, ")") )
 		   {
-		       var campoAux = {};
+		       campoAux = {};
 		       campoAux.name     = frm_getToken(context) ;
 		       campoAux.indirect = true ;
 		       instruccionAux.fields.push(campoAux);
@@ -240,7 +245,7 @@ function firm_instruction_read ( context, xr_info, all_ones_oc )
        firma = firma.substr(0, firma.length-1);
        firma = firma.replace(/,,/g, ",") ;
        firmaUsuario = firmaUsuario.substr(0, firmaUsuario.length-1);
-       firmaUsuario = firmaUsuario.replace(/  /g, " ") ;
+       firmaUsuario = firmaUsuario.replace(/ {2}/g, " ") ;
        instruccionAux.signature       = firma;
        instruccionAux.signatureGlobal = firma;
        instruccionAux.signatureUser   = firmaUsuario;
@@ -281,7 +286,7 @@ function firm_instruction_read ( context, xr_info, all_ones_oc )
 //             }*
 // }
 
-	   ret = {} ;
+	//    ret = {} ;
 	   if (true == instruccionAux.is_native)
 		ret = read_native(context) ;
 	   else ret = firm_mcode_signals_read(context) ;

@@ -18,27 +18,43 @@
  *
  */
 
+import $ from 'jquery';
+import { simcore_ga } from './sim_core_ga.js';
+import { simcore_record_append_new } from './sim_core_record.js';
+import { wepsim_url_getJSON } from '../wepsim_core/wepsim_url.js';
+import { ws_alert } from './sim_core_ui.js';
 
-        var WSCFG = {} ;
+export var WSCFG = {} ;
 
 
         /*
          *  Access: get_cfg/set_cfg/update_cfg
          */
 
-        function get_cfg ( field )
+        export function get_cfg ( field )
         {
              return WSCFG[field].value ;
         }
 
-        function set_cfg ( field, value )
+        export function set_cfg ( field, value )
         {
+             if (WSCFG[field] && WSCFG[field].type === "boolean" && typeof value === "string") {
+                  value = (value === "true");
+             } else if (WSCFG[field] && WSCFG[field].type === "int" && typeof value === "string") {
+                  value = parseInt(value, 10);
+             }
              WSCFG[field].value = value ;
         }
 
         // update_cfg = set_cfg + ga + save_cfg
-        function update_cfg ( field, value )
+        export function update_cfg ( field, value )
         {
+             if (WSCFG[field] && WSCFG[field].type === "boolean" && typeof value === "string") {
+                  value = (value === "true");
+             } else if (WSCFG[field] && WSCFG[field].type === "int" && typeof value === "string") {
+                  value = parseInt(value, 10);
+             }
+
              if (WSCFG[field].value != value)
              {
                  simcore_ga('cfg',
@@ -55,7 +71,7 @@
              save_cfg() ;
         }
 
-        function is_cfg_empty ( )
+        export function is_cfg_empty ( )
         {
              return (Object.keys(WSCFG).length === 0) ;
         }
@@ -65,7 +81,7 @@
          *  Persistence: save_cfg/restore_cfg
          */
 
-        function save_cfg ( )
+        export function save_cfg ( )
         {
 	   try
 	   {
@@ -82,7 +98,7 @@
            set_secondary_cfg() ;
         }
 
-        function restore_cfg ( )
+        export function restore_cfg ( )
         {
            // set primary configuration with default values
            WSCFG = get_primary_cfg() ;
@@ -93,7 +109,7 @@
 	   }
 
            // try to restore primary configuration values from local_storage
-           var default_value = null ;
+           var default_value ;
            var saved_value   = null ;
 
            for (var item in WSCFG)
@@ -130,7 +146,7 @@
          *  Transitions: reset_cfg/upgrade_cfg
          */
 
-        function reset_cfg ( )
+        export function reset_cfg ( )
         {
              WSCFG = get_primary_cfg() ;
              set_secondary_cfg() ;
@@ -139,13 +155,13 @@
              save_cfg() ;
         }
 
-        function reset_cfg_values ( )
+        export function reset_cfg_values ( )
         {
              WSCFG = get_primary_cfg() ;
              set_secondary_cfg() ;
         }
 
-        function upgrade_cfg ( )
+        export function upgrade_cfg ( )
         {
             var wscfg = get_primary_cfg() ;
             var item  = null ;
@@ -189,7 +205,7 @@
          *  Auxiliar functions
          */
 
-        function is_mobile ( )
+        export function is_mobile ( )
         {
              if (typeof navigator === "undefined") {
                  return false ;
@@ -198,17 +214,17 @@
              return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ;
         }
 
-        function is_cordova ( )
+        export function is_cordova ( )
         {
              // https://stackoverflow.com/questions/8068052/phonegap-detect-if-running-on-desktop-browser
              return document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
         }
 
-        function is_darkmode ( )
+        export function is_darkmode ( )
         {
-            var is_dark = false ;
+            var is_dark ;
 
-	    cfgValue = get_cfg('ws_skin_dark_mode') ;
+	    var cfgValue = get_cfg('ws_skin_dark_mode') ;
             switch (cfgValue)
 	    {
                case 'on':
@@ -227,7 +243,7 @@
 	    return is_dark ;
         }
 
-        function get_primary_cfg ( )
+        export function get_primary_cfg ( )
         {
              var wscfg = {
                    /* version */
@@ -319,7 +335,15 @@
              return wscfg ;
         }
 
-        function set_secondary_cfg ( )
+        export var cfg_show_rf_delay             = 100 ;
+        export var cfg_show_eltos_delay          = 100 ;
+        export var cfg_show_main_memory_delay    = 150 ;
+        export var cfg_show_control_memory_delay = 120 ;
+        export var cfg_show_dbg_ir_delay         = 100 ;
+        export var cfg_show_rf_refresh_delay     = 30 ;
+        export var cfg_show_asmdbg_pc_delay      = 50 ;
+
+        export function set_secondary_cfg ( )
         {
             var dbg_delay = get_cfg('DBG_delay') ;
 
@@ -352,10 +376,10 @@
      *  Configurations: available set
      */
 
-    var ws_cfg_hash = {} ;
-    var ws_cfg_set  = [] ;
+    export var ws_cfg_hash = {} ;
+    export var ws_cfg_set  = [] ;
 
-    function cfgset_init ( )
+    export function cfgset_init ( )
     {
          var url_list = get_cfg('cfg_url') ;
 
@@ -370,15 +394,15 @@
          return ws_cfg_hash ;
     }
 
-    function cfgset_getSet ( )
+    export function cfgset_getSet ( )
     {
          return ws_cfg_hash ;
     }
 
-    function cfgset_load ( cfg_name )
+    export function cfgset_load ( cfg_name )
     {
          var ret  = null ;
-         var jobj = null ;
+         var jobj ;
 
          if (typeof ws_cfg_hash[cfg_name] === "undefined") {
              return ret ;
@@ -386,7 +410,7 @@
 
          // try to import the requested one
 	 try {
-	     jobj = $.getJSON({'url': ws_cfg_hash[cfg_name], 'async': false}) ;
+	    jobj = $.getJSON({'url': ws_cfg_hash[cfg_name], 'async': false}) ;
 	     jobj = JSON.parse(jobj.responseText) ;
 	     ret  = cfgset_import(jobj) ;
 	 }
@@ -394,13 +418,13 @@
              ws_alert("WepSIM can not import the configuration from URL: \n'" +
                        ws_cfg_hash[cfg_name]  + "'.\n" +
                       "Found following error: \n" +
-                       err.message) ;
+                       e.message) ;
 	 }
 
 	 return ret ;
     }
 
-    function cfgset_import ( wscfg )
+    export function cfgset_import ( wscfg )
     {
          // import primary fields
 	 for (var item in wscfg)

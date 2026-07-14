@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.gui.ru = {
+    export function i18n_ru_register_gui(i18n) {
+
+
+
+        i18n.eltos.gui.ru = {
 
 		'Loading WepSIM...':		'Загрузка WepSIM ...',
 		'About':			'О компании',
@@ -142,4 +146,5 @@
 
 		'_last_':			'_last_'
     };
+    }
 

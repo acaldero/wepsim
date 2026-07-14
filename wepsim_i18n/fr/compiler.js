@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.compiler.fr = {
+    export function i18n_fr_register_compiler(i18n) {
+
+
+
+        i18n.eltos.compiler.fr = {
 
 	        "PROBLEM AROUND LINE":          "Problème autour de la ligne",
 		'NO TAG OR DIRECTIVE':		'balise attendu ou directive, mais à cet jeton à la place:',
@@ -123,4 +127,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

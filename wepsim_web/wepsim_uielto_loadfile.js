@@ -19,12 +19,14 @@
  */
 
 
+import $ from 'jquery';
+
         /*
          *  Load file
          */
 
         /* jshint esversion: 6 */
-        class ws_load_file extends HTMLElement
+        export class ws_load_file extends HTMLElement
         {
               static get observedAttributes()
 	      {
@@ -63,7 +65,7 @@
 			  " <h5 class='m-0'>" +
 			  " <span class='text-white bg-secondary' data-langkey='Input file'>Input file</span>" +
 			  " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
-                          "         onclick='" + this.jload + "'><span data-langkey='Load'>Load</span></button>" +
+                           "         data-bind='click' data-action='load' data-code='" + this.jload + "'><span data-langkey='Load'>Load</span></button>" +
 			  " </h5>" +
 			  "</div>" +
 			  "<div class='card-body'>" +
@@ -79,9 +81,20 @@
                     $('.dropify').dropify() ;
 	      }
 
+	      bindElements ()
+	      {
+		    this.addEventListener('click', (e) => {
+			const el = e.target.closest('[data-bind="click"]');
+			if (!el) return;
+			e.preventDefault();
+			eval(el.getAttribute('data-code'));
+		    });
+	      }
+
 	      connectedCallback ()
 	      {
 		    this.render(this) ;
+		    this.bindElements();
 	      }
 
 	      attributeChangedCallback (name, oldValue, newValue)
@@ -110,7 +123,4 @@
 	      }
         }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-load-file', ws_load_file) ;
-        }
 

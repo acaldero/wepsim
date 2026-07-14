@@ -17,6 +17,16 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto } from './wepsim_uielto.js';
+import { simhw_active } from '../sim_hw/sim_hw_index.js';
+import { simhwelto_describe_component, simhwelto_prepare_hash } from '../sim_hw/sim_hw_eltos.js';
+import { value_toString } from '../sim_core/sim_core_values.js';
+import { wepsim_popovers_hide, wepsim_popovers_init } from './wepsim_web_ui_popover.js';
+import { popover_cfg_make } from './wepsim_uielto_registers.js';
+import { wepsim_update_signal_dialog, show_visgraph } from '../wepsim_core/wepsim_signal.js';
+import { jit_fire_dep } from '../sim_hw/sim_hw_behavior.js';
+import { jit_fire_order } from '../sim_hw/sim_hw_signal.js';
 
 
         /*
@@ -24,12 +34,13 @@
          */
 
         /* jshint esversion: 6 */
-        class ws_hw extends ws_uielto
+        export class ws_hw extends ws_uielto
         {
               constructor ()
               {
                     // parent
                     super();
+                    this.bindElements();
               }
 
               // render
@@ -41,6 +52,49 @@
                     // render current element
 		    this.render_skel() ;
 		    this.render_populate() ;
+              }
+
+              bindElements () {
+                  this.addEventListener('click', (e) => {
+                      var el = e.target.closest('[data-action]');
+                      if (!el) return;
+                      e.preventDefault();
+                      switch (el.dataset.action) {
+                          case 'hw-active-signals-toggle':
+                              ws_signals_show_inactive = !ws_signals_show_inactive;
+                              $('.s-ina').toggle();
+                              break;
+                          case 'hw-dependencies-toggle':
+                              $('#depgraph1c').collapse('toggle');
+                              show_visgraph(jit_fire_dep, jit_fire_order);
+                              break;
+                          case 'hw-signal-dialog':
+                              simcoreui_signal_dialog(el.dataset.signalName);
+                              break;
+                          case 'hw-popover-close':
+                              wepsim_popovers_hide('.popover_hw');
+                              break;
+                          case 'hw-ctrl-states-toggle':
+                              $('#ctrlstates1').collapse('toggle');
+                              break;
+                          case 'hw-active-states-toggle':
+                               ws_states_show_inactive = !ws_states_show_inactive;
+                               $('.t-ina').toggle();
+                               break;
+                          case 'quickcfg-hw-filter':
+                               var showInactive = el.dataset.value === 'true';
+                               ws_signals_show_inactive = showInactive;
+                               ws_states_show_inactive = showInactive;
+                               if (showInactive) {
+                                   $('.s-ina').show();
+                                   $('.t-ina').show();
+                               } else {
+                                   $('.s-ina').hide();
+                                   $('.t-ina').hide();
+                               }
+                               break;
+                      }
+                  });
               }
 
 	      render_skel ( )
@@ -74,26 +128,23 @@
               }
         }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-hw', ws_hw) ;
-        }
 
 
         //
         //  Hardware Information Panel
         //
 
-        var ws_signals_show_inactive = true ;
-        var ws_states_show_inactive  = true ;
+        export var ws_signals_show_inactive = true ;
+        export var ws_states_show_inactive  = true ;
 
-        var simcoreui_hwui_fn = {} ;
+        export var simcoreui_hwui_fn = {} ;
         simcoreui_hwui_fn.summary   = simcoreui_hw_summary_init ;
         simcoreui_hwui_fn.elements  = simcoreui_hw_elements_init ;  // simulated
         simcoreui_hwui_fn.signals   = simcoreui_hw_signals_init ;   // simulation
         simcoreui_hwui_fn.states    = simcoreui_hw_states_init ;    // simulation
         simcoreui_hwui_fn.behaviors = simcoreui_hw_behaviors_init ; // simulation
 
-        function simcoreui_init_hw ( div_name, components_arr )
+        export function simcoreui_init_hw( div_name, components_arr )
         {
               // get active hardware
               var ahw = simhw_active() ;
@@ -118,7 +169,7 @@
 	      $(div_name).html(o) ;
 
               // initialization of recent HTML added components
-	      popover_cfg = {
+	      var popover_cfg = {
 	  	      trigger:    'hover click',
 		      container:  'body',
 		      placement:  'auto',
@@ -165,7 +216,7 @@
               wepsim_popovers_init('.popover_hw', popover_cfg, popover_on_show) ;
         }
 
-        function simcoreui_show_hw ( )
+        export function simcoreui_show_hw( )
         {
               var ahw = simhw_active() ;
 
@@ -175,7 +226,7 @@
               return true ;
         }
 
-        function simcoreui_signal_dialog ( ahw_elto_name )
+        export function simcoreui_signal_dialog( ahw_elto_name )
         {
               wepsim_update_signal_dialog(ahw_elto_name) ;
               wepsim_popovers_hide(".popover_hw") ;
@@ -183,7 +234,7 @@
 
         // hw_summary
 
-        function simcoreui_hw_summary_init ( ahw, framed )
+        export function simcoreui_hw_summary_init( ahw, framed )
         {
 	    // card with list
 	    var o = '' ;
@@ -218,11 +269,11 @@
 
         // signal
 
-        function simcoreui_hw_signals_init ( ahw, framed )
+        export function simcoreui_hw_signals_init( ahw, framed )
         {
-	    var elto_c  = '' ;
-	    var e = '' ;
-	    var c = '' ;
+	    var elto_c  ;
+	    var e ;
+	    var c ;
 
 	    // list of signals
 	    c = '<span class="row justify-content-between">' ;
@@ -251,7 +302,7 @@
             return c ;
         }
 
-        function simcoreui_hw_init_signals_card ( content )
+        export function simcoreui_hw_init_signals_card( content )
         {
 	    var o = '  <div class="card m-2">' +
 		    '    <div class="card-header bg-tertiary border border-tertiary p-2">' +
@@ -281,32 +332,29 @@
 	    return o ;
         }
 
-        function simcoreui_hw_btn_active_signals_toggle ( )
+        export function simcoreui_hw_btn_active_signals_toggle( )
         {
             var o = '<span class="col-auto btn btn-sm btn-outline-secondary me-2" ' +
 		    '      data-bs-toggle="tooltip" data-bs-html="true" ' +
 		    '      title="Shows/Hide inactive signals"' +
-		    '      onclick="ws_signals_show_inactive = !ws_signals_show_inactive;' +
-		    '               $(\'.s-ina\').toggle();' +
-		    '               return false;" ' +
+		    '      data-bind="click" data-action="hw-active-signals-toggle" ' +
 		    '      data-langkey="Active">Active</span>' ;
 
 	    return o ;
         }
 
-        function simcoreui_hw_btn_signals_dependencies_toggle ( )
+        export function simcoreui_hw_btn_signals_dependencies_toggle( )
         {
             var o = '<span class="col-auto btn btn-sm btn-outline-secondary" ' +
 		    '      data-bs-toggle="tooltip" data-bs-html="true" ' +
 		    '      title="Graph of the signal dependencies <br>(it needs several seconds to be displayed)."' +
-		    '      onclick="$(\'#depgraph1c\').collapse(\'toggle\'); ' +
-		    '               show_visgraph(jit_fire_dep, jit_fire_order);" ' +
+		    '      data-bind="click" data-action="hw-dependencies-toggle"' +
 		    '      data-langkey="Dependencies">Dependencies</span>' ;
 
 	    return o ;
         }
 
-        function simcoreui_hw_signals_popup ( ahw_signals, elto )
+        export function simcoreui_hw_signals_popup( ahw_signals, elto )
         {
               var e = '' ;
 
@@ -330,7 +378,7 @@
               e = '<span style=\'text-align:left\'>' +
                   '<span data-langkey=\'name\'>name</span>: ' + ahw_signals[elto].name  + '<br>' +
                   '<span data-langkey=\'value\'>value</span>: ' +
-                  '<span onclick=simcoreui_signal_dialog(\'' + ahw_signals[elto].name + '\'); ' +
+                  '<span data-bind="click" data-action="hw-signal-dialog" data-signal-name="' + ahw_signals[elto].name + '"' +
                   '      class=\'fw-bold\'>' + elto_v +
                   '</span><br>' +
                   '<span data-langkey=\'default_value\'>default_value</span>: ' + elto_dv + '<br>' +
@@ -339,26 +387,26 @@
                   '<span data-langkey=\'visible\'>visible</span>: '       + ahw_signals[elto].visible +
                   '<button type=\'button\' id=\'close\' data-role=\'none\' ' +
                   '        class=\'btn btn-sm btn-danger w-100 p-0 mt-2\' ' +
-                  "        onclick='wepsim_popovers_hide(\".popover_hw\");'>" +
+                    '        data-bind="click" data-action="hw-popover-close">' +
                   '<span data-langkey=\'Close\'>Close</span></button>' +
                   '</span>' ;
 
               return e ;
         }
 
-        function simcoreui_hw_signals_update ( ahw, framed )
+        export function simcoreui_hw_signals_update( ahw, framed )
         {
-              var elto_v  = '' ;
-              var elto_dv = '' ;
-              var e = '' ;
+              var elto_v  ;
+              var elto_dv ;
+               var e ;
 
-              // list of signals
-              for (var elto in ahw.signals)
-              {
-                   e = '' ; // simcoreui_hw_signals_popup(ahw.signals, elto) ;
+               // list of signals
+                for (var elto in ahw.signals)
+                {
+                     e = '' ; // simcoreui_hw_signals_popup(ahw.signals, elto) ;
 
-                   id_tt     = "hw_signal_tt_"     + elto ;
-                   id_strong = "hw_signal_strong_" + elto ;
+                     var id_tt     = "hw_signal_tt_"     + elto ;
+                     var id_strong = "hw_signal_strong_" + elto ;
 
                    // reset
                    $("." + id_tt).attr('data-content', e) ;
@@ -385,11 +433,11 @@
 
         // hw_states
 
-        function simcoreui_hw_states_init ( ahw, framed )
+        export function simcoreui_hw_states_init( ahw, framed )
         {
-	    var elto_c  = '' ;
-	    var e = '' ;
-	    var c = '' ;
+	    var elto_c  ;
+	    var e ;
+	    var c ;
 
 	    // list of states
 	    c = '<span class="row justify-content-between">' ;
@@ -418,7 +466,7 @@
             return c ;
         }
 
-        function simcoreui_hw_init_states_card ( content, ahw )
+        export function simcoreui_hw_init_states_card( content, ahw )
         {
 	    var o = '<div class="card m-2">' +
 		    ' <div class="card-header bg-tertiary border border-tertiary p-2">' +
@@ -433,7 +481,7 @@
 		    '          <span class="col-auto btn btn-sm btn-outline-secondary me-2" ' +
 		    '                data-bs-toggle="tooltip" data-bs-html="true" ' +
 		    '                title="It shows the control states: PC, IR, and SP."' +
-		    '                onclick="$(\'#ctrlstates1\').collapse(\'toggle\');" ' +
+		    '                data-bind="click" data-action="hw-ctrl-states-toggle" ' +
 		    '                data-langkey="Control States">Control States</span>' +
 		    '        </span>' +
 		    '       </span>' +
@@ -468,20 +516,18 @@
 	    return o ;
         }
 
-        function simcoreui_hw_btn_active_states_toggle ( )
+        export function simcoreui_hw_btn_active_states_toggle( )
         {
             var o = '<span class="col-auto btn btn-sm btn-outline-secondary me-2" ' +
 		    '      data-bs-toggle="tooltip" data-bs-html="true" ' +
 		    '      title="Shows/Hide inactive states"' +
-		    '      onclick="ws_states_show_inactive = !ws_states_show_inactive;' +
-		    '               $(\'.t-ina\').toggle();' +
-		    '               return false;" ' +
+		    '      data-bind="click" data-action="hw-active-states-toggle" ' +
 		    '      data-langkey="Active">Active</span>' ;
 
 	    return o ;
         }
 
-        function simcoreui_hw_states_popup ( ahw_states, elto )
+        export function simcoreui_hw_states_popup( ahw_states, elto )
         {
               var e = '' ;
 
@@ -521,21 +567,20 @@
                   '<span data-langkey=\'visible\'>visible</span>: '             + elto_vi +
                   '<button type=\'button\' id=\'close\' data-role=\'none\' ' +
                   '        class=\'btn btn-sm btn-danger w-100 p-0 mt-2\' ' +
-                  '        onclick=wepsim_popovers_hide(\'.popover_hw\');>' +
+                  '        data-bind="click" data-action="hw-popover-close">' +
                   '<span data-langkey=\'Close\'>Close</span></button>' +
                   '</span>' ;
 
               return e ;
         }
 
-        function simcoreui_hw_states_update ( ahw )
+        export function simcoreui_hw_states_update( ahw )
         {
-              var e = '' ;
-              var elto_v  = '' ;
-              var elto_dv = '' ;
-              var elto_c  = '' ;
-              var id_tt     = '' ;
-              var id_strong = '' ;
+              var e ;
+              var elto_v  ;
+              var elto_dv ;
+              var id_tt     ;
+              var id_strong ;
 
               // list of states
               for (var elto in ahw.states)
@@ -572,7 +617,7 @@
 
         // behaviors
 
-        function simcoreui_hw_behaviors_init ( ahw, framed )
+        export function simcoreui_hw_behaviors_init( ahw, framed )
         {
               // list of behaviors
               var c = '<span class="row justify-content-between">' ;
@@ -589,7 +634,7 @@
                         // 'verbal: '          + ahw.behaviors[elto].verbal.toString() + '<br> ' +
                            '<button type=\'button\' id=\'close\' data-role=\'none\' ' +
                            '        class=\'btn btn-sm btn-danger w-100 p-0 mt-2\' ' +
-                           '        onclick=wepsim_popovers_hide(\'.popover_hw\');><span data-langkey=\'Close\'>Close</span></button>' +
+                           '        data-bind="click" data-action="hw-popover-close"><span data-langkey=\'Close\'>Close</span></button>' +
                            '</span>' +
                            '"' +
                            '   data-bs-html="true" title="">' + elto + '</a></span>' ;
@@ -611,40 +656,37 @@
 
         // list subcomponents (component, name, states, signals)
 
-        function simcoreui_hw_components_popup ( ahw, elto )
+        export function simcoreui_hw_components_popup( ahw, elto )
         {
 	      var e = '<span data-langkey=\'name\'>name</span>: '            + ahw.components[elto].name + '<br> ' +
 		      '<span data-langkey=\'version\'>version</span>: '      + ahw.components[elto].version + '<br> ' +
 		      '<span data-langkey=\'abilities\'>abilities</span>: '  + ahw.components[elto].abilities.join(" + ") +
 		      '<button type=\'button\' id=\'close\' data-role=\'none\' ' +
 		      '        class=\'btn btn-sm btn-danger w-100 p-0 mt-2\' ' +
-		      '        onclick=wepsim_popovers_hide(\'.popover_hw\');>' +
+		      '        data-bind="click" data-action="hw-popover-close">' +
 		      '<span data-langkey=\'Close\'>Close</span></button>' ;
-
               return e ;
         }
 
-        function simcoreui_hw_elements_popup ( elto_path, elto )
+        export function simcoreui_hw_elements_popup( elto_path, elto )
         {
 	      var e = simhwelto_describe_component(elto_path, elto, 'html') +
 		      '<button type=\'button\' id=\'close\' data-role=\'none\' ' +
 		      '        class=\'btn btn-sm btn-danger w-100 p-0 mt-2\' ' +
-		      '        onclick=wepsim_popovers_hide(\'.popover_hw\');>' +
+		      '        data-bind="click" data-action="hw-popover-close">' +
 		      '<span data-langkey=\'Close\'>Close</span></button>' ;
 
               return e ;
         }
 
-        function simcoreui_hw_elements_init ( ahw, framed )
+        export function simcoreui_hw_elements_init( ahw, framed )
         {
-	    var i = 0 ;
+	    var i ;
 	    var o = '' ;
-	    var c = '' ;
-	    var p = '' ;
-	    var elto_c         = '' ;
-	    var last_belongs   = '' ;
-	    var state_ref      = '' ;
-	    var state_ref_orig = '' ;
+	    var p ;
+	    var elto_c         ;
+	    var state_ref      ;
+	    var state_ref_orig ;
 
 	    // header
             o += '<div class="table-responsive">' +
@@ -675,8 +717,8 @@
 	         for (var j=0; j<ahw.elements_hash.by_belong[b].length; j++)
 	         {
 		         // new row
-                         elto = ahw.elements_hash.by_belong[b][j] ;
-                         elto_path = ahw.sim_short_name + ':' + elto.key ;
+                         var elto = ahw.elements_hash.by_belong[b][j] ;
+                         var elto_path = ahw.sim_short_name + ':' + elto.key ;
 
 			 // 1) name
 			 o += '<td class="col-2"><span class="row w-100">' +
@@ -738,10 +780,10 @@
 			 o += '<td class="col-2"><span class="row w-100">' ;
 			 for (var es in elto.signals)
 			 {
-				 signal_ref = elto.signals[es].ref ;
+				 var signal_ref = elto.signals[es].ref ;
 
 				 elto_c = 'hw_signal_strong_' + signal_ref ;
-				 e = 'signal ' + signal_ref ; // simcoreui_hw_signals_popup(ahw.signals, signal_ref) ;
+				 var e = 'signal ' + signal_ref ; // simcoreui_hw_signals_popup(ahw.signals, signal_ref) ;
 
 				 // value
 				 o += '<span class="' + elto_c + ' s-ina col fw-normal">' +
@@ -774,9 +816,9 @@
             return o ;
         }
 
-        function simcoreui_hw_init_elements_card ( content )
+        export function simcoreui_hw_init_elements_card( content )
         {
-            var o = '' ;
+            var o ;
 
 	    o = '  <div class="card m-2">' +
 		'    <div class="card-header bg-tertiary border border-tertiary p-2">' +

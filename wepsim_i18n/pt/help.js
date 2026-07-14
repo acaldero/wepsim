@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.help.pt = {
+    export function i18n_pt_register_help(i18n) {
+
+
+
+        i18n.eltos.help.pt = {
 
 		'Welcome tutorial':		'Welcome tutorial',
 		'help_01_01':		'Abra o tutorial de boas vindas',
@@ -50,4 +54,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

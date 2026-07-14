@@ -17,14 +17,18 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { get_simware } from '../sim_core/sim_adt_core.js';
+import { wsasm_src2src } from '../sim_sw/assembly.js';
+import { inputasm } from './wepsim_web_simulator.js';
+
 
 
         /*
          *  Flash assembly
          */
-
         /* jshint esversion: 6 */
-        class ws_flash_asm extends ws_uielto
+        export class ws_flash_asm extends ws_uielto
         {
               // constructor
 	      constructor ()
@@ -41,6 +45,23 @@
 
                     // render current element
                     this.render_skel() ;
+                    this.bindElements() ;
+              }
+
+              bindElements()
+              {
+                    this.addEventListener('click', function(ev) {
+                        var el = ev.target.closest('[data-bind="click"]');
+                        if (!el) return;
+                        switch (el.dataset.action) {
+                            case 'flash':
+                                gateway_do_flash('div_url', 'div_dev', 'div_target', 'div_info');
+                                break;
+                            case 'cancel':
+                                gateway_do_stop('div_url', 'div_info');
+                                break;
+                        }
+                    });
               }
 
               // render
@@ -139,11 +160,11 @@
                                 '<div class="btn-group w-100" role="group" aria-label="flash_and_cancel">' +
 				'<button type="button" class="btn btn-outline-success"' +
 				'        id="btn_flash"' +
-				'        onclick="gateway_do_flash(\'div_url\', \'div_dev\', \'div_target\', \'div_info\');"' +
+				'        data-bind="click" data-action="flash"' +
                                 '>Flash</button>' +
 		  		'<button type="button" class="btn btn-outline-danger"' +
 		  		'        id="btn_cancel"' +
-		  		'        onclick="gateway_do_stop(\'div_url\', \'div_info\');"' +
+				'        data-bind="click" data-action="cancel"' +
                                 '>Cancel</button>' +
                                 '</div>' +
 				'</div>' +
@@ -168,14 +189,13 @@
 	      }
         }
 
-        register_uielto('ws-flash_asm', ws_flash_asm) ;
 
 
         /*
          *  Flashing
          */
 
-	async function gateway_do_request ( flash_url, flash_args, div_info )
+	export async function gateway_do_request ( flash_url, flash_args, div_info )
 	{
              var fetch_args = {
 			        method:  'POST',
@@ -201,7 +221,7 @@
              return jres ;
 	}
 
-	function gateway_request_status ( status_url, info_div )
+	export function gateway_request_status( status_url, info_div )
 	{
 	     var s = new EventSource(status_url) ;
 
@@ -216,7 +236,7 @@
 			   };
 	}
 
-	function gateway_do_flash ( div_url_name, div_dev_name, div_target_name, div_info_name )
+	export function gateway_do_flash( div_url_name, div_dev_name, div_target_name, div_info_name )
 	{
              // name to objects...
              var ddev = document.getElementById(div_dev_name) ;
@@ -226,24 +246,24 @@
 
              // prepare assembly code...
              var SIMWARE = get_simware() ;
-             var fasm = inputasm.getValue() ;
-             var ret  = wsasm_src2src(SIMWARE, fasm, { instruction_comma: true }) ;
-             if (ret.error != null) { 
-                 return ret;
-             }
+		var fasm = inputasm.getValue() ;
+	     var ret  = wsasm_src2src(SIMWARE, fasm, { instruction_comma: true }) ;
+	     if (ret.error != null) {
+	         return ret;
+	     }
 
-             fasm = ret.src_alt ; // normalized syntax
+            //  fasm = ret.src_alt ; // normalized syntax
 
              // do remote flash...
              idiv.value = 'Flashing...\n' ;
-             var fasm = inputasm.getValue() ;
+             fasm = inputasm.getValue() ;
 	     var farg = {
 			   target_board: ddet.value,
 			   target_port:  ddev.value,
 			   assembly:     fasm
 			} ;
              var furl = udiv.value ;
-	     var ret = gateway_do_request(furl + "/flash", farg, idiv);
+	     ret = gateway_do_request(furl + "/flash", farg, idiv);
 
 	     // working with the async result...
              ret.then((result) => {
@@ -259,7 +279,7 @@
                      }) ;
 	}
 
-	function gateway_do_stop ( div_url_name, div_info_name )
+	export function gateway_do_stop( div_url_name, div_info_name )
 	{
              // name to objects...
 	     var udiv = document.getElementById(div_url_name) ;

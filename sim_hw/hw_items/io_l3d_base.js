@@ -18,16 +18,21 @@
  *
  */
 
+import { simhw_internalState_get, simhw_sim_signal, simhw_sim_state } from '../sim_hw_index.js';
+import { get_value, get_var, set_value, set_var } from '../../sim_core/sim_core_values.js';
+import { signal_fire } from '../sim_hw_signal.js';
+import { compute_behavior } from '../sim_hw_behavior.js';
+import { simcore_rest_call } from '../../sim_core/sim_core_rest.js';
 
 /*
  *  L3D
  */
 
-var L3DSR_ID   = 0x2100 ;
-var L3DCR_ID   = 0x2104 ;
-var L3DDR_ID   = 0x2108 ;
+export var L3DSR_ID   = 0x2100 ;
+export var L3DCR_ID   = 0x2104 ;
+export var L3DDR_ID   = 0x2108 ;
 
-function io_l3d_base_register ( sim_p )
+export function io_l3d_base_register ( sim_p )
 {
         /* jshint esversion: 6 */
         sim_p.components.L3D = {
@@ -56,12 +61,12 @@ function io_l3d_base_register ( sim_p )
                                                     if (typeof associated_state == "undefined") {
                                                         throw new Error("unknown element named " + elto) ;
                                                     }
-						    var value = (get_value(simhw_sim_state(associated_state)) >>> 0) ;
+						    // var value = (get_value(simhw_sim_state(associated_state)) >>> 0) ;
 
 						    set_value(simhw_sim_state('BUS_AB'), elto) ;
 						    set_value(simhw_sim_signal('IOR'), 1) ;
 						    signal_fire("IOR") ; //compute_behavior("FIRE IOR") ;
-						    value = get_value(simhw_sim_state('BUS_DB')) ;
+						    var value = get_value(simhw_sim_state('BUS_DB')) ;
 
 						    return value ;
                                                },
@@ -276,7 +281,7 @@ function io_l3d_base_register ( sim_p )
 						        // internal state -> frame in REST
 						        var l3dstates = sim_p.internal_states.l3d_state ;
 						        var o = '' ;
-						        var p = 0 ;
+						        var p ;
                                                         var n = sim_p.internal_states.l3d_dim ;
 						        for (var i=0; i<n; i++)
 						        {

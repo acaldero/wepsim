@@ -21,7 +21,10 @@
 
     // Tranlation thanks to https://github.com/shiptux
 
-    i18n.eltos.cfg.zh_cn = {
+    export function i18n_zh_cn_register_cfg(i18n) {
+
+
+        i18n.eltos.cfg.zh_cn = {
 
 		'General':							'通用',
 		'Idiom for help, examples, etc.':				'帮助，例子等',
@@ -74,4 +77,5 @@
 		'_last_':							'_last_'
 
     };
+    }
 

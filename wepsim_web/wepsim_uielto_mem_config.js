@@ -17,14 +17,19 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto } from './wepsim_uielto.js';
+import { get_value } from '../sim_core/sim_core_values.js';
+import { vue_observable, vue_appyBinding } from '../sim_core/sim_core_values.js';
+import { simhw_active, simhw_internalState_get, simhw_internalState_reset } from '../sim_hw/sim_hw_index.js';
+
 
 
         /*
          * Memory (configuration)
          */
-
         /* jshint esversion: 6 */
-        class ws_mem_config extends ws_uielto
+        export class ws_mem_config extends ws_uielto
         {
 	      constructor ()
 	      {
@@ -142,7 +147,4 @@
               }
         }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-mem-config', ws_mem_config) ;
-        }
 

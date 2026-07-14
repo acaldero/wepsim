@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.hw.ru = {
+    export function i18n_ru_register_hw(i18n) {
+
+
+
+        i18n.eltos.hw.ru = {
 
         "Component":                                "Компонент",
         "Element":                                  "Элемент",
@@ -384,5 +388,6 @@
 
 	"_last_":				    "_last_"
 
-    } ;
+    };
+    }
 

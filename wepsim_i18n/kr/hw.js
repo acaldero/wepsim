@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.hw.kr = {
+    export function i18n_kr_register_hw(i18n) {
+
+
+
+        i18n.eltos.hw.kr = {
 
         "Component":                                "구성 요소",
         "Element":                                  "요소",
@@ -384,5 +388,6 @@
 
 	"_last_":				    "_last_"
 
-    } ;
+    };
+    }
 

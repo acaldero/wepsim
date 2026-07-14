@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.dialogs.pt = {
+    export function i18n_pt_register_dialogs(i18n) {
+
+
+
+        i18n.eltos.dialogs.pt = {
 
 		'Show/Hide ActionBar':			'Mostrar / Ocultar ActionBar',
 		'Show/Hide Slider':			'Mostrar / Ocultar Slider',
@@ -43,4 +47,5 @@
 		'_last_':				'_last_'
 
     };
+    }
 

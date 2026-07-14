@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.gui.sv = {
+    export function i18n_sv_register_gui(i18n) {
+
+
+
+        i18n.eltos.gui.sv = {
 
 		'Loading WepSIM...':		'Laddar WepSIM ...',
 		'About':			'Om',
@@ -148,4 +152,5 @@
 
 		'_last_':			'_last_'
     };
+    }
 

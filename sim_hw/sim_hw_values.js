@@ -18,14 +18,15 @@
  *
  */
 
+import { simhw_sim_signal, simhw_sim_signals, simhw_sim_state, simhw_sim_states } from './sim_hw_index.js';
 
-        /*
+/*
          *  References
          */
 
-        var sim_references = {} ; // new Object() ;
+        export var sim_references = {} ; // new Object() ;
 
-        function compute_references ( )
+        export function compute_references ( )
         {
             for (var key in simhw_sim_signals()) {
 		 sim_references[key] = simhw_sim_signal(key) ;
@@ -38,7 +39,7 @@
 	    }
         }
 
-        function get_reference ( sim_name )
+        export function get_reference ( sim_name )
         {
 	    return sim_references[sim_name] ;
         }
@@ -48,7 +49,7 @@
          *  Show verbal key & value
          */
 
-        function show_verbal ( key )
+        export function show_verbal ( key )
         {
             // key -> obj ?
 	    var vn = simhw_sim_state(key) ;
@@ -65,7 +66,7 @@
             return vn.verbal ;
         }
 
-        function show_value ( value )
+        export function show_value ( value )
         {
 	    if (isNaN(value)) {
 		return "NaN" ;

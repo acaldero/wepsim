@@ -21,7 +21,10 @@
 
     // Translated thanks to Google translate
 
-    i18n.eltos.gui.fr = {
+    export function i18n_fr_register_gui(i18n) {
+
+
+        i18n.eltos.gui.fr = {
 
 		"Loading WepSIM...":		"Chargement de WepSIM ...",
 		"About":                        "À propos de",
@@ -144,5 +147,6 @@
 
 		'_last_':			'_last_'
 
-    } ;
+    };
+    }
 

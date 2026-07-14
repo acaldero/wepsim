@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.states.kr = {
+    export function i18n_kr_register_states(i18n) {
+
+
+
+        i18n.eltos.states.kr = {
 
 		"States":  			                "주",
 		'state':					'상태',
@@ -51,5 +55,6 @@
 		'Session to be restore':			'복원 할 세션',
 
 		'_last_':					'_last_'
-    } ;
+    };
+    }
 

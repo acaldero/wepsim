@@ -17,14 +17,17 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { wsweb_record_on, wsweb_record_off, wsweb_record_play, wsweb_record_pause, wsweb_record_confirmReset, wsweb_notifyuser_add } from './wepsim_web_api.js';
+
 
 
         /*
          *  Recordbar
          */
-
         /* jshint esversion: 6 */
-        class ws_recordbar extends ws_uielto
+        export class ws_recordbar extends ws_uielto
         {
               // constructor
 	      constructor ()
@@ -76,50 +79,61 @@
 		    o1 += '  <a class="btn btn-sm btn-outline-secondary btn-light shadow-sm rounded px-2 me-2" href="#"' +
                           '     data-bs-toggle="tooltip" data-bs-placement="top" data-boundary="window"' +
                           '     title="Remove recorded session"' +
-                          '     onclick="wsweb_record_confirmReset(); ' +
-                          '              return false;"><em class="fas fa-times text-danger"></em>' +
+                          '     data-bind="click" data-action="record-reset"><em class="fas fa-times text-danger"></em>' +
                           '     <span class="d-none d-md-inline-flex ps-1" ' +
                           '               data-langkey=\'Reset\'>Reset</span>' +
                           '  </a>' +
                           '  <a class="btn btn-sm btn-outline-secondary btn-light shadow-sm rounded px-2 mx-2" href="#"' +
                           '     data-bs-toggle="tooltip" data-bs-placement="top" data-boundary="window"' +
                           '     title="(While recording) add a new comment"' +
-                          '     onclick="wsweb_notifyuser_add(); ' +
-                          '              return false;"><em class="fas fa-comment"></em>' +
+                          '     data-bind="click" data-action="record-comment"><em class="fas fa-comment"></em>' +
                           '     <span class="d-none d-md-inline-flex ps-1" data-langkey=\'Comment\'>Comment</span>' +
                           '  </a>' +
                           '  <a class="btn btn-sm btn-outline-secondary btn-light shadow-sm rounded px-2 mx-2" href="#"' +
                           '     data-bs-toggle="tooltip" data-bs-placement="top" data-boundary="window"' +
                           '     title="Pause/Continue playback"' +
-                          '     onclick="wsweb_record_pause(); ' +
-                          '              return false;"><em class="fas fa-pause"></em>' +
+                          '     data-bind="click" data-action="record-pause"><em class="fas fa-pause"></em>' +
                           '     <span class="d-none d-md-inline-flex ps-1" data-langkey=\'Pause\'>Pause</span>' +
                           '  </a>' +
                           '  <a class="btn btn-sm btn-outline-secondary btn-light shadow-sm rounded px-2 mx-2" href="#"' +
                           '     data-bs-toggle="tooltip" data-bs-placement="top" data-boundary="window"' +
                           '     title="Play"' +
-                          '     onclick="wsweb_record_play(); ' +
-                          '              return false;"><em class="fas fa-play"></em>' +
+                          '     data-bind="click" data-action="record-play"><em class="fas fa-play"></em>' +
                           '     <span class="d-none d-md-inline-flex ps-1" data-langkey=\'Play\'>Play</span>' +
                           '  </a>' +
                           '  <a class="btn btn-sm btn-outline-secondary btn-light shadow-sm rounded px-2 mx-2" href="#"' +
                           '     data-bs-toggle="tooltip" data-bs-placement="top" data-boundary="window" data-bs-html="true"' +
                           '     title="Stop recording /<br>Reset playback"' +
-                          '     onclick="wsweb_record_off(); ' +
-                          '              return false;"><em class="fas fa-square"></em>' +
+                          '     data-bind="click" data-action="record-stop"><em class="fas fa-square"></em>' +
                           '     <span class="d-none d-md-inline-flex ps-1" data-langkey=\'Stop\'>Stop</span>' +
                           '  </a>' +
                           '  <a class="btn btn-sm btn-outline-secondary btn-light shadow-sm rounded px-2 ms-2" href="#"' +
                           '     data-bs-toggle="tooltip" data-bs-placement="top" data-boundary="window"' +
                           '     title="Start recording session"' +
-                          '     onclick="wsweb_record_on(); ' +
-                          '              return false;"><em class="fas fa-circle"></em>' +
+                          '     data-bind="click" data-action="record-on"><em class="fas fa-circle"></em>' +
                           '     <span class="d-none d-md-inline-flex ps-1" data-langkey=\'Record\'>Record</span>' +
                           '  </a>' ;
 
                     $('#record_div_container').html(o1) ;
 	      }
+
+	      bindElements ()
+	      {
+		    this.addEventListener('click', (e) => {
+			const el = e.target.closest('[data-bind="click"]') ;
+			if (!el) return ;
+			e.preventDefault() ;
+
+			switch (el.dataset.action) {
+			    case 'record-reset':   wsweb_record_confirmReset() ; break ;
+			    case 'record-comment': wsweb_notifyuser_add() ;      break ;
+			    case 'record-pause':   wsweb_record_pause() ;       break ;
+			    case 'record-play':    wsweb_record_play() ;        break ;
+			    case 'record-stop':    wsweb_record_off() ;         break ;
+			    case 'record-on':      wsweb_record_on() ;          break ;
+			}
+		    }) ;
+	      }
         }
 
-        register_uielto('ws-recordbar', ws_recordbar) ;
 

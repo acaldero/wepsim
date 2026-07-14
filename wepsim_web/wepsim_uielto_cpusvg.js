@@ -17,14 +17,21 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto } from './wepsim_uielto.js';
+import { get_cfg, is_darkmode } from '../sim_core/sim_cfg.js';
+import { simhw_sim_state } from '../sim_hw/sim_hw_index.js';
+import { wait_if_uievents } from '../sim_core/sim_core_ctrl.js';
+import { set_ab_size } from './wepsim_web_simulator.js';
+import { wsweb_set_cpucu_size } from './wepsim_web_api.js';
+
 
 
         /*
          *  CPU device
          */
-
         /* jshint esversion: 6 */
-        class ws_cpusvg extends ws_uielto
+        export class ws_cpusvg extends ws_uielto
         {
 	      constructor ()
 	      {
@@ -63,16 +70,13 @@
 	      }
         }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-cpusvg', ws_cpusvg) ;
-        }
 
 
         /*
          *  draw
          */
 
-	function wepsim_svg_obj_draw ( obj_name, active, color_active, color_inactive, size_active, size_inactive )
+	export function wepsim_svg_obj_draw( obj_name, active, color_active, color_inactive, size_active, size_inactive )
         {
 	   var r = obj_name.split(':') ;
 
@@ -118,18 +122,18 @@
          *  Drawing part
          */
 
-        var DRAW_stop    = false ;
-        var is_dark_mode = false ;
+        export var DRAW_stop    = false ;
+        export var is_dark_mode = false ;
 
-        var cfg_color_background    = 'white' ;
-        var cfg_color_data_active   = '#0066FF' ;
-        var cfg_color_name_active   = '#FF0000' ;
-        var cfg_color_data_inactive = '#000000' ;
-        var cfg_color_name_inactive = '#000000' ;
-        var cfg_size_active         = 3.0 ;
-        var cfg_size_inactive       = 1.0 ;
+        export var cfg_color_background    = 'white' ;
+        export var cfg_color_data_active   = '#0066FF' ;
+        export var cfg_color_name_active   = '#FF0000' ;
+        export var cfg_color_data_inactive = '#000000' ;
+        export var cfg_color_name_inactive = '#000000' ;
+        export var cfg_size_active         = 3.0 ;
+        export var cfg_size_inactive       = 1.0 ;
 
-	function wepsim_svg_update_drawing ( )
+	export function wepsim_svg_update_drawing( )
         {
             // 1) from configuration
 	    cfg_color_data_active   = get_cfg('color_data_active') ;
@@ -154,32 +158,32 @@
             }
         }
 
-	function wepsim_svg_start_drawing ( )
+	export function wepsim_svg_start_drawing( )
         {
             DRAW_stop = false ;
 
 	    wepsim_svg_update_drawing() ;
         }
 
-	function wepsim_svg_stop_drawing ( )
+	export function wepsim_svg_stop_drawing( )
         {
             DRAW_stop = true ;
         }
 
-	function wepsim_svg_is_drawing ( )
+	export function wepsim_svg_is_drawing( )
         {
             return (DRAW_stop == false) ;
         }
 
-	function wepsim_svg_update_draw ( obj, value )
+	export function wepsim_svg_update_draw( obj, value )
         {
             if (true === DRAW_stop) {
                 return ;
 	    }
 
-	    var i = 0 ;
-	    var j = 0 ;
-	    var k = 0 ;
+	    var i ;
+	    var j ;
+	    var k ;
 
 	    var draw_it = get_cfg('is_byvalue'); // 'is_byvalue' belongs to the sim_cfg.js
 
@@ -322,7 +326,7 @@
 	    }
 	}
 
-        function wepsim_svg_update_bus_visibility ( bus_name, value )
+        export function wepsim_svg_update_bus_visibility( bus_name, value )
         {
             if (true === DRAW_stop) {
                 return ;
@@ -341,7 +345,7 @@
             o.style.visibility = value ;
         }
 
-	function wepsim_svg_apply_darkmode ( svg_id )
+	export function wepsim_svg_apply_darkmode( svg_id )
         {
 	    var svg_o = document.getElementById(svg_id);
             if (null == svg_o) return ;
@@ -356,7 +360,7 @@
 	    svg2.setAttribute('style', 'background-color:' + cfg_color_background);
 
             // 2) path
-            var def_color = null ;
+            var def_color ;
 	    var elements  = svg.querySelectorAll("path") ;
 	    for (var i = 0; i < elements.length; i++)
             {
@@ -375,14 +379,14 @@
 
             // 3) text
 	    elements = svg.querySelectorAll("text") ;
-	    for (var i = 0; i < elements.length; i++) {
+	    for (i = 0; i < elements.length; i++) {
 	         elements[i].style.fill = cfg_color_data_inactive ;
 	    }
         }
 
-        function wepsim_svg_refresh ( id_arr )
+        export function wepsim_svg_refresh( id_arr )
         {
-            var o = null ;
+            var o ;
 
             // set darkmode
 	    wepsim_svg_update_drawing() ;
@@ -397,7 +401,7 @@
             }
         }
 
-		function eventhandler_load_svg_set_darkmode ( obj )
+		export function eventhandler_load_svg_set_darkmode( obj )
 		{
 			  var obj_target = obj.target ;
 			  wepsim_svg_apply_darkmode(obj.currentTarget.id) ;
@@ -415,10 +419,10 @@
 			  }
 		}
 
-        function wepsim_svg_reload ( id_arr, img_arr )
+        export function wepsim_svg_reload( id_arr, img_arr )
         {
-            var o = null ;
-            var d = "" ;
+            var o ;
+            var d ;
 
             // update default drawing
 	    wepsim_svg_update_drawing() ;

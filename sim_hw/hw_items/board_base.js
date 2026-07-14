@@ -19,7 +19,7 @@
  */
 
 
-function board_base_register ( sim_p )
+export function board_base_register ( sim_p )
 {
         /*
          *  Syntax of behaviors

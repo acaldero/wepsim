@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.compiler.ja = {
+    export function i18n_ja_register_compiler(i18n) {
+
+
+
+        i18n.eltos.compiler.ja = {
 
 	        "PROBLEM AROUND LINE":          "ライン周辺の問題",
 		'NO TAG OR DIRECTIVE':		'タグやディレクティブを期待したが、代わりにこのトークンが見つかりました：',
@@ -123,4 +127,5 @@
 		'_last_':			'_last_'
 
     };
+    }
 

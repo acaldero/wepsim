@@ -18,12 +18,16 @@
  *
  */
 
+import { get_value } from '../sim_core/sim_core_values.js';
+import { simhw_sim_state } from '../sim_hw/sim_hw_index.js';
+import { simcore_simstate_current2state, simcore_simstate_state2checklist } from '../sim_core/sim_api_stateshots.js';
+import { ws_info } from '../sim_core/sim_adt_core.js';
 
-    /*
+/*
      * Check state
      */
 
-    function wepsim_state_get_clk ( )
+    export function wepsim_state_get_clk ( )
     {
          var reg_maddr = get_value(simhw_sim_state('REG_MICROADDR')) ;
          var reg_clk   = get_value(simhw_sim_state('CLK')) ;
@@ -36,19 +40,17 @@
 	        } ;
     }
 
-    ws_info.state_history = [] ;
-
-    function wepsim_state_history_get ( )
+    export function wepsim_state_history_get ( )
     {
          return ws_info.state_history ;
     }
 
-    function wepsim_state_history_reset ( )
+    export function wepsim_state_history_reset ( )
     {
          ws_info.state_history = [] ;
     }
 
-    function wepsim_state_history_add ( )
+    export function wepsim_state_history_add ( )
     {
          var ret       = wepsim_state_get_clk() ;
          var state_obj = simcore_simstate_current2state() ;

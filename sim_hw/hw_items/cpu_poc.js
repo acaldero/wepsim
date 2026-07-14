@@ -18,12 +18,22 @@
  *
  */
 
+import { get_value, reset_value, set_value } from '../../sim_core/sim_core_values.js';
+import { simhw_sim_ctrlStates_get, simhw_sim_signal, simhw_sim_state, simhw_sim_state_getref } from '../sim_hw_index.js';
+import { show_asmdbg_pc, show_dbg_ir, update_draw, ws_alert } from '../../sim_core/sim_core_ui.js';
+import { get_reference, show_value, show_verbal } from '../sim_hw_values.js';
+import { get_cfg } from '../../sim_core/sim_cfg.js';
+import { oceoc2rom_addr, update_cpu_bus_fire, update_system_bus_fire } from '../../sim_core/sim_core_ctrl.js';
+import { compute_signal_verbals } from '../sim_hw_behavior.js';
+import { decode_instruction } from '../../sim_sw/firmware.js';
+import { get_deco_from_pc } from '../../sim_core/sim_adt_mainmemory.js';
+import { signal_apply_behaviour_allByEdge, signal_apply_behaviour_allByLevel, signal_fire, signal_reset_and_apply } from '../sim_hw_signal.js';
 
 /*
  *  CPU
  */
 
-function cpu_poc_register ( sim_p )
+export function cpu_poc_register ( sim_p )
 {
         sim_p.components["CPU"] = {
 		                  name: "CPU",
@@ -44,7 +54,7 @@ function cpu_poc_register ( sim_p )
 					          // var internal_reg = ["PC", "MAR", "MBR", "IR", "RT1", "RT1", "RT2", "SR"] ;
 					          var internal_reg = ["PC", "SR"] ;
 
-						  var value = 0 ;
+						  var value ;
 					          for (var i=0; i<sim_p.states.BR.length; i++)
 						  {
 						      value = parseInt(get_value(sim_p.states.BR[i])) >>> 0;
@@ -57,7 +67,7 @@ function cpu_poc_register ( sim_p )
 						      }
 						  }
 
-					          for (var i=0; i<internal_reg.length; i++)
+					          for (i=0; i<internal_reg.length; i++)
 						  {
 						      value = parseInt(sim_p.states['REG_' + internal_reg[i]].value) >>> 0;
 						      if (value != 0) {
@@ -99,7 +109,7 @@ function cpu_poc_register ( sim_p )
 					              r_reg = r_reg.replace('R','') ;
 					          var index = parseInt(r_reg) ;
 					          if (typeof sim_p.states.BR[index] != "undefined") {
-					              var value = get_value(sim_p.states.BR[index]) >>> 0;
+					              value = get_value(sim_p.states.BR[index]) >>> 0;
 					              return "0x" + value.toString(16) ;
 					          }
 
@@ -758,9 +768,9 @@ function cpu_poc_register ( sim_p )
                                      types: ["X", "X"],
                                      operation: function(s_expr)
                                                 {
-						   sim_elto_org = get_reference(s_expr[2]) ;
-						   sim_elto_dst = get_reference(s_expr[1]) ;
-                                                   newval       = get_value(sim_elto_org) ;
+						   let sim_elto_org = get_reference(s_expr[2]) ;
+						   let sim_elto_dst = get_reference(s_expr[1]) ;
+                                                   let newval       = get_value(sim_elto_org) ;
                                                    set_value(sim_elto_dst, newval) ;
                                                 },
                                         verbal: function (s_expr)
@@ -782,9 +792,9 @@ function cpu_poc_register ( sim_p )
                                      types: ["X", "X"],
                                      operation: function(s_expr)
                                                 {
-						   sim_elto_org = get_reference(s_expr[2]) ;
-						   sim_elto_dst = get_reference(s_expr[1]) ;
-                                                   newval       = get_value(sim_elto_org) ;
+						   let sim_elto_org = get_reference(s_expr[2]) ;
+						   let sim_elto_dst = get_reference(s_expr[1]) ;
+                                                   let newval       = get_value(sim_elto_org) ;
                                                    set_value(sim_elto_dst, newval) ;
                                                 },
                                         verbal: function (s_expr)
@@ -807,14 +817,14 @@ function cpu_poc_register ( sim_p )
                                      types: ["X", "X"],
                                      operation: function(s_expr)
                                                 {
-                                                   r = s_expr[2].split('/') ;
-						   sim_elto_org = get_reference(r[0]) ;
+                                                   let r = s_expr[2].split('/') ;
+						   let sim_elto_org = get_reference(r[0]) ;
 
-                                                   newval = get_value(sim_elto_org) ;
+                                                   let newval = get_value(sim_elto_org) ;
 						   newval = newval[r[1]] ;
                                                    if (typeof newval != "undefined")
 						   {
-						       sim_elto_dst = get_reference(s_expr[1]) ;
+						       let sim_elto_dst = get_reference(s_expr[1]) ;
                                                        set_value(sim_elto_dst, newval);
 						   }
                                                 },
@@ -1778,7 +1788,7 @@ function cpu_poc_register ( sim_p )
 						   var n3 = n2.substr(31 - (base + offset - 1), offset) ;
 
 						   // name
-					           var from_elto = "" ;
+					           var from_elto ;
 						   if (1 == r.length)
                                                         from_elto = show_verbal(s_expr[3]) ;
 						   else from_elto = "\"" + show_verbal(s_expr[2]) + "\"[" + r[1] + "] " ;
@@ -1799,7 +1809,7 @@ function cpu_poc_register ( sim_p )
 				     types: ["X", "I", "I"],
 				     operation: function (s_expr)
 		                                {
-						   sim_elto_dst = get_reference(s_expr[1]) ;
+						   let sim_elto_dst = get_reference(s_expr[1]) ;
 
 						   //    0             1    2  3
 						   //   SBIT_SIGNAL  A0A1   1  0
@@ -1813,7 +1823,7 @@ function cpu_poc_register ( sim_p )
                                                 },
                                         verbal: function (s_expr)
                                                 {
-						   sim_elto_dst = get_reference(s_expr[1]) ;
+						   var sim_elto_dst = get_reference(s_expr[1]) ;
 
                                                    // return verbal of the compound signal/value
 						   var new_value = sim_elto_dst.value ;
@@ -1829,8 +1839,8 @@ function cpu_poc_register ( sim_p )
 				     types: ["X", "X", "I"],
 				     operation: function (s_expr)
 		                                {
-						   sim_elto_org = get_reference(s_expr[2]) ;
-						   sim_elto_dst = get_reference(s_expr[1]) ;
+						   let sim_elto_org = get_reference(s_expr[2]) ;
+						   let sim_elto_dst = get_reference(s_expr[1]) ;
 
 						   //    0             1      2    3
 				                   //   UPDATE_FLAG SELP_M7 FLAG_U 0
@@ -1840,8 +1850,8 @@ function cpu_poc_register ( sim_p )
 						},
 					verbal: function (s_expr)
                                                 {
-						   sim_elto_org = get_reference(s_expr[2]) ;
-						   sim_elto_dst = get_reference(s_expr[1]) ;
+						   var sim_elto_org = get_reference(s_expr[2]) ;
+						   var sim_elto_dst = get_reference(s_expr[1]) ;
 
                                                    var verbose = get_cfg('verbal_verbose') ;
                                                    if (verbose !== 'math') {
@@ -2106,7 +2116,7 @@ function cpu_poc_register ( sim_p )
 					     types: ["S", "X"],
 					     operation: function (s_expr)
 							{
-						            sim_elto = get_reference(s_expr[2]) ;
+						            let sim_elto = get_reference(s_expr[2]) ;
 							    if (sim_elto.changed == false) {
 								return ;
 							    }
@@ -2123,7 +2133,7 @@ function cpu_poc_register ( sim_p )
 					     types: ["X"],
 					     operation: function (s_expr)
 							{
-						            sim_elto = get_reference(s_expr[1]) ;
+						            let sim_elto = get_reference(s_expr[1]) ;
 							    sim_elto.changed = false ; // todo: comment this line
 							},
 						verbal: function (s_expr)
@@ -2135,8 +2145,8 @@ function cpu_poc_register ( sim_p )
 		sim_p.behaviors["CLOCK"] = { nparameters: 1,
 					     operation: function(s_expr)
 							{
-						            var new_maddr = null ;
-							    var mcelto    = null ;
+						            var new_maddr ;
+							    var mcelto        ;
 
 						            // measure time (1/2)
 					                    var t0 = performance.now() ;
@@ -2175,7 +2185,7 @@ function cpu_poc_register ( sim_p )
 					                    var t1 = performance.now() ;
 
 						            // update time
-							    var val = get_value(sim_p.states["ACC_TIME"]) ;
+							    val = get_value(sim_p.states["ACC_TIME"]) ;
                                                                 val = val + (t1-t0) ;
 							    set_value(sim_p.states["ACC_TIME"], val);
                                                         },
@@ -2191,8 +2201,8 @@ function cpu_poc_register ( sim_p )
 							    // set states/signals to the default state
 							    for (var key in sim_p.states) {
 								 reset_value(sim_p.states[key]) ;
-                                                            }
-							    for (var key in  sim_p.signals) {
+                                                             }
+							    for (key in  sim_p.signals) {
 								 reset_value(sim_p.signals[key]) ;
                                                             }
                                                         },

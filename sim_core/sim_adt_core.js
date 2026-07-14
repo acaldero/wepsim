@@ -18,17 +18,18 @@
  *
  */
 
+import { simhw_internalState } from '../sim_hw/sim_hw_index.js';
 
-        /*
+/*
          *  FIRMWARE
          */
 
-        function get_simware ( )
+        export function get_simware ( )
         {
             return simhw_internalState('FIRMWARE') ;
 	}
 
-        function set_simware ( preWARE )
+        export function set_simware ( preWARE )
         {
             var cf = simhw_internalState('FIRMWARE') ;
 
@@ -42,7 +43,7 @@
 
         // empty firmware
 
-        ws_empty_firmware = {
+        export var ws_empty_firmware = {
                                  // datatypes
 				 firmware:            [],
 				 mp:                  {},
@@ -67,21 +68,21 @@
          *  Registry
          */
 
-	var ws_info = { } ;
+	export var ws_info = { } ;
 
-        function get_wsinfo ( key )
+        export function get_wsinfo ( key )
         {
             return ws_info[key] ;
 	}
 
-        function set_wsinfo ( key, value )
+        export function set_wsinfo ( key, value )
         {
             return ws_info[key] = value ;
 	}
 
         // WepSIM team
 
-	var wsteam = [
+	export var wsteam = [
 			  {
 			    c_id:    "collapse-team-1",
 			    i_src:   "images/team_fgarcia.png",

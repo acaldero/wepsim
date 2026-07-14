@@ -17,14 +17,17 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import * as bootstrap from 'bootstrap';
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+
 
 
         /*
          *  Dropdown (information part)
          */
-
         /* jshint esversion: 6 */
-        class ws_ddown_info extends ws_uielto
+        export class ws_ddown_info extends ws_uielto
         {
               // constructor
 	      constructor ()
@@ -165,14 +168,13 @@
 	      }
         }
 
-        register_uielto('ws-ddown-info', ws_ddown_info) ;
 
 
         //
         // set programmatically the selected option (info part)
         //
 
-        function uipacker_ddown_info_set_select ( opt )
+        export function uipacker_ddown_info_set_select( opt )
         {
             var atab = document.querySelector('#tab' + opt) ;
             if (null == atab) {

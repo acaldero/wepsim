@@ -18,22 +18,24 @@
  *
  */
 
+import { i18n, i18n_get_TagFor } from '../../wepsim_i18n/i18n.js';
+import { simcore_ga } from '../../sim_core/sim_core_ga.js';
 
 /*
  *  Token management
  */
 
-function wsasm_isEndOfFile (context)
+export function wsasm_isEndOfFile (context)
 {
         return ("" === asm_getToken(context)) && (context.t >= context.text.length) ;
 }
 
-function asm_nextToken ( context )
+export function asm_nextToken ( context )
 {
-	  var tok   = "" ;
-	  var first = "" ;
-	  var last  = "" ;
-          var token_type = "" ;
+	  var tok   ;
+	  var first ;
+	  var last  ;
+          var token_type ;
 
           // skip whitespaces
           while ( ("# \t\n\r\u2003".indexOf(context.text[context.t]) != -1) && (context.t < context.text.length) )
@@ -159,22 +161,22 @@ function asm_nextToken ( context )
           return context ;
 }
 
-function asm_getToken ( context )
+export function asm_getToken ( context )
 {
 	 return context.tokens[context.i] ;
 }
 
-function asm_getTokenType ( context )
+export function asm_getTokenType ( context )
 {
 	 return context.token_types[context.i] ;
 }
 
-function asm_isToken ( context, text )
+export function asm_isToken ( context, text )
 {
          return (asm_getToken(context) == text.trim()) ;
 }
 
-function asm_isToken_arr ( context, arr )
+export function asm_isToken_arr ( context, arr )
 {
          for (var i=0; i<arr.length; i++)
          {
@@ -191,7 +193,7 @@ function asm_isToken_arr ( context, arr )
  *  Error handler
  */
 
-function asm_langError ( context, msgError, msgOrigin )
+export function asm_langError ( context, msgError, msgOrigin )
 {
         // detect lines
 	var line2 = 0 ;
@@ -240,12 +242,12 @@ function asm_langError ( context, msgError, msgOrigin )
  *  Label context management
  */
 
-function asm_getLabelContext ( context )
+export function asm_getLabelContext ( context )
 {
         return { t: context.t, line: context.line, newlines: context.newlines.slice() } ;
 }
 
-function asm_setLabelContext ( context, labelContext )
+export function asm_setLabelContext ( context, labelContext )
 {
         context.t = labelContext.t ;
         context.line = labelContext.line ;
@@ -257,12 +259,12 @@ function asm_setLabelContext ( context, labelContext )
  *  Comments management
  */
 
-function asm_getComments ( context )
+export function asm_getComments ( context )
 {
         return context.comments.join('\n') ;
 }
 
-function asm_resetComments ( context )
+export function asm_resetComments ( context )
 {
         context.comments = [] ;
 }

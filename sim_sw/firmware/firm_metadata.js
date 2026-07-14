@@ -18,8 +18,10 @@
  *
  */
 
+import { frm_getToken, frm_isToken, frm_langError, frm_nextToken } from './lexical.js';
+import { i18n, i18n_get_TagFor } from '../../wepsim_i18n/i18n.js';
 
-function firm_metadata_write ( context )
+export function firm_metadata_write ( context )
 {
 	var o = "" ;
 
@@ -77,7 +79,7 @@ function firm_metadata_write ( context )
 }
 
 
-function firm_metadata_read ( context )
+export function firm_metadata_read ( context )
 {
         // optional:
         //   *firmware {

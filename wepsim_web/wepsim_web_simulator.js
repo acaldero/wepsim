@@ -18,10 +18,40 @@
  *
  */
 
+import $ from 'jquery';
+import { get_cfg, update_cfg, cfgset_init, is_mobile, is_darkmode } from '../sim_core/sim_cfg.js';
+import { get_simware } from '../sim_core/sim_adt_core.js';
+import { simhw_active, simhw_setActive, simhw_hwset_load, simhw_hwset_init, simhw_internalState } from '../sim_hw/sim_hw_index.js';
+import { simcore_init_hw, simcore_init_ui, simcore_reset } from '../sim_core/sim_api_core.js';
+import { simcore_record_init, simcore_record_captureInit } from '../sim_core/sim_core_record.js';
+import { show_control_memory, show_main_memory } from '../sim_core/sim_core_ui.js';
+import { update_memories } from '../sim_core/sim_core_ctrl.js';
+import { wsweb_change_workspace_simulator, wsweb_change_show_processor, wsweb_set_details, wsweb_set_cpucu_size, wsweb_set_c1c2_size, wsweb_select_main } from './wepsim_web_api.js';
+import { sim_cfg_editor_theme, sim_cm_get_firmcfg, sim_cm_get_asmcfg, sim_init_editor } from './wepsim_web_editor.js';
+import { wepsim_svg_refresh, wepsim_svg_update_draw, wepsim_svg_update_bus_visibility } from './wepsim_uielto_cpusvg.js';
+import { wepsim_show_main_memory } from './wepsim_uielto_mem.js';
+import { wepsim_show_control_memory, wepsim_show_dbg_mpc } from './wepsim_uielto_dbg_mc.js';
+import { wepsim_show_asmdbg_pc, wepsim_show_dbg_ir, showhideAsmElements, asmdbg_update_assembly } from './wepsim_uielto_dbg_asm.js';
+import { wepsim_show_cache_memory } from './wepsim_uielto_cache.js';
+import { wepsim_init_states, wepsim_init_rf, wepsim_show_rf_names } from './wepsim_uielto_registers.js';
+import { show_cpuview_view, cpucu_show_graph, cpucu_show_table } from './wepsim_uipacker_cpu_cu.js';
+import { wepsim_notify_warning, wepsim_notify_success, wepsim_notify_error, wepsim_notify_close, wepsim_notify_do_notify } from '../wepsim_core/wepsim_notify.js';
+import { wepsim_preload_fromHash, wepsim_preload_get2hash } from '../wepsim_core/wepsim_preload.js';
+import { wepsim_example_loadSet } from '../wepsim_core/wepsim_example.js';
+import { wepsim_checkpoint_addCurrentToCache } from '../wepsim_core/wepsim_checkpoint.js';
+import { wepsim_voice_init, wepsim_voice_stop } from '../wepsim_core/wepsim_voice.js';
+import { wepsim_popovers_init } from './wepsim_web_ui_popover.js';
+import { wepsim_quickcfg_init } from './wepsim_web_ui_quickcfg.js';
+import { wepsim_config_button_pretoggle_val2, wepsim_config_select_toggle } from './wepsim_web_ui_config.js';
+import { wepsim_get_screen_content, wepsim_set_screen_content, wepsim_get_keyboard_content, wepsim_set_keyboard_content } from './wepsim_uielto_console.js';
+import { wepsim_get_sound_content, wepsim_set_sound_content } from './wepsim_uielto_sound.js';
+import { webui_executionbar_toggle_play } from './wepsim_uielto_executionbar.js';
+
+export let inputfirm, inputasm, inputfirm_cfg, inputasm_cfg;
 
     // workspaces
 
-    function sim_change_workspace ( page_id, carousel_id )
+    export function sim_change_workspace( page_id, carousel_id )
     {
             if ( (typeof $.mobile                             != "undefined") &&
                  (typeof $.mobile.pageContainer               != "undefined") &&
@@ -37,12 +67,10 @@
 
     // active/restore UI
 
-    function wepsim_uicfg_apply ( )
+    export function wepsim_uicfg_apply( )
     {
-	    var cfgValue = null ;
-
 	    // view
-	    cfgValue = get_cfg('ws_skin_user') ;
+	    let cfgValue = get_cfg('ws_skin_user') ;
 	    wepsim_restore_view(cfgValue) ;
 
 	    // dark mode
@@ -53,7 +81,7 @@
 	    wepsim_toggle_history_ui();
     }
 
-    function wepsim_uicfg_restore ( )
+    export function wepsim_uicfg_restore( )
     {
 	    // Reload UIcfg
 	    wepsim_uicfg_apply() ;
@@ -68,7 +96,7 @@
 	    wsweb_set_c1c2_size(get_cfg('C1C2_size')) ;
     }
 
-    function wepsim_activeview ( view, is_set )
+    export function wepsim_activeview( view, is_set )
     {
             // update current skin
 	    var cur_skin_user = get_cfg('ws_skin_user').split(":") ;
@@ -93,7 +121,7 @@
     }
 
 
-    var hash_opt_wsx = {
+    export var hash_opt_wsx = {
 			  'extra_mcode':   '.wsx_microcode',
 			  'extra_morecfg': '.wsx_morecfg',
 			  'extra_share':   '.wsx_share',
@@ -104,9 +132,8 @@
 			  'beta_cache':    '.wsx_cache'
 		       } ;
 
-    function wepsim_restore_view ( view )
+    export function wepsim_restore_view( view )
     {
-	    var classes = '' ;
             var all_classes = [] ;
             var new_classes = [] ;
 	    var cur_skin_user = view.split(":") ;
@@ -122,7 +149,7 @@
             }
 
             // show/hide elements...
-	    classes = all_classes.join(", ") ;
+	    var classes = all_classes.join(", ") ;
 	    $(classes).removeClass('d-none') ;
             classes = new_classes.join(", ") ;
             $(classes).addClass('d-none') ;
@@ -139,7 +166,7 @@
 	    }
     }
 
-    function wepsim_toggle_history_ui ()
+    export function wepsim_toggle_history_ui()
     {
         try {
             var history_enabled = (get_cfg('history_enable') === true);
@@ -160,12 +187,11 @@
                 }
                 bars[i].setAttribute('components', arr.join(','));
             }
-        } catch(e) {}
+        } catch(e) { /* ignore */ }
     }
 
-    function wepsim_appy_darkmode ( is_darkmode )
+    export function wepsim_appy_darkmode( is_darkmode )
     {
-	    var o = null ;
             var id_arr = [ "svg_p", "svg_cu" ] ;
 
             // refresh svg
@@ -188,9 +214,9 @@
 	    return true ;
     }
 
-    function wepsim_set_darkmode ( mode )
+    export function wepsim_set_darkmode( mode )
     {
-            var is_dark_mode = false ;
+            let is_dark_mode ;
 
             // document
             switch (mode)
@@ -206,7 +232,7 @@
                     break;
 
                default: // 'auto':
-	            is_dark_mode = window.matchMedia('(prefers-color-scheme: dark)').matches
+	            is_dark_mode = matchMedia('(prefers-color-scheme: dark)').matches
                     if (is_dark_mode)
                          document.documentElement.setAttribute('data-bs-theme', 'dark') ;
 	            else document.documentElement.setAttribute('data-bs-theme', 'light') ;
@@ -219,26 +245,26 @@
 	    return true ;
     }
 
-    function wepsim_restore_darkmode ( )
+    export function wepsim_restore_darkmode( )
     {
             var optValue = get_cfg('ws_skin_dark_mode') ;
             return wepsim_set_darkmode(optValue) ;
     }
 
 
-    var observer_darkmode = null ;
+    export var observer_darkmode = null ;
 
-    function wepsim_keepsync_darkmode ( )
+    export function wepsim_keepsync_darkmode( )
     {
             // event handler for onChange (only once)
             if (observer_darkmode == null)
             {
-                observer = new MutationObserver(function ( mutations ) {
+                observer_darkmode = new MutationObserver(function ( mutations ) {
 						    var is_dark_mode = is_darkmode() ;
 						    wepsim_appy_darkmode(is_dark_mode) ;
 			                        }) ;
 
-                observer.observe(document.documentElement, {
+                observer_darkmode.observe(document.documentElement, {
                                     attributes: true,
                                     attributeFilter: [ "data-bs-theme" ]
                                  });
@@ -247,9 +273,9 @@
 	    return true ;
     }
 
-        function wepsim_keepsync_darkmode_onEvent ( event )
+        export function wepsim_keepsync_darkmode_onEvent( event )
         {
-            cfgValue = get_cfg('ws_skin_dark_mode') ;
+            var cfgValue = get_cfg('ws_skin_dark_mode') ;
 	    if (cfgValue != 'auto') {
 		return ;
 	    }
@@ -259,17 +285,17 @@
 	    else wepsim_set_darkmode('off') ;
         }
 
-    function wepsim_keepsync_darkmode_start ( )
+    export function wepsim_keepsync_darkmode_start( )
     {
             // event handler for onChange
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', wepsim_keepsync_darkmode_onEvent) ;
+            matchMedia('(prefers-color-scheme: dark)').addEventListener('change', wepsim_keepsync_darkmode_onEvent) ;
 
 	    return true ;
     }
 
-    function wepsim_keepsync_darkmode_stop ( )
+    export function wepsim_keepsync_darkmode_stop( )
     {
-            window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', wepsim_keepsync_darkmode_onEvent) ;
+            matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', wepsim_keepsync_darkmode_onEvent) ;
 
 	    return true ;
     }
@@ -277,7 +303,7 @@
 
     // hardware reload
 
-    function wepsim_reload_hw ( p_name )
+    export function wepsim_reload_hw( p_name )
     {
          // try to load
          var ret = simhw_hwset_load(p_name) ;
@@ -292,9 +318,9 @@
 
     // wepsim_activehw: UI handlers
 
-    var msg_default = '<div class="bg-warning"><b>Not available in this hardware</b></div>' ;
+    export var msg_default = '<div class="bg-warning"><b>Not available in this hardware</b></div>' ;
 
-    var hash_detail2init = {
+    export var hash_detail2init = {
 
 	    "REGISTER_FILE":  {
 						  init: function() {
@@ -429,9 +455,9 @@
 	                      }
 	} ;
 
-    function wepsim_activehw ( mode )
+    export function wepsim_activehw( mode )
     {
-            var ahw = null ;
+            var ahw ;
             var o   = null ;
 
             // activate the associated hardware
@@ -470,7 +496,7 @@
 
     // sliders
 
-    function set_ab_size ( diva, divb, new_value )
+    export function set_ab_size( diva, divb, new_value )
     {
         // reset
 	var colclass = "col-1 col-2 col-3 col-4 col-5 col-6 col-7 col-8 col-9 col-10 col-11 col-12 " +
@@ -508,17 +534,17 @@
     //
 
     // confirm exit
-    function wepsim_confirm_exit ( e )
+    export function wepsim_confirm_exit( e )
     {
 	    wepsim_checkpoint_addCurrentToCache() ;
 
 	    var confirmationMessage = "\o/";
-	    (e || window.event).returnValue = confirmationMessage; // Gecko + IE
+	    (e || event).returnValue = confirmationMessage; // Gecko + IE
 	    return confirmationMessage;                            // Webkit, Safari, Chrome
     }
 
     // alert reload
-    function wepsim_general_exception_handler ( err )
+    export function wepsim_general_exception_handler( err )
     {
           alert("Please try to cleanup the browser cache and try again.\n" +
                 "WepSIM was improperly used and found an error, sorry :-(\n" +
@@ -537,12 +563,9 @@
     // Initialize UI
     //
 
-    function wepsim_init_quickfixes ( )
+    export function wepsim_init_quickfixes( )
     {
 	// https://github.com/facebook/react-native/issues/18375
-	/* eslint-disable no-extend-native */
-	/* eslint-disable no-param-reassign */
-	/* eslint-disable no-bitwise */
 	if (!String.prototype.padStart)
         {
 	  String.prototype.padStart = function padStart(targetLength, padString) {
@@ -561,19 +584,19 @@
 	}
     }
 
-    function wepsim_init_ui ( )
+    export function wepsim_init_ui( )
     {
             // fixed padString...
             wepsim_init_quickfixes() ;
 
 	    // install protection for accidental close.
-	    window.addEventListener("beforeunload", wepsim_confirm_exit) ;
+	    addEventListener("beforeunload", wepsim_confirm_exit) ;
 
 	    // disable effects
-	    if (typeof jQuery.fx != "undefined")
-		jQuery.fx.off = true;
-	    if (typeof ko != "undefined")
-		ko.options.deferUpdates = true;
+	    if (typeof $.fx != "undefined")
+		$.fx.off = true;
+	    if (typeof window.ko != "undefined")
+		window.ko.options.deferUpdates = true;
 
 	    // carousel: touch swipe disabled
 	    $('.carousel').carousel({ touch: false }) ;
@@ -621,7 +644,7 @@
 	    }
     }
 
-       function wepsim_init_default_preloadFromHash ( url_hash )
+       export function wepsim_init_default_preloadFromHash( url_hash )
        {
             // Preload from hash...
             var o = wepsim_preload_fromHash(url_hash) ;
@@ -635,7 +658,7 @@
                     '<span class="btn btn-sm btn-info py-0" data-bs-dismiss="alert">X</span> mark. <br>' +
                     'In order to execute an example please press the ' +
                     '<span class="btn btn-sm btn-info py-0" ' +
-                    '      onclick="webui_executionbar_toggle_play(\'exebar1\');">Run</span> ' +
+                    '      data-bind="click" data-action="webui_executionbar_toggle_play">Run</span> ' +
                     'button.<br>' ;
 
                 if (url_hash.notify.toLowerCase() !== 'false') {
@@ -645,10 +668,10 @@
             }
        }
 
-    function wepsim_init_default ( )
+    export function wepsim_init_default( )
     {
 	    // Get URL params
-            var url_hash = wepsim_preload_get2hash(window.location,
+            var url_hash = wepsim_preload_get2hash(location,
                                                    wepsim_init_default_preloadFromHash) ;
 
 	    // 1.- Pre-load defaults
@@ -684,7 +707,7 @@
             wepsim_init_default_preloadFromHash(url_hash) ;
     }
 
-    function wepsim_init_PWA ( )
+    export function wepsim_init_PWA( )
     {
             // progressive web application
 	    if ( (false == is_mobile()) && ('serviceWorker' in navigator) )
@@ -700,7 +723,7 @@
 	    }
     }
 
-    function wepsim_init_firefoxOS ( )
+    export function wepsim_init_firefoxOS( )
     {
             // Firefox OS
 	    if ('mozApps' in navigator)

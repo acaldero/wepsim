@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.dialogs.sv = {
+    export function i18n_sv_register_dialogs(i18n) {
+
+
+
+        i18n.eltos.dialogs.sv = {
 
 		'Show/Hide ActionBar':			'Visa / Dölj ActionBar',
 		'Show/Hide Slider':			'Visa / Dölj Slider',
@@ -42,4 +46,5 @@
 		'_last_':				'_last_'
 
     };
+    }
 

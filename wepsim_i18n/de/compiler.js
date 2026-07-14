@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.compiler.de = {
+    export function i18n_de_register_compiler(i18n) {
+
+
+
+        i18n.eltos.compiler.de = {
 
 		'PROBLEM AROUND LINE': 		"Problem um die Linie",
 		'NO TAG OR DIRECTIVE':		'Erwartete Tag oder Richtlinie, sondern fanden diese Token statt: ',
@@ -123,4 +127,5 @@
 		'_last_':			'_last_'
 
     };
+    }
 

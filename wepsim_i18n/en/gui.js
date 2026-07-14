@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.gui.en = {
+    export function i18n_en_register_gui(i18n) {
+
+
+
+        i18n.eltos.gui.en = {
 
 		"Loading WepSIM...":  			        "Loading WepSIM...",
                 "About":                         		"About",
@@ -149,5 +153,6 @@
                 "No cache memory was already defined.":		"No cache memory was already defined.",
 
 		"_last_":					"_last_"
-    } ;
+    };
+    }
 

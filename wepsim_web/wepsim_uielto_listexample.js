@@ -17,6 +17,11 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import Vue from 'vue';
+import { wepsim_example_getSet, wepsim_example_reset, wepsim_example_load } from '../wepsim_core/wepsim_example.js';
+import { wepsim_notify_success } from '../wepsim_core/wepsim_notify.js';
 
 
         /*
@@ -24,7 +29,7 @@
          */
 
         /* jshint esversion: 6 */
-        class ws_list_example extends ws_uielto
+        export class ws_list_example extends ws_uielto
         {
               // constructor
 	      constructor ()
@@ -75,29 +80,41 @@
                     }
 
                     // build HTML code
-		    o1 += '<div class="btn-group-vertical w-100" role="group" aria-label="Examples">' +
-			  '<button type="button" ' +
-			  '        v-for="ex in examples" ' +
-			  '        v-bind:data-name="ex.name" ' +
-			  '        class="text-danger btn border-secondary m-1 btn-block" ' +
-			  '        onclick="wepsim_example_reset() ;' +
-                          '                 var ex_name = this.getAttribute(\'data-name\') ;' +
-			  '	            wepsim_example_load(ex_name) ;' +
-			  '	            wepsim_notify_success(\'<strong>INFO</strong>\',' +
-			  '		    	                  \'Examples list loaded!.\') ;' +
-			  '	            return false;">' +
-			  '<span :data-langkey="ex.name">{{ ex.name }}</span>' +
-			  '</button>' +
-		          '</div>' ;
+o1 += '<div class="btn-group-vertical w-100" role="group" aria-label="Examples">' +
+      '<button type="button" ' +
+      '        v-for="ex in examples" ' +
+      '        v-bind:data-name="ex.name" ' +
+      '        class="text-danger btn border-secondary m-1 btn-block" ' +
+      '        data-bind="click" data-action="example-load">' +
+      '<span :data-langkey="ex.name">{{ ex.name }}</span>' +
+      '</button>' +
+      '</div>' ;
 
 		    $('#list_examples_' + this.name_str).html(o1) ;
 
-		    this.vueobj = new Vue({
-					     el: '#list_examples_' + this.name_str,
-					     data: { examples: e_exs }
-					  }) ;
+                    this.vueobj = new Vue({
+                                                    el: '#list_examples_' + this.name_str,
+                                                    data: { examples: e_exs }
+                                               }) ;
 	      }
+
+              bindElements ()
+              {
+                    this.addEventListener('click', (e) => {
+                        const el = e.target.closest('[data-bind="click"]');
+                        if (!el) return;
+                        e.preventDefault();
+                        switch (el.dataset.action) {
+                            case 'example-load':
+                                wepsim_example_reset();
+                                var ex_name = el.getAttribute('data-name');
+                                wepsim_example_load(ex_name);
+                                wepsim_notify_success('<strong>INFO</strong>',
+                                                     'Examples list loaded!.');
+                                break;
+                        }
+                    });
+              }
         }
 
-        register_uielto('ws-list-example', ws_list_example) ;
 

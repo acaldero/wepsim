@@ -19,11 +19,14 @@
  */
 
 
+import Vue from 'vue';
+import Vuex from 'vuex';
+
         /*
          *  Get/Set value
          */
 
-        function get_value ( sim_obj )
+        export function get_value ( sim_obj )
         {
            // get value with vue
            if (sim_obj.value instanceof Vuex.Store)
@@ -35,7 +38,7 @@
 	   return sim_obj.value ;
         }
 
-        function set_value ( sim_obj, value )
+        export function set_value ( sim_obj, value )
         {
            // set value with vue
            if (sim_obj.value instanceof Vuex.Store)
@@ -52,7 +55,7 @@
            }
         }
 
-        function reset_value ( sim_obj )
+        export function reset_value ( sim_obj )
         {
            // reset value with vue
            if (sim_obj.value instanceof Vuex.Store)
@@ -87,7 +90,7 @@
            }
         }
 
-        function update_value ( sim_obj )
+        export function update_value ( sim_obj )
         {
            // forceUpdate value with vue
            if (sim_obj.value instanceof Vuex.Store)
@@ -105,10 +108,10 @@
          *  Get/Set variable
          */
 
-        function get_var ( sim_var )
+        export function get_var ( sim_var )
         {
            // get value with vue
-           if (sim_var instanceof Vuex.Store)
+            if (sim_var instanceof Vuex.Store)
 	   {
 	       return sim_var.state.value ;
 	   }
@@ -117,10 +120,10 @@
 	   return sim_var.value ;
         }
 
-        function set_var ( sim_var, value )
+        export function set_var ( sim_var, value )
         {
            // set value with vue
-           if (sim_var instanceof Vuex.Store)
+            if (sim_var instanceof Vuex.Store)
 	   {
 	       sim_var.commit('set_value', value) ;
                return ;
@@ -135,7 +138,7 @@
          *  value toString
          */
 
-        function value_toString ( elto_v )
+        export function value_toString ( elto_v )
         {
               if (typeof elto_v == 'undefined') {
                   return '-' ;
@@ -158,14 +161,13 @@
          *  vue binding
          */
 
-        function vue_observable ( initial_value )
+        var vue_use_vuex = false;
+        export function vue_observable ( initial_value )
         {
-	    // without Vuex
-	    if (typeof Vuex === "undefined") {
-	        return Vuex ;
-	    }
-
-	    // with Vuex
+            if (!vue_use_vuex) {
+                vue_use_vuex = true;
+                Vue.use(Vuex);
+            }
 	    return new Vuex.Store({
 				      state: {
 				          value:   initial_value,
@@ -185,14 +187,8 @@
 				  }) ;
         }
 
-        function vue_observable_ifnotjetdone ( element )
+        export function vue_observable_ifnotjetdone ( element )
         {
-	    // without Vuex
-	    if (typeof Vuex === "undefined") {
-	        return Vuex ;
-	    }
-
-            // vue_observable if not done before
             if (false == (element instanceof Vuex.Store)) {
                 element = vue_observable(element.value) ;
             }
@@ -200,14 +196,24 @@
             return element ;
         }
 
-        function vue_appyBinding ( r_value, vue_context, f_computed_value )
+        export function vue_appyBinding ( r_value, vue_context, f_computed_value, extra_methods )
         {
-	    // without Vue
-	    if (typeof Vue === "undefined") {
-                return Vue ;
-            }
+	    var methods = {
+		    set_value ( newValue ) {
+			this.$store.commit('set_value', newValue) ;
+		    },
+		    set_value_at ( index, newValue ) {
+			this.$store.commit('set_value_at', index, newValue) ;
+		    },
+		    inc_updates () {
+			this.$store.commit('inc_updates') ;
+		    }
+		} ;
 
-	    // with Vue
+	    if (extra_methods) {
+		    Object.assign(methods, extra_methods) ;
+	    }
+
 	    return new Vue({
 				el:    vue_context,
 				store: r_value,
@@ -227,29 +233,12 @@
      					return f_computed_value(this.$store.state.value, vue_context) ;
 				    }
 				},
-				methods: {
-				    set_value ( newValue ) {
-					this.$store.commit('set_value', newValue) ;
-				    },
-				    set_value_at ( index, newValue ) {
-                                        // Vue.set(this, index, newValue) ;
-					this.$store.commit('set_value_at', index, newValue) ;
-				    },
-				    inc_updates () {
-					this.$store.commit('inc_updates') ;
-				    }
-				}
+				methods: methods
 			   }) ;
         }
 
-        function vue_rebind_state ( ref_obj, id_elto, f_computed_value )
+        export function vue_rebind_state ( ref_obj, id_elto, f_computed_value )
         {
-	    // without Vue
-	    if (typeof Vue === "undefined") {
-                return Vue ;
-            }
-
-	    // with Vue
 	    if (false == (ref_obj.value instanceof Vuex.Store)) {
 		ref_obj.value = vue_observable(ref_obj.value) ;
 	    }

@@ -21,7 +21,10 @@
 
     // Translated thanks to Google translate
 
-    i18n.eltos.gui.kr = {
+    export function i18n_kr_register_gui(i18n) {
+
+
+        i18n.eltos.gui.kr = {
 
 		"Loading WepSIM...":  			        "WepSIM로드 중...",
                 "About":                              		"소개",
@@ -147,5 +150,6 @@
                 "No cache memory was already defined.":		"캐시 메모리는 이미 정의되지 않았습니다.",
 
 	        '_last_':					'_last_'
-    } ;
+    };
+    }
 

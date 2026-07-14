@@ -23,7 +23,7 @@
  *   Segments
  */
 
- sim_segments = {
+ export var sim_segments = {
                    ".kdata":  { name:".kdata",  begin:0x00000, end:0x000FF,    color:"#FF99CC", kindof:"data"  },
                    ".ktext":  { name:".ktext",  begin:0x00100, end:0x00FFF,    color:"#A9D0F5", kindof:"text"  },
 
@@ -36,14 +36,14 @@
 
 
    // check if address is within segment <s>
-   function segments_addr_within_text ( address )
+   export function segments_addr_within_text ( address )
    {
 	 return (((address >= sim_segments[".text"].begin ) && (address <= sim_segments[".text"].end ))
                    ||
 		 ((address >= sim_segments[".ktext"].begin) && (address <= sim_segments[".ktext"].end))) ;
    }
 
-   function segments_addr_within_data ( address )
+   export function segments_addr_within_data ( address )
    {
 	 return (((address >= sim_segments[".data"].begin ) && (address <= sim_segments[".data"].end ))
                    ||
@@ -52,7 +52,7 @@
 
 
    // get start/end address of segment <s>
-   function segments_get_begin_addr ( segment_name )
+   export function segments_get_begin_addr ( segment_name )
    {
 	 if (typeof sim_segments[segment_name]       === "undefined")
 	     return null ;
@@ -62,7 +62,7 @@
 	 return sim_segments[segment_name].begin ;
    }
 
-   function segments_get_end_addr ( segment_name )
+   export function segments_get_end_addr ( segment_name )
    {
 	 if (typeof sim_segments[segment_name]     === "undefined")
 	     return null ;

@@ -21,7 +21,10 @@
 
     // Translated thanks to Google translate
 
-    i18n.eltos.states.fr = {
+    export function i18n_fr_register_states(i18n) {
+
+
+        i18n.eltos.states.fr = {
 
 		"States":					"États",
 		'state':					'etat',
@@ -52,5 +55,6 @@
 
 	        "_last_":					"_last_"
 
-    } ;
+    };
+    }
 

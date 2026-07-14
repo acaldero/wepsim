@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.help.sv = {
+    export function i18n_sv_register_help(i18n) {
+
+
+
+        i18n.eltos.help.sv = {
 
 		'Welcome tutorial':		'Välkommen handledning',
 		'help_01_01':		'Öppna välkomsthandledningen',
@@ -50,4 +54,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

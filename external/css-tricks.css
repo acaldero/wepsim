@@ -87,7 +87,7 @@
  */
 
 .ui-icon-reset:after {
-	background-image: url("images/reset.svg");
+	background-image: url("../images/reset.svg");
         background-repeat: no-repeat;
         background-size: 15px 15px;
 }

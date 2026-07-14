@@ -21,7 +21,10 @@
 
     // Translated thanks to Google translate
 
-    i18n.eltos.tutorial_simpleusage.fr = {
+    export function i18n_fr_register_tutorial_simpleusage(i18n) {
+
+
+        i18n.eltos.tutorial_simpleusage.fr = {
 
                  "title_0":     "Expérience WepSIM simple: microprogrammation et programmation",
                  "message_0":   "<center><img alt='wepsim screenshot' src='images/simulator/simulator011.jpg' style='max-width:100%; max-height:40vh;'></center>" +
@@ -92,4 +95,5 @@
                                 "</h5>"
 
     };
+    }
 

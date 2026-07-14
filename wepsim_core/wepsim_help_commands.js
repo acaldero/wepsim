@@ -18,8 +18,15 @@
  *
  */
 
+import { wsweb_dialog_close, wsweb_dialog_open, wsweb_recordbar_show } from '../wepsim_web/wepsim_web_api.js';
+import { wepsim_checkpoint_loadExample } from './wepsim_checkpoint.js';
+import { sim_tutorial_showframe } from './wepsim_tutorial.js';
+import { wepsim_help_set } from './wepsim_help.js';
+import { ws_info } from '../sim_core/sim_adt_core.js';
 
-    ws_info.help = [
+export function wepsim_register_help_commands()
+{
+ws_info.help = [
                        {
                           id:          "simulator",
                           title:       "Execute example",
@@ -146,5 +153,6 @@
      	                               "wsweb_dialog_open('about');",
                           description: "<span data-langkey='help_04_02'>WepSIM Team</span>.<br>"
                        }
-                   ] ;
+                    ] ;
+}
 

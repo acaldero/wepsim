@@ -18,12 +18,13 @@
  *
  */
 
+import { get_cfg } from './sim_cfg.js';
 
-        /*
+/*
 	 *  Voice (speak)
 	 */
 
-        function simcore_voice_canSpeak ( )
+        export function simcore_voice_canSpeak ( )
         {
     	    if (typeof window.speechSynthesis == "undefined") {
                 return false ;
@@ -36,9 +37,9 @@
             return true ;
         }
 
-        function simcore_voice_speak ( msg )
+        export function simcore_voice_speak ( msg )
         {
-	    var ssu = null ;
+	    var ssu;
 
     	    if (simcore_voice_canSpeak())
 	    {
@@ -54,7 +55,7 @@
 	    }
         }
 
-        function simcore_voice_stopSpeak ( )
+        export function simcore_voice_stopSpeak ( )
         {
     	    if (simcore_voice_canSpeak())
 	    {

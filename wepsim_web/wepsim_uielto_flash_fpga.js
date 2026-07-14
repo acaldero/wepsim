@@ -17,14 +17,17 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { get_simware } from '../sim_core/sim_adt_core.js';
+import { segments_get_begin_addr } from '../sim_sw/assembly/memory_segments.js';
+
 
 
         /*
          *  Flash FPGA
          */
-
         /* jshint esversion: 6 */
-        class ws_flash_fpga extends ws_uielto
+        export class ws_flash_fpga extends ws_uielto
         {
               // constructor
 	      constructor ()
@@ -41,12 +44,29 @@
 
                     // render current element
                     this.render_skel() ;
+                    this.bindElements() ;
+              }
+
+              bindElements()
+              {
+                    this.addEventListener('click', function(ev) {
+                        var el = ev.target.closest('[data-bind="click"]');
+                        if (!el) return;
+                        switch (el.dataset.action) {
+                            case 'flash-microcode':
+                                gateway_do_sendmicro('div_url', 'div_dev', 'div_info');
+                                break;
+                            case 'flash-program':
+                                gateway_do_sendasm('div_url', 'div_dev', 'div_info');
+                                break;
+                        }
+                    });
               }
 
               // render
 	      render_skel ( )
 	      {
-		   var o1 = "" ;
+		   var o1 ;
 
 		   // html holder
 		   o1 = "<div id='scroller-flashfpga' class='container-fluid p-0' " +
@@ -111,11 +131,11 @@
                                 '<div class="btn-group w-100" role="group" aria-label="compile_request_and_cancel">' +
 				'<button type="button" class="btn btn-outline-info mx-1"' +
 				'        id="btn_sendmicro"' +
-				'        onclick="gateway_do_sendmicro(\'div_url\', \'div_dev\', \'div_info\');"' +
+				'        data-bind="click" data-action="flash-microcode"' +
                                 '>Flash microcode</button>' +
 				'<button type="button" class="btn btn-outline-success mx-1"' +
 				'        id="btn_flash"' +
-				'        onclick="gateway_do_sendasm(\'div_url\', \'div_dev\', \'div_info\');"' +
+				'        data-bind="click" data-action="flash-program"' +
                                 '>Flash program</button>' +
                                 '</div>' +
 				'</div>' +
@@ -140,14 +160,13 @@
 	      }
         }
 
-        register_uielto('ws-flash_fpga', ws_flash_fpga) ;
 
 
         /*
          *  Flashing
          */
 
-	async function gateway_do_request ( req_url, req_args, div_info )
+	export async function gateway_do_request ( req_url, req_args, div_info )
 	{
              var fetch_args = {
 			        method:  'POST',
@@ -173,7 +192,7 @@
              return jres ;
 	}
 
-	function gateway_request_status ( status_url, info_div )
+	export function gateway_request_status( status_url, info_div )
 	{
 	     var s = new EventSource(status_url) ;
 
@@ -188,7 +207,7 @@
 			   };
 	}
 
-	function gateway_do_sendmicro ( div_url_name, div_dev_name, div_info_name )
+	export function gateway_do_sendmicro( div_url_name, div_dev_name, div_info_name )
 	{
              // name to objects...
              var ddev = document.getElementById(div_dev_name) ;
@@ -260,7 +279,7 @@
                      }) ;
 	}
 
-	function gateway_do_sendasm ( div_url_name, div_dev_name, div_info_name )
+	export function gateway_do_sendasm( div_url_name, div_dev_name, div_info_name )
 	{
              // name to objects...
              var ddev = document.getElementById(div_dev_name) ;

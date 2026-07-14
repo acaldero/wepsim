@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.hw.ja = {
+    export function i18n_ja_register_hw(i18n) {
+
+
+
+        i18n.eltos.hw.ja = {
 
         "Component":                                "コンポーネント",
         "Element":                                  "エレメント",
@@ -384,5 +388,6 @@
 
 	"_last_":				    "_last_"
 
-    } ;
+    };
+    }
 

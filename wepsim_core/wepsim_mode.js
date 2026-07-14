@@ -18,11 +18,21 @@
  *
  */
 
+import { simhw_getIdByName } from '../sim_hw/sim_hw_index.js';
+import { wepsim_activehw, wepsim_activeview } from '../wepsim_web/wepsim_web_simulator.js';
+import { get_cfg } from '../sim_core/sim_cfg.js';
+import { load_from_example_firmware, wepsim_example_load } from './wepsim_example.js';
+import { wsweb_recordbar_show } from '../wepsim_web/wepsim_web_api.js';
+import { wepsim_checkpoint_loadExample } from './wepsim_checkpoint.js';
+import { wepsim_newbie_tour } from './wepsim_tour.js';
+import { ws_info } from '../sim_core/sim_adt_core.js';
 
-    /*
+/*
      * Execution Modes
      */
 
+export function wepsim_register_modes()
+{
     ws_info.modes = [ 'ep', 'ep2', 'rv', 'poc',
 	              'newbie', 'intro',
 	              'asm_mips', 'asm_rv32', 'asm_z80',
@@ -46,10 +56,11 @@
 
     ws_info.modes_ep  = [ 'newbie', 'intro',     'asm_mips',     'asm_rv32',     'asm_z80' ] ;
     ws_info.modes_ep2 = [ 'newbie', 'intro', 'ep2_asm_mips', 'ep2_asm_rv32', 'ep2_asm_z80' ] ;
+}
 
 
     // get equivalent base mode
-    function wepsim_mode_getBaseMode ( derive_model )
+    export function wepsim_mode_getBaseMode ( derive_model )
     {
         if (derive_model == null) {
             return 'ep' ;
@@ -66,7 +77,7 @@
     }
 
     // Change WepSIM mode -> activate_hw + UI view
-    function wepsim_mode_change ( optValue )
+    export function wepsim_mode_change ( optValue )
     {
 	    // switch active hardware by name...
             var bm   = wepsim_mode_getBaseMode(optValue) ;

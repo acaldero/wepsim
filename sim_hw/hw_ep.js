@@ -18,12 +18,22 @@
  *
  */
 
+import { board_base_register } from './hw_items/board_base.js';
+import { cpu_ep_register } from './hw_items/cpu_ep.js';
+import { mem_ep_register } from './hw_items/mem_ep.js';
+import { io_screen_base_register } from './hw_items/io_screen_base.js';
+import { io_keyboard_base_register } from './hw_items/io_keyboard_base.js';
+import { io_clk_base_register } from './hw_items/io_clk_base.js';
+import { io_l3d_base_register } from './hw_items/io_l3d_base.js';
+import { io_ldm_base_register } from './hw_items/io_ldm_base.js';
+import { io_sound_base_register } from './hw_items/io_sound_base.js';
+import { simhw_add } from './sim_hw_index.js';
 
-        /*
+/*
          *  Elemental Processor
          */
 
-        var ep_def = {
+        export var ep_def = {
                        sim_name:            "Elemental Processor",
                        sim_short_name:      "ep",
                        sim_img_processor:   "repo/hardware/ep/images/processor.svg",
@@ -41,16 +51,17 @@
                        events:              {}
 	             } ;
 
-            // registering elements
-                  board_base_register ( ep_def ) ;
-                      cpu_ep_register ( ep_def ) ;
-                      mem_ep_register ( ep_def ) ;
-              io_screen_base_register ( ep_def ) ;
-            io_keyboard_base_register ( ep_def ) ;
-                 io_clk_base_register ( ep_def ) ;
-                 io_l3d_base_register ( ep_def ) ;
-                 io_ldm_base_register ( ep_def ) ;
-               io_sound_base_register ( ep_def ) ;
+export function sim_hw_register_EP() {
+    board_base_register ( ep_def ) ;
+    cpu_ep_register ( ep_def ) ;
+    mem_ep_register ( ep_def ) ;
+    io_screen_base_register ( ep_def ) ;
+    io_keyboard_base_register ( ep_def ) ;
+    io_clk_base_register ( ep_def ) ;
+    io_l3d_base_register ( ep_def ) ;
+    io_ldm_base_register ( ep_def ) ;
+    io_sound_base_register ( ep_def ) ;
 
-            simhw_add(ep_def) ;
+    simhw_add(ep_def) ;
+}
 

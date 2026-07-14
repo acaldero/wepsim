@@ -17,14 +17,15 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
+import { ws_uielto } from './wepsim_uielto.js';
+import { wsweb_set_cpucu_size } from './wepsim_web_api.js';
 
         /*
          *  Slider: CPU / Control Unit
          */
 
         /* jshint esversion: 6 */
-        class ws_slider_cpucu extends ws_uielto
+        export class ws_slider_cpucu extends ws_uielto
         {
 	      constructor ()
 	      {
@@ -47,17 +48,26 @@
                              '           id="' + this.name_str + '"' +
 			     '	  min="0" max="14" value="7" step="1"' +
 			     '	  data-show-value="false"' +
-                             '         class="form-range slider col mx-0 px-0"' +
-                             '         oninput="wsweb_set_cpucu_size(this.value);' +
-                             '                  return false;">' +
+			     '         class="form-range slider col mx-0 px-0"' +
+			     '         data-bind="input" data-action="slider-cpucu-change">' +
 			     '</form>' ;
 
 		    // load html
 		    this.innerHTML = o1 ;
 	      }
+
+	      bindElements ()
+	      {
+		    this.addEventListener('input', function(ev) {
+			  var el = ev.target.closest('[data-action]');
+			  if (!el) return;
+			  switch (el.dataset.action) {
+				case 'slider-cpucu-change':
+				      wsweb_set_cpucu_size(el.value);
+				      break;
+			  }
+		    });
+	      }
         }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-slider-cpucu', ws_slider_cpucu) ;
-        }
 

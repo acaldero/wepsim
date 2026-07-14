@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.help.kr = {
+    export function i18n_kr_register_help(i18n) {
+
+
+
+        i18n.eltos.help.kr = {
 
 	"Welcome tutorial":		"환영 자습서",
         "help_01_01": 			"환영하는 자습서 열기",
@@ -60,5 +64,6 @@
 	"Authors":			"WepSIM 팀",
         "help_04_02": 			"WepSIM 팀"
 
-    } ;
+    };
+    }
 

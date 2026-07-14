@@ -17,14 +17,18 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
+import $ from 'jquery';
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { simhw_hwset_getSet } from '../sim_hw/sim_hw_index.js';
+import { wepsim_reload_hw } from './wepsim_web_simulator.js';
+import { wepsim_notify_success } from '../wepsim_core/wepsim_notify.js';
 
         /*
          *  Processors list
          */
 
         /* jshint esversion: 6 */
-        class ws_list_processor extends ws_uielto
+        export class ws_list_processor extends ws_uielto
         {
               // constructor
 	      constructor ()
@@ -81,10 +85,8 @@
 			 var ename = e_hw.toUpperCase() ;
 			 o1 += '<button type="button" ' +
 			       '    class="text-danger btn border-secondary m-1 btn-block" ' +
-			       '    onclick="wepsim_reload_hw(\'' + e_hw + '\') ;' +
-			       '	     wepsim_notify_success(\'<strong>INFO</strong>\', ' +
-			       '			          \'' + e_hw +' processor loaded!.\') ;'+
-			       '	     return false;">' +
+			       '    data-bind="click" data-action="processor-load" ' +
+			       '    data-hw-name="' + e_hw + '">' +
 			       '<span data-langkey="' + ename + '">' + ename + '</span>' +
 			       '</button>' ;
 		    }
@@ -92,7 +94,22 @@
 
 		    $('#list_processors_1').html(o1) ;
 	      }
+
+              bindElements ()
+              {
+                    this.addEventListener('click', (e) => {
+                        const el = e.target.closest('[data-bind="click"]');
+                        if (!el) return;
+                        e.preventDefault();
+                        switch (el.dataset.action) {
+                            case 'processor-load':
+                                wepsim_reload_hw(el.dataset.hwName);
+                                wepsim_notify_success('<strong>INFO</strong>',
+                                                     el.dataset.hwName + ' processor loaded!.');
+                                break;
+                        }
+                    });
+              }
         }
 
-        register_uielto('ws-list-processor', ws_list_processor) ;
 

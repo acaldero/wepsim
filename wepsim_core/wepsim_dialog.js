@@ -18,12 +18,19 @@
  *
  */
 
+import $ from 'jquery';
+import { get_cfg } from '../sim_core/sim_cfg.js';
+import { i18n, i18n_update_tags } from '../wepsim_i18n/i18n.js';
+import { wsweb_dialog_close } from '../wepsim_web/wepsim_web_api.js';
+import { wepsim_tooltips_closeAll } from '../wepsim_web/wepsim_web_ui_tooltip.js';
 
-    //
+import bootbox from 'bootbox';
+
+//
     // dialogs
     //
 
-    function wsweb_dlg_open ( dialog_obj )
+    export function wsweb_dlg_open ( dialog_obj )
     {
 	    // check params
 	    if (typeof dialog_obj !== "object") {
@@ -82,7 +89,7 @@
 	    return d1 ;
     }
 
-    function wsweb_dlg_close ( dialog_obj )
+    export function wsweb_dlg_close ( dialog_obj )
     {
 	    // check params
 	    if (typeof dialog_obj !== "object") {
@@ -97,7 +104,7 @@
 	    return d1 ;
     }
 
-    function wsweb_dlg_alert ( msg )
+    export function wsweb_dlg_alert ( msg )
     {
              // alert object
 	     var a_obj = {

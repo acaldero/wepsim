@@ -23,10 +23,13 @@
  *  KEYBOARD (rvpipe style)
  */
 
+import { get_value, set_value } from '../../sim_core/sim_core_values.js';
+import { get_keyboard_content, set_keyboard_content } from '../../sim_core/sim_core_ui.js';
+
 const IO_KBD_KBDR_ID = 0x0100;
 const IO_KBD_KBSR_ID = 0x0104;
 
-function io_keyboard_rvpipe_register(sim_p: Simulator): Simulator {
+export function io_keyboard_rvpipe_register(sim_p: Simulator): Simulator {
     const DEBUG = false;
     sim_p.components["KBD"] = {
         name: "KBD",

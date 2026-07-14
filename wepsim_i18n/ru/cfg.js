@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.cfg.ru = {
+    export function i18n_ru_register_cfg(i18n) {
+
+
+
+        i18n.eltos.cfg.ru = {
 
 		'General':							'генеральный',
 		'Idiom for help, examples, etc.':				'Идиома за помощь, примеры и т. Д.',
@@ -72,4 +76,5 @@
 		'_last_':							'_last_'
 
     };
+    }
 

@@ -24,7 +24,7 @@
          */
 
         /* jshint esversion: 6 */
-        class ws_save_files_option extends HTMLElement
+        export class ws_save_files_option extends HTMLElement
         {
               static get observedAttributes()
 	      {
@@ -63,16 +63,27 @@
                     this.update_internal_attributes() ;
 
                     // get html for options...
-                    var o1 = "  <h6 class='dropdown-header'>Optional " + i + ":</h6>" +
+                    var o1 = "  <h6 class='dropdown-header'>" + this.label + ":</h6>" +
                              "  <a class='dropdown-item' href='#' " +
-                             "     onclick='" + this.jsrc + "'><span data-langkey='" + this.label + "'>" +
+                              "     data-bind='click' data-action='save-option' data-code='" + this.jsrc + "'><span data-langkey='" + this.label + "'>" +
                                    this.label + "</span></a>" ;
 
                     this.innerHTML = o1 ;
 	      }
 
+	      bindElements ()
+	      {
+		    this.addEventListener('click', (e) => {
+			const el = e.target.closest('[data-bind="click"]');
+			if (!el) return;
+			e.preventDefault();
+			eval(el.getAttribute('data-code'));
+		    });
+	      }
+
 	      connectedCallback () {
 		    this.render('connectedCallback') ;
+		    this.bindElements();
 	      }
 
 	      attributeChangedCallback (name, oldValue, newValue) {
@@ -106,16 +117,13 @@
 	      }
         }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-save-files-option', ws_save_files_option) ;
-        }
 
 
         //
         // ws_save_files::ws_save_files_option
         //
 
-        class ws_save_files extends HTMLElement
+        export class ws_save_files extends HTMLElement
         {
               static get observedAttributes()
 	      {
@@ -146,7 +154,7 @@
                     var eltos = this.querySelectorAll("ws-save-files-option") ;
 
                     var o1_list   = "" ;
-                    var opt_label = "" ;
+                    var opt_label ;
                     var elto_src   = [] ;
                     var elto_label = [] ;
                     for (var i=0; i<eltos.length; i++)
@@ -168,7 +176,7 @@
 
 		       o1_list += "  <h6 class='dropdown-header'>" + opt_label + ":</h6>" +
                                   "  <a class='dropdown-item' href='#' " +
-                                  "     onclick='" + elto_src[i] + "'><span data-langkey='" + elto_label[i] + "'>" +
+                                  "     data-bind='click' data-action='save-option' data-code='" + elto_src[i] + "'><span data-langkey='" + elto_label[i] + "'>" +
                                         elto_label[i] + "</span></a>" ;
                     }
 
@@ -180,7 +188,7 @@
 			  "  <span class='text-white bg-secondary' data-langkey='Output file'>Output file</span>" +
                           "<div class='btn-group float-end'>" +
 			  "  <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
-                          "          onclick='" + elto_src[0] + "'><span data-langkey='Save'>Save</span></button>" +
+                          "          data-bind='click' data-action='save' data-code='" + elto_src[0] + "'><span data-langkey='Save'>Save</span></button>" +
                           "  <button type='button' " +
                           "          class='btn bg-body-tertiary dropdown-toggle dropdown-toggle-split btn-sm' " +
                           "          data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>" +
@@ -206,8 +214,19 @@
                     this.innerHTML = o1 ;
 	      }
 
+	      bindElements ()
+	      {
+		    this.addEventListener('click', (e) => {
+			const el = e.target.closest('[data-bind="click"]');
+			if (!el) return;
+			e.preventDefault();
+			eval(el.getAttribute('data-code'));
+		    });
+	      }
+
 	      connectedCallback () {
 		    // this.render('connectedCallback') ;
+		    this.bindElements();
 	      }
 
 	      attributeChangedCallback (name, oldValue, newValue) {
@@ -224,7 +243,4 @@
 	      }
         }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-save-files', ws_save_files) ;
-        }
 

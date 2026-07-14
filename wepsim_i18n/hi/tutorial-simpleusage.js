@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.tutorial_simpleusage.hi = {
+    export function i18n_hi_register_tutorial_simpleusage(i18n) {
+
+
+
+        i18n.eltos.tutorial_simpleusage.hi = {
 
 		'title_0':		'सरल WepSIM अनुभव: माइक्रोप्रोग्रामिंग और प्रोग्रामिंग',
 		'message_0':		'<केंद्र> <img alt = \'wepsim स्क्रीनशॉट\' src = \'मदद / सिम्युलेटर / सिमुलेटर011.jpg\' शैली = \'अधिकतम-चौड़ाई: 100%; अधिकतम ऊंचाई: 40vh; \'> </केंद्र> <p> <h5> यह संक्षिप्त ट्यूटोरियल आपको यह दिखाने जा रहा है कि कैसे: <ol> <li> <a href =\' # \'onclick =\' sim_tutorial_boframe ("सिंपलस") , 0,1);>> अपना माइक्रोकोड संपादित करें। </a> </li> <li> <a href=\'#\' onclick= anim_tutorial_goframe("simpleusage",0,3);;;; पिछले माइक्रोकोड के आधार पर)। </a> </li> <li> <a href=\'#\' onclick= anim_tutorial_goframe("simpleusage",0,5);\'> सिमुलेशन में असेंबली / माइक्रोकोड निष्पादित करें। </a> </li> </ol> </h5>',
@@ -36,4 +40,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

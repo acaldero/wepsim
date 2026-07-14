@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.dialogs.de = {
+    export function i18n_de_register_dialogs(i18n) {
+
+
+
+        i18n.eltos.dialogs.de = {
 
 		'Show/Hide ActionBar':			'Aktionsleiste ein- / ausblenden',
 		'Show/Hide Slider':			'Schieberegler ein- / ausblenden',
@@ -43,4 +47,5 @@
 		'_last_':				'_last_'
 
     };
+    }
 

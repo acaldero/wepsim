@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.compiler.zh_cn = {
+    export function i18n_zh_cn_register_compiler(i18n) {
+
+
+
+        i18n.eltos.compiler.zh_cn = {
 
 	        "PROBLEM AROUND LINE":          "繞線問題",
 		'NO TAG OR DIRECTIVE':		'期望tag或指令却发现此令牌来代替：',
@@ -123,4 +127,5 @@
 		'_last_':			'_last_'
 
     };
+    }
 

@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.cfg.kr = {
+    export function i18n_kr_register_cfg(i18n) {
+
+
+
+        i18n.eltos.cfg.kr = {
 
 	     "General": 							"일반",
 	      "Idiom for help, examples, etc.": 		             "도움, 예제 등을위한 관용구",
@@ -70,5 +74,6 @@
 	      'Off':							     'Off',
 	      '_last_':							     '_last_'
 
-                  } ;
+                  };
+                  }
 

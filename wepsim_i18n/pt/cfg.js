@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.cfg.pt = {
+    export function i18n_pt_register_cfg(i18n) {
+
+
+
+        i18n.eltos.cfg.pt = {
 
 		'General':							'Geral',
 		'Idiom for help, examples, etc.':				'Idioma para ajuda, exemplos, etc.',
@@ -72,4 +76,5 @@
 		'_last_':							'_last_'
 
     };
+    }
 

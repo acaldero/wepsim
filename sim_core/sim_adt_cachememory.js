@@ -18,8 +18,11 @@
  *
  */
 
+import { get_var, set_var } from './sim_core_values.js';
+import { simhw_internalState } from '../sim_hw/sim_hw_index.js';
+import { segments_addr_within_data, segments_addr_within_text } from '../sim_sw/assembly/memory_segments.js';
 
-        /*
+/*
          *  cache_memory => {
          *               "stats": {
          *                           n_access:     0,
@@ -56,12 +59,11 @@
         // Auxiliar functions
         //
 
-        function cache_memory_update_stats ( memory, address, parts, r_w, m_h, clock_timestamp )
+        export function cache_memory_update_stats ( memory, address, parts, r_w, m_h, clock_timestamp )
         {
-            var val = '' ;
 
             // global stats
-            val = get_var(memory.stats.n_access) ;
+            let val = get_var(memory.stats.n_access) ;
             set_var(memory.stats.n_access,   val + 1) ;
             set_var(memory.stats.last_addr,  address) ;
             set_var(memory.stats.last_r_w,   r_w) ;
@@ -102,7 +104,7 @@
 	    */
         }
 
-        function cache_memory_select_victim ( memory, set )
+        export function cache_memory_select_victim ( memory, set )
         {
             var keys = Object.keys(memory.sets[set].tags) ;
             var tag_victim  = 0 ;
@@ -110,12 +112,12 @@
             if (get_var(memory.cfg.replace_pol) == "lfu")
             {
 		tag_victim  = keys[0] ;
-                var tag_naccess = memory.sets[parts.set].tags[tag_victim].n_access ;
+                var tag_naccess = memory.sets[set].tags[tag_victim].n_access ;
 		for (var i=1; i<keys.length; i++)
 		{
-                     if (tag_naccess > memory.sets[parts.set].tags[keys[i]].n_access) {
+                     if (tag_naccess > memory.sets[set].tags[keys[i]].n_access) {
 		         tag_victim = keys[i] ;
-                         tag_naccess = memory.sets[parts.set].tags[tag_victim].n_access ;
+                         tag_naccess = memory.sets[set].tags[tag_victim].n_access ;
                      }
                 }
             }
@@ -123,17 +125,17 @@
        else if (get_var(memory.cfg.replace_pol) == "fifo")
             {
 		tag_victim  = keys[0] ;
-                var tag_stamp = memory.sets[parts.set].tags[tag_victim].timestamp ;
-		for (var i=1; i<keys.length; i++)
+                var tag_stamp = memory.sets[set].tags[tag_victim].timestamp ;
+		for (i=1; i<keys.length; i++)
 		{
-                     if (tag_stamp > memory.sets[parts.set].tags[keys[i]].timestamp) {
+                     if (tag_stamp > memory.sets[set].tags[keys[i]].timestamp) {
 		         tag_victim = keys[i] ;
-                         tag_stamp = memory.sets[parts.set].tags[tag_victim].timestamp ;
+                         tag_stamp = memory.sets[set].tags[tag_victim].timestamp ;
                      }
                 }
             }
 
-       else if (get_var(memory.cfg.replace_pol) == "first") {
+        else if (get_var(memory.cfg.replace_pol) == "first") {
                 tag_victim = keys[0] ;
             }
 
@@ -154,7 +156,7 @@
         //                   * su_policy:               "unified" | "split_i" | "split_d",
         //                   * level:                    1,
         //                   * next_cache:               null (cm) | -1 (cm_cfg)
-        function cache_memory_init ( name, via_size, off_size, set_size, replace_pol, su_pol, level, next_cache )
+        export function cache_memory_init ( name, via_size, off_size, set_size, replace_pol, su_pol, level, next_cache )
         {
             var c = {
 		       "stats": {
@@ -176,8 +178,6 @@
 				    mask_tag:{},
 				    mask_set:{},
 				    mask_off:{},
-				    mask_tag:{},
-				    mask_set:{},
 				    replace_pol:{},
 				    su_pol:{},
 				    level:{},
@@ -220,7 +220,7 @@
         }
 
         // Example: var cm = cache_memory_init_eltofromcfg(cfg) ;
-        function cache_memory_init_eltofromcfg ( cfg )
+        export function cache_memory_init_eltofromcfg ( cfg )
         {
             return cache_memory_init(get_var(cfg.name),
                                      get_var(cfg.via_size),    get_var(cfg.off_size), get_var(cfg.set_size),
@@ -229,7 +229,7 @@
 	    // next_cache: first, it is -1/value but not reference...
         }
 
-        function cache_memory_init_eltonextcache ( cm, cfg_i, cm_i )
+        export function cache_memory_init_eltonextcache ( cm, cfg_i, cm_i )
         {
 	    // next_cache: ...then, it is reference associated
 
@@ -241,7 +241,7 @@
         }
 
         // Example: var array_cm = cache_memory_init_cm(array_cm_cfg) ;
-        function cache_memory_init_cm ( array_cm_cfg )
+        export function cache_memory_init_cm ( array_cm_cfg )
         {
             var array_cm = [] ;
 
@@ -250,7 +250,7 @@
             }
 
 	    // link each other...
-            for (var i=0; i<array_cm_cfg.length; i++) {
+            for (i=0; i<array_cm_cfg.length; i++) {
                  cache_memory_init_eltonextcache(array_cm, array_cm_cfg[i], array_cm[i]) ;
             }
 
@@ -258,7 +258,7 @@
         }
 
 
-        function cache_memory_update ( name, via_size, off_size, set_size, replace_pol, su_pol, level, next_cache )
+        export function cache_memory_update ( name, via_size, off_size, set_size, replace_pol, su_pol, level, next_cache )
         {
             var c = { "stats":{}, "cfg":{}, "sets":{} } ;
 
@@ -295,7 +295,7 @@
             return c ;
         }
 
-        function cache_memory_update_eltofromcfg ( cfg )
+        export function cache_memory_update_eltofromcfg ( cfg )
         {
             return cache_memory_update(get_var(cfg.name),
                                        get_var(cfg.via_size),    get_var(cfg.off_size),   get_var(cfg.set_size),
@@ -305,7 +305,7 @@
 
         // Example: var parts = cache_memory_split(cm, 0x12345678)
         //          console.log("set: " + parts.set + ", tag: " + parts.tag + ", off: " + parts.offset) ;
-        function cache_memory_split ( memory, address )
+        export function cache_memory_split ( memory, address )
         {
             var parts = {
                            set:    0,
@@ -323,7 +323,7 @@
 
         // Example: var cm_cache  = simhw_internalState('CM') ;
         //          var cache_cfg = cache_memory_configuration_get(cm_cache) ;
-        function cache_memory_configuration_get ( memory )
+        export function cache_memory_configuration_get ( memory )
         {
             return memory.cfg ;
         }
@@ -333,7 +333,7 @@
         //                       * address:   0x12345678
         //                       * r_w:       "read" | "write"
         //                       * clk_stamp: 100
-        function cache_memory_access ( memory, address, r_w, clock_timestamp )
+        export function cache_memory_access ( memory, address, r_w, clock_timestamp )
         {
             if (get_var(memory.cfg.su_pol) != 'unified')
             {

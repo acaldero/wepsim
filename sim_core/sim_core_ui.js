@@ -18,8 +18,14 @@
  *
  */
 
+import $ from 'jquery';
+import { simcore_action_ui } from './sim_api_core.js';
+import { simhw_internalState, simhw_sim_ctrlStates_get, simhw_sim_signals, simhw_sim_state, simhw_syntax_behavior } from '../sim_hw/sim_hw_index.js';
+import { get_value } from './sim_core_values.js';
+import { compute_behavior } from '../sim_hw/sim_hw_behavior.js';
+import { WORD_LENGTH } from '../sim_sw/assembly/datatypes.js';
 
-        /*
+/*
          *  Format
          */
 
@@ -34,7 +40,7 @@
 	//    ]
 	//
 
-	function decimal2binary ( number, size )
+	export function decimal2binary ( number, size )
 	{
 		var num_base2        = number.toString(2) ;
 		var num_base2_length = num_base2.length ;
@@ -59,7 +65,7 @@
 		return [num_base2, size-num_base2.length, num_base2_length] ;
 	}
 
-	function float2binary ( f, size )
+	export function float2binary ( f, size )
 	{
 		var buf   = new ArrayBuffer(8) ;
 		var float = new Float32Array(buf) ;
@@ -69,7 +75,7 @@
 		return decimal2binary(uint[0], size) ;
 	}
 
-	function float2decimal ( f )
+	export function float2decimal ( f )
 	{
 		var buf   = new ArrayBuffer(8) ;
 		var float = new Float32Array(buf) ;
@@ -79,12 +85,12 @@
                 return uint[0] ;
 	}
 
-	function float2hex ( f )
+	export function float2hex ( f )
 	{
                 return float2decimal(f).toString(16) ;
 	}
 
-        function hex2float ( hexvalue )
+        export function hex2float ( hexvalue )
         {
 		var sign     = (hexvalue & 0x80000000) ? -1 : 1;
 		var exponent = ((hexvalue >> 23) & 0xff) - 127;
@@ -103,14 +109,14 @@
 		return valuef ;
         }
 
-        function uint_to_float32 ( value )
+        export function uint_to_float32 ( value )
         {
               var buf = new ArrayBuffer(4) ;
               (new Uint32Array(buf))[0] = value ;
               return (new Float32Array(buf))[0] ;
         }
 
-        function float32_to_uint ( value )
+        export function float32_to_uint ( value )
         {
               var buf = new ArrayBuffer(4) ;
               (new Float32Array(buf))[0] = value ;
@@ -132,7 +138,7 @@
 	 *      8 -> -NaN (signaling)
 	 *      9 -> +NaN (quiet)
 	 */
-	function float_class ( a )
+	export function float_class ( a )
 	{
               var s = a & 0x80000000;
                   s = s >> 31 ;
@@ -140,7 +146,7 @@
                   e = e >> 23 ;
               var m = a & 0x007FFFFF;
 
-	      let rd = 0 ;
+	      let rd ;
 
 	      if (!m && !e) {
 		  rd = s ? 3 : 4 ;
@@ -161,7 +167,7 @@
 	      return rd ;
 	}
 
-	function float_class_power2 ( a )
+	export function float_class_power2 ( a )
 	{
               var s = a & 0x80000000;
                   s = s >> 31 ;
@@ -169,7 +175,7 @@
                   e = e >> 23 ;
               var m = a & 0x007FFFFF;
 
-	      let rd = 0 ;
+	      let rd ;
 
 	      if (!m && !e) {
 		  rd = s ? 1<<3 : 1<<4 ;
@@ -190,7 +196,7 @@
 	      return rd ;
 	}
 
-        function hex2char8 ( hexvalue )
+        export function hex2char8 ( hexvalue )
         {
                 var valuec = [] ;
 
@@ -202,14 +208,14 @@
                 return valuec ;
         }
 
-        function simcoreui_pack ( val, pack_size )
+        export function simcoreui_pack ( val, pack_size )
         {
             var base_str = "0".repeat(pack_size) ;
 
             return base_str.substring(0, pack_size - val.length) + val ;
         }
 
-        function hex2bin   ( hexvalue )
+        export function hex2bin   ( hexvalue )
         {
                 var valuebin = hexvalue.toString(2) ;
 
@@ -222,9 +228,9 @@
                 return valuebin ;
         }
 
-        function value2string ( format, value )
+        export function value2string ( format, value )
         {
-                var fmt_value = "" ;
+                var fmt_value ;
 
 		// formating value
 		var fmt = format.split("_") ;
@@ -255,63 +261,63 @@
 
         // Register File
 
-        function show_rf_names ( )
+        export function show_rf_names ( )
         {
             return simcore_action_ui("CPU", 0, "show_rf_names")() ;
         }
 
         // Console (Screen + Keyboard)
 
-	function get_screen_content ( )
+	export function get_screen_content ( )
 	{
 	      return simcore_action_ui("SCREEN", 0, "get_screen_content")() ;
 	}
 
-	function set_screen_content ( screen )
+	export function set_screen_content ( screen )
 	{
 	      simcore_action_ui("SCREEN", 0, "set_screen_content")(screen) ;
 	}
 
-	function get_keyboard_content ( )
+	export function get_keyboard_content ( )
 	{
 	      return simcore_action_ui("KBD", 0, "get_keyboard_content")() ;
 	}
 
-	function set_keyboard_content ( keystrokes )
+	export function set_keyboard_content ( keystrokes )
 	{
 	      simcore_action_ui("KBD", 0, "set_keyboard_content")(keystrokes) ;
 	}
 
         // Sound
 
-	function get_sound_content ( )
+	export function get_sound_content ( )
 	{
 	      return simcore_action_ui("SOUND", 0, "get_sound_content")() ;
 	}
 
-	function set_sound_content ( sound )
+	export function set_sound_content ( sound )
 	{
 	      simcore_action_ui("SOUND", 0, "set_sound_content")(sound) ;
 	}
 
         // Memory
 
-        function show_main_memory ( memory, index, redraw, updates )
+        export function show_main_memory ( memory, index, redraw, updates )
         {
 	    return simcore_action_ui("MEMORY", 0, "show_main_memory")(memory, index, redraw, updates) ;
         }
 
-        function show_control_memory ( memory, index, redraw )
+        export function show_control_memory ( memory, index, redraw )
         {
 	    return simcore_action_ui("MEMORY", 0, "show_control_memory")(memory, index, redraw) ;
         }
 
-        function show_cache_memory ( memory )
+        export function show_cache_memory ( memory )
         {
 	    return simcore_action_ui("MEMORY", 0, "show_cache_memory")(memory) ;
         }
 
-        function show_memories_values ( )
+        export function show_memories_values ( )
         {
 	    // main memory
 	    var pc_name = simhw_sim_ctrlStates_get().pc.state ;
@@ -331,17 +337,17 @@
 
         // CPU svg: update_draw
 
-        function update_draw ( obj, value )
+        export function update_draw ( obj, value )
         {
             return simcore_action_ui("CPU", 1, "update_draw")(obj, value) ;
         }
 
-        function update_bus_visibility ( bus_name, value )
+        export function update_bus_visibility ( bus_name, value )
         {
             return simcore_action_ui("CPU", 1, "update_bus_visibility")(bus_name, value) ;
         }
 
-        function refresh()
+        export function refresh()
         {
 	    var all_signals = simhw_sim_signals() ;
             var one_signals = {} ;
@@ -351,7 +357,7 @@
 		      update_draw(all_signals[key], all_signals[key].value) ;
                  else one_signals[key] = 1 ;
 	    }
-	    for (var key in one_signals) {
+	    for (key in one_signals) {
 		 update_draw(all_signals[key], all_signals[key].value) ;
 	    }
 
@@ -367,24 +373,24 @@
          *  Debug: mPC, PC and IR
          */
 
-        function show_dbg_ir ( value )
+        export function show_dbg_ir ( value )
         {
             return simcore_action_ui("MEMORY", 0, "show_dbg_ir")(value) ;
         }
 
-        function show_dbg_mpc ( )
+        export function show_dbg_mpc ( )
         {
             return simcore_action_ui("MEMORY", 0, "show_dbg_mpc")() ;
         }
 
-        function show_asmdbg_pc ( )
+        export function show_asmdbg_pc ( )
         {
             return simcore_action_ui("MEMORY", 0, "show_asmdbg_pc")() ;
         }
 
         // portable alert
 
-        function ws_alert ( msg )
+        export function ws_alert ( msg )
         {
 	    if (typeof document === "undefined") {
 	        console.log(msg) ;
@@ -395,7 +401,7 @@
 	    return true ;
         }
 
-        function element_scroll_get ( list_id )
+        export function element_scroll_get ( list_id )
         {
             var offset = 0 ;
 
@@ -407,7 +413,7 @@
             return offset ;
         }
 
-        function element_scroll_set ( list_id, offset )
+        export function element_scroll_set ( list_id, offset )
         {
             var obj_byid = $(list_id) ;
             if (obj_byid.length > 0) {
@@ -415,7 +421,7 @@
             }
         }
 
-        function element_scroll_setRelative ( list_id, obj_id, offset )
+        export function element_scroll_setRelative ( list_id, obj_id, offset )
         {
             var obj_byid = $(obj_id) ;
             if (obj_byid.length > 0)
@@ -427,7 +433,7 @@
 
         // colors
 
-        var colors_schemes = {
+        export var colors_schemes = {
 			        'color14' :  [ "#000000", "#FFFFFF", "#FF0000", "#FF8800", "#FFFF00",
                                                "#88FF00", "#00FF00", "#00FF88", "#00FFFF", "#0088FF",
                                                "#0000FF", "#8800FF", "#FF00FF", "#FF0088" ],
@@ -503,7 +509,7 @@
                                                "#d0d0d0", "#dadada", "#e4e4e4", "#eeeeee" ]
 			     } ;
 
-        function colors_clone ( cs )
+        export function colors_clone ( cs )
         {
              var colors = colors_schemes[cs] ;
 

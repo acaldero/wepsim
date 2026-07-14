@@ -17,6 +17,12 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto } from './wepsim_uielto.js';
+import { compute_general_behavior } from '../sim_hw/sim_hw_behavior.js';
+import { simcore_rest_add } from '../sim_core/sim_core_rest.js';
+import { simhw_active, simhw_internalState } from '../sim_hw/sim_hw_index.js';
+import { vue_appyBinding, vue_observable_ifnotjetdone } from '../sim_core/sim_core_values.js';
 
 
         /*
@@ -26,13 +32,13 @@
         /* jshint esversion: 6 */
 
 
-        var l3d_apirest_name     = "L3D" ;
-        var l3d_apirest_endpoint = { value: "" } ;
-        var l3d_apirest_user     = "" ;
-        var l3d_apirest_pass     = "" ;
+        export var l3d_apirest_name     = "L3D" ;
+        export var l3d_apirest_endpoint = { value: "" } ;
+        export var l3d_apirest_user     = "" ;
+        export var l3d_apirest_pass     = "" ;
 
 
-        class ws_l3d extends ws_uielto
+        export class ws_l3d extends ws_uielto
         {
 	      constructor ()
 	      {
@@ -62,8 +68,8 @@
 	      {
                     var o1 = '' ;
                     var div_hash = '#config_L3D_' + this.name_str ;
-		    var i = 0 ;
-		    var offset = 0 ;
+		    var i ;
+		    var offset ;
 
                     // if no active hardware -> empty
                     if (simhw_active() === null) {
@@ -149,12 +155,9 @@
 	      }
         }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-l3d', ws_l3d) ;
-        }
 
 
-	function webui_l3d_set ( )
+	export function webui_l3d_set( )
         {
             // get internal state
 	    var l3d_states = simhw_internalState('l3d_state') ;
@@ -166,11 +169,11 @@
             return true ;
         }
 
-	function l3d_svg_icon ( offset, k )
+	export function l3d_svg_icon( offset, k )
         {
             var id_str = "l3d" + offset + "_svg" ;
 
-	    icon = "<span v-show='value'>" +
+	    var icon = "<span v-show='value'>" +
                    "<i id='" + id_str + "' " +
 		   "   style='transform:skew(" + (15-10*k) + "deg) translateY(-5px) scale(1.2)'" +
 		   "   class='fas fa-lightbulb'></i>" +

@@ -21,7 +21,10 @@
 
     // Translated thanks to Google translate
 
-    i18n.eltos.tutorial_welcome.fr = {
+    export function i18n_fr_register_tutorial_welcome(i18n) {
+
+
+        i18n.eltos.tutorial_welcome.fr = {
 
                  "title_0":       "Bienvenue sur le simulateur WepSIM!",
                  "message_0":     "<center><img alt='wepsim screenshot' src='images/simulator/simulator012.jpg' style='max-width:100%; max-height:40vh;'></center>" +
@@ -81,4 +84,5 @@
                                   "</h5>"
 
     };
+    }
 

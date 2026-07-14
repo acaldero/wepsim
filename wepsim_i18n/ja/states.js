@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.states.ja = {
+    export function i18n_ja_register_states(i18n) {
+
+
+
+        i18n.eltos.states.ja = {
 
 		'States':					'州',
 		'state':					'州',
@@ -51,4 +55,5 @@
 		'_last_':				'_last_'
 
     };
+    }
 

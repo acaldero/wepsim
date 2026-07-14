@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.dialogs.en = {
+    export function i18n_en_register_dialogs(i18n) {
+
+
+
+        i18n.eltos.dialogs.en = {
 
                 "Show/Hide ActionBar":                  "Show/Hide ActionBar",
                 "Show/Hide Slider":                     "Show/Hide Slider",
@@ -45,5 +49,6 @@
 
 		'_last_':				'_last_'
 
-    } ;
+    };
+    }
 

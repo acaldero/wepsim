@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.examples.ru = {
+    export function i18n_ru_register_examples(i18n) {
+
+
+
+        i18n.eltos.examples.ru = {
 
 		'addv + seqv.':			'addv + seqv.',
 		'Alloc.s':			'Alloc.s',
@@ -83,4 +87,5 @@
 		'_last_':			'_last_'
 
     };
+    }
 

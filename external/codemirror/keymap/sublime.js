@@ -568,7 +568,7 @@
       else if (target.word)
         cm.setSelection(target.from, target.to);
     }
-  };
+  }
   cmds.findUnder = function(cm) { findAndGoTo(cm, true); };
   cmds.findUnderPrevious = function(cm) { findAndGoTo(cm,false); };
   cmds.findAllUnder = function(cm) {

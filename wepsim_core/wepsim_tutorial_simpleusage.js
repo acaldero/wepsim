@@ -18,8 +18,15 @@
  *
  */
 
+import { ws_info } from '../sim_core/sim_adt_core.js';
+import { simcore_do_nothing_handler } from '../sim_core/sim_api_core.js';
 
-    ws_info.tutorials.simpleusage = [
+export function wepsim_register_tutorial_simple_usage()
+{
+	if (ws_info.tutorials === undefined) {
+		ws_info.tutorials = {};
+	}
+ws_info.tutorials.simpleusage = [
 					  {
 					     id:        "simpleusage",
 					     title:     "<span data-langkey='title_0'>title 0</span>",
@@ -69,4 +76,5 @@
 					     wait_next: 100
 					  }
                                     ] ;
+}
 

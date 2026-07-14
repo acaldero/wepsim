@@ -23,7 +23,23 @@
  *  CPU - 5-stage pipeline (IF, ID, EX, MEM, WB)
  */
 
-function cpu_rvpipe_register(sim_p: Simulator): Simulator {
+import $ from 'jquery';
+import { get_value, set_value, reset_value } from '../../sim_core/sim_core_values.js';
+import { get_reference, show_value, show_verbal } from '../sim_hw_values.js';
+import { get_cfg } from '../../sim_core/sim_cfg.js';
+import { show_main_memory, show_asmdbg_pc, show_dbg_ir, refresh, get_screen_content, set_screen_content, get_keyboard_content, set_keyboard_content } from '../../sim_core/sim_core_ui.js';
+import { main_memory_getvalue, main_memory_set, main_memory_get_program_counter, get_deco_from_pc } from '../../sim_core/sim_adt_mainmemory.js';
+import { cache_memory_access } from '../../sim_core/sim_adt_cachememory.js';
+import { decode_instruction } from '../../sim_sw/firmware.js';
+import { signal_apply_behaviour, jit_fire_order } from '../sim_hw_signal.js';
+import { compute_behavior } from '../sim_hw_behavior.js';
+import { simcore_sound_playNote } from '../../sim_core/sim_core_sound.js';
+import { wepsim_svg_is_drawing } from '../../wepsim_web/wepsim_uielto_cpusvg.js';
+import { simhw_sim_state_getref, simhw_sim_ctrlStates_get } from '../sim_hw_index.js';
+import { DBG_stop } from '../../wepsim_core/wepsim_execute.js';
+import { ws_empty_firmware } from '../../sim_core/sim_adt_core.js';
+
+export function cpu_rvpipe_register(sim_p: Simulator): Simulator {
     function create_op(behavior: BEHAVIORS, ...signals_or_states: (SIGNALS | STATES | string)[]): string {
         return behavior + " " + signals_or_states.join(" ") + ";";
     }
@@ -3243,8 +3259,9 @@ function cpu_rvpipe_register(sim_p: Simulator): Simulator {
                 if (oi.oinstruction.fields[i].type == "inm" ||
                     oi.oinstruction.fields[i].type == "imm" ||
                     oi.oinstruction.fields[i].type == "address") {
-                    imm_bits = (oi.oinstruction.fields[i].bits !== undefined)
-                        ? oi.oinstruction.fields[i].bits
+                    const field_bits = oi.oinstruction.fields[i].bits;
+                    imm_bits = (field_bits !== undefined)
+                        ? field_bits
                         : [[oi.oinstruction.fields[i].startbit, oi.oinstruction.fields[i].stopbit]];
                 }
             }
@@ -3480,10 +3497,11 @@ function cpu_rvpipe_register(sim_p: Simulator): Simulator {
             for (let i = 0; i < oi.oinstruction.fields.length; i++) {
                 let field = oi.oinstruction.fields[i];
                 if (field.type == "reg") {
-                    let bs = (field.bits !== undefined)
-                        ? field.bits : [[field.startbit, field.stopbit]];
-                    let startbit = parseInt(bs[0][0]);
-                    let stopbit = parseInt(bs[0][1]);
+                    const field_bits = field.bits;
+                    let bs: (number | string)[][] = (field_bits !== undefined)
+                        ? field_bits : [[field.startbit, field.stopbit]];
+                    let startbit = parseInt(String(bs[0][0]));
+                    let stopbit = parseInt(String(bs[0][1]));
                     let size = startbit - stopbit + 1;
                     let reg_num = (ins >>> stopbit) & ((1 << size) - 1);
 

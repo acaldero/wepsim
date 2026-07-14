@@ -18,8 +18,18 @@
  *
  */
 
+import { i18n, i18n_get_welcome } from '../wepsim_i18n/i18n.js';
+import { refresh } from '../sim_core/sim_core_ui.js';
+import { wsweb_select_main } from '../wepsim_web/wepsim_web_api.js';
+import { ws_info } from '../sim_core/sim_adt_core.js';
+import { ws_tour } from './wepsim_tour.js';
 
-    ws_info.tours.tour1 = [
+export function wepsim_register_tour_commands()
+{
+//  tours collection
+ws_info.tours = {} ;
+
+ws_info.tours.tour1 = [
 			     {
 				 title:     'WepSIM',
 				 intro:     i18n_get_welcome(),
@@ -148,5 +158,6 @@
 						  return true ;
 					      }
 			     }
-                          ] ;
+                           ] ;
+}
 

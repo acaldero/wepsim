@@ -18,14 +18,24 @@
  *
  */
 
+import { get_cfg, reset_cfg_values, restore_cfg, set_cfg } from './sim_cfg.js';
+import { simhw_add, simhw_getIdByName, simhw_getObjByName, simhw_internalState, simhw_internalState_get, simhw_setActive, simhw_sim_components, simhw_sim_ctrlStates_get, simhw_sim_signal, simhw_sim_signals, simhw_sim_state, simhw_sim_state_getref } from '../sim_hw/sim_hw_index.js';
+import { get_simware, set_simware } from './sim_adt_core.js';
+import { control_memory_get } from './sim_adt_ctrlmemory.js';
+import { get_value, set_value } from './sim_core_values.js';
+import { compute_general_behavior } from '../sim_hw/sim_hw_behavior.js';
+import { show_asmdbg_pc, show_dbg_ir, show_dbg_mpc } from './sim_core_ui.js';
+import { loadFirmware } from '../sim_sw/firmware.js';
+import { update_memories } from './sim_core_ctrl.js';
+import { wsasm_src2binsrc, wsasm_src2mem } from '../sim_sw/assembly.js';
 
-        /* 1) Init */
+/* 1) Init */
 
         /**
          * Initialize simulator core and UI.
          * @param {boolean} with_ui - initialize with UI support
          */
-        function simcore_init ( with_ui )
+        export function simcore_init ( with_ui )
         {
 	    var ret = {} ;
 	        ret.msg = "" ;
@@ -46,7 +56,7 @@
          * Initialize simulator Hardware.
          * @param {string} simhw_name - hardware name
          */
-        function simcore_init_hw ( simhw_name )
+        export function simcore_init_hw ( simhw_name )
         {
 	    var ret = {} ;
 	        ret.msg = "" ;
@@ -78,7 +88,7 @@
          * Show welcome message.
          * http://patorjk.com/software/taag/#p=testall&h=0&v=0&f=Delta%20Corps%20Priest%201&t=WepSIM
          */
-        function simcore_welcome ( )
+        export function simcore_welcome ( )
         {
 	    var ret = {} ;
 	        ret.msg = "" ;
@@ -106,14 +116,14 @@
          * Initialize simulator core and UI.
          * @param {hash} hash_detail2init - actions to hook for initialize UI
          */
-        function simcore_init_ui ( hash_detail2init )
+        export function simcore_init_ui ( hash_detail2init )
         {
 	    var ret = {} ;
 	        ret.msg = "" ;
 	        ret.ok  = true ;
 
             // display the information holders
-	    var detail_id = 0 ;
+	    var detail_id ;
             var sim_components = simhw_sim_components() ;
             for (var elto in sim_components)
             {
@@ -143,7 +153,7 @@
          * @return {function} - action associated
          */
 
-        function simcore_action_ui ( component_name, detail_id, action_name )
+        export function simcore_action_ui ( component_name, detail_id, action_name )
         {
             var sim_components = simhw_sim_components() ;
 
@@ -161,11 +171,11 @@
          * @param {hash} hash_signal2action - actions to hook for signals
          */
 
-        function simcore_init_eventlistener ( context, hash_detail2action, hash_signal2action )
+        export function simcore_init_eventlistener ( context, hash_detail2action, hash_signal2action )
         {
-	    var context_obj = null ;
+	    var context_obj ;
 	    var r = [] ;
-	    var o = null ;
+	    var o ;
 
 	    // 1.- check parameters...
 	    context_obj = document.getElementById(context).contentDocument ;
@@ -247,7 +257,7 @@
          * Check if simulation can be executed
          * @param {boolean} with_ui - if there is UI available
          */
-        function simcore_check_if_can_execute ( )
+        export function simcore_check_if_can_execute ( )
         {
 	        var ret = {} ;
 	            ret.msg = "" ;
@@ -282,7 +292,7 @@
         /**
          * Check if simulation can continue its execution
          */
-        function simcore_packerror_at ( reg_maddr, msg )
+        export function simcore_packerror_at ( reg_maddr, msg )
         {
                 var ret = {} ;
 
@@ -293,7 +303,7 @@
                 return ret ;
         }
 
-        function simcore_check_if_can_continue2 ( reg_maddr, reg_pc )
+        export function simcore_check_if_can_continue2 ( reg_maddr, reg_pc )
         {
                 var ret = {} ;
                     ret.ok  = true ;
@@ -342,7 +352,7 @@
                 return ret ;
         }
 
-        function simcore_check_if_can_continue ( )
+        export function simcore_check_if_can_continue ( )
         {
                 var pc_name     = simhw_sim_ctrlStates_get().pc.state ;
                 var reg_pc      = parseInt(get_value(simhw_sim_state(pc_name)));
@@ -358,7 +368,7 @@
         /**
          * Reset the WepSIM simulation.
          */
-        function simcore_reset ( )
+        export function simcore_reset ( )
         {
     	    var ret = {} ;
     	        ret.msg = "" ;
@@ -380,7 +390,7 @@
             var sp_state = simhw_sim_state_getref(sp_name) ;
             if (curr_firm.stackRegister != null)
             {
-                sp_rfid  = curr_firm.stackRegister.rf_name ;
+                var sp_rfid  = curr_firm.stackRegister.rf_name ;
                 sp_name  = curr_firm.stackRegister.r_name ;
 
                 var simware_registers_keys = Object.keys(SIMWARE.registers) ;
@@ -451,7 +461,7 @@
         /**
          * Execute the next microinstruction.
          */
-        function simcore_execute_microinstruction ( )
+        export function simcore_execute_microinstruction ( )
         {
 	    var ret = simcore_check_if_can_continue() ;
 	    if (false === ret.ok) {
@@ -467,7 +477,7 @@
             return ret ;
         }
 
-        function simcore_execute_microinstruction2 ( reg_maddr, reg_pc )
+        export function simcore_execute_microinstruction2 ( reg_maddr, reg_pc )
         {
 	    var ret = simcore_check_if_can_continue2(reg_maddr, reg_pc) ;
 	    if (false === ret.ok) {
@@ -486,7 +496,7 @@
         /**
          * Execute the next instruction.
          */
-        function simcore_execute_microprogram ( options )
+        export function simcore_execute_microprogram ( options )
         {
 	        var ret = simcore_check_if_can_continue() ;
 	        if (false === ret.ok) {
@@ -571,7 +581,7 @@
          * @param {string}  options.verbalize         - Textual or mathematical type of description for each signal [text|math]
          */
 
-        function simcore_execute_program ( options )
+        export function simcore_execute_program ( options )
         {
     	    var ret = {} ;
     	        ret.ok  = true ;
@@ -599,10 +609,7 @@
     	    if ( (typeof curr_segments['.ktext'] != "undefined") && (typeof curr_segments['.ktext'].end   != "undefined") )
     	          kcode_end = parseInt(curr_segments['.ktext'].end) ;
 
-	    var ret1         = null ;
-	    var before_state = null ;
-	    var  after_state = null ;
-	    var curr_pc      = "" ;
+	    var ret1         ;
 	    var SIMWARE      = get_simware() ;
 
                 if (typeof options.verbalize !== "undefined") {
@@ -654,7 +661,7 @@
          * Do nothing function (used as default event handler).
          */
 
-        function simcore_do_nothing_handler ( )
+        export function simcore_do_nothing_handler ( )
         {
 	    return null ;
         }
@@ -666,7 +673,7 @@
          * Compile Firmware.
          * @param {string} textToMCompile - The firmware to be compile and loaded into memory
          */
-        function simcore_compile_firmware ( textToMCompile )
+        export function simcore_compile_firmware ( textToMCompile )
         {
     	    var ret = {} ;
     	        ret.msg = "" ;
@@ -681,7 +688,7 @@
             }
 
             // try to load...
-    	    var preSM = null ;
+    	    var preSM ;
 	    try
 	    {
     	        preSM = loadFirmware(textToMCompile) ;
@@ -721,7 +728,7 @@
          * Compile Assembly.
          * @param {string} textToCompile - The assembly to be compile and loaded into memory
          */
-        function simcore_compile_assembly ( textToCompile )
+        export function simcore_compile_assembly ( textToCompile )
         {
     	    var ret = {} ;
     	        ret.msg = "" ;
@@ -754,7 +761,7 @@
             return ret ;
         }
 
-        function simcore_assembly_to_binasm ( textToCompile )
+        export function simcore_assembly_to_binasm ( textToCompile )
         {
     	    var ret = {} ;
     	        ret.msg = "" ;
@@ -790,7 +797,7 @@
          * @param {string} hw_name - The name of the Hardware (e.g. 'ep')
          */
 
-        function simcore_hardware_export ( hw_name )
+        export function simcore_hardware_export ( hw_name )
         {
 	    var ret = {} ;
 	        ret.msg = "{}" ;
@@ -820,7 +827,7 @@
          * @param {string} hw_json - The JSON string with the Hardware description
          */
 
-        function simcore_hardware_import ( hw_json )
+        export function simcore_hardware_import ( hw_json )
         {
 	    var ret = {} ;
 	        ret.msg = "" ;
@@ -828,7 +835,7 @@
 
             // import json
             // based on: https://stackoverflow.com/questions/36517173/how-to-store-a-javascript-function-in-json
-	    hw_obj = JSON.parse( hw_json,
+	    var hw_obj = JSON.parse( hw_json,
 				 function(key, value) {
 					  if (typeof value === "string" &&
 					      value.startsWith("/Function(") &&

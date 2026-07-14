@@ -21,7 +21,7 @@
 
 /* jshint esversion: 9 */
 
-function wsasm_mk_default_options ( )
+export function wsasm_mk_default_options ( )
 {
            var options = {} ;
 
@@ -36,7 +36,7 @@ function wsasm_mk_default_options ( )
            return options ;
 }
 
-function wsasm_expand_options ( base_options )
+export function wsasm_expand_options ( base_options )
 {
            var options = wsasm_mk_default_options() ;
 

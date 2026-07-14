@@ -19,11 +19,14 @@
  */
 
 
+import $ from 'jquery';
+import * as bootstrap from 'bootstrap';
+
     //
     // General tooltip
     //
 
-    function wepsim_tooltip_init ( tooltip_id, tooltip_cfg, fun_ownshown )
+    export function wepsim_tooltip_init( tooltip_id, tooltip_cfg, fun_ownshown )
     {
          // 1) get object
          var obj1 = document.querySelector(tooltip_id) ;
@@ -42,7 +45,7 @@
          return po1 ;
     }
 
-    function wepsim_tooltips_init ( tooltip_set_id, tooltip_cfg, fun_ownshown )
+    export function wepsim_tooltips_init( tooltip_set_id, tooltip_cfg, fun_ownshown )
     {
          // 1) get object list
          var list1 = document.querySelectorAll(tooltip_set_id) ;
@@ -61,29 +64,29 @@
          return plist1 ;
     }
 
-    function wepsim_tooltip_show ( tooltip_id )
+    export function wepsim_tooltip_show( tooltip_id )
     {
          $('#' + tooltip_id).tooltip('show') ;
     }
 
-    function wepsim_tooltip_hide ( tooltip_id )
+    export function wepsim_tooltip_hide( tooltip_id )
     {
          $('#' + tooltip_id).tooltip('hide') ;
     }
 
-    function wepsim_tooltip_action ( tooltip_id, action )
+    export function wepsim_tooltip_action( tooltip_id, action )
     {
          $('#' + tooltip_id).tooltip(action) ;
     }
 
-    function wepsim_tooltips_hide ( tooltips_id )
+    export function wepsim_tooltips_hide( tooltips_id )
     {
          $(tooltips_id).tooltip('hide') ;
     }
 
-    function wepsim_tooltips_closeAll ( )
+    export function wepsim_tooltips_closeAll( )
     {
-         var e2 = null ;
+         var e2 ;
 
          var l1 = document.querySelectorAll('[data-bs-toggle="tooltip"]') ;
     	 for (var i1=0; i1<l1.length; i1++) {

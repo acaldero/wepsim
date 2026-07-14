@@ -17,6 +17,15 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { get_cfg } from '../sim_core/sim_cfg.js';
+import { ws_info } from '../sim_core/sim_adt_core.js';
+import { array_includes } from '../sim_core/sim_core_ctrl.js';
+import { resolve_html_url } from '../wepsim_core/wepsim_help.js';
+import { simcore_ga } from '../sim_core/sim_core_ga.js';
+import { simhw_active } from '../sim_hw/sim_hw_index.js';
+import { simcore_record_append_pending } from '../sim_core/sim_core_record.js';
 
 
         /*
@@ -24,7 +33,7 @@
          */
 
         /* jshint esversion: 6 */
-        class ws_help extends ws_uielto
+        export class ws_help extends ws_uielto
         {
               // constructor
 	      constructor ()
@@ -68,7 +77,7 @@
                     var ahw       = simhw_active() ;
 		    var seg_hardw = ahw.sim_short_name ;
 
-		    var helpurl = '' ;
+		    var helpurl ;
                     var o1 = '<br><h2>Loading...</h2>' ;
                     switch (help_type)
                     {
@@ -111,9 +120,24 @@
 
 		    $('#scroller-help1').html(o1) ;
 	      }
+
+              bindElements ()
+              {
+                    this.addEventListener('click', (e) => {
+                        const el = e.target.closest('[data-bind="click"]');
+                        if (!el) return;
+                        e.preventDefault();
+                        switch (el.dataset.action) {
+                            case 'help-open':
+                                simcore_record_append_pending();
+                                eval(el.getAttribute('data-reference'));
+                                simcore_ga('help', 'help.index', 'help.index.' + el.dataset.index);
+                                break;
+                        }
+                    });
+              }
         }
 
-        register_uielto('ws-help', ws_help) ;
 
 
         /*
@@ -121,7 +145,7 @@
          */
 
 	// scrolling
-        function uielto_help_scrolltothetop ( )
+        export function uielto_help_scrolltothetop( )
         {
 	    var helpdiv_hash_container = 'scroller-help1' ;
 	    var elto = document.getElementById(helpdiv_hash_container) ;
@@ -130,7 +154,7 @@
 	}
 
 	// hardware summary image
-        function uielto_help_hw_summary_image ( seg_hardw )
+        export function uielto_help_hw_summary_image( seg_hardw )
         {
 	    var img2 = 'repo/hardware/' + seg_hardw + '/images/cpu.svg?time=20230701' ;
 
@@ -150,23 +174,23 @@
 	}
 
 	// set help content
-        function table_helps_html ( helps )
+        export function table_helps_html( helps )
         {
             var o = "" ;
 
             var fmt_toggle    = "" ;
-            var w100_toggle   = "" ;
-            var toggle_cls    = "" ;
-            var fmt_header    = "" ;
-    	    var e_title       = "" ;
+            var w100_toggle   ;
+            var toggle_cls    ;
+            var fmt_header    ;
+    	    var e_title       ;
     	    var e_itype       = "" ;
     	    var e_utype       = "" ;
-  	    var e_uclass      = "" ;
-    	    var e_reference   = "" ;
-    	    var e_description = "" ;
+  	    var e_uclass      ;
+    	    var e_reference   ;
+    	    var e_description ;
     	    var e_id          = "" ;
-    	    var t_index       = "" ;
-            var m = 0;
+    	    var t_index       ;
+            var m ;
 
             var utypes = [] ;
             for (m=0; m<helps.length; m++)
@@ -193,10 +217,6 @@
     		e_description = helps[m].description ;
     		e_id          = helps[m].id ;
 
-    		var onclick_code = "simcore_record_append_pending();" +
-    		                   e_reference + ";" +
-                                   "simcore_ga('help', 'help.index', 'help.index." + m + "');" ;
-
     	        if (fmt_toggle === "")
     	            fmt_toggle = "bg-body-tertiary" ;
     	       else fmt_toggle = "" ;
@@ -215,8 +235,11 @@
     			'    <button class="btn btn-md bg-success text-white text-truncate text-wrap border p-0 w-75" ' +
                         '          style="cursor:pointer;" ' +
     			'          id="help_index_' + m + '" ' +
+    			'          data-bind="click" data-action="help-open" ' +
+    			'          data-reference="' + e_reference.replace(/"/g, '&quot;') + '" ' +
+    			'          data-index="' + m + '" ' +
                         '          data-langkey="' + e_title + '" ' +
-    		        '          onclick="' + onclick_code + 'return false;">' +
+    		        '>' +
                              e_title + '</button>' +
     			'</div>' +
     			'<div class="col-sm collapse7 show py-1 ' + toggle_cls + '">' +

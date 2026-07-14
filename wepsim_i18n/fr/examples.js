@@ -21,7 +21,10 @@
 
     // Translated thanks to Google translate
 
-    i18n.eltos.examples.fr = {
+    export function i18n_fr_register_examples(i18n) {
+
+
+        i18n.eltos.examples.fr = {
 
 		"addv + seqv.":					"addv + seqv.",
 		"Alloc.s":					"Alloc.s",
@@ -84,5 +87,6 @@
 		"No examples available...":			"Aucun exemple disponible pour le matériel sélectionné",
 		"Simple example": 				"Exemple simple"
 
-    } ;
+    };
+    }
 

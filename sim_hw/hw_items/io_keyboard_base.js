@@ -18,15 +18,17 @@
  *
  */
 
+import { get_value, set_value } from '../../sim_core/sim_core_values.js';
+import { get_keyboard_content, set_keyboard_content } from '../../sim_core/sim_core_ui.js';
 
 /*
  *  KBD - simple keyboard
  */
 
-var KBDR_ID = 0x0100 ;
-var KBSR_ID = 0x0104 ;
+export var KBDR_ID = 0x0100 ;
+export var KBSR_ID = 0x0104 ;
 
-function io_keyboard_base_register ( sim_p )
+export function io_keyboard_base_register ( sim_p )
 {
 	/*
 	 *  Components

@@ -18,28 +18,32 @@
  *
  */
 
+import { simhw_sim_signal, simhw_sim_signals } from './sim_hw_index.js';
+import { update_draw, ws_alert } from '../sim_core/sim_core_ui.js';
+import { compute_signal_behavior } from './sim_hw_behavior.js';
+import { get_value, set_value } from '../sim_core/sim_core_values.js';
 
-        /*
+/*
          *  Model/signals (function simhw_signal_...(){})
          */
 
-        var jit_fire_dep  = null ;
-
-        var jit_fire_order   = null ;
-        var jit_fire_ndep = null ;
-
-        var jit_fire_order_E = null ;
-        var jit_fire_order_L = null ;
-
-        var fire_array_isfiring = [] ; // to avoid loops: M1->...->M1
 
 
-        function firedep_to_fireorder ( jit_fire_dep )
+        export var jit_fire_order = [] ;
+        export var jit_fire_ndep = [] ;
+
+        export var jit_fire_order_E = [] ;
+        export var jit_fire_order_L = [] ;
+
+        export var fire_array_isfiring = [] ; // to avoid loops: M1->...->M1
+
+
+        export function firedep_to_fireorder ( jit_fire_dep )
         {
 	    var all_signals = simhw_sim_signals() ;
-	    var signal_obj = null ;
-            var allfireto  = false;
-            var ndep = 0 ;
+	    var signal_obj ;
+            var allfireto ;
+            var ndep ;
             var sid  = 0 ;
 
 	    // build dependency graph
@@ -94,7 +98,7 @@
         }
 
         // TIP: update_state now is signal_apply_behaviour
-        function signal_apply_behaviour ( signal_name )
+        export function signal_apply_behaviour ( signal_name )
         {
 	    // skip empty behavior
 	    var signal_obj = simhw_sim_signal(signal_name) ;
@@ -121,7 +125,7 @@
             compute_signal_behavior(signal_name, index_behavior) ;
         }
 
-        function signal_fire ( signal_name )
+        export function signal_fire ( signal_name )
         {
 	    var signal_obj = simhw_sim_signal(signal_name) ;
 
@@ -143,9 +147,9 @@
 	    fire_array_isfiring[signal_obj.id] = false ;
         }
 
-	function signal_fireL ( )
+	export function signal_fireL ( )
 	{
-	    var signal_obj = null ;
+	    var signal_obj ;
 
 	    for (const signal_name of jit_fire_order_L)
 	    {
@@ -161,7 +165,7 @@
 	 */
 
         // functions for each clock cycle
-        function signal_reset_and_apply ( sim_p_signals, mc_elto )
+        export function signal_reset_and_apply ( sim_p_signals, mc_elto )
         {
 	    // var signal_obj = null ;
 	    var all_signals    = Object.entries(sim_p_signals) ;
@@ -175,14 +179,14 @@
 	    // set active signals to current values
 	    for (const [signal_name, value] of active_signals)
 	    {
-		 signal_obj = sim_p_signals[signal_name] ;
+		 let signal_obj = sim_p_signals[signal_name] ;
 		 if (typeof signal_obj != "undefined") {
 		     set_value(signal_obj, value) ;
 		 }
 	    }
 	}
 
-        function signal_apply_behaviour_allByEdge ( mc_elto )
+        export function signal_apply_behaviour_allByEdge ( mc_elto )
         {
 	    if ( (typeof mc_elto == "undefined") || (mc_elto.is_native) )
 	    {     // skip signal activation if undefined OR is_native
@@ -194,7 +198,7 @@
 	    }
 	}
 
-        function signal_apply_behaviour_allByLevel ( mc_elto )
+        export function signal_apply_behaviour_allByLevel ( mc_elto )
         {
 	    if (mc_elto.is_native)
 	    {
@@ -212,7 +216,7 @@
 	}
 
         // function update edge/level now
-        function fn_updateE_now ( signal_name )
+        export function fn_updateE_now ( signal_name )
         {
 	    var signal_obj = simhw_sim_signal(signal_name) ;
 
@@ -221,7 +225,7 @@
 	    }
 	}
 
-        function fn_updateL_now ( signal_name )
+        export function fn_updateL_now ( signal_name )
         {
 	    var signal_obj = simhw_sim_signal(signal_name) ;
 

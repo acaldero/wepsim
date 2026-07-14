@@ -19,11 +19,13 @@
  */
 
 
+import { ws_empty_firmware } from '../../sim_core/sim_adt_core.js';
+
 /*
  *  Control Unit
  */
 
-function cu_poc_register ( sim_p )
+export function cu_poc_register ( sim_p )
 {
 	/*
 	 *  Control States, and Default elements at the Instruction Register (IR)

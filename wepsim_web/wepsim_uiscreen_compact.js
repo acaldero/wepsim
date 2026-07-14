@@ -17,6 +17,8 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { wepsim_quickcfg_init } from './wepsim_web_ui_quickcfg.js';
 
 
         /*
@@ -24,7 +26,7 @@
          */
 
         /* jshint esversion: 6 */
-        class ws_uiscreen_compact extends ws_uielto
+        export class ws_uiscreen_compact extends ws_uielto
         {
               // constructor
 	      constructor ()
@@ -42,6 +44,8 @@
                     // render current element
 		    this.render_skel() ;
 		    this.render_populate() ;
+
+	      this.bindElements();
 	      }
 
 	      render_skel ( )
@@ -121,10 +125,13 @@
 			  '	  <div class="w-100 d-md-block d-lg-none"></div>' +
 			  '' +
 			  '	  <div class="col-sm p-0 ms-1 collapse multi-collapse-2 wsx_microcode">' +
-			  '	  <ws-toolbar components="slider_c1c2"></ws-toolbar>' +
-			  '	  </div>' ;
+'	  <ws-toolbar components="slider_c1c2"></ws-toolbar>' +
+'	  </div>' ;
+	      }
+
+	      bindElements()
+	      {
 	      }
         }
 
-        register_uielto('ws-screen-compact', ws_uiscreen_compact) ;
 

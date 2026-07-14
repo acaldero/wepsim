@@ -18,25 +18,28 @@
  *
  */
 
+import { get_value, set_value } from './sim_core_values.js';
+import { simhw_internalState_get, simhw_sim_ctrlStates_get, simhw_sim_state } from '../sim_hw/sim_hw_index.js';
+import { compute_signal_verbals } from '../sim_hw/sim_hw_behavior.js';
 
-        /*
+/*
          *  memory => {
          *               "0x...": { value: "SIGNAL=1011", ... },
          *               ...
          *            }
          */
 
-        function control_memory_getkeys ( memory )
+        export function control_memory_getkeys ( memory )
         {
             return Object.keys(memory) ;
         }
 
-        function control_memory_get ( memory, elto )
+        export function control_memory_get ( memory, elto )
         {
             return memory[elto] ;
         }
 
-        function control_memory_set ( memory, elto, melto )
+        export function control_memory_set ( memory, elto, melto )
         {
             // default computed attributes
             if (typeof melto.changed     === "undefined")  melto.changed     = false ;
@@ -46,7 +49,7 @@
             if (typeof melto.is_native   === "undefined")  melto.is_native   = false ;
 
             // modify computed attributes by comments "operators"
-            var comments_str = '' ;
+            var comments_str ;
             if (null != melto.comments)
             {
                 comments_str = melto.comments ;
@@ -91,7 +94,7 @@
         // Auxiliar functions
         //
 
-        function control_memory_lineToString ( memory, key )
+        export function control_memory_lineToString ( memory, key )
         {
                 var mcelto = control_memory_get(memory, key) ;
 
@@ -126,7 +129,7 @@
         // verbal description
         //
 
-	function get_verbal_from_current_mpc ( )
+	export function get_verbal_from_current_mpc ( )
 	{
 	     var active_signals = "" ;
 	     var active_verbal  = "" ;

@@ -17,14 +17,15 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
+import { ws_uielto } from './wepsim_uielto.js';
+import { simcore_native_set_value } from '../sim_core/sim_api_native.js';
 
         /*
          *  Sound
          */
 
         /* jshint esversion: 6 */
-        class ws_sound extends ws_uielto
+        export class ws_sound extends ws_uielto
         {
               constructor ()
               {
@@ -49,16 +50,13 @@
 	      }
         }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-sound', ws_sound) ;
-        }
 
 
         //
         // Screen / Keyboard
         //
 
-	function wepsim_get_sound_content ( )
+	export function wepsim_get_sound_content( )
 	{
 	      var sound_content = "" ;
 
@@ -72,7 +70,7 @@
 	      return sound_content ;
 	}
 
-	function wepsim_set_sound_content ( sound_content )
+	export function wepsim_set_sound_content( sound_content )
 	{
 	      var scrobj = document.getElementById("snd_card") ;
               if (scrobj != null) {

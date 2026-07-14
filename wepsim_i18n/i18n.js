@@ -18,12 +18,25 @@
  *
  */
 
+import { get_cfg, update_cfg } from '../sim_core/sim_cfg.js';
+import { i18n_de_register } from './de/register.js' ;
+import { i18n_en_register } from './en/register.js' ;
+import { i18n_es_register } from './es/register.js' ;
+import { i18n_fr_register } from './fr/register.js' ;
+import { i18n_hi_register } from './hi/register.js' ;
+import { i18n_it_register } from './it/register.js' ;
+import { i18n_ja_register } from './ja/register.js' ;
+import { i18n_kr_register } from './kr/register.js' ;
+import { i18n_pt_register } from './pt/register.js' ;
+import { i18n_ru_register } from './ru/register.js' ;
+import { i18n_sv_register } from './sv/register.js' ;
+import { i18n_zh_cn_register } from './zh_cn/register.js' ;
 
-    /*
+/*
      * Initialize...
      */
 
-    var i18n = {
+    export var i18n = {
 	          lang:  {
 			    en: "English",
 			    es: "Espa&ntilde;ol", 
@@ -68,7 +81,7 @@
      *  i18n Private Interface
      */
 
-    function i18n_init ( )
+    export function i18n_init ( )
     {
 	for (var l in i18n.lang) 
 	{
@@ -78,24 +91,35 @@
 	     }
 	}
 
+	i18n_de_register(i18n) ;
+	i18n_en_register(i18n) ;
+	i18n_es_register(i18n) ;
+	i18n_fr_register(i18n) ;
+	i18n_hi_register(i18n) ;
+	i18n_it_register(i18n) ;
+	i18n_ja_register(i18n) ;
+	i18n_kr_register(i18n) ;
+	i18n_pt_register(i18n) ;
+	i18n_ru_register(i18n) ;
+	i18n_sv_register(i18n) ;
+	i18n_zh_cn_register(i18n) ;
+
 	return true ;
     }
-
-    i18n_init() ;
 
 
     /*
      *  i18n Public Interface
      */
 
-    function i18n_update_tags ( component )
+    export function i18n_update_tags ( component )
     {
         var ws_idiom = get_cfg('ws_idiom') ;
 
         i18n_update_tagsFor(component, ws_idiom) ;
     }
 
-    function i18n_update_tagsFor ( component, lang )
+    export function i18n_update_tagsFor ( component, lang )
     {
         if (typeof i18n.eltos[component] == "undefined") {
 	    return ;
@@ -111,7 +135,7 @@
                          	 }) ;
     }
 
-    function i18n_get ( component, lang, key )
+    export function i18n_get ( component, lang, key )
     {
 	if (typeof i18n.eltos[component] === "undefined") {
 	    return key ;
@@ -127,7 +151,7 @@
     }
 
 
-    function i18n_get_TagFor ( component, key )
+    export function i18n_get_TagFor ( component, key )
     {
         var ws_idiom ;
 	try {
@@ -145,21 +169,15 @@
 	return translation ;
     }
 
-    function i18n_get_select ( div_name, str_onchange )
+    export function i18n_get_select ( div_name, extra_components )
     {
         var curr_val = get_cfg('ws_idiom') ;
 
         var o  = " <select name='" + div_name + "' id='" + div_name + "' " + 
                  "         class='form-control form-control-sm custom-select'" +
 	         "	   aria-label='idiom for examples and help' " +
-	         "	   onchange=\"var opt = $(this).find('option:selected');" +
-	         "	 	      var optValue = opt.val();" +
-	         "		      update_cfg('ws_idiom', optValue);" +
-	         "                    i18n_update_tagsFor('gui',      optValue); " +
-	         "                    i18n_update_tagsFor('dialogs',  optValue); " +
-	         "                    i18n_update_tagsFor('hw',       optValue); " +
-                 str_onchange +
-	         "                    return true; \"" +
+	         "	   data-bind='change' data-action='idiom-change'" +
+	         "	   data-extra='" + (extra_components || '') + "'" +
 	         "	   data-native-menu='false'>" ;
 	for (var l in i18n.lang)
 	{
@@ -172,17 +190,12 @@
 	return o ;
     }
 
-    function i18n_get_selectcfg ( )
+    export function i18n_get_selectcfg ( )
     {
         var o  = " <select name='select7' id='select7' class='form-control form-control-sm custom-select border-secondary'" +
 	         "	     aria-label='idiom for examples and help' " +
-	         "	     onchange=\"var opt = $(this).find('option:selected');" +
-	         "	 	        var optValue = opt.val();" +
-	         "		        update_cfg('ws_idiom', optValue);" +
-	         "                      i18n_update_tagsFor('gui', optValue);" +
-	         "                      i18n_update_tagsFor('cfg', optValue);" +
-	         "                      i18n_update_tagsFor('hw', optValue);" +
-	         "		        return true;\"" +
+	         "	     data-bind='change' data-action='idiom-change'" +
+	         "	     data-extra='cfg'" +
 	         "	     data-native-menu='false'>" ;
 	for (var l in i18n.lang)
 	{
@@ -193,19 +206,40 @@
 	return o ;
     }
 
-    function i18n_get_welcome ( )
+    export function i18n_handle_idiom_change ( ev )
     {
-        var o = "<div  class=\"container\">" +
-                "<span class=\"row\">" ;
+        var el = ev.target.closest('[data-action="idiom-change"]');
+        if (!el) return;
+
+        var optValue = el.value;
+        update_cfg('ws_idiom', optValue);
+        i18n_update_tagsFor('gui', optValue);
+        i18n_update_tagsFor('hw', optValue);
+
+        var extra = el.dataset.extra;
+        if (extra) {
+            extra.split(',').forEach(function(c) {
+                c = c.trim();
+                if (c) {
+                    i18n_update_tagsFor(c, optValue);
+                }
+            });
+        }
+    }
+
+    export function i18n_get_welcome ( )
+    {
+        var o = '<div  class="container">' +
+                '<span class="row">' ;
         for (var key in i18n.lang)
         {
-            o += "<a class=\"btn btn-sm btn-outline-secondary mx-2 my-2 col-auto\" href=\"#\" " + 
-                 "   onclick=\"wepsim_newbie_tour_reload('" + key + "');\">" + 
+            o += '<a class="btn btn-sm btn-outline-secondary mx-2 my-2 col-auto" href="#" ' +
+                 '   onclick="wepsim_newbie_tour_reload(\'' + key + '\');">' +
                  i18n_get('gui', key, 'Welcome') + 
-                 "</a>" ;
+                 '</a>' ;
         }
-        o += "</span>" +
-             "</div>" ;
+        o += '</span>' +
+             '</div>' ;
 
 	return o ;
     }

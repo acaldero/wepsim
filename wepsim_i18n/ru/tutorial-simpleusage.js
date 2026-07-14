@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.tutorial_simpleusage.ru = {
+    export function i18n_ru_register_tutorial_simpleusage(i18n) {
+
+
+
+        i18n.eltos.tutorial_simpleusage.ru = {
 
 		'title_0':		'Простой опыт WepSIM: микропрограммирование и программирование',
 		'message_0':		'<center> <img alt = \'скриншот wepsim\' src = \'images/simulator/simulator011.jpg\' style = \'max-width: 100%; max-height: 40vh; \'> </center> <p> <h5> Этот краткий учебник покажет вам, как: <ol> <li> <a href =\' # \'onclick =\' sim_tutorial_goframe ("simpleusage" , 0,1); \'> Редактируйте свой микрокод. </a> </li> <li> <a href=\'#\' onclick=\'sim_tutorial_goframe("simpleusage",0,3);\'> Редактируйте свою сборку ( на основе предыдущего микрокода). </a> </li> <li> <a href=\'#\' onclick=\'sim_tutorial_goframe("simpleusage",0,5);\'> Выполните сборку + микрокод в симуляции. </a> </литий> </ол> </h5>',
@@ -36,4 +40,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

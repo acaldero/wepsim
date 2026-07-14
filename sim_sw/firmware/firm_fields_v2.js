@@ -18,8 +18,11 @@
  *
  */
 
+import { frm_getToken, frm_getTokenType, frm_isToken, frm_isToken_arr, frm_langError, frm_nextToken } from './lexical.js';
+import { i18n, i18n_get_TagFor } from '../../wepsim_i18n/i18n.js';
+import { WORD_LENGTH } from '../assembly/datatypes.js';
 
-function firm_fields_v2_write ( elto_fields )
+export function firm_fields_v2_write ( elto_fields )
 {
 	var o = "" ;
 
@@ -31,7 +34,7 @@ function firm_fields_v2_write ( elto_fields )
 	// fields:
 	//   reg(25:21)=field1,
 	//   address-rel(19|18:0)=field2,
-	for (j=0; j<elto_fields.length; j++)
+	for (var j=0; j<elto_fields.length; j++)
 	{
 		 o += '\t' + elto_fields[j].type ;
 		 if ("address" == elto_fields[j].type) {
@@ -39,7 +42,7 @@ function firm_fields_v2_write ( elto_fields )
 		 }
 
 		 o += "(" ;
-		 for (k=0; k<elto_fields[j].bits_start.length; k++)
+		 for (var k=0; k<elto_fields[j].bits_start.length; k++)
 		 {
 		      if (elto_fields[j].bits_start[k] != elto_fields[j].bits_stop[k])
 			   o += elto_fields[j].bits_start[k] + ":" + elto_fields[j].bits_stop[k] ;  // 18:0
@@ -61,7 +64,7 @@ function firm_fields_v2_write ( elto_fields )
 }
 
 
-function firm_instruction_check_oc ( context, instruccionAux, xr_info, all_ones_oc )
+export function firm_instruction_check_oc ( context, instruccionAux, _xr_info, _all_ones_oc )
 {
        // semantic check: valid value
        if (instruccionAux.oc.match("[01]*")[0] != instruccionAux.oc)
@@ -94,7 +97,7 @@ function firm_instruction_check_oc ( context, instruccionAux, xr_info, all_ones_
 
        // semantic check: 'oc' length
        var oc_ins_len = 0 ;
-       var nbits_field = 0 ;
+       var nbits_field ;
        for (var i=0; i<instruccionAux.fields_all.length; i++)
        {
             for (var j=0; j<instruccionAux.fields_all[i].bits_stop.length; j++)
@@ -118,7 +121,7 @@ function firm_instruction_check_oc ( context, instruccionAux, xr_info, all_ones_
        return {} ;
 }
 
-function firm_instruction_check_eoc ( context, instruccionAux, xr_info, all_ones_oc )
+export function firm_instruction_check_eoc ( context, instruccionAux, _xr_info, _all_ones_oc )
 {
        // semantic check: valid value
        if (instruccionAux.eoc.match("[01]*")[0] != instruccionAux.eoc)
@@ -151,7 +154,7 @@ function firm_instruction_check_eoc ( context, instruccionAux, xr_info, all_ones
 
        // semantic check: 'eoc' length
        var eoc_ins_len = 0 ;
-       var nbits_field = 0 ;
+       var nbits_field ;
        for (var i=0; i<instruccionAux.fields_all.length; i++)
        {
             for (var j=0; j<instruccionAux.fields_all[i].bits_stop.length; j++)
@@ -176,13 +179,13 @@ function firm_instruction_check_eoc ( context, instruccionAux, xr_info, all_ones
        return {} ;
 }
 
-function firm_instruction_get_opcode_pattern ( context, instruccionAux )
+export function firm_instruction_get_opcode_pattern ( context, instruccionAux )
 {
-       var b = [] ;
-       var c = 0 ;
-       var d = {} ;
-       var nbits = 0 ;
-       var a1 = [] ;
+       var b ;
+       var c ;
+       var d ;
+       var nbits ;
+       var a1 ;
 
        // opcode_pattern (e.g.: "------10101-----1100")
        nbits = instruccionAux.nwords * WORD_LENGTH ;
@@ -211,7 +214,7 @@ function firm_instruction_get_opcode_pattern ( context, instruccionAux )
 
 	    var j = 0 ;
 	    var v = campo.value.padStart(c, '0') ;
-            for (var s=0; s<b.length; s++)
+            for (s=0; s<b.length; s++)
             {
 		 if (b[s].start > b[s].stop)
 		 {
@@ -223,7 +226,7 @@ function firm_instruction_get_opcode_pattern ( context, instruccionAux )
 		 }
 		 else
 		 {
-	             for (var i=b[s].start; i<=b[s].stop; i++)
+	             for (i=b[s].start; i<=b[s].stop; i++)
 	             {
                           a1[nbits - i - 1] = v[j] ; // instruccionAux.opcode_pattern[i] = v[j] ;
 		          j = j + 1 ;
@@ -245,7 +248,7 @@ function firm_instruction_get_opcode_pattern ( context, instruccionAux )
         return {} ;
 }
 
-function firm_instruction_keynumber_read ( context, instruccionAux )
+export function firm_instruction_keynumber_read ( context, _instruccionAux )
 {
        var ret = {} ;
 
@@ -275,7 +278,7 @@ function firm_instruction_keynumber_read ( context, instruccionAux )
        return ret ;
 }
 
-function firm_instruction_keystring_read ( context, instruccionAux )
+export function firm_instruction_keystring_read ( context, _instruccionAux )
 {
        var ret = {} ;
 
@@ -313,7 +316,7 @@ function firm_instruction_keystring_read ( context, instruccionAux )
        return ret ;
 }
 
-function firm_instruction_field_read_v2 ( context, instruccionAux )
+export function firm_instruction_field_read_v2 ( context, instruccionAux )
 {
         var tmp_fields = {} ;
 	var field_list = ["oc", "eoc", "reg", "imm", "inm", "address-rel", "address-abs"] ;
@@ -409,8 +412,8 @@ function firm_instruction_field_read_v2 ( context, instruccionAux )
 
 		frm_nextToken(context);
 		// match mandatory START_BIT
-		var start = frm_getToken(context);
-		var stop  = start;
+		start = frm_getToken(context);
+		stop  = start;
 
 		// check startbit range
 		if (start > 32*parseInt(instruccionAux.nwords)-1) {
@@ -536,7 +539,7 @@ function firm_instruction_field_read_v2 ( context, instruccionAux )
 		tmp_fields.name = tmp_name ; // reg(8,7)=*rs1*
 
 		var index_name = -1 ;
-		for (var i=0; (i<instruccionAux.fields.length) && (index_name == -1); i++)
+		for (i=0; (i<instruccionAux.fields.length) && (index_name == -1); i++)
 		{
 		     if (typeof instruccionAux.fields[i].type != "undefined") {
                          continue ; // skip already assigned fields
@@ -580,9 +583,9 @@ function firm_instruction_field_read_v2 ( context, instruccionAux )
         return tmp_fields ;
 }
 
-function firm_instruction_read_fields_v2 ( context, instruccionAux, xr_info, all_ones_oc )
+export function firm_instruction_read_fields_v2 ( context, instruccionAux, xr_info, all_ones_oc )
 {
-       var ret = {};
+       var ret ;
 
 // li reg val offset {
 //            *[nwords=1,]
@@ -601,7 +604,7 @@ function firm_instruction_read_fields_v2 ( context, instruccionAux, xr_info, all
        var campos       = instruccionAux.fields ;
        var firma        = instruccionAux.signature ;
        var firmaUsuario = instruccionAux.signatureUser ;
-       var firmaGlobal  = instruccionAux.signatureGlobal ;
+       var firmaGlobal ;
 
        var oc_inserted = 0;
        var camposInsertados = 0;

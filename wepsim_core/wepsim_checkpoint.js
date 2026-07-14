@@ -18,12 +18,29 @@
  *
  */
 
+import $ from 'jquery';
+import { get_cfg } from '../sim_core/sim_cfg.js';
+import { wepsim_state_get_clk, wepsim_state_history_get, wepsim_state_history_reset } from './wepsim_state.js';
+import { simcore_simstate_current2state, simcore_simstate_state2checklist } from '../sim_core/sim_api_stateshots.js';
+import { simhw_internalState, simhw_internalState_reset } from '../sim_hw/sim_hw_index.js';
+import { simcore_record_get, simcore_record_set } from '../sim_core/sim_core_record.js';
+import { wepsim_state_history_list } from '../wepsim_web/wepsim_uielto_states.js';
+import { wsweb_select_main } from '../wepsim_web/wepsim_web_api.js';
+import { wepsim_compile_assembly, wepsim_compile_firmware } from '../wepsim_web/wepsim_web_editor.js';
+import { wepsim_notify_do_notify } from './wepsim_notify.js';
+import { cache_memory_init_cm, cache_memory_init_eltofromcfg } from '../sim_core/sim_adt_cachememory.js';
+import { wepsim_show_cache_memory_config } from '../wepsim_web/wepsim_uielto_cache_config.js';
+import { wepsim_file_loadFrom, wepsim_load_from_url, wepsim_save_to_file, wepsim_url_json } from './wepsim_url.js';
+import { ws_alert } from '../sim_core/sim_core_ui.js';
+import { share_information } from './wepsim_share.js';
+import { ws_info } from '../sim_core/sim_adt_core.js';
+import { inputasm, inputfirm } from '../wepsim_web/wepsim_web_simulator.js';
 
-    /*
+/*
      * Checkpointing: get/set
      */
 
-    function wepsim_checkpoint_get ( tagName )
+    export function wepsim_checkpoint_get ( tagName )
     {
 	    // get mode and history
 	    var ws_mode     = get_cfg('ws_mode') ;
@@ -54,11 +71,11 @@
 	    return elements ;
     }
 
-    function wepsim_checkpoint_loadFromObj ( checkpointObj, obj_fileToLoad )
+    export function wepsim_checkpoint_loadFromObj ( checkpointObj, obj_fileToLoad )
     {
 	   var o = '' ;
-	   var u = '' ;
-	   var i = 0 ;
+	   var u ;
+	   var i ;
 
 	   // 1.- check params
 	   if (checkpointObj === null) {
@@ -96,7 +113,7 @@
 
 		// firmware + assembly: load into editor
 		inputfirm.setValue(checkpointObj.firmware) ;
-		 inputasm.setValue(checkpointObj.assembly) ;
+		inputasm.setValue(checkpointObj.assembly) ;
 
 		o += '<li>Firmware and Assembly: Loaded' ;
 
@@ -137,7 +154,7 @@
 
 	   // 5.- restore cache-cfg and cache
 	   var cm_cfg   = [] ;
-	   var cm_cfg_i = {} ;
+	   var cm_cfg_i ;
 	   for (i=0; i<checkpointObj.cache.length; i++)
 	   {
 		 cm_cfg_i = cache_memory_init_eltofromcfg(checkpointObj.cache[i].cfg) ;
@@ -158,7 +175,7 @@
      * Checkpointing: save + load
      */
 
-    function wepsim_checkpoint_NB_concat_ws_cells ( cells )
+    export function wepsim_checkpoint_NB_concat_ws_cells ( cells )
     {
          cells.push({
 	   	      "cell_type": "markdown",
@@ -228,10 +245,10 @@
          return cells ;
     }
 
-    function wepsim_checkpoint_Obj2NB ( elements )
+    export function wepsim_checkpoint_Obj2NB ( elements )
     {
-         var val = "" ;
-         var typ = "" ;
+         var val ;
+         var typ ;
 
          // fill cells
          var cells = [] ;
@@ -299,7 +316,7 @@
          return nbObj ;
     }
 
-    function wepsim_checkpoint_NB2Obj ( nbObj )
+    export function wepsim_checkpoint_NB2Obj ( nbObj )
     {
 	 var elements = {} ;
 
@@ -312,9 +329,9 @@
          }
 
          // convert NB -> Obj
-	 var key   = "" ;
-	 var type  = "" ;
-	 var value = "" ;
+	 var key   ;
+	 var type  ;
+	 var value ;
          for (var i=0; i<nbObj.cells.length; i++)
          {
 	      if (nbObj.cells[i].cell_type !== "code") {
@@ -335,7 +352,7 @@
          return elements ;
     }
 
-    function wepsim_checkpoint_save ( id_filename, id_tagname, checkpointObj )
+    export function wepsim_checkpoint_save ( id_filename, id_tagname, checkpointObj )
     {
 	    // get & check params
             var obj_fileName = document.getElementById(id_filename) ;
@@ -354,7 +371,7 @@
 	    return true ;
     }
 
-	    function wepsim_checkpoint_afterLoad ( textLoaded, obj_fileToLoad )
+	    export function wepsim_checkpoint_afterLoad ( textLoaded, obj_fileToLoad )
 	    {
 		    try
 		    {
@@ -373,7 +390,7 @@
 		    }
 	    }
 
-    function wepsim_checkpoint_load ( id_file_to_load )
+    export function wepsim_checkpoint_load ( id_file_to_load )
     {
 	    // get & check params
 	    var obj_fileToLoad = document.getElementById(id_file_to_load).files[0] ;
@@ -393,7 +410,7 @@
 	    return true ;
     }
 
-    function wepsim_checkpoint_loadURI ( obj_uri )
+    export function wepsim_checkpoint_loadURI ( obj_uri )
     {
 	    // check params
 	    if ( (typeof obj_uri === "undefined") || (obj_uri === null) ) {
@@ -418,7 +435,7 @@
 	    }
     }
 
-    function wepsim_checkpoint_loadExample ( tutorial_name )
+    export function wepsim_checkpoint_loadExample ( tutorial_name )
     {
 	    var file_uri = 'repo/checkpoint/' + tutorial_name ;
 
@@ -434,7 +451,7 @@
             wepsim_load_from_url(file_uri, function_after_loaded) ;
     }
 
-    function wepsim_checkpoint_share ( id_filename, id_tagname, checkpointObj )
+    export function wepsim_checkpoint_share ( id_filename, id_tagname, checkpointObj )
     {
 	    // get & check params
             var obj_fileName = document.getElementById(id_filename) ;
@@ -469,10 +486,10 @@
 
     // auxiliar
 
-    function wepsim_checkpoint_backup_load ( )
+    export function wepsim_checkpoint_backup_load ( )
     {
 	    // load current backup list
-	    var obj_wsbackup = [] ;
+	    var obj_wsbackup ;
 	    try {
 	       var json_wsbackup = localStorage.getItem('wepsim_backup') ;
 	       obj_wsbackup = JSON.parse(json_wsbackup) ;
@@ -488,7 +505,7 @@
 	    return obj_wsbackup ;
     }
 
-    function wepsim_checkpoint_backup_save ( obj_wsbackup )
+    export function wepsim_checkpoint_backup_save ( obj_wsbackup )
     {
 	    // save new backup list
 	    var json_wsbackup = JSON.stringify(obj_wsbackup) ;
@@ -499,7 +516,7 @@
 
     // visible
 
-    function wepsim_checkpoint_listCache ( id_listdiv )
+    export function wepsim_checkpoint_listCache ( id_listdiv )
     {
             var o = '<span class="bg-warning text-dark bg-opacity-75">' +
                     '&lt;<span data-langkey="Empty">Empty</span>&gt;' +
@@ -514,7 +531,7 @@
 	    // build backup list
             o = '<div class="btn-group btn-group-toggle list-group m-1" data-bs-toggle="buttons">' ;
 	    obj_wsbackup = obj_wsbackup.reverse() ;
-	    for (i=0; i<obj_wsbackup.length; i++)
+	    for (var i=0; i<obj_wsbackup.length; i++)
 	    {
 		 o += '<label data-bs-toggle="list" ' +
                       '       class="list-group-item btn btn-white border-dark text-truncate rounded-1">' +
@@ -529,7 +546,7 @@
 	    return true ;
     }
 
-    function wepsim_checkpoint_loadFromCache ( id_backupname )
+    export function wepsim_checkpoint_loadFromCache ( id_backupname )
     {
 	    var ret = {
 		         error: true,
@@ -563,7 +580,7 @@
 	    return ret ;
     }
 
-    function wepsim_checkpoint_addCurrentToCache ( )
+    export function wepsim_checkpoint_addCurrentToCache ( )
     {
 	    // load current backup list
             var obj_wsbackup = wepsim_checkpoint_backup_load() ;
@@ -581,7 +598,7 @@
 	    return true ;
     }
 
-    function wepsim_checkpoint_clearCache ( )
+    export function wepsim_checkpoint_clearCache ( )
     {
 	    // save new backup list
             var obj_wsbackup = [] ;

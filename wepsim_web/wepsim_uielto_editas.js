@@ -17,14 +17,15 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+
 
 
         /*
          *  Assembly Editor
          */
-
         /* jshint esversion: 6 */
-        class ws_edit_as extends ws_uielto
+        export class ws_edit_as extends ws_uielto
         {
               // constructor
 	      constructor ()
@@ -128,5 +129,4 @@
 	      }
         }
 
-        register_uielto('ws-edit-as', ws_edit_as) ;
 

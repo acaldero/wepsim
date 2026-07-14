@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.tour_intro.de = {
+    export function i18n_de_register_tour_intro(i18n) {
+
+
+
+        i18n.eltos.tour_intro.de = {
 
 		'step1':		'WepSIM hilft dabei, die Funktionsweise eines Computers besser zu verstehen: Es ist visuell, interaktiv, integriert von Signalen bis hin zu Unterbrechungen, Systemaufrufen, Ausnahmen usw. <br> <br> Wir sind der festen Überzeugung, dass WepSIM ein revolutionäres Lehrmittel ist. Diese kurze Tour führt in die wichtigsten Elemente der Benutzeroberfläche ein.',
 
@@ -42,4 +46,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

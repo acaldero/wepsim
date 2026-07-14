@@ -18,16 +18,20 @@
  *
  */
 
+import { simhw_internalState_get, simhw_sim_signal, simhw_sim_state } from '../sim_hw_index.js';
+import { get_value, get_var, set_value, set_var } from '../../sim_core/sim_core_values.js';
+import { signal_fire } from '../sim_hw_signal.js';
+import { compute_behavior } from '../sim_hw_behavior.js';
 
 /*
  *  IO
  */
 
-var IOSR_ID   = 0x1100 ;
-var IOCR_ID   = 0x1104 ;
-var IODR_ID   = 0x1108 ;
+export var IOSR_ID   = 0x1100 ;
+export var IOCR_ID   = 0x1104 ;
+export var IODR_ID   = 0x1108 ;
 
-function io_clk_base_register ( sim_p )
+export function io_clk_base_register ( sim_p )
 {
         sim_p.components.IO = {
 		                  name: "IO",
@@ -55,12 +59,12 @@ function io_clk_base_register ( sim_p )
                                                     if (typeof associated_state == "undefined") {
                                                         throw new Error("unknown element named " + elto) ;
                                                     }
-						    var value = (get_value(simhw_sim_state(associated_state)) >>> 0) ;
+						    // var value = (get_value(simhw_sim_state(associated_state)) >>> 0) ;
 
 						    set_value(simhw_sim_state('BUS_AB'), elto) ;
 						    set_value(simhw_sim_signal('IOR'), 1) ;
 						    signal_fire("IOR") ; //compute_behavior("FIRE IOR") ;
-						    value = get_value(simhw_sim_state('BUS_DB')) ;
+						    var value = get_value(simhw_sim_state('BUS_DB')) ;
 
 						    return value ;
                                                },

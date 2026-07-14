@@ -18,25 +18,29 @@
  *
  */
 
+import { get_value, set_value } from './sim_core_values.js';
+import { simcoreui_pack } from './sim_core_ui.js';
+import { simhw_internalState, simhw_sim_ctrlStates_get, simhw_sim_state, simhw_sim_state_getref } from '../sim_hw/sim_hw_index.js';
+import { show_value } from '../sim_hw/sim_hw_values.js';
 
-        /*
+/*
          *  memory => {
          *               "0x...": { value: 0, source_tracking: "origin", ... },
          *               ...
          *            }
          */
 
-        function main_memory_getkeys ( memory )
+        export function main_memory_getkeys ( memory )
         {
             return Object.keys(memory) ;
         }
 
-        function main_memory_get ( memory, elto )
+        export function main_memory_get ( memory, elto )
         {
             return memory[elto] ;
         }
 
-        function main_memory_set ( memory, elto, melto )
+        export function main_memory_set ( memory, elto, melto )
         {
             // default computed attributes
             if (typeof melto.changed     === "undefined")  melto.changed     = false ;
@@ -48,7 +52,7 @@
             if (typeof melto.source_bin  === "undefined")  melto.source_bin  = '' ;
 
             // modify computed attributes by comments "operators"
-            var comments_str = '' ;
+            var comments_str ;
             if (null != melto.comments)
             {
                 comments_str = melto.comments.join("\n") ;
@@ -94,7 +98,7 @@
         // Get fields
         //
 
-        function main_memory_getvalue ( memory, elto )
+        export function main_memory_getvalue ( memory, elto )
         {
             var valobj = memory[elto] ;
 
@@ -105,7 +109,7 @@
             return get_value(valobj) ;
         }
 
-		function main_memory_source_escape_html ( src )
+		export function main_memory_source_escape_html ( src )
 		{
 		    return src.replace(/'/g, '\u{0027}')
 			      .replace(/"/g, '\u{0022}')
@@ -118,7 +122,7 @@
 			      .replace(/\f/, '&lt;FF&gt;') ;
 		}
 
-        function main_memory_getsrc ( memory, elto )
+        export function main_memory_getsrc ( memory, elto )
         {
             var src = "" ;
             var valobj = memory[elto] ;
@@ -153,7 +157,7 @@
 	    return src ;
         }
 
-        function main_memory_getsrcbin ( memory, elto )
+        export function main_memory_getsrcbin ( memory, elto )
         {
             var src = "" ;
             var valobj = memory[elto] ;
@@ -182,7 +186,7 @@
         //  Get value as word (32 bits)
         //
 
-        function main_memory_getword ( memory, elto )
+        export function main_memory_getword ( memory, elto )
         {
             // get value...
             var value = "0" ;
@@ -204,7 +208,7 @@
         //    dest:   dbvalue
         //    origin: value, dbvalue
         //    filter: part dbvalue to be updated with value = 10xx/11xx (word), 01hx (half), 00bb (byte)
-        function main_memory_fusionvalues ( dbvalue, value, filter )
+        export function main_memory_fusionvalues ( dbvalue, value, filter )
         {
 	    if ( 0 == (filter & 0x0000000C) )
 	    {  // byte
@@ -232,7 +236,7 @@
              return dbvalue ;
         }
 
-        function main_memory_extractvalues ( value, filter_size, filter_elto, sign_extension )
+        export function main_memory_extractvalues ( value, filter_size, filter_elto, sign_extension )
         {
              var dbvalue = 0 ;
 
@@ -253,7 +257,7 @@
 
 			 if (1 == sign_extension)
 			 {
-			     var svalue = (dbvalue & 0x80) >> 7 ;
+			 var svalue = (dbvalue & 0x80) >> 7 ;
 			     if (1 == svalue) {
 				 dbvalue = dbvalue | 0xFFFFFF00 ;
 			     }
@@ -275,7 +279,7 @@
 
 			 if (1 == sign_extension)
 			 {
-			     var svalue = (dbvalue & 0x8000) >> 15 ;
+			     svalue = (dbvalue & 0x8000) >> 15 ;
 			     if (1 == svalue) {
 				 dbvalue = dbvalue | 0xFFFF0000 ;
 			     }
@@ -300,7 +304,7 @@
              return dbvalue ;
         }
 
-        function main_memory_updatevalues ( value, dbvalue, filter_size, filter_elto )
+        export function main_memory_updatevalues ( value, dbvalue, filter_size, filter_elto )
         {
 	     switch (filter_size)
 	     {
@@ -356,7 +360,7 @@
         //  Get PC/SP/... memory value (or null)
         //
 
-        function main_memory_get_program_counter ( )
+        export function main_memory_get_program_counter ( )
         {
 	      var r_ref   = simhw_sim_ctrlStates_get().pc ;
 	      var r_value = null ;
@@ -372,16 +376,15 @@
 	      return r_value ;
         }
 
-        function main_memory_get_baseaddr ( )
+        export function main_memory_get_baseaddr ( )
         {
 	      var r_ref = simhw_sim_ctrlStates_get() ;
 	      if (typeof r_ref === "undefined") {
 		  return null ;
 	      }
 
-              var parts   = null ;
               var r_value = 0 ;
-              var r_ref2  = null ;
+              var r_ref2 ;
               var all_baseaddr = {} ;
               for (var elto in r_ref)
               {
@@ -405,7 +408,7 @@
         // verbal description
         //
 
-	function get_deco_from_pc ( pc )
+	export function get_deco_from_pc ( pc )
 	{
                 var mp_obj = simhw_internalState('MP') ;
 
@@ -419,7 +422,7 @@
                 return mp_obj[pc].source ;
         }
 
-	function get_verbal_from_current_pc ( )
+	export function get_verbal_from_current_pc ( )
 	{
 	     var pc_name = simhw_sim_ctrlStates_get().pc.state ;
 	     var reg_pc  = get_value(simhw_sim_state(pc_name)) ;

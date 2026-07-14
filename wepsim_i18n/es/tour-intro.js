@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.tour_intro.es = {
+    export function i18n_es_register_tour_intro(i18n) {
+
+
+
+        i18n.eltos.tour_intro.es = {
 
 			"step1":  "WepSIM ayudar&aacute; a entender mejor c&oacute;mo funciona un computador: " + 
                                   "es visual, interactivo, integra interrupciones, llamadas al sistema, etc. <br>" +
@@ -50,5 +54,6 @@
                         "step6":  "¡Felicidades!. Ya conoce las partes clave de la interfaz de WepSIM.<br>" +
                                   "Desde el panel de 'Ayuda' puede acceder al 'Tutorial de bienvenida'. para continuar aprendiendo.<br>"
 
-                  } ;
+                  };
+                  }
 

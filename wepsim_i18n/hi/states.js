@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.states.hi = {
+    export function i18n_hi_register_states(i18n) {
+
+
+
+        i18n.eltos.states.hi = {
 
 		'States':		'राज्य अमेरिका',
 		'state':				'राज्य ',
@@ -51,4 +55,5 @@
 		'_last_':			'_last_'
 
     };
+    }
 

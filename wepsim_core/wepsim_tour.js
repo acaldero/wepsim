@@ -18,16 +18,21 @@
  *
  */
 
+import $ from 'jquery';
+import introJs from 'intro.js';
+import { get_cfg, save_cfg, set_cfg } from '../sim_core/sim_cfg.js';
+import { i18n, i18n_get, i18n_update_tags } from '../wepsim_i18n/i18n.js';
+import { wsweb_dialog_close, wsweb_select_main } from '../wepsim_web/wepsim_web_api.js';
+import { simcore_ga } from '../sim_core/sim_core_ga.js';
+import { ws_info } from '../sim_core/sim_adt_core.js';
 
-    //  tours collection
-    ws_info.tours = {} ;
 
     //  tour
-    var ws_tour      = null ;
-    var ws_tour_name = "tour1" ;
+    export var ws_tour      = null ;
+    export var ws_tour_name = "tour1" ;
 
     // tour API
-    function wepsim_newbie_tour ( tour_name )
+    export function wepsim_newbie_tour ( tour_name )
     {
              // get newbie tour...
              var newbie_tour1 = ws_info.tours[tour_name] ;
@@ -78,7 +83,7 @@
              simcore_ga('ui', 'ui.tour', 'ui.tour.newbie') ;
     }
 
-    function wepsim_newbie_tour_setLang ( tour_name, lang )
+    export function wepsim_newbie_tour_setLang ( tour_name, lang )
     {
              // get newbie tour...
              var newbie_tour1 = ws_info.tours[tour_name] ;
@@ -86,7 +91,7 @@
 	         return ;
              }
 
-	     var step = '' ;
+	     var step ;
 	     for (var i=0; i<newbie_tour1.length; i++)
 	     {
 		  step = newbie_tour1[i].step ;
@@ -96,7 +101,7 @@
 	     }
     }
 
-    function wepsim_newbie_tour_reload ( lang )
+    export function wepsim_newbie_tour_reload ( lang )
     {
 	     // save idiom
              set_cfg('ws_idiom', lang) ;

@@ -18,12 +18,17 @@
  *
  */
 
+import { main_memory_fusionvalues, main_memory_get_program_counter, main_memory_getvalue, main_memory_set } from '../../sim_core/sim_adt_mainmemory.js';
+import { show_main_memory } from '../../sim_core/sim_core_ui.js';
+import { get_value, get_var } from '../../sim_core/sim_core_values.js';
+import { cache_memory_access } from '../../sim_core/sim_adt_cachememory.js';
+import { get_cfg } from '../../sim_core/sim_cfg.js';
 
 /*
  *  Memory
  */
 
-function mem_ep_register ( sim_p )
+export function mem_ep_register ( sim_p )
 {
         sim_p.components.MEMORY = {
                                   name: "MEMORY",
@@ -39,8 +44,8 @@ function mem_ep_register ( sim_p )
                                                   if (typeof vec.MEMORY == "undefined")
                                                       vec.MEMORY = {} ;
 
-                                                  var key = 0 ;
-                                                  var value = 0 ;
+                                                  var key ;
+                                                  var value ;
                                                   for (var index in sim_p.internal_states.MP)
                                                   {
                                                        value = main_memory_getvalue(sim_p.internal_states.MP,
@@ -78,9 +83,10 @@ function mem_ep_register ( sim_p )
                                                   return false ;
                                              },
                                   get_state: function ( pos ) {
-                                                  var index = parseInt(pos) ;
-                                                  var value = main_memory_getvalue(sim_p.internal_states.MP,
-                                                                                   elto) ;
+                                                   var index = parseInt(pos) ;
+                                                   let elto = index ;
+                                                   var value = main_memory_getvalue(sim_p.internal_states.MP,
+                                                                                    elto) ;
                                                   if (typeof value === "undefined") {
                                                       return null ;
                                                   }
@@ -219,7 +225,7 @@ function mem_ep_register ( sim_p )
                                                    },
                                            verbal: function (s_expr)
                                                    {
-                                                      var verbal = "" ;
+                                                      var verbal ;
 
                                                       var address = sim_p.states[s_expr[1]].value;
                                                       var dbvalue = sim_p.states[s_expr[2]].value;
@@ -239,8 +245,8 @@ function mem_ep_register ( sim_p )
 
                                                       var verbose = get_cfg('verbal_verbose') ;
                                                       if (verbose !== 'math') {
-                                                          verbal = "Try to read a " + bw_type + " from memory " +
-                                                                   "at address 0x"  + address.toString(16) + " with value 0x" + value.toString(16) + ". " ;
+                                                        //   verbal = "Try to read a " + bw_type + " from memory " +
+                                                        //            "at address 0x"  + address.toString(16) + " with value 0x" + value.toString(16) + ". " ;
                                                       }
 
                                                       verbal = "Memory output = 0x" + value.toString(16) +
@@ -319,7 +325,7 @@ function mem_ep_register ( sim_p )
                                                    },
                                            verbal: function (s_expr)
                                                    {
-                                                      var verbal = "" ;
+                                                      var verbal ;
 
                                                       var address = sim_p.states[s_expr[1]].value;
                                                       var dbvalue = sim_p.states[s_expr[2]].value;
@@ -332,16 +338,16 @@ function mem_ep_register ( sim_p )
                                                       else if ( 1 == (bw & 0x0000000C) )
                                                           bw_type = "half" ;
 
-                                                      var value = main_memory_getvalue(sim_p.internal_states.MP, address) ;
-                                                      if (typeof value === "undefined") {
-                                                          value = 0 ;
-						      }
+                            //                           var value = main_memory_getvalue(sim_p.internal_states.MP, address) ;
+                            //                           if (typeof value === "undefined") {
+                            //                             //   value = 0 ;
+						    //   }
 
                                                       var verbose = get_cfg('verbal_verbose') ;
                                                       if (verbose !== 'math') {
-                                                          verbal = "Try to write a " + bw_type + " to memory " +
-                                                                   "at address 0x"  + address.toString(16) +
-                                                                   " with value " + value.toString(16) + ". " ;
+                                                        //   verbal = "Try to write a " + bw_type + " to memory " +
+                                                        //            "at address 0x"  + address.toString(16) +
+                                                        //            " with value " + value.toString(16) + ". " ;
                                                       }
 
                                                       verbal = "Memory[0x" + address.toString(16) + "] = " +

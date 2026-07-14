@@ -18,11 +18,13 @@
  *
  */
 
+import { i18n, i18n_get_TagFor } from '../wepsim_i18n/i18n.js';
+
 //
 // Treat control sequences
 //
 
- control_sequences = {
+ export var control_sequences = {
                         'b':  '\b',
                         'f':  '\f',
                         'n':  '\n',
@@ -35,7 +37,7 @@
                         '0':  '\0'
                      } ;
 
-function treatControlSequences ( possible_value )
+export function treatControlSequences ( possible_value )
 {
         var ret = {} ;
         ret.string = "" ;
@@ -68,7 +70,7 @@ function treatControlSequences ( possible_value )
  // Treat HTML sequences
  //
 
- var html_sequences = {
+ export var html_sequences = {
                          '&amp;':  '&',
                          '&lt;':   '<',
                          '&gt;':   '>',
@@ -76,9 +78,9 @@ function treatControlSequences ( possible_value )
                          '&#039;': "'"
                       } ;
 
-function treatHTMLSequences ( text_with_html )
+export function treatHTMLSequences ( text_with_html )
 {
-    var re  = null ;
+    var re  ;
     var key = null ;
 
     for (key in html_sequences)

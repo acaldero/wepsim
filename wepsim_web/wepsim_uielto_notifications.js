@@ -17,14 +17,20 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { simcore_notifications_get, simcore_notifications_reset } from '../sim_core/sim_core_notify.js';
+import { wepsim_uicfg_apply } from './wepsim_web_simulator.js';
+import { wsweb_scroll_record } from './wepsim_web_api.js';
+import { simcore_record_captureInit } from '../sim_core/sim_core_record.js';
+
 
 
         /*
          *  Notifications
          */
-
         /* jshint esversion: 6 */
-        class ws_notifications extends ws_uielto
+        export class ws_notifications extends ws_uielto
         {
               // constructor
 	      constructor ()
@@ -59,17 +65,9 @@
 			  "            ><span data-langkey='Reset'>Reset</span></button>" +
                           "   </button>" +
                           "    <div class='dropdown-menu' aria-labelledby='resetyn'>" +
-                          "     <a class='dropdown-item py-2 bg-tertiary text-danger' type='button' " +
-                          "        onclick='simcore_notifications_reset(); " +
-			  "		    var notifications = simcore_notifications_get(); " +
-			  "	            var ntf_html = table_notifications_html(notifications); " +
-			  "		    $(\"#scroller-notifications3\").html(ntf_html); " +
-			  "		    // reajust ui " +
-			  "		    wepsim_uicfg_apply(); " +
-			  "		    wsweb_scroll_record(\"#scroller-notifications3\"); " +
-			  "		    simcore_record_captureInit(); " +
-			  "		    return false;'" +
-                          "         ><span data-langkey='Yes'>Yes</span></a>" +
+                           "     <a class='dropdown-item py-2 bg-tertiary text-danger' type='button' " +
+                           "        data-bind='click' data-action='notifications-reset' href='#'" +
+                           "         ><span data-langkey='Yes'>Yes</span></a>" +
 			  "      <div class='dropdown-divider'></div>" +
                           "      <a class='dropdown-item py-2 bg-tertiary text-info' type='button' " +
                           "         ><span data-langkey='No'>No</span></a>" +
@@ -96,21 +94,40 @@
 		    var notifications_html = table_notifications_html(notifications) ;
 		    $('#scroller-notifications3').html(notifications_html) ;
 	      }
+
+              bindElements ()
+              {
+                    this.addEventListener('click', (e) => {
+                        const el = e.target.closest('[data-bind="click"]');
+                        if (!el) return;
+                        e.preventDefault();
+                        switch (el.dataset.action) {
+                            case 'notifications-reset':
+                                simcore_notifications_reset();
+                                var notifications = simcore_notifications_get();
+                                var ntf_html = table_notifications_html(notifications);
+                                $("#scroller-notifications3").html(ntf_html);
+                                wepsim_uicfg_apply();
+                                wsweb_scroll_record("#scroller-notifications3");
+                                simcore_record_captureInit();
+                                break;
+                        }
+                    });
+              }
         }
 
-        register_uielto('ws-notifications', ws_notifications) ;
 
 
         /*
          * Notifications (summary)
          */
 
-        function table_notifications_html ( notifications )
+        export function table_notifications_html( notifications )
         {
 		// setup content...
 		var u = '' ;
-	        var t = null ;
-		var m = '' ;
+	        var t ;
+		var m ;
 		for (var i=notifications.length-1; i!=-1; i--)
 		{
 		     t = new Date(notifications[i].date) ;

@@ -23,10 +23,14 @@
  *  SCREEN (rvpipe style)
  */
 
+import { get_value, set_value } from '../../sim_core/sim_core_values.js';
+import { get_screen_content, set_screen_content } from '../../sim_core/sim_core_ui.js';
+import { simcore_sound_playNote } from '../../sim_core/sim_core_sound.js';
+
 const IO_SCR_DDR_ID = 0x1000;
 const IO_SCR_DSR_ID = 0x1004;
 
-function io_screen_rvpipe_register(sim_p: Simulator): Simulator {
+export function io_screen_rvpipe_register(sim_p: Simulator): Simulator {
     const DEBUG = false;
     sim_p.components["SCREEN"] = {
         name: "SCREEN",

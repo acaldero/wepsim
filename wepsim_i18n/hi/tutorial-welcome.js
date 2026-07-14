@@ -21,7 +21,10 @@
 
     // Translated thanks to Google translate
 
-    i18n.eltos.tutorial_welcome.hi = {
+    export function i18n_hi_register_tutorial_welcome(i18n) {
+
+
+        i18n.eltos.tutorial_welcome.hi = {
 
 		'title_0':		'WepSIM सिम्युलेटर में आपका स्वागत है!',
 		'message_0':		'<केंद्र> <img alt = \'wepsim स्क्रीनशॉट\' src = \'मदद / सिम्युलेटर / Simulator012.jpg\' शैली = \'अधिकतम-चौड़ाई: 100%; अधिकतम ऊंचाई: 40vh; \'> </ केंद्र> <p> <h5> यह संक्षिप्त ट्यूटोरियल आपको यह दिखाने जा रहा है कि कैसे: <ol> <li> <a href =\' # \'onclick =\' sim_tutorial_boframe ("वेलकम") , 0,1); \'> एक उदाहरण लोड करें। </a> </ li> <li> <a href=\'#\' onclick= anim_tutorial_goframe("welcome",0,2);\'> उदाहरण का चयन करें; </a> </ li> <li> <a href=\'#\' onclick= anim_tutorial_goframe("welcome",0,3);\'> सिमुलेशन को कॉन्फ़िगर करें। </a> </ li> <li> < a href = \'#\' onclick = \'sim_tutorial_goframe ("स्वागत", 0,4);>> सहायता प्राप्त करें। </a> </ li> </ ol> </ h5>',
@@ -38,4 +41,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

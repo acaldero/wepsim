@@ -18,16 +18,23 @@
  *
  */
 
+import { simhw_internalState_get, simhw_sim_signal, simhw_sim_state } from '../sim_hw_index.js';
+import { get_value, get_var, set_value, set_var } from '../../sim_core/sim_core_values.js';
+import { signal_fire } from '../sim_hw_signal.js';
+import { compute_behavior } from '../sim_hw_behavior.js';
+import { colors_clone, simcoreui_pack } from '../../sim_core/sim_core_ui.js';
+import { simcore_native_get_value } from '../../sim_core/sim_api_native.js';
+import { simcore_rest_call } from '../../sim_core/sim_core_rest.js';
 
 /*
  *  LEDM
  */
 
-var LEDMSR_ID   = 0x3100 ;
-var LEDMCR_ID   = 0x3104 ;
-var LEDMDR_ID   = 0x3108 ;
+export var LEDMSR_ID   = 0x3100 ;
+export var LEDMCR_ID   = 0x3104 ;
+export var LEDMDR_ID   = 0x3108 ;
 
-function io_ldm_base_register ( sim_p )
+export function io_ldm_base_register ( sim_p )
 {
         /* jshint esversion: 6 */
         sim_p.components.LEDM = {
@@ -56,12 +63,12 @@ function io_ldm_base_register ( sim_p )
                                                     if (typeof associated_state == "undefined") {
                                                         throw new Error("unknown element named " + elto) ;
                                                     }
-                                                    var value = (get_value(simhw_sim_state(associated_state)) >>> 0) ;
+                                                    // var value = (get_value(simhw_sim_state(associated_state)) >>> 0) ;
 
                                                     set_value(simhw_sim_state('BUS_AB'), elto) ;
                                                     set_value(simhw_sim_signal('IOR'), 1) ;
 						    signal_fire("IOR") ; //compute_behavior("FIRE IOR") ;
-                                                    value = get_value(simhw_sim_state('BUS_DB')) ;
+                                                    var value = get_value(simhw_sim_state('BUS_DB')) ;
 
                                                     return value ;
                                                },
@@ -241,10 +248,9 @@ function io_ldm_base_register ( sim_p )
                                                           {
                                                               set_value(sim_p.states[s_expr[3]], 1) ;
 
-                                                              // update internal states
-                                                              var s = 0;
-                                                              var neltos = sim_p.internal_states.ledm_neltos ;
-                                                              for (var p=0; p<neltos; p=p+4) {
+                                                               // update internal states
+                                                               var neltos = sim_p.internal_states.ledm_neltos ;
+                                                               for (p=0; p<neltos; p=p+4) {
                                                                    s = simcore_native_get_value("MEMORY", dr+p) ;
                                                                    set_var(sim_p.internal_states.ledm_state[p+0].color, (s & 0x000000FF) >>> 0);
                                                                    set_var(sim_p.internal_states.ledm_state[p+1].color, (s & 0x0000FF00) >>> 8);
@@ -260,11 +266,10 @@ function io_ldm_base_register ( sim_p )
                                                           {
                                                               set_value(sim_p.states[s_expr[3]], 1) ;
 
-                                                              // update internal colors
-                                                              var s = 0 ;
-                                                              var c = '' ;
-                                                              var neltos = sim_p.internal_states.ledm_colors.length ;
-                                                              for (var p=0; p<neltos; p++)
+                                                               // update internal colors
+                                                               var c ;
+                                                               neltos = sim_p.internal_states.ledm_colors.length ;
+                                                               for (p=0; p<neltos; p++)
                                                               {
                                                                    s = simcore_native_get_value("MEMORY", dr+p*4) ;
                                                                    s = (s & 0xFFFFFF00) >>> 8 ;
@@ -273,9 +278,9 @@ function io_ldm_base_register ( sim_p )
                                                                    sim_p.internal_states.ledm_colors[p] = c ;
                                                               }
 
-                                                              // update internal states
-                                                              neltos = sim_p.internal_states.ledm_neltos ;
-                                                              for (var p=0; p<neltos; p++) {
+                                                               // update internal states
+                                                               neltos = sim_p.internal_states.ledm_neltos ;
+                                                               for (p=0; p<neltos; p++) {
                                                                    s = get_var(sim_p.internal_states.ledm_state[p].color);
                                                                    set_var(sim_p.internal_states.ledm_state[p].color, ~s);
                                                                    set_var(sim_p.internal_states.ledm_state[p].color, s);
@@ -294,10 +299,9 @@ function io_ldm_base_register ( sim_p )
                                                               if (nrows > sim_p.internal_states.ledm_dim) {
                                                                    nrows = sim_p.internal_states.ledm_dim ;
                                                               }
-                                                              var neltos = nrows * sim_p.internal_states.ledm_dim ;
+                                                               neltos = nrows * sim_p.internal_states.ledm_dim ;
 
-                                                              var s = 0;
-                                                              for (var p=0; p<neltos; p=p+4)
+                                                               for (p=0; p<neltos; p=p+4)
                                                               {
                                                                    s = simcore_native_get_value("MEMORY", dr+p) ;
 
@@ -394,7 +398,7 @@ function io_ldm_base_register ( sim_p )
                                                         // internal state -> frame in REST
                                                         var ledmstates = sim_p.internal_states.ledm_state ;
                                                         var o = '' ;
-                                                        var p = 0 ;
+                                                        var p ;
                                                         for (var j=0; j<sim_p.internal_states.ledm_dim; j++)
                                                         {
                                                              for (var k=0; k<sim_p.internal_states.ledm_dim; k++)

@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.tutorial_welcome.de = {
+    export function i18n_de_register_tutorial_welcome(i18n) {
+
+
+
+        i18n.eltos.tutorial_welcome.de = {
 
 		'title_0':		'Willkommen im WepSIM-Simulator!',
 		'message_0':		'<center> <img alt = \'wepsim screenshot\' src = \'images/simulator/simulator012.jpg\' style = \'maximale Breite: 100%; max-height: 40vh; \'> </center> <p> <h5> In diesem kurzen Tutorial erfahren Sie, wie Sie: <ol> <li> <a href =\' # \'onclick =\' sim_tutorial_goframe ("welcome") , 0,1); \'> Laden Sie ein Beispiel. </a> </li> <li> <a href=\'#\'onclick=\'sim_tutorial_goframe("welcome",0,2);\'> Führen Sie ein Beispiel aus. </a> </li> <li> <a href=\'#\'onclick=\'sim_tutorial_goframe("welcome",0,3);\'> Konfigurieren Sie die Simulation. </a> </li> <li> <a href = \'#\' onclick = \'sim_tutorial_goframe ("welcome", 0,4);\'> Holen Sie sich Hilfe. </a> </li> </ol> </h5>',
@@ -36,4 +40,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

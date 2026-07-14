@@ -18,12 +18,14 @@
  *
  */
 
+import { frm_getToken, frm_isToken, frm_langError, frm_nextToken } from './lexical.js';
+import { i18n, i18n_get_TagFor } from '../../wepsim_i18n/i18n.js';
 
-function firm_pseudoinstructions_write ( context )
+export function firm_pseudoinstructions_write ( context )
 {
 	var o = "" ;
-        var elto = null ;
-        var ie_inst = "" ;
+        var elto ;
+        var ie_inst ;
 
         // no pseudo -> return empty section
 	if (typeof context.pseudoInstructions == "undefined") {
@@ -82,13 +84,13 @@ function firm_pseudoinstructions_write ( context )
 }
 
 
-function firm_pseudoinstructions_read ( context )
+export function firm_pseudoinstructions_read ( context )
 {
-	var tok = '' ;
+	var tok ;
 
         // speedup instruction name search using a hash table
         var hash_inst_name = {} ;
-        for (i=0; i<context.instrucciones.length; i++) {
+        for (var i=0; i<context.instrucciones.length; i++) {
              hash_inst_name[context.instrucciones[i].name] = context.instrucciones[i].name ;
         }
 

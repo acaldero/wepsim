@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.compiler.it = {
+    export function i18n_it_register_compiler(i18n) {
+
+
+
+        i18n.eltos.compiler.it = {
 
 	        "PROBLEM AROUND LINE":          "Problema intorno alla linea",
 		'NO TAG OR DIRECTIVE':		'Previsto tag o direttiva, ma trovato questo token invece: ',
@@ -123,4 +127,5 @@
 		'_last_':			'_last_'
 
     };
+    }
 

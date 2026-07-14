@@ -17,14 +17,19 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import { ws_uielto } from './wepsim_uielto.js';
+import { wepsim_popover_action } from './wepsim_web_ui_popover.js';
+import { wepsim_uicfg_apply } from './wepsim_web_simulator.js';
+import { wsweb_quickmenu_show, wsweb_dialog_open } from './wepsim_web_api.js';
+
+
 
 
         /*
          *  Navbar: topbar
          */
-
         /* jshint esversion: 6 */
-        class ws_topbar extends ws_uielto
+        export class ws_topbar extends ws_uielto
         {
 	      constructor ()
 	      {
@@ -41,11 +46,7 @@
                                 '          style="text-decoration: none"' +
 				'          id="po1"' +
 				'	   data-container="body"' +
-	// bs5 toggle fails	'          onclick="if (typeof wsweb_quickmenu_toggle === \'function\')' +
-	// bs5 toggle fails	'	               wsweb_quickmenu_toggle();' +
-				'          onclick="if (typeof wsweb_quickmenu_show === \'function\')' +
-				'	                wsweb_quickmenu_show();' +
-				'	            return false;"' +
+				'          data-bind="click" data-action="quickmenu-toggle"' +
 				'	  data-bs-html="true"' +
 				'	  data-bs-placement="bottom">WepSIM&nbsp;<span class="badge rounded-pill text-bg-secondary"><div class="wsversion">loading ...</div></span>' +
 				'       </a>' +
@@ -56,8 +57,7 @@
                                 '          style="text-decoration: none"' +
 				'          id="po1"' +
 				'	   data-container="body"' +
-				'          onclick="wsweb_dialog_open(\'about\');' +
-				'	            return true;"' +
+				'          data-bind="click" data-action="dialog-about"' +
 				'	  data-bs-html="true"' +
 				'	  data-bs-placement="bottom"><span data-langkey="About">About</span>...</a>' +
 				'    </span>' +
@@ -65,15 +65,30 @@
 
 		    this.innerHTML = o1 ;
 	      }
+
+              bindElements()
+              {
+                    this.addEventListener('click', function(ev) {
+                          var el = ev.target.closest('[data-action]');
+                          if (!el) return;
+                          switch (el.dataset.action) {
+                                case 'quickmenu-toggle':
+                                      if (typeof wsweb_quickmenu_show === 'function')
+                                            wsweb_quickmenu_show();
+                                      ev.preventDefault();
+                                      break;
+                                case 'dialog-about':
+                                      wsweb_dialog_open('about');
+                                      break;
+                          }
+                    });
+              }
         }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-topbar', ws_topbar) ;
-        }
 
 
         // quick menu
-        function topbar_quickmenu_action ( action )
+        export function topbar_quickmenu_action( action )
         {
             wepsim_popover_action('po1', action) ;
 

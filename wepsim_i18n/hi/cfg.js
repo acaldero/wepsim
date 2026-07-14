@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.cfg.hi = {
+    export function i18n_hi_register_cfg(i18n) {
+
+
+
+        i18n.eltos.cfg.hi = {
 
 		'General':					'सामान्य',
 		'Idiom for help, examples, etc.':		'मदद, उदाहरण आदि के लिए मुहावरा',
@@ -71,4 +75,5 @@
 		'_last_':						'_last_'
 
     };
+    }
 

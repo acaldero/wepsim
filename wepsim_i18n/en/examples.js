@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.examples.en = {
+    export function i18n_en_register_examples(i18n) {
+
+
+
+        i18n.eltos.examples.en = {
 
              "addv + seqv.":						"addv + seqv.",
              "Alloc.s":							"Alloc.s",
@@ -82,5 +86,6 @@
 	     "No examples available...": 		"No examples are available for the selected hardware",
              "Simple example":				"Simple example."
 
-    } ;
+    };
+    }
 

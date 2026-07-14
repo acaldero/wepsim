@@ -18,8 +18,10 @@
  *
  */
 
+import { frm_getToken, frm_isToken, frm_langError, frm_nextToken } from './lexical.js';
+import { i18n, i18n_get_TagFor } from '../../wepsim_i18n/i18n.js';
 
-function firm_registers_write ( context )
+export function firm_registers_write ( context )
 {
 	var o = "" ;
 
@@ -34,7 +36,7 @@ function firm_registers_write ( context )
         }
 
         // return registers as string...
-        var m = '' ;
+        var m ;
 	for (var k=0; k < context_registers_keys.length; k++)
 	{
              m = context_registers_keys[k] ;
@@ -46,7 +48,7 @@ function firm_registers_write ( context )
 
 	     o += 'registers ' + context.registers[m].name + '\n' +
 		  '{\n' ;
-	     for (i=0; i< context.registers[m].registers.length; i++)
+	     for (var i=0; i< context.registers[m].registers.length; i++)
 	     {
 		     if (typeof context.registers[m].registers[i] == "undefined") {
 			 continue ;
@@ -54,7 +56,7 @@ function firm_registers_write ( context )
 
 		     var l = context.registers[m].registers[i].length - 1 ;
 		     var r = "(" ;
-		     for (j=0; j<l; j++) {
+		     for (var j=0; j<l; j++) {
 			  r += context.registers[m].registers[i][j] + ", " ;
 		     }
 		     r += context.registers[m].registers[i][l] + ")" ;
@@ -79,7 +81,7 @@ function firm_registers_write ( context )
 }
 
 
-function firm_find_rf_by_name ( context, rf_name )
+export function firm_find_rf_by_name ( context, rf_name )
 {
 	for (var i=0; i<context.registers.length; i++)
 	{
@@ -91,7 +93,7 @@ function firm_find_rf_by_name ( context, rf_name )
         return -1 ;
 }
 
-function firm_registers_read ( context )
+export function firm_registers_read ( context )
 {
 	// *registers [register file name]
 	// {*
@@ -100,7 +102,7 @@ function firm_registers_read ( context )
         //    2=(sp,   x2) (stack_pointer)
 	// }
 
-       var rf_item = null ;
+       var rf_item ;
        var rf_name = "default" ;
 
        // skip 'registers'

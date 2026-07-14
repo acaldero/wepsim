@@ -18,31 +18,33 @@
  *
  */
 
+import { getContext, getTransport, start, Synth } from "tone";
 
         /*
 	 *  Sound (Tune.js)
 	 */
 
-        function simcore_sound_init ( )
+        export function simcore_sound_init ( )
         {
 	    if (typeof window !== "undefined") {
                 window.TONE_SILENCE_LOGGING = true;
+                // window.Tone = Tone;
 	    }
         }
 
-        function simcore_sound_canPlay ( )
+        export function simcore_sound_canPlay ( )
         {
-    	    if (typeof Tone == "undefined") {
-                return false ;
-            }
-    	    if (typeof Tone.context == "undefined") {
+	    // if (typeof Tone == "undefined") {
+        //         return false ;
+        //     }
+	    if (typeof getContext() == "undefined") {
                 return false ;
             }
 
             return true ;
         }
 
-        async function simcore_sound_start ( )
+        export async function simcore_sound_start ( )
         {
     	    if (simcore_sound_canPlay() == false) {
                 return false ;
@@ -50,9 +52,9 @@
 
 	    try
 	    {
-                await Tone.Transport.start() ;
-	        if (Tone.context.state !== 'running') {
-	            Tone.context.resume() ;
+                await getTransport().start() ;
+	        if (getContext().state !== 'running') {
+	            getContext().resume() ;
 	        }
 	    }
 	    catch (e)
@@ -64,7 +66,7 @@
             return true ;
         }
 
-        async function simcore_sound_stop ( )
+        export async function simcore_sound_stop ( )
         {
     	    if (simcore_sound_canPlay() == false) {
                 return false ;
@@ -72,7 +74,7 @@
 
 	    try
 	    {
-                await Tone.Transport.stop() ;
+                await getTransport().stop() ;
 	    }
 	    catch (e)
 	    {
@@ -83,15 +85,15 @@
             return true ;
         }
 
-        async function simcore_sound_playNote ( note_str, time_str )
+        export async function simcore_sound_playNote ( note_str, time_str )
         {
     	    if (simcore_sound_canPlay() == false) {
                 return false ;
 	    }
 
-            await Tone.start() ;
-	    if (Tone.context.state !== 'running') {
-	        Tone.context.resume() ;
+            await start() ;
+	    if (getContext().state !== 'running') {
+	        getContext().resume() ;
 	    }
 
 	    try
@@ -100,7 +102,7 @@
 	            note_str = null ;
 	        }
 
-	        synth1 = new Tone.Synth().toDestination() ;
+	        var synth1 = new Synth().toDestination() ;
 	        synth1.triggerAttackRelease(note_str, time_str) ;
 	    }
 	    catch (e)
@@ -117,10 +119,10 @@
         // word <-> note
         //
 
-        function simcore_sound_ascii2note ( word, bytesInWord )
+        export function simcore_sound_ascii2note ( word, bytesInWord )
         {
             var n = '' ;
-            var b = 0 ;
+            var b ;
 
             for (var i=0; i<bytesInWord; i++)
             {
@@ -134,10 +136,10 @@
             return n.trim() ;
         }
 
-        function simcore_sound_word2note ( word, bytesInWord )
+        export function simcore_sound_word2note ( word, bytesInWord )
         {
             var n = '' ;
-            var b = 0 ;
+            var b ;
 
             for (var i=0; i<bytesInWord; i++)
             {
@@ -151,10 +153,10 @@
             return n.trim() ;
         }
 
-        function simcore_sound_note2word ( note, bytesInWord )
+        export function simcore_sound_note2word ( note, bytesInWord )
         {
             var w = 0 ;
-            var b = 0 ;
+            var b ;
 
             for (var i=0; i<bytesInWord; i++)
             {

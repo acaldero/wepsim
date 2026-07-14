@@ -21,7 +21,10 @@
 
     // Tranlation thanks to https://github.com/shiptux
 
-    i18n.eltos.dialogs.zh_cn = {
+    export function i18n_zh_cn_register_dialogs(i18n) {
+
+
+        i18n.eltos.dialogs.zh_cn = {
 
 		'Show/Hide ActionBar':			'显示/隐藏动作栏',
 		'Show/Hide Slider':			'显示/隐藏滑块',
@@ -45,4 +48,5 @@
 		'_last_':				'_last_'
 
     };
+    }
 

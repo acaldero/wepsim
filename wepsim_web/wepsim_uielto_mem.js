@@ -17,6 +17,15 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { get_cfg, cfg_show_main_memory_delay } from '../sim_core/sim_cfg.js';
+import { get_simware } from '../sim_core/sim_adt_core.js';
+import { get_value } from '../sim_core/sim_core_values.js';
+import { value2string, simcoreui_pack, element_scroll_get, element_scroll_set, element_scroll_setRelative, show_main_memory } from '../sim_core/sim_core_ui.js';
+import { main_memory_get, main_memory_get_baseaddr, main_memory_getkeys, main_memory_getsrc, main_memory_getword, main_memory_set } from '../sim_core/sim_adt_mainmemory.js';
+import { simhw_active, simhw_internalState, simhw_sim_ctrlStates_get, simhw_sim_state } from '../sim_hw/sim_hw_index.js';
+import { wepsim_quickcfg_init } from './wepsim_web_ui_quickcfg.js';
 
 
         /*
@@ -24,7 +33,7 @@
          */
 
         /* jshint esversion: 6 */
-        class ws_mainmemory extends ws_uielto
+        export class ws_mainmemory extends ws_uielto
         {
               // constructor
 	      constructor ()
@@ -72,17 +81,16 @@
 	      }
         }
 
-        register_uielto('ws-mainmemory', ws_mainmemory) ;
 
 
         /*
          *  Main Memory UI
          */
 
-        var show_main_memory_deferred = null;
-        var show_main_memory_redraw   = false;
+        export var show_main_memory_deferred = null;
+        export var show_main_memory_redraw   = false;
 
-        function wepsim_show_main_memory ( memory, index, redraw, updates )
+        export function wepsim_show_main_memory( memory, index, redraw, updates )
         {
             // (redraw==false && updates==true) -> update existing memory element
 	    if ( (false == redraw) && (true == updates) )
@@ -106,14 +114,14 @@
 						    	    light_refresh_main_memory(memory, index, updates) ;
                                                         else hard_refresh_main_memory(memory, index, updates) ;
 
-                                                        show_main_memory_updates  = false ;
+                                                        var show_main_memory_updates  = false ;
                                                         show_main_memory_redraw   = false ;
                                                         show_main_memory_deferred = null ;
 
                                                    }, cfg_show_main_memory_delay);
         }
 
-        function hard_refresh_main_memory ( memory, index, redraw )
+        export function hard_refresh_main_memory( memory, index, redraw )
         {
             // configuration
             var cfg = {} ;
@@ -131,7 +139,7 @@
             // memory
             var base_addrs = main_memory_get_baseaddr() ;
             var memory_cpy = Object.assign({}, memory) ;
-	    var melto      = null ;
+	    var melto ;
             for (var elto in base_addrs)
             {
                  // skip pointers to zero
@@ -165,14 +173,14 @@
 	    var o1 = '' ;
 	    var o2 = '' ;
 
-	    var s1 = '' ;
-	    var s2 = '' ;
+	    var s1 ;
+	    var s2 ;
             var seglabels_i = 0 ;
 
             var value   = [] ;
-            var i_key   = 0 ;
+            var i_key ;
             var i_index = parseInt(index) ;
-            var n_key   = 0 ;
+            var n_key ;
 
             var keys = main_memory_getkeys(memory_cpy) ;
             var k = 0 ;
@@ -238,12 +246,12 @@
             old_main_addr = index ;
         }
 
-        var old_main_addr = 0;
+        export var old_main_addr = 0;
 
-        function light_refresh_main_memory ( memory, index, redraw )
+        export function light_refresh_main_memory( memory, index, redraw )
         {
 	    // if not visible -> skip
-            o1 = $("#memory_MP") ;
+            var o1 = $("#memory_MP") ;
             if (o1.is(':visible') == false) {
 	        return ;
             }
@@ -252,9 +260,9 @@
 
             if (redraw)
             {
-                var ri = 0 ;
-                var svalue = '' ;
-                var addrplusn = index + 4*n ;
+                var ri ;
+                var svalue ;
+                var addrplusn ;
 		for (var n=0; n<cfg_nwords; n++)
 		{
                      addrplusn = index + 4*n ;
@@ -292,39 +300,39 @@
             update_badges(cfg_nwords) ;
         }
 
-        function main_memory_showseglst ( seg_id, seg_name )
+        export function main_memory_showseglst( seg_id, seg_name )
         {
             return '<a class="list-group-item list-group-item-action py-0 border-secondary" ' +
-                   '   onclick="scroll_memory_to_segment(\'' + seg_id + '\');">' +
+                   '   data-bind="click" data-action="scroll-to-seg" data-seg="' + seg_id + '">' +
                    seg_name +
                    '</a>' ;
         }
 
-        function main_memory_showsegrow ( seg_id, seg_name )
+        export function main_memory_showsegrow( seg_id, seg_name )
         {
             return '<div id="' +  seg_id + '" class="row" data-bs-toggle="collapse" href="#lst_seg1">' +
                    '<u>' + seg_name + '</u>' +
                    '</div>' ;
         }
 
-        function main_memory_showrow ( cfg, memory, addr, revlabels, is_current )
+        export function main_memory_showrow( cfg, memory, addr, revlabels, is_current )
         {
-            var i  = 0 ;
-            var ri = 0 ;
-            var addrplusn = 0 ;
+            var i ;
+            var ri ;
+            var addrplusn ;
             var wcolor = "" ;
 
             // valkeys
             var valkeys = [] ;
             var idi     = [] ;
-            var addri   = 0 ;
+            var addri ;
 
 	    // html
-            var o = "" ;
-            var value2 = '' ;
-            var labeli = '' ;
-            var valuei = '' ;
-            var src_html = '' ;
+            var o ;
+            var value2 ;
+            var labeli ;
+            var valuei ;
+            var src_html ;
             var row_html = '' ;
 
 	    for (var n=0; n<cfg.nwords; n++)
@@ -411,7 +419,7 @@
 	        stop_addr  = valkeys[3] ;
 	    }
 	    start_addr = simcoreui_pack(start_addr, 5).toUpperCase() ;
-	    stop_addr  = simcoreui_pack(stop_addr,  5).toUpperCase() ;
+	    // stop_addr  = simcoreui_pack(stop_addr,  5).toUpperCase() ;
 
 	    o = "<div class='row " + wcolor + "' id='addr" + addr + "'" +
                 "     style='font-size:small; border-bottom: 1px solid lightgray !important'>" +
@@ -429,28 +437,28 @@
 	    return o ;
         }
 
-        function scroll_memory_to_segment ( seg_id )
+        export function scroll_memory_to_segment( seg_id )
         {
             return element_scroll_setRelative('#lst_ins1', '#'+seg_id, -250) ;
         }
 
-        function scroll_memory_to_address ( addr )
+        export function scroll_memory_to_address( addr )
         {
             return element_scroll_setRelative('#lst_ins1', '#addr'+addr, -250) ;
         }
 
-        function scroll_memory_to_lastaddress ( )
+        export function scroll_memory_to_lastaddress( )
         {
             return element_scroll_setRelative('#lst_ins1', '#addr'+old_main_addr, -250) ;
         }
 
-        function update_badges ( cfg_nwords )
+        export function update_badges( cfg_nwords )
         {
             var html = {} ;
 	    var tobe_updated = {} ;
 	    var tobe_updated_any = false ;
             var elto = null ;
-	    var eaddr = 0 ;
+	    var eaddr ;
 
             var base_addrs = main_memory_get_baseaddr() ;
             for (elto in base_addrs)
@@ -473,7 +481,7 @@
             }
 
             // clear all old badges and update current active badges
-            var old_html = '' ;
+            var old_html ;
             $('.mp_row_badge').html('') ;
             for (elto in base_addrs)
             {

@@ -21,7 +21,10 @@
 
     // Translated thanks to Google translate
 
-    i18n.eltos.tutorial_welcome.kr = {
+    export function i18n_kr_register_tutorial_welcome(i18n) {
+
+
+        i18n.eltos.tutorial_welcome.kr = {
 
                  "title_0":       "WepSIM 시뮬레이터에 오신 것을 환영합니다",
                  "message_0":     "<center><img alt='wepsim screenshot' src='images/simulator/simulator012.jpg' style='max-width:100%; max-height:40vh;'></center>" +
@@ -81,4 +84,5 @@
                                   "</h5>"
 
     };
+    }
 

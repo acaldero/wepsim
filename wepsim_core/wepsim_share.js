@@ -18,12 +18,22 @@
  *
  */
 
+import $ from 'jquery';
+import LZString from 'lz-string';
+import QRCode from 'qrcode';
+import { wsweb_dlg_alert } from './wepsim_dialog.js';
+import { get_cfg } from '../sim_core/sim_cfg.js';
+import { simhw_internalState, simhw_internalState_reset } from '../sim_hw/sim_hw_index.js';
+import { cache_memory_init_cm } from '../sim_core/sim_adt_cachememory.js';
+import { wepsim_show_cache_memory_config } from '../wepsim_web/wepsim_uielto_cache_config.js';
+import { simcore_ga } from '../sim_core/sim_core_ga.js';
+import { inputasm, inputfirm } from '../wepsim_web/wepsim_web_simulator.js';
 
-    /*
+/*
      * Share
      */
 
-    function share_information ( info_shared, share_title, share_text, share_url )
+    export function share_information ( info_shared, share_title, share_text, share_url )
     {
 	 if (typeof navigator.share !== 'undefined')
 	 {
@@ -31,17 +41,17 @@
 	 }
 
          // new dialog
-	 var msg = '<div id="qrcode1" class="mx-auto"></div>' +
+	 var msg = '<canvas id="qrcode1" class="mx-auto" width="256" height="256"></canvas>' +
 		   '<br>' +
 		   'You can use the following link:<br>' +
 	           '<textarea id="qrcode2" class="form-control" row="5" ' +
                    '          style="width: 100%; height:100%"' +
-                   '          onclick="navigator.clipboard.writeText(this.value);">' +
+                   '          data-bind="click" data-action="share-copy-text">' +
                    share_url +
                    '</textarea>' +
                    '<span class="btn btn-sm btn-success" ' +
-                   '      onclick="var c = document.getElementById(\'qrcode2\').value;' +
-                   '               navigator.clipboard.writeText(c);">Copy to clipboard</span>' +
+                   '      data-bind="click" data-action="share-copy-clipboard"' +
+                   '      data-source="qrcode2">Copy to clipboard</span>' +
 	           '<br>' ;
 
 	 wsweb_dlg_alert(msg) ;
@@ -49,24 +59,26 @@
          // get URL and QR
          try
          {
-            $("#qrcode1").html('You can use the following QR-code:<br>') ;
-            var qrcode = new QRCode("qrcode1") ;
-            qrcode.clear() ;
-            qrcode.makeCode(share_url) ;
+            var canvas = document.getElementById('qrcode1') ;
+            QRCode.toCanvas(canvas, share_url, function(error) {
+                if (error) {
+                    canvas.style.display = 'none' ;
+                }
+            }) ;
          }
          catch (e) {
-         // $("#qrcode1").html('You can use the following <a href="' + share_url + '">link</a><br>') ;
-            $("#qrcode1").html('') ;
+            var el = document.getElementById('qrcode1') ;
+            if (el) el.style.display = 'none' ;
          }
 
          // return ok
 	 return true ;
     }
 
-    function share_as_uri ( share_eltos )
+    export function share_as_uri ( share_eltos )
     {
-         var url_to_share = '' ;
-         var txt_enc      = '' ;
+         var url_to_share ;
+         var txt_enc      ;
 
          // build the associate URI
          try
@@ -94,7 +106,7 @@
                      cm_cfg.push(cm_cfg_i) ;
                 }
 
-		json_enc = JSON.stringify(cm_cfg) ;
+		let json_enc = JSON.stringify(cm_cfg) ;
                 txt_enc  = LZString.compressToEncodedURIComponent(json_enc) ;
                 url_to_share = url_to_share + '&cache=' + txt_enc ;
             }
@@ -108,7 +120,7 @@
 	 return url_to_share ;
     }
 
-    function load_from_uri ( url_to_share )
+    export function load_from_uri ( url_to_share )
     {
          var elto_shared = {} ;
              elto_shared.asm = null ;
@@ -157,7 +169,7 @@
 	 return elto_shared ;
     }
 
-    function share_uri ( info_shared, share_title, share_text, share_url )
+    export function share_uri ( info_shared, share_title, share_text, share_url )
     {
 	 // build data
 	 var data = {} ;

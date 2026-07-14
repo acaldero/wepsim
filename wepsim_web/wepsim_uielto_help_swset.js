@@ -17,14 +17,16 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
+import $ from 'jquery';
+import { ws_uielto } from './wepsim_uielto.js';
+import { get_simware } from '../sim_core/sim_adt_core.js';
 
         /*
          *  Help on hardware elements
          */
 
         /* jshint esversion: 6 */
-        class ws_help_swset extends ws_uielto
+        export class ws_help_swset extends ws_uielto
         {
 	      constructor ()
 	      {
@@ -53,10 +55,7 @@
 		    o1 += '<div class="container">' +
 			  '<div class="row justify-content-center w-100 my-2 mx-0 sticky-top bg-body">' +
 			  '<input id="' + id_search + '" ' +
-			  '       onkeyup="var value=$(this).val().toLowerCase();' +
-			  '	             $(\'.table2 tr\').filter(function() {' +
-			  '	               $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)' +
-			  '	             });"' +
+			  '       data-bind="keyup" data-action="sw-search"' +
 			  '       class="form-control my-2" type="text" placeholder="Search...">' +
 			  '</div>' +
 			  '<div class="row justify-content-center" id="' + id_list + '"></div>' +
@@ -93,9 +92,9 @@
 
 		    // tables by first letter...
 		    var t = {} ;
-		    var ins_name = '' ;
-		    var ins_help = '' ;
-		    var first_l = '' ;
+		    var ins_name ;
+		    var ins_help ;
+		    var first_l ;
                     var grid = 'col-md-12 col-lg-6 col-xxl-4' ;
                     if (this.layout == "offcanvas") {
                         grid = 'col-xs-12 w-100' ;
@@ -141,10 +140,24 @@
 
                     // load HTML
                     $('#' + id_list).html(o1) ;
-	      }
+              }
+
+              bindElements ()
+              {
+                    this.addEventListener('keyup', (e) => {
+                        var el = e.target.closest('[data-bind="keyup"]');
+                        if (!el) return;
+
+                        switch (el.dataset.action) {
+                            case 'sw-search':
+                                var value = el.value.toLowerCase();
+                                $('.table2 tr').filter(function() {
+                                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                                });
+                                break;
+                        }
+                    });
+              }
         }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-help-swset', ws_help_swset) ;
-        }
 

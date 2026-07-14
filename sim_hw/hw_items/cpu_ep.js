@@ -18,12 +18,23 @@
  *
  */
 
+import { ws_empty_firmware } from '../../sim_core/sim_adt_core.js';
+import { get_value, reset_value, set_value } from '../../sim_core/sim_core_values.js';
+import { simhw_sim_ctrlStates_get, simhw_sim_signal, simhw_sim_state, simhw_sim_state_getref } from '../sim_hw_index.js';
+import { float2decimal, float32_to_uint, float_class, hex2float, show_asmdbg_pc, show_dbg_ir, update_draw, ws_alert } from '../../sim_core/sim_core_ui.js';
+import { get_reference, show_value, show_verbal } from '../sim_hw_values.js';
+import { get_cfg } from '../../sim_core/sim_cfg.js';
+import { oceoc2rom_addr, update_cpu_bus_fire, update_system_bus_fire } from '../../sim_core/sim_core_ctrl.js';
+import { compute_signal_verbals } from '../sim_hw_behavior.js';
+import { decode_instruction } from '../../sim_sw/firmware.js';
+import { get_deco_from_pc } from '../../sim_core/sim_adt_mainmemory.js';
+import { signal_apply_behaviour_allByEdge, signal_apply_behaviour_allByLevel, signal_fire, signal_reset_and_apply } from '../sim_hw_signal.js';
 
 /*
  *  CPU
  */
 
-function cpu_ep_register ( sim_p )
+export function cpu_ep_register ( sim_p )
 {
         sim_p.components["CPU"] = {
 		                  name: "CPU",
@@ -43,7 +54,7 @@ function cpu_ep_register ( sim_p )
 					          // var internal_reg = ["PC", "MAR", "MBR", "IR", "RT1", "RT2", "RT3", "SR"] ;
 					          var internal_reg = ["PC", "SR"] ;
 
-						  var value = 0 ;
+						  var value ;
 					          for (var i=0; i<sim_p.states.BR.length; i++)
 						  {
 						      value = parseInt(get_value(sim_p.states.BR[i])) >>> 0;
@@ -90,7 +101,7 @@ function cpu_ep_register ( sim_p )
                                                   return false ;
 				              },
 		                  get_state:  function ( reg ) {
-					          var value = 0 ;
+					          var value ;
 					          var r_reg = reg.toUpperCase().trim() ;
 					          if (typeof sim_p.states['REG_' + r_reg] != "undefined") {
 					              value = get_value(sim_p.states['REG_' + r_reg]) >>> 0;
@@ -1048,9 +1059,9 @@ function cpu_ep_register ( sim_p )
                                      types: ["X", "X"],
                                      operation: function(s_expr)
                                                 {
-						   sim_elto_org = get_reference(s_expr[2]) ;
-						   sim_elto_dst = get_reference(s_expr[1]) ;
-                                                   newval       = get_value(sim_elto_org) ;
+						   let sim_elto_org = get_reference(s_expr[2]) ;
+						   let sim_elto_dst = get_reference(s_expr[1]) ;
+                                                   let newval       = get_value(sim_elto_org) ;
                                                    set_value(sim_elto_dst, newval) ;
                                                 },
                                         verbal: function (s_expr)
@@ -1073,9 +1084,9 @@ function cpu_ep_register ( sim_p )
                                      types: ["X", "X"],
                                      operation: function(s_expr)
                                                 {
-						   sim_elto_org = get_reference(s_expr[2]) ;
-						   sim_elto_dst = get_reference(s_expr[1]) ;
-                                                   newval       = get_value(sim_elto_org) ;
+						   let sim_elto_org = get_reference(s_expr[2]) ;
+						   let sim_elto_dst = get_reference(s_expr[1]) ;
+                                                   let newval       = get_value(sim_elto_org) ;
                                                    set_value(sim_elto_dst, newval) ;
                                                 },
                                         verbal: function (s_expr)
@@ -1099,20 +1110,20 @@ function cpu_ep_register ( sim_p )
                                      types: ["X", "X"],
                                      operation: function(s_expr)
                                                 {
-                                                   r = s_expr[2].split('/') ;
-						   sim_elto_org = get_reference(r[0]) ;
+                                                   let r = s_expr[2].split('/') ;
+						   let sim_elto_org = get_reference(r[0]) ;
 
-                                                   newval = get_value(sim_elto_org) ;
+                                                   let newval = get_value(sim_elto_org) ;
 						   newval = newval[r[1]] ;
                                                    if (typeof newval != "undefined")
 						   {
-						       sim_elto_dst = get_reference(s_expr[1]) ;
+						       let sim_elto_dst = get_reference(s_expr[1]) ;
                                                        set_value(sim_elto_dst, newval);
 						   }
                                                 },
                                         verbal: function (s_expr)
                                                 {
-						   var newval = 0 ;
+						   var newval ;
                                                    var r = s_expr[2].split('/') ;
 						   var sim_elto_org = get_reference(r[0]) ;
 						   var sim_elto_dst = get_reference(r[1]) ;
@@ -2224,7 +2235,7 @@ function cpu_ep_register ( sim_p )
 						   var n3 = n2.substr(31 - (base + offset - 1), offset) ;
 
 						   // name
-					           var from_elto = "" ;
+					           var from_elto ;
 						   if (1 == r.length)
                                                         from_elto = show_verbal(s_expr[3]) ;
 						   else from_elto = show_verbal(s_expr[2]) + "[" + r[1] + "] " ;
@@ -2245,7 +2256,7 @@ function cpu_ep_register ( sim_p )
 				     types: ["X", "I", "I"],
 				     operation: function (s_expr)
 		                                {
-						   sim_elto_dst = get_reference(s_expr[1]) ;
+						   let sim_elto_dst = get_reference(s_expr[1]) ;
 
 						   //    0             1    2  3
 						   //   SBIT_SIGNAL  A0A1   1  0
@@ -2259,7 +2270,7 @@ function cpu_ep_register ( sim_p )
                                                 },
                                         verbal: function (s_expr)
                                                 {
-						   sim_elto_dst = get_reference(s_expr[1]) ;
+						   var sim_elto_dst = get_reference(s_expr[1]) ;
 
                                                    // return verbal of the compound signal/value
 						   var new_value = sim_elto_dst.value ;
@@ -2275,8 +2286,8 @@ function cpu_ep_register ( sim_p )
 				     types: ["X", "X", "I"],
 				     operation: function (s_expr)
 		                                {
-						   sim_elto_org = get_reference(s_expr[2]) ;
-						   sim_elto_dst = get_reference(s_expr[1]) ;
+						   let sim_elto_org = get_reference(s_expr[2]) ;
+						   let sim_elto_dst = get_reference(s_expr[1]) ;
 
 						   //    0             1      2    3
 				                   //   UPDATE_FLAG SELP_M7 FLAG_U 0
@@ -2286,8 +2297,8 @@ function cpu_ep_register ( sim_p )
                                                 },
                                         verbal: function (s_expr)
                                                 {
-						   sim_elto_org = get_reference(s_expr[2]) ;
-						   sim_elto_dst = get_reference(s_expr[1]) ;
+						   var sim_elto_org = get_reference(s_expr[2]) ;
+						   var sim_elto_dst = get_reference(s_expr[1]) ;
 
                                                    var verbose = get_cfg('verbal_verbose') ;
                                                    if (verbose !== 'math') {
@@ -2435,9 +2446,9 @@ function cpu_ep_register ( sim_p )
 						   var n2 = sim_p.signals[s_expr[1]].value ;
 						   var m1 = (1 << (posd+len)) - 1 ; // mask: 000...000 11111 (last      posd+len  bits to '1')
 						       m1 = ~m1                   ; // mask: 111...111 00000 (first 32-(posd+len) bits to '1')
-						       m1 = m1 & n2 ;             ; // get first 32-(posd+len) bits of n2
+						       m1 = m1 & n2 ;             // get first 32-(posd+len) bits of n2
 						   var m2 = (1 << posd) - 1       ; // mask: 000...000 11111 (last 'posd' bits to '1')
-						       m2 = m2 & n2 ;             ; // get last 'posd' bits of n2
+						       m2 = m2 & n2 ;             // get last 'posd' bits of n2
 
 						   var n3 = m1 + (n1 << posd) + m2 ;
 						   set_value(sim_p.signals[s_expr[1]], n3) ;
@@ -2556,7 +2567,7 @@ function cpu_ep_register ( sim_p )
 					     types: ["S", "X"],
 					     operation: function (s_expr)
 							{
-						            sim_elto = get_reference(s_expr[2]) ;
+						            let sim_elto = get_reference(s_expr[2]) ;
 							    if (sim_elto.changed == false) {
 								return ;
                                                             }
@@ -2573,7 +2584,7 @@ function cpu_ep_register ( sim_p )
 					     types: ["X"],
 					     operation: function (s_expr)
 							{
-						            sim_elto = get_reference(s_expr[1]) ;
+						            let sim_elto = get_reference(s_expr[1]) ;
 							    sim_elto.changed = false ; // Disable by Default
                                                         },
                                                 verbal: function (s_expr)
@@ -2585,8 +2596,8 @@ function cpu_ep_register ( sim_p )
 		sim_p.behaviors["CLOCK"] = { nparameters: 1,
 					     operation: function(s_expr)
 							{
-                                                            var new_maddr = null ;
-                                                            var mcelto    = null ;
+                                                            var new_maddr ;
+                                                            var mcelto    ;
 
 						            // measure time (1/2)
 					                    var t0 = performance.now() ;
@@ -2625,7 +2636,7 @@ function cpu_ep_register ( sim_p )
 					                    var t1 = performance.now() ;
 
 						            // update time
-							    var val = get_value(sim_p.states["ACC_TIME"]) ;
+							    val = get_value(sim_p.states["ACC_TIME"]) ;
                                                                 val = val + (t1-t0) ;
 							    set_value(sim_p.states["ACC_TIME"], val);
                                                         },
@@ -2641,8 +2652,8 @@ function cpu_ep_register ( sim_p )
 							    // set states/signals to the default state
 							    for (var key in sim_p.states) {
 								 reset_value(sim_p.states[key]) ;
-                                                            }
-							    for (var key in  sim_p.signals) {
+                                                             }
+							    for (key in  sim_p.signals) {
 								 reset_value(sim_p.signals[key]) ;
                                                             }
                                                         },

@@ -19,12 +19,17 @@
  */
 
 
+import $ from 'jquery';
+import { share_as_uri, share_information } from '../wepsim_core/wepsim_share.js';
+import { wait_if_uievents } from '../sim_core/sim_core_ctrl.js';
+import { wepsim_notify_success } from '../wepsim_core/wepsim_notify.js';
+
         /*
          *  Share link
          */
 
         /* jshint esversion: 6 */
-        class ws_share_link extends HTMLElement
+        export class ws_share_link extends HTMLElement
         {
               static get observedAttributes()
 	      {
@@ -62,22 +67,16 @@
 			  " <h5 class='m-0'>" +
 			  " <span class='text-white bg-secondary' data-langkey='Link'>Link</span>" +
 			  " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
-                          '         onclick="var c = document.getElementById(\'qrcode2\').value;' +
-                          '                  share_information(\'share\', \'title\', \'text\', c);" ' +
-                          "><span data-langkey='Share'>Share</span></button>" +
+                          "         data-bind='click' data-action='share'><span data-langkey='Share'>Share</span></button>" +
 			  " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
-                          '         onclick="var c = document.getElementById(\'qrcode2\').value;' +
-                          '                  navigator.clipboard.writeText(c); ' +
-                          '                  wepsim_notify_success(\'<strong>INFO</strong>\', ' +
-                          '                                        \'Copied to clipboard!\');" ' +
-                          "><span data-langkey='Copy'>Copy</span></button>" +
+                          "         data-bind='click' data-action='copy'><span data-langkey='Copy'>Copy</span></button>" +
 			  " </h5>" +
 			  "</div>" +
 			  "<div class='card-body'>" +
 		          'You can use the following link:<br>' +
 	                  '<textarea id="qrcode2" class="form-control" ' +
 	                  '          row="5" style="height:70%" ' +
-                          '          onclick="navigator.clipboard.writeText(this.value);" ' +
+	                  '          data-bind="click" data-action="textarea-copy" ' +
                           '>Loading...</textarea>' +
 	                  '<br>' +
 	               // '<div id="qrcode1" class="mx-auto"></div>' +
@@ -106,9 +105,33 @@
                                }, 200) ;
 	      }
 
+	      bindElements ()
+	      {
+		    this.addEventListener('click', (e) => {
+			const el = e.target.closest('[data-bind="click"]');
+			if (!el) return;
+			e.preventDefault();
+			switch (el.dataset.action) {
+			    case 'share':
+				var c = document.getElementById('qrcode2').value;
+				share_information('share', 'title', 'text', c);
+				break;
+			    case 'copy':
+				var c2 = document.getElementById('qrcode2').value;
+				navigator.clipboard.writeText(c2);
+				wepsim_notify_success('<strong>INFO</strong>', 'Copied to clipboard!');
+				break;
+			    case 'textarea-copy':
+				navigator.clipboard.writeText(el.value);
+				break;
+			}
+		    });
+	      }
+
 	      connectedCallback ()
 	      {
 		    this.render('connectedCallback') ;
+		    this.bindElements();
 	      }
 
 	      attributeChangedCallback (name, oldValue, newValue)
@@ -137,7 +160,4 @@
 	      }
         }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-share-link', ws_share_link) ;
-        }
 

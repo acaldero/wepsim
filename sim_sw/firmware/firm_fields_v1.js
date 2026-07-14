@@ -18,8 +18,13 @@
  *
  */
 
+import { frm_getToken, frm_getTokenType, frm_isToken, frm_isToken_arr, frm_langError, frm_nextToken } from './lexical.js';
+import { i18n, i18n_get_TagFor } from '../../wepsim_i18n/i18n.js';
+import { simhw_sim_ctrlStates_get } from '../../sim_hw/sim_hw_index.js';
+import { firm_instruction_keynumber_read, firm_instruction_keystring_read } from './firm_fields_v2.js';
+import { WORD_LENGTH } from '../assembly/datatypes.js';
 
-function firm_fields_v1_write ( elto_fields )
+export function firm_fields_v1_write ( elto_fields )
 {
 	var o = "" ;
 
@@ -29,7 +34,7 @@ function firm_fields_v1_write ( elto_fields )
         }
 
         // return fields as string...
-	for (j=0; j<elto_fields.length; j++)
+	for (var j=0; j<elto_fields.length; j++)
 	{
 		 o += '\t' + elto_fields[j].name + " = " + elto_fields[j].type ;
 		 o += "(" + elto_fields[j].startbit + "," + elto_fields[j].stopbit + ")" ;
@@ -44,7 +49,7 @@ function firm_fields_v1_write ( elto_fields )
 }
 
 
-function firm_instruction_nword_read ( context, instruccionAux )
+export function firm_instruction_nword_read ( context, instruccionAux )
 {
 
 // li reg val {
@@ -73,7 +78,7 @@ function firm_instruction_nword_read ( context, instruccionAux )
        return {} ;
 }
 
-function firm_instruction_help_read ( context, instruccionAux )
+export function firm_instruction_help_read ( context, instruccionAux )
 {
 
 // li reg val {
@@ -112,7 +117,7 @@ function firm_instruction_help_read ( context, instruccionAux )
        return {} ;
 }
 
-function firm_instruction_co_read ( context, instruccionAux, xr_info, all_ones_co )
+export function firm_instruction_co_read ( context, instruccionAux, xr_info, all_ones_co )
 {
 
 // li reg val {
@@ -168,10 +173,10 @@ function firm_instruction_co_read ( context, instruccionAux, xr_info, all_ones_c
 	   }
        }
 
-       // overlapping mask (initialized with 'co' field)
-       stop  = 31 - parseInt(xr_info.ir.default_eltos.oc.end) ;   // 5 -> 26
-       start = 31 - parseInt(xr_info.ir.default_eltos.oc.begin) ; // 0 -> 31
-       for (i=stop; i<=start; i++)
+        // overlapping mask (initialized with 'co' field)
+        var stop  = 31 - parseInt(xr_info.ir.default_eltos.oc.end) ;   // 5 -> 26
+        var start = 31 - parseInt(xr_info.ir.default_eltos.oc.begin) ; // 0 -> 31
+        for (var i=stop; i<=start; i++)
        {
 	    if (typeof instruccionAux.overlapping[i] != "undefined") {
 	        return frm_langError(context,
@@ -196,7 +201,7 @@ function firm_instruction_co_read ( context, instruccionAux, xr_info, all_ones_c
        return {} ;
 }
 
-function firm_instruction_cop_read ( context, instruccionAux, all_ones_co )
+export function firm_instruction_cop_read ( context, instruccionAux, all_ones_co )
 {
 
 // li reg val {
@@ -261,7 +266,7 @@ function firm_instruction_cop_read ( context, instruccionAux, all_ones_co )
        return {} ;
 }
 
-function firm_instruction_field_read ( context, instruccionAux, camposInsertados )
+export function firm_instruction_field_read ( context, instruccionAux, camposInsertados )
 {
 	var tmp_name = frm_getToken(context) ;
 
@@ -372,14 +377,14 @@ function firm_instruction_field_read ( context, instruccionAux, camposInsertados
        return {} ;
 }
 
-function firm_instruction_compute_opcode_pattern ( context, instruccionAux )
+export function firm_instruction_compute_opcode_pattern ( context, instruccionAux )
 {
        var nbits = instruccionAux.nwords * WORD_LENGTH ;
-       var c = 0 ;
-       var d_start = 0 ;
-       var d_stop = 0 ;
-       var v = '' ;
-       var j = 0 ;
+       var c ;
+       var d_start ;
+       var d_stop ;
+       var v ;
+       var j ;
 
        // opcode_pattern (e.g.: "------10101-----1100")
        instruccionAux.opcode_pattern = '-'.repeat(nbits) ;
@@ -418,9 +423,9 @@ function firm_instruction_compute_opcode_pattern ( context, instruccionAux )
         return {} ;
 }
 
-function firm_instruction_read_flexible_fields ( context, instruccionAux, xr_info, all_ones_co )
+export function firm_instruction_read_flexible_fields ( context, instruccionAux, xr_info, all_ones_co )
 {
-       var ret = {};
+       var ret ;
 
 // li reg val {
 //             *co=000000,
@@ -438,7 +443,7 @@ function firm_instruction_read_flexible_fields ( context, instruccionAux, xr_inf
        var campos       = instruccionAux.fields ;
        var firma        = instruccionAux.signature ;
        var firmaUsuario = instruccionAux.signatureUser ;
-       var firmaGlobal  = instruccionAux.signatureGlobal ;
+       var firmaGlobal ;
 
        var co_inserted = 0;
        var camposInsertados = 0;

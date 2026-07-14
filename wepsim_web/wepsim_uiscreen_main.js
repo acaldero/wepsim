@@ -17,6 +17,12 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { simcore_init, simcore_welcome } from '../sim_core/sim_api_core.js';
+import { upgrade_cfg } from '../sim_core/sim_cfg.js';
+import { wepsim_example_reset } from '../wepsim_core/wepsim_example.js';
+import { wepsim_general_exception_handler, wepsim_init_default, wepsim_init_ui } from './wepsim_web_simulator.js';
 
 
         /*
@@ -24,7 +30,7 @@
          */
 
         /* jshint esversion: 6 */
-        class ws_web_main extends ws_uielto
+        export class ws_web_main extends ws_uielto
         {
               // constructor
 	      constructor ()
@@ -42,6 +48,8 @@
                     // render current element
 		    this.render_skel() ;
 		    this.render_populate(event_name) ;
+
+	      this.bindElements();
 	      }
 
 	      render_skel ( )
@@ -97,21 +105,24 @@
 	           upgrade_cfg() ;
 
 	           // ...and full initialization after jquery-ready
-	           $(document).ready(function()
+           $(document).ready(function()
 	           {
-		       try
-		       {
+		      // try
+		      // {
 			   wepsim_init_ui() ;
                            wepsim_example_reset() ;
-    			   wepsim_init_default() ;
-		       }
-		       catch(err)
-		       {
-			   wepsim_general_exception_handler(err) ;
-		       }
+			   wepsim_init_default() ;
+		      // }
+		      // catch(err)
+		      // {
+			// wepsim_general_exception_handler(err) ;
+		      // }
 	           }) ;
+	      }
+
+	      bindElements()
+	      {
 	      }
         }
 
-        register_uielto('ws-web-main', ws_web_main) ;
 

@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.examples.ja = {
+    export function i18n_ja_register_examples(i18n) {
+
+
+
+        i18n.eltos.examples.ja = {
 
 		'addv + seqv.':			'addv + seqv',
 		'Alloc.s':			'同種',
@@ -83,4 +87,5 @@
 		'_last_':			'_last_'
 
     };
+    }
 

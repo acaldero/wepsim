@@ -17,14 +17,19 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { get_simware } from '../sim_core/sim_adt_core.js';
+import { simhw_internalState, simhw_sim_signals } from '../sim_hw/sim_hw_index.js';
+import { wait_if_uievents } from '../sim_core/sim_core_ctrl.js';
+
 
 
         /*
          *  Main Memory
          */
-
         /* jshint esversion: 6 */
-        class ws_bin_mc extends ws_uielto
+        export class ws_bin_mc extends ws_uielto
         {
               // constructor
 	      constructor ()
@@ -41,6 +46,7 @@
 
                     // render current element
                     this.render_skel() ;
+                    this.bindElements() ;
                     this.render_populate() ;
               }
 
@@ -75,18 +81,17 @@
 	      }
         }
 
-        register_uielto('ws-bin_mc', ws_bin_mc) ;
 
 
         /*
          *  mc2html
          */
 
-	function firmware2html ( fir, showBinary )
+	export function firmware2html( fir, showBinary )
 	{
-		var i = 0 ;
-		var s = "" ;
-		var n = "" ;
+		var i ;
+		var s ;
+		var n ;
 
                 var filter = simhw_internalState('filter_signals') ;
 
@@ -112,15 +117,15 @@
 		    o += "<table class='border border-0'>";
 
                 var l = 0;
-                var line = "";
-	        var fragment = "";
-		var ico  = "";
-		var madd = "";
+                var line ;
+	        var fragment ;
+		var ico  ;
+		var madd ;
 		for (i=0; i<fir.length; i++)
 		{
 		    var mstart = fir[i]["mc-start"];
 		    var mcode  = fir[i].microcode;
-		    for (j=0; j<mcode.length; j++)
+		    for (var j=0; j<mcode.length; j++)
 		    {
                          if ((++l % 10) == 1)
 		             o = o + h ;

@@ -23,12 +23,26 @@
      * WepSIM actions
      */
 
-    var hash_action = {} ;
+import { simcore_do_nothing_handler, simcore_hardware_export } from '../sim_core/sim_api_core.js';
+import { get_screen_content, get_sound_content } from '../sim_core/sim_core_ui.js';
+import { wepsim_checkpoint_NB2Obj, wepsim_checkpoint_Obj2NB } from '../wepsim_core/wepsim_checkpoint.js';
+import { wepsim_nodejs_runApp, wepsim_nodejs_check, wepsim_nodejs_show_currentstate,
+         wepsim_nodejs_verbose_instructionlevel, wepsim_nodejs_verbose_microinstructionlevel,
+         wepsim_nodejs_verbose_verbalized, wepsim_nodejs_runAppInteractive,
+         wepsim_nodejs_show_record, wepsim_nodejs_init, wepsim_nodejs_prepareCode,
+         wepsim_nodejs_get_asmbin, wepsim_nodejs_get_instructionset,
+         wepsim_nodejs_get_instructionset_filtered, wepsim_nodejs_help_signal,
+         wepsim_nodejs_help_instructionset, wepsim_nodejs_help_component,
+         wepsim_nodejs_help_components, wepsim_nodejs_load_examples,
+         wepsim_nodejs_examples2tests } from './wepsim_node_core.js';
+
+    export var hash_action = {} ;
 
 
     //
     // CHECK
     //
+    export function wepsim_nodejs_regiter_action() {
 
     hash_action.CHECK = function(data, options)
     {
@@ -272,8 +286,8 @@
 
     hash_action["SHOW-MICROCODE-FIELDS"] = function(data, options)
     {
-    	var elto_obj    = null ;
-    	var elto_fields = null ;
+    	var elto_obj    ;
+    	var elto_fields ;
         var ret = wepsim_nodejs_get_instructionset(data, options) ;
 
         // empty firmware
@@ -337,7 +351,7 @@
 
     hash_action.HELP = function(data, options)
     {
-        var ret = null ;
+        var ret ;
 
         wepsim_nodejs_init(data) ;
 
@@ -413,13 +427,13 @@
         // return ok
         return true ;
     } ;
-
+    }
 
     /**
      * WepSIM actions
      */
 
-    function wepsim_nodejs_doActionError ( err_action )
+    export function wepsim_nodejs_doActionError ( err_action )
     {
         console.log('\n' +
                     'WepSIM-cl\n' +
@@ -435,7 +449,7 @@
         return false ;
     }
 
-    function wepsim_nodejs_doAction ( data, options )
+    export function wepsim_nodejs_doAction ( data, options )
     {
         var action_f = hash_action[data.action] ;
         if (typeof action_f !== "undefined") {
@@ -445,20 +459,10 @@
         return wepsim_nodejs_doActionError(data.action) ;
     }
 
-    function wepsim_nodejs_loadCheckpoint ( data_checkpoint )
+    export function wepsim_nodejs_loadCheckpoint ( data_checkpoint )
     {
 	    var obj_checkpoint  = JSON.parse(data_checkpoint) ;
             obj_checkpoint  = wepsim_checkpoint_NB2Obj(obj_checkpoint) ;
 
         return obj_checkpoint ;
     }
-
-
-    /**
-     * Export API
-     */
-
-    module.exports.wepsim_nodejs_doActionError  = wepsim_nodejs_doActionError ;
-    module.exports.wepsim_nodejs_doAction       = wepsim_nodejs_doAction ;
-    module.exports.wepsim_nodejs_loadCheckpoint = wepsim_nodejs_loadCheckpoint ;
-

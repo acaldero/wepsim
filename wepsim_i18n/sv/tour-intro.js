@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.tour_intro.sv = {
+    export function i18n_sv_register_tour_intro(i18n) {
+
+
+
+        i18n.eltos.tour_intro.sv = {
 
 		'step1':		'WepSIM hjälper till att bättre förstå hur en dator fungerar: den är visuell, interaktiv, integreras från signaler upp till avbrott, systemsamtal, undantag, etc. <br> <br> Vi tror verkligen WepSIM är ett revolutionerande undervisningsverktyg. Den här korta rundan introducerar de viktigaste delarna av dess gränssnitt.',
 	        "step2":                "Den här knappen längst upp till höger är en snabbåtkomstmeny för olika arbetslägen. <br>" +
@@ -36,4 +40,5 @@
 		'_last_':		'_last_'
 
     };
+    }
 

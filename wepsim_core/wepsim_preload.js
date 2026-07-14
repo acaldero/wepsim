@@ -18,15 +18,18 @@
  *
  */
 
+import { wepsim_url_json } from './wepsim_url.js';
+import { ws_alert } from '../sim_core/sim_core_ui.js';
+import { ws_info } from '../sim_core/sim_adt_core.js';
 
-    //
+//
     // Preload work
     //
 
-    function wepsim_preload_fromHash ( hash )
+    export function wepsim_preload_fromHash ( hash )
     {
-        var key = '' ;
-        var act = function() {} ;
+        var key ;
+        var act ;
 
         // preload tasks in order
 	var o = '' ;
@@ -44,10 +47,10 @@
 	return o ;
     }
 
-    function wepsim_preload_get2hash ( window_location, f_preload_fromHash )
+    export function wepsim_preload_get2hash ( window_location, f_preload_fromHash )
     {
 	    var hash       = {} ;
-            var hash_field = '' ;
+        var hash_field ;
 	    var uri_obj    = null ;
 
 	    // 1.- check params
@@ -57,7 +60,7 @@
 
 	    // 2.- get parameters
             var parameters = new URL(window_location).searchParams ;
-            for (i=0; i<ws_info.preload_tasks.length; i++)
+            for (let i=0; i<ws_info.preload_tasks.length; i++)
             {
                  hash_field = ws_info.preload_tasks[i].name ;
                  hash[hash_field] = parameters.get(hash_field) ;

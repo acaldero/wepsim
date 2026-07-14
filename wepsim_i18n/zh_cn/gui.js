@@ -21,7 +21,10 @@
 
     // Tranlation thanks to https://github.com/shiptux
 
-    i18n.eltos.gui.zh_cn = {
+    export function i18n_zh_cn_register_gui(i18n) {
+
+
+        i18n.eltos.gui.zh_cn = {
 
 		'Loading WepSIM...':		'正在加载WepSIM ...',
 		'About':			'关于',
@@ -144,4 +147,5 @@
 
 		'_last_':			'_last_'
     };
+    }
 

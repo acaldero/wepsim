@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.examples.kr = {
+    export function i18n_kr_register_examples(i18n) {
+
+
+
+        i18n.eltos.examples.kr = {
 
              "addv + seqv.":				"addv + seqv.",
              "Alloc.s":					"Alloc.s",
@@ -84,5 +88,6 @@
 	     "No examples available...": 		"선택한 하드웨어에 대한 예제가 없습니다",
              "Simple example":				"간단한 예"
 
-    } ;
+    };
+    }
 

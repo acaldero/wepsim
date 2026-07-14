@@ -19,7 +19,11 @@
  */
 
 
-    i18n.eltos.tutorial_simpleusage.es = {
+    export function i18n_es_register_tutorial_simpleusage(i18n) {
+
+
+
+        i18n.eltos.tutorial_simpleusage.es = {
 
                  "title_0":     "WepSIM: microprogramar, ensamblar y simular",
                  "message_0":   "<center><img alt='wepsim screenshot' src='images/simulator/simulator011.jpg' style='max-width:100%; max-height:40vh;'></center>" +
@@ -90,4 +94,5 @@
                                 "</h5>"
 
     };
+    }
 

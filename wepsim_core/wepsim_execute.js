@@ -18,12 +18,29 @@
  *
  */
 
+import bootbox from 'bootbox';
 
-    /*
+import { wepsim_state_history_add, wepsim_state_history_reset } from './wepsim_state.js';
+import { get_simware } from '../sim_core/sim_adt_core.js';
+import { update_memories, wait_uievents_and_settimeout } from '../sim_core/sim_core_ctrl.js';
+import { simcore_check_if_can_execute, simcore_reset, simcore_execute_microprogram, simcore_execute_microinstruction, simcore_check_if_can_continue, simcore_execute_microinstruction2 } from '../sim_core/sim_api_core.js';
+import { wsweb_dlg_alert, wsweb_dlg_close, wsweb_dlg_open } from './wepsim_dialog.js';
+import { get_cfg } from '../sim_core/sim_cfg.js';
+import { simhw_internalState, simhw_internalState_get, simhw_sim_ctrlStates_get, simhw_sim_state } from '../sim_hw/sim_hw_index.js';
+import { webui_button_set_start, webui_button_set_stop } from '../wepsim_web/wepsim_uielto_executionbar.js';
+import { get_value } from '../sim_core/sim_core_values.js';
+import { simcore_ga } from '../sim_core/sim_core_ga.js';
+import { wsweb_change_show_asmdbg, wsweb_change_show_processor, wsweb_dialog_open, wsweb_execution_run, wsweb_set_details } from '../wepsim_web/wepsim_web_api.js';
+import { wepsim_offcanvas_hide, wepsim_offcanvas_set_content, wepsim_offcanvas_show } from '../wepsim_web/wepsim_uiscreen_classic.js';
+import { simcore_record_glowing } from '../sim_core/sim_core_record.js';
+import { wepsim_state_history_list } from '../wepsim_web/wepsim_uielto_states.js';
+
+
+/*
      * Run/Stop
      */
 
-    function wepsim_execute_reset ( reset_cpu, reset_memory )
+    export function wepsim_execute_reset ( reset_cpu, reset_memory )
     {
         wepsim_state_history_reset();
 
@@ -41,7 +58,7 @@
         }
     }
 
-    function wepsim_execute_instruction ( )
+    export function wepsim_execute_instruction ( )
     {
 	var ret = simcore_check_if_can_execute() ;
 	if (false === ret.ok)
@@ -65,7 +82,7 @@
         return true ;
     }
 
-    function wepsim_execute_microinstruction ( )
+    export function wepsim_execute_microinstruction ( )
     {
 	var ret = simcore_check_if_can_execute() ;
 	if (false === ret.ok)
@@ -83,7 +100,7 @@
         return true ;
     }
 
-    function wepsim_execute_set_breakpoint ( hexaddr, is_set )
+    export function wepsim_execute_set_breakpoint ( hexaddr, is_set )
     {
         var SIMWARE   = get_simware() ;
         var curr_mp   = simhw_internalState('MP') ;
@@ -100,7 +117,7 @@
         return true ;
     }
 
-    function wepsim_execute_toggle_breakpoint ( hexaddr )
+    export function wepsim_execute_toggle_breakpoint ( hexaddr )
     {
         var SIMWARE   = get_simware() ;
         var curr_mp   = simhw_internalState('MP') ;
@@ -122,7 +139,7 @@
         return is_set ;
     }
 
-    function wepsim_execute_toggle_microbreakpoint ( hexaddr )
+    export function wepsim_execute_toggle_microbreakpoint ( hexaddr )
     {
         var curr_mc   = simhw_internalState('MC') ;
         var curr_addr = parseInt(hexaddr, 16) ;
@@ -138,10 +155,10 @@
     }
 
 
-    var DBG_stop  = true ;
-    var DBG_limit_instruction = 0 ;
+    export var DBG_stop  = true ;
+    export var DBG_limit_instruction = 0 ;
 
-    function wepsim_execute_stop ( )
+    export function wepsim_execute_stop ( )
     {
 	DBG_stop = true;
         DBG_limit_instruction = 0 ;
@@ -156,7 +173,7 @@
 	return true ;
     }
 
-    function wepsim_execute_play ( wepsim_execute_stop )
+    export function wepsim_execute_play ( wepsim_execute_stop )
     {
 	var ret = simcore_check_if_can_execute() ;
 	if (false === ret.ok)
@@ -173,7 +190,7 @@
 	return true ;
     }
 
-    function wepsim_execute_toggle_play ( wepsim_execute_stop )
+    export function wepsim_execute_toggle_play ( wepsim_execute_stop )
     {
         if (DBG_stop === false)
         {
@@ -192,7 +209,7 @@
      * Breakpoints
      */
 
-    function wepsim_check_stopbybreakpoint ( dash_memaddr )
+    export function wepsim_check_stopbybreakpoint ( dash_memaddr )
     {
         if (typeof dash_memaddr === "undefined") {
             return false ;
@@ -201,7 +218,7 @@
         return (dash_memaddr.breakpoint) ;
     }
 
-    function wepsim_show_stopbyevent ( msg1, msg2 )
+    export function wepsim_show_stopbyevent ( msg1, msg2 )
     {
 	var buttons = {} ;
 	    buttons.states = {
@@ -267,11 +284,11 @@
 	return true ;
     }
 
-    function wepsim_memdashboard_notify_offcanvas ( ref_mdash, notif_origin, notifications, skip1st )
+    export function wepsim_memdashboard_notify_offcanvas ( ref_mdash, notif_origin, notifications, skip1st )
     {
         // find index 'k' of the first line for the notify...
         let k = 0 ;
-        let lineuc = '' ;
+        let lineuc ;
 	while (k < notifications)
         {
             lineuc = ref_mdash.notify[k].toUpperCase() ;
@@ -315,16 +332,13 @@
 	// footer
 	var dialog_footer = '<span class="row m-2">' +
                             '<button class="btn btn-danger col me-2"' +
-			    '        onclick="wepsim_execute_stop();' +
-			    '                 wepsim_offcanvas_hide(\'offcvs3\');' +
-			    '                 return false;">' +
+			    '        data-bind="click" data-action="notify-stop"' +
+			    '        data-offcanvas="offcvs3">' +
 			    '<span data-langkey="Stop">Stop</span></button>' +
 			    '<button class="btn btn-success col"' +
-			    '        onclick="wepsim_offcanvas_hide(\'offcvs3\');' +
-                            '                 setTimeout(wepsim_execute_chainplay,' +
-			    '                            get_cfg(\'DBG_delay\'),' +
-			    '                            wepsim_execute_stop);' +
-			    '                 return false;">' +
+			    '        data-bind="click" data-action="notify-continue"' +
+			    '        data-offcanvas="offcvs3"' +
+                            '        data-delaycfg="DBG_delay">' +
 			    '<span data-langkey="Continue">Continue</span></button>' +
                             '</span>' ;
 
@@ -335,7 +349,7 @@
 	return false ;
     }
 
-    function wepsim_memdashboard_notify_dialogbox ( ref_mdash, notif_origin, notifications, skip1st )
+    export function wepsim_memdashboard_notify_dialogbox ( ref_mdash, notif_origin, notifications, skip1st )
     {
         var k = 1 ;
         if (skip1st) k++ ;
@@ -372,7 +386,7 @@
 	return false ;
     }
 
-    function wepsim_check_getnotifyoptions ( firstline )
+    export function wepsim_check_getnotifyoptions ( firstline )
     {
         var ret = {
 	             showas:         'offcanvas',
@@ -419,7 +433,7 @@
 	return ret ;
     }
 
-    function wepsim_check_donotifyoptions ( options )
+    export function wepsim_check_donotifyoptions ( options )
     {
 	// glowing elements...
 	for (var i=0; i<options.eltos2glow.length; i++) {
@@ -450,9 +464,9 @@
 	return false ;
     }
 
-    function wepsim_check_memdashboard ( ref_mdash, notif_origin )
+    export function wepsim_check_memdashboard ( ref_mdash, notif_origin )
     {
-	var ret = true ;
+	var ret ;
 
         if (typeof ref_mdash === "undefined") {
 	    return false ;
@@ -491,7 +505,7 @@
     }
 
     // execute_chunk
-    function pack_ret2 ( p_ok, p_level, p_msg )
+    export function pack_ret2 ( p_ok, p_level, p_msg )
     {
         var ret2 = {
 	              ok:        p_ok,
@@ -502,10 +516,10 @@
         return ret2 ;
     }
 
-    function wepsim_execute_chunk ( options, chunk )
+    export function wepsim_execute_chunk ( options, chunk )
     {
-	var ret  = false ;
-        var ret2 = {} ;
+	var ret  ;
+        var ret2 ;
 
 	var curr_mp     = simhw_internalState('MP') ;
         var curr_firm   = simhw_internalState('FIRMWARE') ;
@@ -515,8 +529,8 @@
 	var maddr_name  = simhw_sim_ctrlStates_get().mpc.state ;
 	var ref_maddr   = simhw_sim_state(maddr_name) ;
 	var reg_maddr   = get_value(ref_maddr) ;
-        var ref_mdash   = null ;
-        var fetch_maddr = 0 ;
+        var ref_mdash   ;
+        var fetch_maddr ;
 
         var i_clks = 0 ;
 	var i = 0 ;
@@ -578,10 +592,10 @@
                                    " (limited to " + options.instruction_limit + ")") ;
     }
 
-    function wepsim_execute_chunk_atlevel ( chunk, wepsim_execute_stop )
+    export function wepsim_execute_chunk_atlevel ( chunk, wepsim_execute_stop )
     {
-        var options = {} ;
-	var ret = false ;
+        var options ;
+	var ret ;
 
 	var playlevel = get_cfg('DBG_level') ;
 	if (playlevel !== "instruction")
@@ -605,14 +619,13 @@
 	var ref_pc     = simhw_sim_state(pc_name) ;
 	var maddr_name = simhw_sim_ctrlStates_get().mpc.state ;
 	var ref_maddr  = simhw_sim_state(maddr_name) ;
-	var ref_mdash  = 0 ;
+	var ref_mdash  ;
 	options        = {
 			    verbosity:    0,
 			    cycles_limit: get_cfg('DBG_limitick')
 	                 } ;
 
-	ret = false ;
-	var reg_pc  = 0 ;
+	var reg_pc  ;
 
         for (var i=0; i<chunk; i++)
         {
@@ -638,14 +651,14 @@
     }
 
     // instructions per chunck to be chained...
-    var max_turbo = 5.0 ;
+    export var max_turbo = 5.0 ;
 
-    function wepsim_reset_max_turbo ( )
+    export function wepsim_reset_max_turbo ( )
     {
         max_turbo = 5.0 ;
     }
 
-    function wepsim_execute_chainplay ( wepsim_execute_stop )
+    export function wepsim_execute_chainplay ( wepsim_execute_stop )
     {
 	var t0 = 1.0 ;
 	var t1 = 1.0 ;

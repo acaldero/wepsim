@@ -24,7 +24,7 @@
          */
 
         /* jshint esversion: 6 */
-        class ws_uielto extends HTMLElement
+        export class ws_uielto extends HTMLElement
         {
               // constructor
 	      constructor ()
@@ -51,8 +51,15 @@
                     if (0 == this.elto_initialized)
                     {
 		        this.render('connectedCallback') ;
+		        this.bindElements() ;
                         this.elto_initialized = 1 ;
                     }
+	      }
+
+	      bindElements ()
+	      {
+		    // subclasses override this to add event listeners
+		    // using data-bind attributes and event delegation
 	      }
 
               attributeChangedCallback (name, oldValue, newValue)
@@ -129,7 +136,7 @@
         }
 
 
-        function register_uielto ( tag_name, obj_ref )
+        export function register_uielto ( tag_name, obj_ref )
         {
               if (typeof window !== "undefined") {
                   window.customElements.define(tag_name, obj_ref) ;

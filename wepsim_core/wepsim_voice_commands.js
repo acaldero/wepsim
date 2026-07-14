@@ -18,14 +18,22 @@
  *
  */
 
+import $ from 'jquery';
+import { simcore_voice_speak, simcore_voice_stopSpeak } from '../sim_core/sim_core_voice.js';
 
-    /*
-     * Voice control
-     */
+import bootbox from 'bootbox';
+import { wsweb_dialog_close, wsweb_dialog_open } from '../wepsim_web/wepsim_web_api.js';
+import { load_from_example_firmware } from './wepsim_example.js';
+import { wepsim_execute_instruction, wepsim_execute_microinstruction, wepsim_execute_play, wepsim_execute_reset, wepsim_execute_stop } from './wepsim_execute.js';
+import { get_verbal_from_current_mpc } from '../sim_core/sim_adt_ctrlmemory.js';
+import { get_verbal_from_current_pc } from '../sim_core/sim_adt_mainmemory.js';
+import { ws_info } from '../sim_core/sim_adt_core.js';
 
+export var wepsim_voice_dialog = null ;
+
+export function wepsim_register_voice_commands()
+{
     ws_info.voice_commands = {} ;
-    var wepsim_voice_dialog = null ;
-
 
     // dialog
     ws_info.voice_commands['hello'] = function()
@@ -143,4 +151,5 @@
     {
 	 simcore_voice_stopSpeak() ;
     } ;
+}
 

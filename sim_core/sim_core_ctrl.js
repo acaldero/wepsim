@@ -18,12 +18,23 @@
  *
  */
 
+import { simhw_internalState, simhw_internalState_get, simhw_internalState_reset, simhw_internalState_set, simhw_sim_ctrlStates_get, simhw_sim_signal, simhw_sim_state } from '../sim_hw/sim_hw_index.js';
+import { show_cache_memory, show_control_memory, show_main_memory, show_memories_values, update_bus_visibility, update_draw, ws_alert } from './sim_core_ui.js';
+import { get_simware, set_simware } from './sim_adt_core.js';
+import { get_value } from './sim_core_values.js';
+import { get_cfg } from './sim_cfg.js';
+import { control_memory_get, control_memory_set } from './sim_adt_ctrlmemory.js';
+import { saveFirmware } from '../sim_sw/firmware.js';
+import { signal_fire } from '../sim_hw/sim_hw_signal.js';
+import { compute_behavior } from '../sim_hw/sim_hw_behavior.js';
+import { main_memory_set } from './sim_adt_mainmemory.js';
+import { cache_memory_init_cm } from './sim_adt_cachememory.js';
 
-        /*
+/*
          *  base
          */
 
-        function array_includes ( arr, val )
+        export function array_includes ( arr, val )
         {
 	    if (typeof arr.includes != "undefined") {
 	        return arr.includes(val) ;
@@ -39,12 +50,12 @@
 	}
 
 	// Next two functions taken from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
-	function base_escapeRegExp ( string )
+	export function base_escapeRegExp ( string )
 	{
 	    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 	}
 
-	function base_replaceAll ( base_str, match, replacement )
+	export function base_replaceAll ( base_str, match, replacement )
 	{
 	    // ES12+
 	    if (typeof base_str.replaceAll != "undefined") {
@@ -55,11 +66,11 @@
 	    return base_str.replace(new RegExp(base_escapeRegExp(match), 'g'), ()=>replacement);
 	}
 
-        async function wait_if_uievents ( function1, recommended_timeout )
+        export async function wait_if_uievents ( function1, recommended_timeout )
         {
             if (globalThis.scheduler?.yield)
             {
-                await scheduler.yield() ;
+                await globalThis.scheduler.yield() ;
                 function1() ;
             }
             else
@@ -68,10 +79,10 @@
             }
 	}
 
-        async function wait_uievents_and_settimeout ( function1, recommended_timeout )
+        export async function wait_uievents_and_settimeout ( function1, recommended_timeout )
         {
             if (globalThis.scheduler?.yield) {
-                await scheduler.yield() ;
+                await globalThis.scheduler.yield() ;
             }
 
             setTimeout(function1, recommended_timeout) ;
@@ -82,11 +93,11 @@
          *  checking & updating
          */
 
-        function update_cpu_bus_fire ( tri_mask, tri_index )
+        export function update_cpu_bus_fire ( tri_mask, tri_index )
         {
 	     // 1.- number of active tri-state
 	     var n = 0 ;
-	     var a = 0 ;
+	     var a ;
 	     var e = -1 ;
 	     if (tri_mask) // 000...00 -> skip loop
 	     {
@@ -128,7 +139,7 @@
              return n ;
         }
 
-        function update_system_bus_fire ( number_active_tri )
+        export function update_system_bus_fire ( number_active_tri )
         {
 	     if (simhw_internalState_get('fire_visible', 'databus') == true)
 	     {
@@ -152,7 +163,7 @@
          *  Show/Update the global state
          */
 
-        function update_signal_firmware ( key )
+        export function update_signal_firmware ( key )
         {
             var SIMWARE = get_simware() ;
 	    var maddr_name = simhw_sim_ctrlStates_get().mpc.state ;
@@ -196,13 +207,13 @@
 	    }
 
 	    // show memories...
-	    var bits = get_value(simhw_sim_state('REG_IR')).toString(2) ;
-	    bits = "00000000000000000000000000000000".substring(0, 32 - bits.length) + bits ;
+	    // var bits = get_value(simhw_sim_state('REG_IR')).toString(2) ;
+	    // bits = "00000000000000000000000000000000".substring(0, 32 - bits.length) + bits ;
 
             show_memories_values() ;
 	}
 
-        function propage_signal_update ( key )
+        export function propage_signal_update ( key )
         {
 	    if (true === get_cfg('is_interactive'))
 	    {
@@ -240,7 +251,7 @@
 	    signal_fire(key) ; //compute_behavior('FIRE ' + key) ;
         }
 
-	function oceoc2rom_addr ( oc_code, eoc_code, eoc )
+	export function oceoc2rom_addr ( oc_code, eoc_code, eoc )
 	{
 	       var xr_info = simhw_sim_ctrlStates_get() ;
 	       var ocsize  = xr_info.ir.default_eltos.oc.length ; // ocsize is 6 bits in MIPS, 7 bits in RV, etc.
@@ -254,9 +265,9 @@
 	       return rom_addr ;
 	}
 
-        function update_memories ( preSIMWARE )
+        export function update_memories ( preSIMWARE )
         {
-            var i=0;
+            var i ;
 
 	    // 1.- load the SIMWARE
             set_simware(preSIMWARE) ;
@@ -265,14 +276,14 @@
 	    // 2.- load the MC from ROM['firmware']
             simhw_internalState_reset('MC', {}) ;
             var mc_obj = simhw_internalState('MC') ;
-            var mcelto = null ;
-            for (i=0; i<SIMWARE.firmware.length; i++)
-	    {
-	       var last = SIMWARE.firmware[i].microcode.length ; // mc = microcode
-               var mci  = SIMWARE.firmware[i]["mc-start"] ;
-	       for (var j=0; j<last; j++)
-	       {
-                    var mcelto = {
+               var mcelto ;
+               for (i=0; i<SIMWARE.firmware.length; i++)
+                   {
+                      var last = SIMWARE.firmware[i].microcode.length ; // mc = microcode
+                      var mci  = SIMWARE.firmware[i]["mc-start"] ;
+                      for (var j=0; j<last; j++)
+                      {
+                          mcelto = {
 		                    value:        SIMWARE.firmware[i].microcode[j],
                                     comments:     SIMWARE.firmware[i].microcomments[j],
                                     is_native:    SIMWARE.firmware[i].is_native,
@@ -309,7 +320,7 @@
 	    // 4.- load the MP from SIMWARE['mp']
             simhw_internalState_reset('MP', {}) ;
             var mp_obj = simhw_internalState('MP') ;
-            var melto  = null ;
+            var melto  ;
 	    for (var key in SIMWARE.mp)
 	    {
                  melto = Object.assign({}, SIMWARE.mp[key]) ;
@@ -320,7 +331,7 @@
 
 	    // 5.- load the segments from SIMWARE['seg']
             simhw_internalState_reset('segments', {}) ;
-	    for (var key in SIMWARE.seg)
+	    for (key in SIMWARE.seg)
 	    {
 	         simhw_internalState_set('segments', key, SIMWARE['seg'][key]) ;
 	    }
