@@ -156,7 +156,7 @@ export default defineConfig({
                         {
                             if (id.includes('node_modules'))
                             {
-                                if (id.includes('/tone/')) return 'vendor-tone';
+                                if (id.includes('/tone/') || id.includes('/standardized-audio-context/')) return 'vendor-tone';
                                 if (id.includes('/codemirror/')) return 'vendor-codemirror';
                                 if (id.includes('/jquery') ||
                                     id.includes('/bootstrap-tokenfield/') ||

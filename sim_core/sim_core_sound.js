@@ -18,8 +18,6 @@
  *
  */
 
-import { getContext, getTransport, start, Synth } from 'tone';
-
 /*
  *  Sound (Tune.js)
  */
@@ -33,12 +31,17 @@ export function simcore_sound_init ()
     }
 }
 
-export function simcore_sound_canPlay ()
+export async function simcore_sound_canPlay ()
 {
-    // if (typeof Tone == "undefined") {
-    //         return false ;
-    //     }
-    if (typeof getContext() == 'undefined')
+    try
+    {
+        const { getContext } = await import('tone') ;
+        if (typeof getContext() == 'undefined')
+        {
+            return false ;
+        }
+    }
+    catch (e)
     {
         return false ;
     }
@@ -48,13 +51,14 @@ export function simcore_sound_canPlay ()
 
 export async function simcore_sound_start ()
 {
-    if (simcore_sound_canPlay() == false)
+    if (await simcore_sound_canPlay() == false)
     {
         return false ;
     }
 
     try
     {
+        const { getContext, getTransport } = await import('tone') ;
         await getTransport().start() ;
         if (getContext().state !== 'running')
         {
@@ -72,13 +76,14 @@ export async function simcore_sound_start ()
 
 export async function simcore_sound_stop ()
 {
-    if (simcore_sound_canPlay() == false)
+    if (await simcore_sound_canPlay() == false)
     {
         return false ;
     }
 
     try
     {
+        const { getTransport } = await import('tone') ;
         await getTransport().stop() ;
     }
     catch (e)
@@ -92,11 +97,12 @@ export async function simcore_sound_stop ()
 
 export async function simcore_sound_playNote (note_str, time_str)
 {
-    if (simcore_sound_canPlay() == false)
+    if (await simcore_sound_canPlay() == false)
     {
         return false ;
     }
 
+    const { getContext, start, Synth } = await import('tone') ;
     await start() ;
     if (getContext().state !== 'running')
     {
