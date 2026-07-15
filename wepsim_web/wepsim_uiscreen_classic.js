@@ -20,6 +20,7 @@
 import $ from 'jquery';
 import * as bootstrap from 'bootstrap';
 import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { get_cfg } from '../sim_core/sim_cfg.js';
 import { simhw_active } from '../sim_hw/sim_hw_index.js';
 import { resolve_html_url, wepsim_help_set } from '../wepsim_core/wepsim_help.js';
@@ -64,8 +65,6 @@ export class ws_uiscreen_classic extends ws_uielto
                                      var content_name = event.target.getAttribute('data-ws-content') ;
                                      wepsim_offcanvas_helponhw('offcvs2', content_name) ;
                                  }) ;
-
-        this.bindElements();
     }
 
     render_skel ()
@@ -337,52 +336,30 @@ export class ws_uiscreen_classic extends ws_uielto
         // return HTML
         return o1 ;
     }
-
-    bindElements()
-    {
-        if (this._bindElementsDone) return;
-        this._bindElementsDone = true;
-
-        this.addEventListener('click', (event) =>
-        {
-            var target = event.target.closest('[data-bind="click"]');
-            if (!target) return;
-
-            var action = target.getAttribute('data-action');
-            switch (action)
-            {
-                case 'open-state':
-                    wsweb_dialog_open('state');
-                    break;
-                case 'open-help-asm-format':
-                    wsweb_dialog_open('help');
-                    wepsim_help_set('relative', 'simulator#help_assembly_format');
-                    break;
-                case 'open-help':
-                    wsweb_dialog_open('help');
-                    break;
-                case 'open-help-firmware-format':
-                    wsweb_dialog_open('help');
-                    wepsim_help_set('relative', 'simulator#help_firmware_format');
-                    break;
-                case 'open-hw-summary':
-                    var offobj = document.getElementById('offcvs2');
-                    offobj.setAttribute('data-ws-content', 'hardware_summary');
-                    wepsim_offcanvas_show('offcvs2');
-                    break;
-                case 'open-signals-summary':
-                    var offobj = document.getElementById('offcvs2');
-                    offobj.setAttribute('data-ws-content', 'signals_summary');
-                    wepsim_offcanvas_show('offcvs2');
-                    break;
-                case 'toggle-offcanvas':
-                    var oid = target.getAttribute('data-offcanvas');
-                    if (oid) wepsim_offcanvas_toggleHV(oid);
-                    break;
-            }
-        });
-    }
 }
+
+onClick('open-state', () => wsweb_dialog_open('state')) ;
+onClick('open-help-asm-format', () =>
+{
+    wsweb_dialog_open('help') ; wepsim_help_set('relative', 'simulator#help_assembly_format') ;
+}) ;
+onClick('open-help', () => wsweb_dialog_open('help')) ;
+onClick('open-help-firmware-format', () =>
+{
+    wsweb_dialog_open('help') ; wepsim_help_set('relative', 'simulator#help_firmware_format') ;
+}) ;
+onClick('open-hw-summary', () =>
+{
+    var offobj = document.getElementById('offcvs2') ; offobj.setAttribute('data-ws-content', 'hardware_summary') ; wepsim_offcanvas_show('offcvs2') ;
+}) ;
+onClick('open-signals-summary', () =>
+{
+    var offobj = document.getElementById('offcvs2') ; offobj.setAttribute('data-ws-content', 'signals_summary') ; wepsim_offcanvas_show('offcvs2') ;
+}) ;
+onClick('toggle-offcanvas', (el) =>
+{
+    var oid = el.getAttribute('data-offcanvas') ; if (oid) wepsim_offcanvas_toggleHV(oid) ;
+}) ;
 
 //
 // General popover

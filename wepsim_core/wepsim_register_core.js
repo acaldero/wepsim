@@ -9,6 +9,7 @@ import { wepsim_register_voice_commands } from './wepsim_voice_commands.js';
 import { wepsim_register_preload_tasks } from './wepsim_preload_commands.js';
 import { wepsim_register_config_ui } from '../wepsim_web/wepsim_web_ui_config_commands.js';
 import { wepsim_state_history_reset } from './wepsim_state.js';
+import { wepsim_example_register } from './wepsim_example.js';
 
 export function wepsim_register_core()
 {
@@ -23,4 +24,5 @@ export function wepsim_register_core()
     wepsim_register_preload_tasks();
     wepsim_register_config_ui();
     wepsim_state_history_reset();
+    wepsim_example_register();
 }

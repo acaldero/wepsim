@@ -19,6 +19,7 @@
  */
 import $ from 'jquery';
 import { ws_uielto } from './wepsim_uielto.js';
+import { onChange, onClick } from './wepsim_web_actions.js';
 import { simhw_active, simhw_internalState, simhw_internalState_reset } from '../sim_hw/sim_hw_index.js';
 import { get_var, set_var } from '../sim_core/sim_core_values.js';
 import { cache_memory_init, cache_memory_init_eltofromcfg, cache_memory_init_eltonextcache } from '../sim_core/sim_adt_cachememory.js';
@@ -44,7 +45,6 @@ export class ws_cache_config extends ws_uielto
         // render current element
         this.render_skel() ;
         this.render_populate() ;
-        this.bindElements() ;
     }
 
     render_skel ()
@@ -82,53 +82,7 @@ export class ws_cache_config extends ws_uielto
         var o1 = wepsim_show_cache_memory_cfg(div_hash, curr_cfg) ;
         $(div_hash).html(o1) ;
     }
-
-    bindElements()
-    {
-        this.addEventListener('change', (e) =>
-        {
-            const el = e.target.closest('[data-bind="change"]');
-            if (!el) return;
-            const index = parseInt(el.dataset.index);
-            switch (el.dataset.action)
-            {
-                case 'cm-update-cfg':
-                    wepsim_cm_update_cfg(index, el.dataset.field, el.type === 'number' ? parseInt(el.value) : el.value);
-                    break;
-                case 'cm-update-placement':
-                    wepsim_cm_update_placement(index, el.value);
-                    break;
-                case 'cm-update-set':
-                    wepsim_cm_update_cfg(index, 'set_size', parseInt(el.value));
-                    var e2 = document.getElementById('rng_cmcfg');
-                    if (e2) e2.textContent = el.value;
-                    break;
-                case 'cm-update-next':
-                    wepsim_cm_update_cfg(index, 'next_cache', el.value);
-                    wepsim_show_cache_memory_config();
-                    break;
-            }
-        });
-        this.addEventListener('click', (e) =>
-        {
-            const el = e.target.closest('[data-bind="click"]');
-            if (!el) return;
-            e.preventDefault();
-            const index = parseInt(el.dataset.index);
-            switch (el.dataset.action)
-            {
-                case 'cm-rm-level':
-                    wepsim_cm_rm_cachelevel('#config_CACHE_sel', index);
-                    break;
-                case 'cm-add-level':
-                    var curr_cfg = simhw_internalState('CM_cfg');
-                    wepsim_cm_add_cachelevel('#config_CACHE_sel', typeof curr_cfg !== 'undefined' ? curr_cfg.length : 0);
-                    break;
-            }
-        });
-    }
 }
-
 /*
          *  Cache config UI
          */
@@ -174,7 +128,10 @@ export function wepsim_show_cm_level_cfg_bits(memory_cfg, index)
         '</tr>' +
         '</tbody>' +
         '</table>' ;
-
+    onChange('cm-update-cfg', (el) =>
+    {
+        wepsim_cm_update_cfg(parseInt(el.dataset.index), el.dataset.field, el.type === 'number' ? parseInt(el.value) : el.value);
+    }) ;
     return o ;
 }
 
@@ -195,7 +152,10 @@ export function wepsim_show_cm_level_cfg_splitunify(memory_cfg, index)
         '    </select>' +
         '    </div>' +
         '  </div>' ;
-
+    onChange('cm-update-cfg', (el) =>
+    {
+        wepsim_cm_update_cfg(parseInt(el.dataset.index), el.dataset.field, el.type === 'number' ? parseInt(el.value) : el.value);
+    }) ;
     return o ;
 }
 
@@ -215,7 +175,10 @@ export function wepsim_show_cm_level_cfg_replacepol(memory_cfg, index)
         '    </select>' +
         '    </div>' +
         '  </div>' ;
-
+    onChange('cm-update-cfg', (el) =>
+    {
+        wepsim_cm_update_cfg(parseInt(el.dataset.index), el.dataset.field, el.type === 'number' ? parseInt(el.value) : el.value);
+    }) ;
     return o ;
 }
 
@@ -279,7 +242,16 @@ export function wepsim_show_cm_level_cfg_placepol(memory_cfg, index)
         '    ' +
         '    </div>' +
         '  </div>' ;
-
+    onChange('cm-update-placement', (el) =>
+    {
+        wepsim_cm_update_placement(parseInt(el.dataset.index), el.value);
+    }) ;
+    onChange('cm-update-set', (el) =>
+    {
+        wepsim_cm_update_cfg(parseInt(el.dataset.index), 'set_size', parseInt(el.value));
+        var e2 = document.getElementById('rng_cmcfg');
+        if (e2) e2.textContent = el.value;
+    }) ;
     return o ;
 }
 
@@ -294,7 +266,11 @@ export function wepsim_show_cm_level_cfg_nextcm(memory_cfg, index)
         "          id='su_next_" + index + '_' + this.name_str + "' " +
         "          data-bind='change' data-action='cm-update-next' data-index='" + index + "'" +
         "          aria-label='Next Cache'>" ;
-
+    onChange('cm-update-next', (el) =>
+    {
+        wepsim_cm_update_cfg(parseInt(el.dataset.index), 'next_cache', el.value);
+        wepsim_show_cache_memory_config();
+    }) ;
     o += "<option value='-1'>None</option>" ;
     for (var i = 0; i < memory_cfg.length; i++)
     {
@@ -336,7 +312,7 @@ export function wepsim_show_cm_level_cfg(div_hash, memory_cfg, index)
         '</div>' +
         "<div class='col-auto px-2 py-0'>" +
         '<span class=\'btn btn-sm btn-warning text-white py-0\' ' +
-        '      data-bind=\'click\' data-action=\'cm-rm-level\' data-index=\'' + index + '\'>Remove</span>' +
+        '      data-bind=\'click\' data-action=\'cm-rm-level\' data-divhash=\'' + div_hash + '\' data-index=\'' + index + '\'>Remove</span>' +
         '</div>' +
         '</div>' +
         '' +
@@ -351,6 +327,10 @@ export function wepsim_show_cm_level_cfg(div_hash, memory_cfg, index)
         wepsim_show_cm_level_cfg_splitunify(memory_cfg, index) +
         wepsim_show_cm_level_cfg_nextcm (memory_cfg, index) +
         '</div>' ;
+    onClick('cm-rm-level', (el) =>
+    {
+        wepsim_cm_rm_cachelevel(el.dataset.divhash, parseInt(el.dataset.index));
+    }) ;
 
     return o ;
 }
@@ -369,14 +349,17 @@ export function wepsim_show_cache_memory_cfg(div_hash, memory_cfg)
         "<span class='col h5 ps-1'>" +
         "  <span data-langkey='Cache'>Cache</span>" +
         '  <span class=\'btn btn-sm btn-success text-white py-0\' ' +
-        '        data-bind=\'click\' data-action=\'cm-add-level\'>Add new</span>' +
+        '        data-bind=\'click\' data-action=\'cm-add-level\ data-divhash=\'' + div_hash + '\' data-memlength=\'' + memory_cfg.length + '\'>Add new</span>' +
         '</span>' +
         "<span class='col border border-secondary border-2 opacity-75 align-middle mt-3'></span>" +
         "<span class='col h5 ps-1'>" +
         "  <span data-langkey='Memory'>Memory</span></span>" +
         '</div>' +
         '</div>' ;
-
+    onClick('cm-add-level', (el) =>
+    {
+        wepsim_cm_add_cachelevel(el.dataset.divhash, el.dataset.memlength);
+    }) ;
     // cards
     o += "<span class='row mx-auto'>" ;
     for (i = 0; i < memory_cfg.length; i++)

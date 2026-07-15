@@ -19,6 +19,7 @@
  */
 import $ from 'jquery';
 import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { wsweb_record_on, wsweb_record_off, wsweb_record_play, wsweb_record_pause, wsweb_record_confirmReset, wsweb_notifyuser_add } from './wepsim_web_api.js';
 
 /*
@@ -113,26 +114,13 @@ export class ws_recordbar extends ws_uielto
             '  </a>' ;
 
         $('#record_div_container').html(o1) ;
-    }
 
-    bindElements ()
-    {
-        this.addEventListener('click', (e) =>
-        {
-            const el = e.target.closest('[data-bind="click"]') ;
-            if (!el) return ;
-            e.preventDefault() ;
-
-            switch (el.dataset.action)
-            {
-                case 'record-reset': wsweb_record_confirmReset() ; break ;
-                case 'record-comment': wsweb_notifyuser_add() ; break ;
-                case 'record-pause': wsweb_record_pause() ; break ;
-                case 'record-play': wsweb_record_play() ; break ;
-                case 'record-stop': wsweb_record_off() ; break ;
-                case 'record-on': wsweb_record_on() ; break ;
-            }
-        }) ;
+        onClick('record-reset', () => wsweb_record_confirmReset()) ;
+        onClick('record-comment', () => wsweb_notifyuser_add()) ;
+        onClick('record-pause', () => wsweb_record_pause()) ;
+        onClick('record-play', () => wsweb_record_play()) ;
+        onClick('record-stop', () => wsweb_record_off()) ;
+        onClick('record-on', () => wsweb_record_on()) ;
     }
 }
 

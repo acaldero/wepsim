@@ -19,16 +19,17 @@
  */
 import $ from 'jquery';
 import { ws_uielto } from './wepsim_uielto.js';
-import { simhw_sim_signals, simhw_sim_states, simhw_internalState, simhw_sim_state_getref } from '../sim_hw/sim_hw_index.js';
+import { onClick } from './wepsim_web_actions.js';
+import { simhw_sim_states, simhw_internalState, simhw_sim_state_getref } from '../sim_hw/sim_hw_index.js';
 import { get_simware } from '../sim_core/sim_adt_core.js';
-import { get_cfg, set_cfg } from '../sim_core/sim_cfg.js';
+import { get_cfg } from '../sim_core/sim_cfg.js';
 import { get_value, set_value, update_value } from '../sim_core/sim_core_values.js';
 import { value2string, hex2char8, hex2bin, hex2float, simcoreui_pack } from '../sim_core/sim_core_ui.js';
 import { vue_observable_ifnotjetdone, vue_appyBinding } from '../sim_core/sim_core_values.js';
 import { i18n_get_TagFor } from '../wepsim_i18n/i18n.js';
 import { quickcfg_html_btn, quickcfg_html_btnreg, quickcfg_html_onoff, quickcfg_html_header, quickcfg_html_br, quickcfg_html_close, wepsim_quickcfg_init } from './wepsim_web_ui_quickcfg.js';
 import { wepsim_popovers_init } from './wepsim_web_ui_popover.js';
-import { wait_if_uievents } from '../sim_core/sim_core_ctrl.js';
+import { wepsim_config_button_toggle } from './wepsim_web_ui_config.js';
 
 /*
          *  Registers (Register file + transparent registers)
@@ -40,33 +41,12 @@ export class ws_registers extends ws_uielto
     {
         // parent
         super();
-        this.bindElements();
 
         this.rf_div = 'states_BR' ;
         this.tf_div = 'states_ALL' ;
         this.gf_div = 'states_GR' ;
     }
 
-    bindElements ()
-    {
-        this.addEventListener('click', (e) =>
-        {
-            var el = e.target.closest('[data-action]');
-            if (!el) return;
-            switch (el.dataset.action)
-            {
-                case 'reg-hex-update':
-                    hex2values_update(el.dataset.regIndex);
-                    break;
-                case 'reg-popover-close':
-                    if (el.dataset.targetId)
-                    {
-                        $('#' + el.dataset.targetId).click();
-                    }
-                    break;
-            }
-        });
-    }
     render (event_name)
     {
         // html holder
@@ -191,6 +171,7 @@ export function hex2values(hexvalue, index)
         o2 +
         '</tbody>' +
         '</table>' ;
+    onClick('reg-hex-update', (el) => hex2values_update(el.dataset.regIndex)) ;
 
     return o1;
 }
@@ -219,7 +200,9 @@ export function quick_config_rf_register_format()
         }
 
         o1 += quickcfg_html_btn(r_formats[i].label2,
-                                r_formats[i].colwidth) ;
+                                r_formats[i].colwidth,
+                                'RF_display_format',
+                                r_formats[i].format2) ;
     }
 
     return o1 ;
@@ -246,16 +229,19 @@ export function quick_config_rf_register_names()
 
     // make menu
     o2 += quickcfg_html_btnreg('R10',
-                               'col-6') ;
+                               'col-6',
+                               'RF_display_name', 'numerical') ;
     if (logical_defined.length == 0)
         o2 += "<div class='col-6 p-1'></div>" ;
     else o2 += quickcfg_html_btnreg(logical_defined.join('|'),
-                                    'col-6') ;
+                                    'col-6',
+                                    'RF_display_name', 'logical') ;
 
     for (var i = 0; i < logical_defined.length; i++)
     {
         o2 += quickcfg_html_btnreg(logical_defined[i],
-                                   'col-6') ;
+                                   'col-6',
+                                   'RF_display_name', 'logical', i + 1) ;
     }
 
     return o2 ;
@@ -270,6 +256,13 @@ export function quick_config_rf_register_orientation()
                              i18n_get_TagFor('cfg', 'Horizontal'),
                              '(*) ' + i18n_get_TagFor('cfg', 'Vertical'),
                              'rf-orientation') ;
+    onClick('rf-orientation', (el) =>
+    {
+        var value = el.dataset.value === 'true';
+        wepsim_config_button_toggle('RF_vertical_pack', value, '20');
+        if (value) $('.mp_tooltip').collapse('show');
+        else $('.mp_tooltip').collapse('hide');
+    });
 
     return o1 ;
 }
@@ -494,7 +487,10 @@ export function wepsim_init_rf()
 
             var id_button = '&quot;#rf' + r_index + '&quot;' ;
             var rname = wepsim_refresh_rf_names_mkname(disp_name, SIMWARE, rf_index, r_index, 0) ;
-
+            onClick('reg-popover-close', (el) =>
+            {
+                if (el.dataset.targetId) $('#' + el.dataset.targetId).click() ;
+            }) ;
             return '<span class="text-body font-monospace col"><strong>' + rname + '</strong></span>' +
                 '<button type="button" id="close" ' +
                 '        class="btn-close border border-secondary ms-auto" ' +
@@ -572,7 +568,7 @@ export function render_state_button(ename, vir_real, separator_class, btn_id_pre
 
 export function popover_cfg_make(btn_prefix)
 {
-    return {
+    var o = {
         html:      true,
         placement: 'bottom',
         animation: false,
@@ -591,6 +587,10 @@ export function popover_cfg_make(btn_prefix)
         {
             var index = $(obj).attr('data-popover-content');
             var id_button = '&quot;#' + btn_prefix + index + '&quot;';
+            onClick('reg-popover-close', (el) =>
+            {
+                if (el.dataset.targetId) $('#' + el.dataset.targetId).click() ;
+            }) ;
             return '<span class="text-body col"><strong>' +
                 simhw_sim_state_getref(index).name +
                 '</strong></span>' +
@@ -603,8 +603,8 @@ export function popover_cfg_make(btn_prefix)
             return content;
         },
     };
+    return o;
 }
-
 export function bind_state_vue(entry, val_prefix, f_computed)
 {
     var s = entry.split(',')[0];

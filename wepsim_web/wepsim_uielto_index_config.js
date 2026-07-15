@@ -19,10 +19,11 @@
  */
 import $ from 'jquery';
 import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { onClick, onChange } from './wepsim_web_actions.js';
 import { ws_info } from '../sim_core/sim_adt_core.js';
 import { get_cfg, update_cfg, reset_cfg } from '../sim_core/sim_cfg.js';
-import { wepsim_popovers_init, wepsim_popover_hide } from './wepsim_web_ui_popover.js';
-import { wepsim_config_button_toggle, wepsim_config_button_toggle2, wepsim_config_color_update } from './wepsim_web_ui_config.js';
+import { wepsim_popovers_init } from './wepsim_web_ui_popover.js';
+import { wepsim_config_button_toggle, wepsim_config_button_toggle2 } from './wepsim_web_ui_config.js';
 import { wepsim_show_rf_names } from './wepsim_uielto_registers.js';
 import { wepsim_toggle_history_ui, wepsim_restore_darkmode, wepsim_confirm_exit, inputfirm, inputasm } from './wepsim_web_simulator.js';
 import { sim_cfg_editor_theme, sim_cfg_editor_mode } from './wepsim_web_editor.js';
@@ -101,104 +102,76 @@ export class ws_config extends ws_uielto
             },
         } ;
         wepsim_popovers_init('a[data-bs-toggle="popover1"]', popover_cfg, null) ;
-    }
 
-    bindElements ()
-    {
-        this.addEventListener('click', (e) =>
+        // Click actions
+        onClick('cfg-toggle2', (el) => wepsim_config_button_toggle2(el.dataset.key, el.dataset.value === 'true', el.dataset.extra)) ;
+        onClick('cfg-toggle', _cfg_toggle_handler) ;
+        onClick('config_toggle_off', _cfg_toggle_handler) ;
+        onClick('config_toggle_on', _cfg_toggle_handler) ;
+        onClick('config_2opt_off', _cfg_toggle_handler) ;
+        onClick('config_2opt_on', _cfg_toggle_handler) ;
+        onChange('cfg-select', (el) =>
         {
-            var el = e.target.closest('[data-bind="click"]');
-            if (!el) return;
-            e.preventDefault();
-            console.log(el.dataset);
-            switch (el.dataset.action)
+            update_cfg(el.dataset.key, el.value);
+            if (el.dataset.key === 'ws_skin_ui')
             {
-                case 'cfg-toggle2':
-                    wepsim_config_button_toggle2(el.dataset.key, el.dataset.value === 'true', el.dataset.extra);
-                    break;
-                case 'cfg-toggle':
-                case 'config_toggle_off':
-                case 'config_toggle_on':
-                case 'config_2opt_off':
-                case 'config_2opt_on':
-                    if (el.dataset.key)
-                    {
-                        var setId = el.id.split('-')[0].replace('label', '');
-                        wepsim_config_button_toggle(el.dataset.key, el.dataset.value, setId);
-                        if (el.dataset.key === 'DBG_skip_notifycolon')
-                        {
-                            update_cfg('editor_mode', el.dataset.value);
-                        }
-                        else if (el.dataset.key === 'RF_display_name')
-                        {
-                            wepsim_show_rf_names();
-                        }
-                        else if (el.dataset.key === 'history_enable')
-                        {
-                            wepsim_toggle_history_ui();
-                        }
-                        else if (el.dataset.key === 'ws_skin_dark_mode')
-                        {
-                            wepsim_restore_darkmode();
-                        }
-                        else if (el.dataset.key === 'RF_display_format')
-                        {
-                            show_memories_values();
-                        }
-                    }
-                    break;
-                case 'wepsim_popover_hide':
-                    if (el.dataset.popoverId)
-                    {
-                        wepsim_popover_hide(el.dataset.popoverId);
-                    }
-                    else
-                    {
-                        $('[data-bs-toggle="popover"]').popover('hide');
-                    }
-                    break;
-                case 'collapse_toggle_descr':
-                case 'collapse_toggle_dd':
-                    $('.collapse7').toggleClass('show');
-                    break;
+                window.removeEventListener('beforeunload', wepsim_confirm_exit);
+                window.location = 'wepsim-' + el.value + '.html';
             }
-        });
-
-        this.addEventListener('change', (e) =>
-        {
-            var el = e.target.closest('[data-bind="change"]');
-            if (!el) return;
-
-            switch (el.dataset.action)
+            else if (el.dataset.key === 'editor_theme')
             {
-                case 'idiom-change':
-                    i18n_handle_idiom_change(e);
-                    break;
-                case 'cfg-select':
-                    update_cfg(el.dataset.key, el.value);
-                    if (el.dataset.key === 'ws_skin_ui')
-                    {
-                        window.removeEventListener('beforeunload', wepsim_confirm_exit);
-                        window.location = 'wepsim-' + el.value + '.html';
-                    }
-                    else if (el.dataset.key === 'editor_theme')
-                    {
-                        sim_cfg_editor_theme(inputfirm);
-                        sim_cfg_editor_theme(inputasm);
-                    }
-                    else if (el.dataset.key === 'editor_mode')
-                    {
-                        sim_cfg_editor_mode(inputfirm);
-                        sim_cfg_editor_mode(inputasm);
-                    }
-                    break;
-                case 'cfg-color':
-                    wepsim_config_color_update(el.dataset.key, el.value, '#' + el.dataset.id);
-                    break;
+                sim_cfg_editor_theme(inputfirm);
+                sim_cfg_editor_theme(inputasm);
             }
-        });
+            else if (el.dataset.key === 'editor_mode')
+            {
+                sim_cfg_editor_mode(inputfirm);
+                sim_cfg_editor_mode(inputasm);
+            }
+            else if (el.dataset.key === 'DBG_limitins')
+            {
+                $('#dbg_ins_limit').text(el.value);
+            }
+            else if (el.dataset.key === 'DBG_limitick')
+            {
+                $('#dbg_ick_limit').text(el.value);
+            }
+            else if (el.dataset.key === 'history_size')
+            {
+                wepsim_toggle_history_ui();
+            }
+        }) ;
     }
 }
+
+var _cfg_toggle_handler = (el) =>
+{
+    if (el.dataset.key)
+    {
+        var setId = el.id.split('-')[0].replace('label', '');
+        wepsim_config_button_toggle(el.dataset.key, el.dataset.value, setId);
+        if (el.dataset.key === 'DBG_skip_notifycolon')
+        {
+            update_cfg('editor_mode', el.dataset.value);
+        }
+        else if (el.dataset.key === 'RF_display_name')
+        {
+            wepsim_show_rf_names();
+        }
+        else if (el.dataset.key === 'history_enable')
+        {
+            wepsim_toggle_history_ui();
+        }
+        else if (el.dataset.key === 'ws_skin_dark_mode')
+        {
+            wepsim_restore_darkmode();
+        }
+        else if (el.dataset.key === 'RF_display_format')
+        {
+            show_memories_values();
+        }
+    };
+};
 
 /*
          *  Configuration to HTML

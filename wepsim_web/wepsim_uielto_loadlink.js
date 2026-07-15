@@ -18,11 +18,8 @@
  *
  */
 
-/*
-         *  Load link
-         */
+import { dispatch } from './wepsim_web_actions.js';
 
-/* jshint esversion: 6 */
 export class ws_load_link extends HTMLElement
 {
     static get observedAttributes()
@@ -32,18 +29,15 @@ export class ws_load_link extends HTMLElement
 
     constructor ()
     {
-        // parent
         super();
     }
 
     update_internal_attributes ()
     {
-        // fid
         var fid = this.getAttribute('fid') ;
         if (fid === null)
             this.setAttribute('fid', 'id58') ;
 
-        // jload
         var jload = this.getAttribute('jload') ;
         if (jload === null)
             this.setAttribute('jload', '') ;
@@ -51,17 +45,15 @@ export class ws_load_link extends HTMLElement
 
     render (event_name)
     {
-        // update attributes
         this.update_internal_attributes() ;
 
-        // save html
         var o1 = '' ;
         o1 += "<div class='card border-secondary h-100'>" +
             "<div class='card-header border-secondary text-white bg-secondary p-1'>" +
             " <h5 class='m-0'>" +
             " <span class='text-white bg-secondary' data-langkey='Input link'>Input link</span>" +
             " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
-            "         data-bind='click' data-action='load' data-code='" + this.jload + "'><span data-langkey='Load'>Load</span></button>" +
+            "         data-bind='click' data-action='load'><span data-langkey='Load'>Load</span></button>" +
             ' </h5>' +
             '</div>' +
             "<div class='card-body'>" +
@@ -83,7 +75,7 @@ export class ws_load_link extends HTMLElement
             const el = e.target.closest('[data-bind="click"]');
             if (!el) return;
             e.preventDefault();
-            eval(el.getAttribute('data-code'));
+            if (dispatch('click', el, this, e)) e.stopPropagation();
         });
     }
 

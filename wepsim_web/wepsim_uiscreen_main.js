@@ -47,8 +47,6 @@ export class ws_web_main extends ws_uielto
         // render current element
         this.render_skel() ;
         this.render_populate(event_name) ;
-
-        this.bindElements();
     }
 
     render_skel ()
@@ -122,10 +120,6 @@ export class ws_web_main extends ws_uielto
             // wepsim_general_exception_handler(err) ;
             // }
         }) ;
-    }
-
-    bindElements()
-    {
     }
 }
 

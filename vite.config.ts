@@ -43,6 +43,15 @@ function wepsimPostBuildPlugin()
             console.timeEnd('[post-build] Copying help files');
             const execAsync = promisify(exec);
             console.time('[post-build] Merging example sets');
+            const mkdir_task = [
+                mkdir('ws_dist/repo/examples_set/mips', { recursive: true }),
+                mkdir('ws_dist/repo/examples_set/rv32', { recursive: true }),
+                mkdir('ws_dist/repo/examples_set/arm', { recursive: true }),
+                mkdir('ws_dist/repo/examples_set/z80', { recursive: true }),
+                mkdir('ws_dist/repo/examples_set/mips_ocw', { recursive: true }),
+                mkdir('ws_dist/repo/examples_set/rv32_ag', { recursive: true }),
+            ];
+            await Promise.all(mkdir_task);
             var jq = async function (inputs: string[], output: string)
             {
                 inputs = inputs.map((value) => ('repo/examples_set/' + value));

@@ -18,6 +18,7 @@
  *
  */
 import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { get_simware } from '../sim_core/sim_adt_core.js';
 import { wsasm_src2src } from '../sim_sw/assembly.js';
 import { inputasm } from './wepsim_web_simulator.js';
@@ -43,25 +44,6 @@ export class ws_flash_asm extends ws_uielto
 
         // render current element
         this.render_skel() ;
-        this.bindElements() ;
-    }
-
-    bindElements()
-    {
-        this.addEventListener('click', function(ev)
-        {
-            var el = ev.target.closest('[data-bind="click"]');
-            if (!el) return;
-            switch (el.dataset.action)
-            {
-                case 'flash':
-                    gateway_do_flash('div_url', 'div_dev', 'div_target', 'div_info');
-                    break;
-                case 'cancel':
-                    gateway_do_stop('div_url', 'div_info');
-                    break;
-            }
-        });
     }
 
     // render
@@ -184,6 +166,8 @@ export class ws_flash_asm extends ws_uielto
             '' +
             '  </div>' +
             '</div>' ;
+        onClick('flash', () => gateway_do_flash('div_url', 'div_dev', 'div_target', 'div_info')) ;
+        onClick('cancel', () => gateway_do_stop('div_url', 'div_info')) ;
 
         this.innerHTML = o1 ;
     }

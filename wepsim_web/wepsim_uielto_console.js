@@ -55,10 +55,6 @@ export class ws_console extends ws_uielto
 
         this.innerHTML = o1 ;
     }
-
-    bindElements()
-    {
-    }
 }
 
 //

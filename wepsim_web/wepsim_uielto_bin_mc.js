@@ -44,7 +44,6 @@ export class ws_bin_mc extends ws_uielto
 
         // render current element
         this.render_skel() ;
-        this.bindElements() ;
         this.render_populate() ;
     }
 

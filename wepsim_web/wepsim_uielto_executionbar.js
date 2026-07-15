@@ -18,7 +18,8 @@
  *
  */
 import $ from 'jquery';
-import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { ws_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { get_cfg } from '../sim_core/sim_cfg.js';
 import { i18n_get } from '../wepsim_i18n/i18n.js';
 import { wepsim_execute_play, wepsim_execute_stop, wepsim_execute_toggle_play } from '../wepsim_core/wepsim_execute.js';
@@ -82,6 +83,7 @@ export class ws_executionbar extends ws_uielto
                 o += (this.icons_str == 'up') ? '<br>' : '&nbsp;' ;
                 o += '<span class="fw-bold" data-langkey="Reset">Reset</span>' +
                     '</button>' ;
+                onClick('exec-reset', () => wsweb_execution_reset()) ;
                 break ;
 
             case 'btn_pm':
@@ -93,6 +95,7 @@ export class ws_executionbar extends ws_uielto
                 o += (this.icons_str == 'up') ? '<br>' : '&nbsp;' ;
                 o += '<span class="d-none d-sm-inline-flex fw-bold" data-langkey="previousMicroinstruction">&#181;Back</span><span class="d-sm-none fw-bold">&#181;Bk</span>' +
                     '</button>' ;
+                onClick('exec-prev-micro', () => wsweb_execution_previous_microinstruction()) ;
                 break ;
 
             case 'btn_emins':
@@ -104,6 +107,7 @@ export class ws_executionbar extends ws_uielto
                 o += (this.icons_str == 'up') ? '<br>' : '&nbsp;' ;
                 o += '<span class="d-none d-sm-inline-flex fw-bold" data-langkey="microInstruction">&#181;Instruction</span><span class="d-sm-none fw-bold">&#181;Instr.</span>' +
                     '</button>' ;
+                onClick('exec-next-micro', () => wsweb_execution_microinstruction()) ;
                 break ;
 
             case 'btn_eins':
@@ -115,6 +119,7 @@ export class ws_executionbar extends ws_uielto
                 o += (this.icons_str == 'up') ? '<br>' : '&nbsp;' ;
                 o += '<span class="d-none d-sm-inline-flex fw-bold" data-langkey="Instruction">Instruction</span><span class="d-sm-none fw-bold">Instr.</span>' +
                     '</button>' ;
+                onClick('exec-next-insn', () => wsweb_execution_instruction()) ;
                 break ;
 
             case 'btn_run':
@@ -126,6 +131,7 @@ export class ws_executionbar extends ws_uielto
                 o += (this.icons_str == 'up') ? '<br>' : '&nbsp;' ;
                 o += '<span class="fw-bold" data-langkey="Run">Run</span>' +
                     '</button>' ;
+                onClick('exec-run', () => wsweb_execution_run()) ;
                 break ;
 
             case 'btn_rnf':
@@ -168,45 +174,12 @@ export class ws_executionbar extends ws_uielto
                     '' +
                     '</ul>' +
                     '</div>' ;
+                onClick('exec-flash-fpga', () => wsweb_dialog_open('flash_fpga')) ;
+                onClick('exec-flash-asm', () => wsweb_dialog_open('flash_assembly')) ;
                 break ;
         }
 
         return o ;
-    }
-
-    bindElements ()
-    {
-        this.addEventListener('click', (e) =>
-        {
-            const el = e.target.closest('[data-bind="click"]') ;
-            if (!el) return ;
-            e.preventDefault() ;
-
-            switch (el.dataset.action)
-            {
-                case 'exec-reset':
-                    wsweb_execution_reset() ;
-                    break ;
-                case 'exec-prev-micro':
-                    wsweb_execution_previous_microinstruction() ;
-                    break ;
-                case 'exec-next-micro':
-                    wsweb_execution_microinstruction() ;
-                    break ;
-                case 'exec-next-insn':
-                    wsweb_execution_instruction() ;
-                    break ;
-                case 'exec-run':
-                    wsweb_execution_run() ;
-                    break ;
-                case 'exec-flash-fpga':
-                    wsweb_dialog_open('flash_fpga') ;
-                    break ;
-                case 'exec-flash-asm':
-                    wsweb_dialog_open('flash_assembly') ;
-                    break ;
-            }
-        }) ;
     }
 }
 

@@ -19,6 +19,7 @@
  */
 import $ from 'jquery';
 import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { get_cfg } from '../sim_core/sim_cfg.js';
 import { ws_info } from '../sim_core/sim_adt_core.js';
 import { array_includes } from '../sim_core/sim_core_ctrl.js';
@@ -118,24 +119,6 @@ export class ws_help extends ws_uielto
         }
 
         $('#scroller-help1').html(o1) ;
-    }
-
-    bindElements ()
-    {
-        this.addEventListener('click', (e) =>
-        {
-            const el = e.target.closest('[data-bind="click"]');
-            if (!el) return;
-            e.preventDefault();
-            switch (el.dataset.action)
-            {
-                case 'help-open':
-                    simcore_record_append_pending();
-                    eval(el.getAttribute('data-reference'));
-                    simcore_ga('help', 'help.index', 'help.index.' + el.dataset.index);
-                    break;
-            }
-        });
     }
 }
 
@@ -242,8 +225,14 @@ export function table_helps_html(helps)
             '          data-langkey="' + e_title + '" ' +
             '>' +
             e_title + '</button>' +
-            '</div>' +
-            '<div class="col-sm collapse7 show py-1 ' + toggle_cls + '">' +
+            '</div>' ;
+        onClick('help-open', (el) =>
+        {
+            simcore_record_append_pending();
+            eval(el.getAttribute('data-reference'));
+            simcore_ga('help', 'help.index', 'help.index.' + el.dataset.index);
+        }) ;
+        o = o + '<div class="col-sm collapse7 show py-1 ' + toggle_cls + '">' +
             '    <c>' + e_description + '</c>' +
             '</div>' +
             '<div class="w-100 ' + w100_toggle + ' ' + toggle_cls + '"></div>' ;

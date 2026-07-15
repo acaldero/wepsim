@@ -19,6 +19,7 @@
  */
 import $ from 'jquery';
 import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import Vue from 'vue';
 import { wepsim_example_getSet, wepsim_example_reset, wepsim_example_load } from '../wepsim_core/wepsim_example.js';
 import { wepsim_notify_success } from '../wepsim_core/wepsim_notify.js';
@@ -91,31 +92,17 @@ export class ws_list_example extends ws_uielto
             '</div>' ;
 
         $('#list_examples_' + this.name_str).html(o1) ;
+        onClick('example-load', (el) =>
+        {
+            wepsim_example_reset();
+            wepsim_example_load(el.getAttribute('data-name'));
+            wepsim_notify_success('<strong>INFO</strong>', 'Examples list loaded!.');
+        }) ;
 
         this.vueobj = new Vue({
             el:   '#list_examples_' + this.name_str,
             data: { examples: e_exs },
         }) ;
-    }
-
-    bindElements ()
-    {
-        this.addEventListener('click', (e) =>
-        {
-            const el = e.target.closest('[data-bind="click"]');
-            if (!el) return;
-            e.preventDefault();
-            switch (el.dataset.action)
-            {
-                case 'example-load':
-                    wepsim_example_reset();
-                    var ex_name = el.getAttribute('data-name');
-                    wepsim_example_load(ex_name);
-                    wepsim_notify_success('<strong>INFO</strong>',
-                                          'Examples list loaded!.');
-                    break;
-            }
-        });
     }
 }
 

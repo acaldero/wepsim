@@ -43,8 +43,6 @@ export class ws_uiscreen_compact extends ws_uielto
         // render current element
         this.render_skel() ;
         this.render_populate() ;
-
-        this.bindElements();
     }
 
     render_skel ()
@@ -126,10 +124,6 @@ export class ws_uiscreen_compact extends ws_uielto
             '      <div class="col-sm p-0 ms-1 collapse multi-collapse-2 wsx_microcode">' +
             '      <ws-toolbar components="slider_c1c2"></ws-toolbar>' +
             '      </div>' ;
-    }
-
-    bindElements()
-    {
     }
 }
 

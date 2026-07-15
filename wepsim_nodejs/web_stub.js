@@ -10,6 +10,18 @@ export function getTransport()
 {}
 export function Synth()
 {}
+export function on()
+{}
+export function dispatch()
+{}
+export function onClick()
+{}
+export function onChange()
+{}
+export function onKeyup()
+{}
+export function onInput()
+{}
 export function webui_toolbar_updateExampleSet()
 {}
 export function wepsim_compile_assembly()

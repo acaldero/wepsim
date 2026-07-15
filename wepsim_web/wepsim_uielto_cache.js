@@ -19,6 +19,7 @@
  */
 import $ from 'jquery';
 import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { get_var } from '../sim_core/sim_core_values.js';
 import { vue_observable_ifnotjetdone, vue_appyBinding } from '../sim_core/sim_core_values.js';
 import { simhw_active, simhw_internalState } from '../sim_hw/sim_hw_index.js';
@@ -80,24 +81,6 @@ export class ws_cachememory extends ws_uielto
         {
             wepsim_show_cache_vueinit(i + 1, cm_ref[i]) ;
         }
-    }
-
-    bindElements()
-    {
-        this.addEventListener('click', function(ev)
-        {
-            var el = ev.target.closest('[data-action]');
-            if (!el) return;
-            switch (el.dataset.action)
-            {
-                case 'cache-config':
-                    wsweb_set_details_select(29);
-                    break;
-                case 'refresh-cache':
-                    wepsim_show_cache_memory_i(parseInt(el.dataset.level));
-                    break;
-            }
-        });
     }
 }
 
@@ -297,6 +280,7 @@ export function wepsim_show_cache_memory_skel(cache_memory)
             '<br>' +
             "<div class='vr' style='width:3px'></div>" +
             "<h5><span data-langkey='Memory'>Memory</span></h5>" ;
+        onClick('cache-config', () => wsweb_set_details_select(29)) ;
 
         return o1 ;
     }
@@ -380,6 +364,7 @@ export function wepsim_show_cache_memory_skel(cache_memory)
             '' +
             '</div>' +
             '</span>' ;
+        onClick('refresh-cache', (el) => wepsim_show_cache_memory_i(parseInt(el.dataset.level))) ;
     }
 
     o1 += '</div>' ;

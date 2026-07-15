@@ -18,6 +18,7 @@
  *
  */
 import { ws_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { inputasm, inputfirm } from '../wepsim_web/wepsim_web_simulator.js';
 
 /*
@@ -92,32 +93,8 @@ export class ws_simmicasm extends ws_uielto
             '</div>' ;
 
         this.innerHTML = o1 ;
-    }
-
-    bindElements ()
-    {
-        this.addEventListener('click', (e) =>
-        {
-            const el = e.target.closest('[data-bind="click"]') ;
-            if (!el) return ;
-            e.preventDefault() ;
-
-            switch (el.dataset.action)
-            {
-                case 'refresh-microcode':
-                    setTimeout(function()
-                    {
-                        inputfirm.refresh();
-                    }, 200) ;
-                    break ;
-                case 'refresh-assembly':
-                    setTimeout(function()
-                    {
-                        inputasm.refresh();
-                    }, 200) ;
-                    break ;
-            }
-        }) ;
+        onClick('refresh-microcode', () => setTimeout(() => inputfirm.refresh(), 200)) ;
+        onClick('refresh-assembly', () => setTimeout(() => inputasm.refresh(), 200)) ;
     }
 }
 

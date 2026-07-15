@@ -18,6 +18,7 @@
  *
  */
 import { ws_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { wsweb_change_show_processor, wsweb_change_show_asmdbg } from './wepsim_web_api.js';
 /*
          *  Navbar: navtab circuits/assembly
@@ -66,26 +67,8 @@ export class ws_ctoasm extends ws_uielto
             '</div>' ;
 
         this.innerHTML = o1 ;
-    }
-
-    bindElements ()
-    {
-        this.addEventListener('click', (e) =>
-        {
-            const el = e.target.closest('[data-bind="click"]') ;
-            if (!el) return ;
-            e.preventDefault() ;
-
-            switch (el.dataset.action)
-            {
-                case 'change-show-processor':
-                    wsweb_change_show_processor() ;
-                    break ;
-                case 'change-show-asmdbg':
-                    wsweb_change_show_asmdbg() ;
-                    break ;
-            }
-        }) ;
+        onClick('change-show-processor', () => wsweb_change_show_processor()) ;
+        onClick('change-show-asmdbg', () => wsweb_change_show_asmdbg()) ;
     }
 }
 

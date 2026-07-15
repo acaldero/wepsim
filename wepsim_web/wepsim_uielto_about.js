@@ -20,6 +20,7 @@
 import $ from 'jquery';
 import Vue from 'vue';
 import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { ws_info } from '../sim_core/sim_adt_core.js';
 import { wepsim_help_set } from '../wepsim_core/wepsim_help.js';
 import { wsweb_dialog_close } from './wepsim_web_api.js';
@@ -86,6 +87,11 @@ export class ws_about extends ws_uielto
             '' +
             '</form>' ;
 
+        onClick('about-license', () =>
+        {
+            wepsim_help_set('relative', 'about#') ;
+            wsweb_dialog_close('about') ;
+        }) ;
         this.innerHTML = o1 ;
     }
 
@@ -129,24 +135,6 @@ export class ws_about extends ws_uielto
         this.vueobj = new Vue({
             el:   '#team_' + this.name_str,
             data: { team: ws_info.wepsim_team },
-        }) ;
-    }
-
-    bindElements ()
-    {
-        this.addEventListener('click', (e) =>
-        {
-            const el = e.target.closest('[data-bind="click"]') ;
-            if (!el) return ;
-            e.preventDefault() ;
-
-            switch (el.dataset.action)
-            {
-                case 'about-license':
-                    wepsim_help_set('relative', 'about#') ;
-                    wsweb_dialog_close('about') ;
-                    break ;
-            }
         }) ;
     }
 }

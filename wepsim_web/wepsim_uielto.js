@@ -22,6 +22,8 @@
          *  wepsim_uielto
          */
 
+import { dispatch } from './wepsim_web_actions.js' ;
+
 /* jshint esversion: 6 */
 export class ws_uielto extends HTMLElement
 {
@@ -57,8 +59,34 @@ export class ws_uielto extends HTMLElement
 
     bindElements ()
     {
-        // subclasses override this to add event listeners
-        // using data-bind attributes and event delegation
+        this.addEventListener('click', (e) =>
+        {
+            const el = e.target.closest('[data-bind="click"]');
+            if (!el) return ;
+            e.preventDefault() ;
+            if (dispatch('click', el, this, e)) e.stopPropagation() ;
+        }) ;
+
+        this.addEventListener('change', (e) =>
+        {
+            const el = e.target.closest('[data-bind="change"]');
+            if (!el) return ;
+            if (dispatch('change', el, this, e)) e.stopPropagation() ;
+        }) ;
+
+        this.addEventListener('keyup', (e) =>
+        {
+            const el = e.target.closest('[data-bind="keyup"]');
+            if (!el) return ;
+            if (dispatch('keyup', el, this, e)) e.stopPropagation() ;
+        }) ;
+
+        this.addEventListener('input', (e) =>
+        {
+            const el = e.target.closest('[data-bind="input"]');
+            if (!el) return ;
+            if (dispatch('input', el, this, e)) e.stopPropagation() ;
+        }) ;
     }
 
     attributeChangedCallback (name, oldValue, newValue)

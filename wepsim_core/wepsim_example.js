@@ -37,10 +37,16 @@ import { inputasm, inputfirm } from '../wepsim_web/wepsim_web_simulator.js';
      * Example set management
      */
 
-export function wepsim_example_reset()
+export function wepsim_example_register()
 {
     ws_info.examples = [] ;
     ws_info.example_set = [{ 'name': 'Empty', 'url': '', 'url_base_asm': '', 'url_base_mc': '' }] ;
+    ws_info.example_active = -1 ;
+}
+
+export function wepsim_example_reset()
+{
+    ws_info.examples = [] ;
     ws_info.example_active = -1 ;
 
     webui_toolbar_updateExampleSet() ;
@@ -49,7 +55,6 @@ export function wepsim_example_reset()
 export function wepsim_example_load(e_name)
 {
     var jobj ;
-
     // try to load each one
     ws_info.examples = [] ;
 

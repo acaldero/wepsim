@@ -19,6 +19,7 @@
  */
 import $ from 'jquery';
 import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { simhw_hwset_getSet } from '../sim_hw/sim_hw_index.js';
 import { wepsim_reload_hw } from './wepsim_web_simulator.js';
 import { wepsim_notify_success } from '../wepsim_core/wepsim_notify.js';
@@ -93,24 +94,11 @@ export class ws_list_processor extends ws_uielto
         o1 += '</div>' ;
 
         $('#list_processors_1').html(o1) ;
-    }
-
-    bindElements ()
-    {
-        this.addEventListener('click', (e) =>
+        onClick('processor-load', (el) =>
         {
-            const el = e.target.closest('[data-bind="click"]');
-            if (!el) return;
-            e.preventDefault();
-            switch (el.dataset.action)
-            {
-                case 'processor-load':
-                    wepsim_reload_hw(el.dataset.hwName);
-                    wepsim_notify_success('<strong>INFO</strong>',
-                                          el.dataset.hwName + ' processor loaded!.');
-                    break;
-            }
-        });
+            wepsim_reload_hw(el.dataset.hwName);
+            wepsim_notify_success('<strong>INFO</strong>', el.dataset.hwName + ' processor loaded!.');
+        }) ;
     }
 }
 

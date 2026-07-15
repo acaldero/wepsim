@@ -18,11 +18,10 @@
  *
  */
 
-/*
-         *  Save file
-         */
+import { dispatch, onClick } from './wepsim_web_actions.js';
+import { wepsim_checkpoint_get, wepsim_checkpoint_save } from '../wepsim_core/wepsim_checkpoint.js';
+import { wepsim_notify_success } from '../wepsim_core/wepsim_notify.js';
 
-/* jshint esversion: 6 */
 export class ws_save_file extends HTMLElement
 {
     static get observedAttributes()
@@ -32,23 +31,19 @@ export class ws_save_file extends HTMLElement
 
     constructor ()
     {
-        // parent
         super();
     }
 
     update_internal_attributes ()
     {
-        // fid
         var fid = this.getAttribute('fid') ;
         if (fid === null)
             this.setAttribute('fid', 'id52') ;
 
-        // jload
-        var jload = this.getAttribute('jload') ;
-        if (jload === null)
-            this.setAttribute('jload', '') ;
+        var jsave = this.getAttribute('jsave') ;
+        if (jsave === null)
+            this.setAttribute('jsave', '') ;
 
-        // jshare
         var jshare = this.getAttribute('jshare') ;
         if (jshare === null)
             this.setAttribute('jshare', '') ;
@@ -56,19 +51,15 @@ export class ws_save_file extends HTMLElement
 
     render (event_name)
     {
-        // update attributes
         this.update_internal_attributes() ;
 
-        // save html
         var o1 = '' ;
         o1 += "<div class='card border-secondary h-100'>" +
             "<div class='card-header border-secondary text-white bg-secondary p-1'>" +
             " <h5 class='m-0'>" +
             " <span class='text-white bg-secondary' data-langkey='Output file'>Output file</span>" +
             " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
-            "         data-bind='click' data-action='save' data-code='" + this.jsave + "'><span data-langkey='Save'>Save</span></button>" +
-        // " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
-        // "         onclick='" + this.jshare + "'><span data-langkey='Share'>Share</span></button>" +
+            "         data-bind='click' data-action='save-file'><span data-langkey='Save'>Save</span></button>" +
             ' </h5>' +
             '</div>' +
             "<div class='card-body'>" +
@@ -81,6 +72,22 @@ export class ws_save_file extends HTMLElement
             '</div>' ;
 
         this.innerHTML = o1 ;
+
+        onClick('save-file', (el) =>
+        {
+            var host = el.closest('ws-save-file');
+            if (host)
+            {
+                var fid = host.getAttribute('fid');
+                var tagId = host.getAttribute('data-tag-id') || 'tagToSave1';
+                wepsim_notify_success('<strong>INFO</strong>',
+                                      'Processing save request...');
+                var obj_tagName = document.getElementById(tagId);
+                var checkpointObj = wepsim_checkpoint_get(obj_tagName.value);
+                wepsim_checkpoint_save(fid, tagId, checkpointObj);
+                return;
+            }
+        });
     }
 
     bindElements ()
@@ -90,7 +97,7 @@ export class ws_save_file extends HTMLElement
             const el = e.target.closest('[data-bind="click"]');
             if (!el) return;
             e.preventDefault();
-            eval(el.getAttribute('data-code'));
+            if (dispatch('click', el, this, e)) e.stopPropagation();
         });
     }
 
@@ -135,4 +142,3 @@ export class ws_save_file extends HTMLElement
         this.setAttribute('jshare', value) ;
     }
 }
-

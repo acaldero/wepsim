@@ -19,6 +19,7 @@
  */
 import $ from 'jquery';
 import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { wsweb_dialog_open, wsweb_firmware_compile, wsweb_assembly_compile } from './wepsim_web_api.js';
 
 /*
@@ -87,10 +88,10 @@ export class ws_compilationbar extends ws_uielto
                     '<button type="button" ' +
                     '        id="select8d"' +
                     '        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"' +
-                    '        data-action="txt_file"' +
                     '        title="Dropdown on the right let you access to common actions."' +
                     '        data-bind="click" data-action="load-save-firmware"' +
                     '       class="btn bg-body-tertiary shadow-sm col-auto m-0 border border-secondary">' ;
+                onClick('load-save-firmware', () => wsweb_dialog_open('load_save_firmware')) ;
                 o += this.render_icon('<em class="fas fa-file"></em>') ;
                 o += '<span class="fw-bold" data-langkey="Load/Save">Load/Save</span>' +
                     '</button>' +
@@ -118,6 +119,9 @@ export class ws_compilationbar extends ws_uielto
                     '\n' +
                     '   </div>' +
                     '</div>' ;
+                onClick('dlg-firmware-txt', () => wsweb_dialog_open('load_save_firmware')) ;
+                onClick('dlg-firmware-link', () => wsweb_dialog_open('load_save_firmware_link')) ;
+                onClick('dlg-firmware-checkpoint', () => wsweb_dialog_open('current_checkpoint')) ;
                 break ;
 
             case 'btn_mcompile':
@@ -125,6 +129,7 @@ export class ws_compilationbar extends ws_uielto
                     '        class="btn bg-secondary-subtle shadow-sm col-auto mx-1 border border-secondary"' +
                     '       data-transition="none" data-inline="true"' +
                     '        data-bind="click" data-action="firmware-compile">' ;
+                onClick('firmware-compile', () => wsweb_firmware_compile()) ;
                 o += this.render_icon('<em class="fa fa-sign-out-alt"></em>') ;
                 o += '<strong><span class="d-none d-sm-inline-flex">&#181;<span data-langkey="compile">compile</span></span><span class="d-sm-none">&#181;c.</span></strong>' +
                     '</button>' ;
@@ -135,6 +140,7 @@ export class ws_compilationbar extends ws_uielto
                     '        id="mob1"' +
                     '        class="btn bg-body-tertiary shadow-sm col-auto mx-1 border border-secondary"' +
                     '        data-bind="click" data-action="show-binary-fir">' ;
+                onClick('show-binary-fir', () => wsweb_dialog_open('binary_fir')) ;
                 o += this.render_icon('<em class="fa fa-memory"></em>') ;
                 o += '<strong><span class="d-none d-sm-inline-flex"><span data-langkey="Show">Show</span>&nbsp;co2&#181;a.+c.m.</span><span class="d-sm-none">co2&#181;addr+c.m.</span></strong>' +
                     '</button>' ;
@@ -145,10 +151,10 @@ export class ws_compilationbar extends ws_uielto
                     '<button type="button" ' +
                     '        id="select8b"' +
                     '        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"' +
-                    '        data-action="txt_file"' +
                     '        title="Dropdown on the right let you access to common actions."' +
                     '        data-bind="click" data-action="load-save-assembly"' +
                     '       class="btn bg-body-tertiary shadow-sm col-auto m-0 border border-secondary">' ;
+                onClick('load-save-assembly', () => wsweb_dialog_open('load_save_assembly')) ;
                 o += this.render_icon('<em class="fas fa-file"></em>') ;
                 o += '<span class="fw-bold" data-langkey="Load/Save">Load/Save</span>' +
                     '</button>' +
@@ -176,6 +182,9 @@ export class ws_compilationbar extends ws_uielto
                     '\n' +
                     '   </div>' +
                     '</div>' ;
+                onClick('dlg-assembly-txt', () => wsweb_dialog_open('load_save_assembly')) ;
+                onClick('dlg-assembly-link', () => wsweb_dialog_open('load_save_assembly_link')) ;
+                onClick('dlg-assembly-checkpoint', () => wsweb_dialog_open('current_checkpoint')) ;
                 break ;
 
             case 'btn_acompile':
@@ -183,6 +192,7 @@ export class ws_compilationbar extends ws_uielto
                     '        class="btn bg-secondary-subtle shadow-sm col-auto mx-1 border border-secondary"' +
                     '       data-transition="none" data-inline="true"' +
                     '        data-bind="click" data-action="assembly-compile">' ;
+                onClick('assembly-compile', () => wsweb_assembly_compile()) ;
                 o += this.render_icon('<em class="fas fa-sign-out-alt"></em>') ;
                 o += '<strong><span data-langkey="Compile">Compile</span></strong>' +
                     '</button>' ;
@@ -193,6 +203,7 @@ export class ws_compilationbar extends ws_uielto
                     '        id="aob1"' +
                     '        class="btn bg-body-tertiary shadow-sm col-auto mx-1 border border-secondary"' +
                     '        data-bind="click" data-action="show-binary-asm">' ;
+                onClick('show-binary-asm', () => wsweb_dialog_open('binary_asm')) ;
                 o += this.render_icon('<em class="fas fa-memory"></em>') ;
                 o += '<strong><span class="d-none d-sm-inline-flex"><span data-langkey="Show Main Memory">Show Main Memory</span></span><span class="d-sm-none">Memory</span></strong></button>' ;
                 break ;
@@ -200,51 +211,4 @@ export class ws_compilationbar extends ws_uielto
 
         return o ;
     }
-
-    bindElements ()
-    {
-        this.addEventListener('click', (e) =>
-        {
-            const el = e.target.closest('[data-bind="click"]') ;
-            if (!el) return ;
-            e.preventDefault() ;
-
-            switch (el.dataset.action)
-            {
-                case 'load-save-firmware':
-                case 'dlg-firmware-txt':
-                    wsweb_dialog_open('load_save_firmware') ;
-                    break ;
-                case 'dlg-firmware-link':
-                    wsweb_dialog_open('load_save_firmware_link') ;
-                    break ;
-                case 'dlg-firmware-checkpoint':
-                    wsweb_dialog_open('current_checkpoint') ;
-                    break ;
-                case 'firmware-compile':
-                    wsweb_firmware_compile() ;
-                    break ;
-                case 'show-binary-fir':
-                    wsweb_dialog_open('binary_fir') ;
-                    break ;
-                case 'load-save-assembly':
-                case 'dlg-assembly-txt':
-                    wsweb_dialog_open('load_save_assembly') ;
-                    break ;
-                case 'dlg-assembly-link':
-                    wsweb_dialog_open('load_save_assembly_link') ;
-                    break ;
-                case 'dlg-assembly-checkpoint':
-                    wsweb_dialog_open('current_checkpoint') ;
-                    break ;
-                case 'assembly-compile':
-                    wsweb_assembly_compile() ;
-                    break ;
-                case 'show-binary-asm':
-                    wsweb_dialog_open('binary_asm') ;
-                    break ;
-            }
-        }) ;
-    }
 }
-

@@ -19,6 +19,7 @@
  */
 import $ from 'jquery';
 import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { ws_info } from '../sim_core/sim_adt_core.js';
 import { get_value } from '../sim_core/sim_core_values.js';
 import { simhw_active, simhw_sim_state } from '../sim_hw/sim_hw_index.js';
@@ -67,71 +68,6 @@ export class ws_states extends ws_uielto
             wepsim_state_history_list() ;
             wepsim_dialog_current_state() ;
         }
-    }
-
-    bindElements ()
-    {
-        this.addEventListener('click', (e) =>
-        {
-            var el = e.target.closest('[data-bind="click"]');
-            if (!el) return;
-            e.preventDefault();
-
-            switch (el.dataset.action)
-            {
-                case 'state-add':
-                    wepsim_state_history_add();
-                    wepsim_notify_success('<strong>INFO</strong>', 'Added !.');
-                    wepsim_state_history_list();
-                    wepsim_dialog_current_state();
-                    $('#states3').collapse('show');
-                    break;
-                case 'state-copy-current':
-                    wepsim_clipboard_CopyFromTextarea('end_state1');
-                    wepsim_state_results_empty();
-                    var curr_tag = $('#curr_clk_maddr').html();
-                    $('#s_clip').html(curr_tag);
-                    break;
-                case 'state-check-current':
-                    var txt_chklst1 = get_clipboard_copy();
-                    var obj_exp1 = simcore_simstate_checklist2state(txt_chklst1);
-                    var txt_chklst2 = $('#end_state1').val();
-                    var obj_exp2 = simcore_simstate_checklist2state(txt_chklst2);
-                    var ref_tag = $('#curr_clk_maddr').html();
-                    $('#s_ref').html(ref_tag);
-                    wepsim_dialog_check_state(obj_exp1, obj_exp2);
-                    $('#check_results_scroll1').collapse('show');
-                    break;
-                case 'state-history-reset':
-                    wepsim_state_history_reset();
-                    wepsim_notify_success('<strong>INFO</strong>', 'Removed all !.');
-                    wepsim_state_history_list();
-                    break;
-                case 'state-diff-copy':
-                    wepsim_clipboard_CopyFromDiv('check_results_scroll1');
-                    break;
-                case 'state-popover-close':
-                    wepsim_popover_hide(el.dataset.popoverId);
-                    break;
-                case 'state-copy-history':
-                    wepsim_state_results_empty();
-                    $('#collapse_' + el.dataset.stateId).collapse('show');
-                    wepsim_clipboard_CopyFromDiv('state_' + el.dataset.stateId);
-                    $('#collapse_' + el.dataset.stateId).collapse('hide');
-                    $('#s_clip').html(el.dataset.titleShort);
-                    $('#s_ref').html('reference');
-                    break;
-                case 'state-check-history':
-                    var txt_chklst1 = get_clipboard_copy();
-                    var obj_exp1 = simcore_simstate_checklist2state(txt_chklst1);
-                    var txt_chklst2 = $('#ta_state_' + el.dataset.stateId).val();
-                    var obj_exp2 = simcore_simstate_checklist2state(txt_chklst2);
-                    wepsim_dialog_check_state(obj_exp1, obj_exp2);
-                    $('#s_ref').html(el.dataset.titleShort);
-                    $('#check_results_scroll1').collapse('show');
-                    break;
-            }
-        });
     }
 }
 
@@ -212,6 +148,32 @@ export function current_state_html()
         '    </div>' +
         '  </div>' +
         '</div>' ;
+    onClick('state-add', () =>
+    {
+        wepsim_state_history_add();
+        wepsim_notify_success('<strong>INFO</strong>', 'Added !.');
+        wepsim_state_history_list();
+        wepsim_dialog_current_state();
+        $('#states3').collapse('show');
+    }) ;
+    onClick('state-copy-current', () =>
+    {
+        wepsim_clipboard_CopyFromTextarea('end_state1');
+        wepsim_state_results_empty();
+        var curr_tag = $('#curr_clk_maddr').html();
+        $('#s_clip').html(curr_tag);
+    }) ;
+    onClick('state-check-current', () =>
+    {
+        var txt_chklst1 = get_clipboard_copy();
+        var obj_exp1 = simcore_simstate_checklist2state(txt_chklst1);
+        var txt_chklst2 = $('#end_state1').val();
+        var obj_exp2 = simcore_simstate_checklist2state(txt_chklst2);
+        var ref_tag = $('#curr_clk_maddr').html();
+        $('#s_ref').html(ref_tag);
+        wepsim_dialog_check_state(obj_exp1, obj_exp2);
+        $('#check_results_scroll1').collapse('show');
+    }) ;
 
     return o ;
 }
@@ -255,6 +217,12 @@ export function state_history_html()
         '    </div>' +
         '  </div>' +
         '</div>' ;
+    onClick('state-history-reset', () =>
+    {
+        wepsim_state_history_reset();
+        wepsim_notify_success('<strong>INFO</strong>', 'Removed all !.');
+        wepsim_state_history_list();
+    }) ;
 
     return o ;
 }
@@ -295,6 +263,7 @@ export function state_differences_html()
         '    </div>' +
         '  </div>' +
         '</div>' ;
+    onClick('state-diff-copy', () => wepsim_clipboard_CopyFromDiv('check_results_scroll1')) ;
 
     return o ;
 }
@@ -382,6 +351,26 @@ export function wepsim_state_history_list()
             '             </div>' +
             '       </div>' +
             '  </div>' ;
+        onClick('state-popover-close', (el) => wepsim_popover_hide(el.dataset.popoverId)) ;
+        onClick('state-copy-history', (el) =>
+        {
+            wepsim_state_results_empty();
+            $('#collapse_' + el.dataset.stateId).collapse('show');
+            wepsim_clipboard_CopyFromDiv('state_' + el.dataset.stateId);
+            $('#collapse_' + el.dataset.stateId).collapse('hide');
+            $('#s_clip').html(el.dataset.titleShort);
+            $('#s_ref').html('reference');
+        }) ;
+        onClick('state-check-history', (el) =>
+        {
+            var txt_chklst1 = get_clipboard_copy();
+            var obj_exp1 = simcore_simstate_checklist2state(txt_chklst1);
+            var txt_chklst2 = $('#ta_state_' + el.dataset.stateId).val();
+            var obj_exp2 = simcore_simstate_checklist2state(txt_chklst2);
+            wepsim_dialog_check_state(obj_exp1, obj_exp2);
+            $('#s_ref').html(el.dataset.titleShort);
+            $('#check_results_scroll1').collapse('show');
+        }) ;
     }
 
     // update contents

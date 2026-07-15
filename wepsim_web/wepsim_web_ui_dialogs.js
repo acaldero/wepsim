@@ -32,7 +32,7 @@ import { wepsim_tooltips_hide } from './wepsim_web_ui_tooltip.js';
 import { wepsim_uicfg_apply, wepsim_uicfg_restore } from './wepsim_web_simulator.js';
 import { wsweb_dialog_close, wsweb_dialog_open, wsweb_record_reset, wsweb_scroll_record } from './wepsim_web_api.js';
 import { table_examplesets_html } from './wepsim_uielto_index_examples.js';
-import { wepsim_notify_success } from '../wepsim_core/wepsim_notify.js';
+import { onClick } from './wepsim_web_actions.js';
 
 export var wsweb_dialogs = {
 
@@ -50,39 +50,16 @@ export var wsweb_dialogs = {
                 "     style='overflow:auto; -webkit-overflow-scrolling:touch;'> " +
                 "<div class='row m-0'>" +
                 "<div class='col-12 col-sm-6 p-2'>" +
-                                //
                 "<ws-save-files fid='inputFileNameToSaveAs2'>" +
-                '<ws-save-files-option ' +
-                "     label='Save editor content' " +
-                "      jsrc='var ifntsa2 = document.getElementById(\"inputFileNameToSaveAs2\");" +
-                '        var fileNameToSaveAs = ifntsa2.value;' +
-                '        var textToWrite      = inputasm.getValue();' +
-                '        wepsim_save_to_file(textToWrite, fileNameToSaveAs);' +
-                '            inputasm.is_modified = false;' +
-                "            return false;'></ws-save-files-option>" +
-                '<ws-save-files-option ' +
-                "     label='Save as binary section' " +
-                "      jsrc='var ifntsa2 = document.getElementById(\"inputFileNameToSaveAs2\");" +
-                '        var fileNameToSaveAs = ifntsa2.value;' +
-                '            var simware = get_simware();' +
-                '            if (simware == null) return false;' +
-                '            var textToWrite = mp2bin(simware.mp, simware.labels_asm, simware.seg);' +
-                '        wepsim_save_to_file(textToWrite, fileNameToSaveAs);' +
-                "            return false;'></ws-save-files-option>" +
-                '></ws-save-files>' +
-                                //
+                "<ws-save-files-option label='Save editor content' jsrc='asm-save-editor'>" +
+                '</ws-save-files-option>' +
+                "<ws-save-files-option label='Save as binary section' jsrc='asm-save-binary'>" +
+                '</ws-save-files-option>' +
+                '</ws-save-files>' +
                 '</div>' +
                 "<div class='col-12 col-sm-6 p-2'>" +
-                '<ws-load-file ' +
-                "    fid='fileToLoad2' " +
-                "    jload='var ftl = document.getElementById(\"fileToLoad2\").files[0];" +
-                '           wepsim_file_loadFrom(ftl, ' +
-                '                        function(txt) { ' +
-                '              inputasm.setValue(txt);' +
-                '                      wsweb_dialog_close("load_save_assembly");' +
-                '              wepsim_notify_success("<strong>INFO</strong>", "Loaded!.") ; ' +
-                '                        });' +
-                "           return false;'></ws-load-file>" +
+                "<ws-load-file fid='fileToLoad2' data-editor='inputasm' data-dialog='load_save_assembly'>" +
+                '</ws-load-file>' +
                 '</div>' +
                 '</div>' +
                 '</div>' ;
@@ -124,19 +101,12 @@ export var wsweb_dialogs = {
                 "     style='overflow:auto; -webkit-overflow-scrolling:touch; height:50vh;'> " +
                 "<div class='row m-0 h-100'>" +
                 "<div class='col-12 col-sm-6 p-2'>" +
-                '<ws-share-link ' +
-                "    fid='inputToShareAs2' " +
-                "    jshare='asm,cache' " +
-                '></ws-share-link>' +
+                "<ws-share-link fid='inputToShareAs2' jshare='asm,cache'>" +
+                '</ws-share-link>' +
                 '</div>' +
                 "<div class='col-12 col-sm-6 p-2'>" +
-                '<ws-load-link ' +
-                "    fid='inputToShareAs3' " +
-                "    jload='elto = document.getElementById(\"inputToShareAs3\"); " +
-                '       load_from_uri(elto.value);' +
-                '           wsweb_dialog_close("load_save_assembly");' +
-                '       wepsim_notify_success("<strong>INFO</strong>", "Loaded!.") ; ' +
-                "           return false;'></ws-load-link>" +
+                "<ws-load-link fid='inputToShareAs3' data-dialog='load_save_assembly'>" +
+                '</ws-load-link>' +
                 '</div>' +
                 '</div>' +
                 '</div>' ;
@@ -178,38 +148,18 @@ export var wsweb_dialogs = {
                 "     style='overflow:auto; -webkit-overflow-scrolling:touch;'> " +
                 "<div class='row m-0'>" +
                 "<div class='col-12 col-sm-6 p-2'>" +
-                                //
                 "<ws-save-files fid='inputFileNameToSaveAs'>" +
-                '<ws-save-files-option ' +
-                "    label='Save editor content' " +
-                "     jsrc='var fileNameToSaveAs  = document.getElementById(\"inputFileNameToSaveAs\").value;" +
-                '           var textToWrite       = inputfirm.getValue();' +
-                '           wepsim_save_to_file(textToWrite, fileNameToSaveAs);' +
-                '           inputfirm.is_modified = false;' +
-                "       return false;'></ws-save-files-option>" +
-                '<ws-save-files-option ' +
-                "    label='Save control memory (firmware v2)' " +
-                "     jsrc='wsweb_save_controlmemory_to_file(2);" +
-                "           return false;'></ws-save-files-option>" +
-                '<ws-save-files-option ' +
-                "    label='Save control memory (firmware v1)' " +
-                "     jsrc='wsweb_save_controlmemory_to_file(1);" +
-                "           return false;'></ws-save-files-option>" +
-                '></ws-save-files>' +
-                                //
+                "<ws-save-files-option label='Save editor content' jsrc='fir-save-editor'>" +
+                '</ws-save-files-option>' +
+                "<ws-save-files-option label='Save control memory (firmware v2)' jsrc='fir-save-cm2'>" +
+                '</ws-save-files-option>' +
+                "<ws-save-files-option label='Save control memory (firmware v1)' jsrc='fir-save-cm1'>" +
+                '</ws-save-files-option>' +
+                '</ws-save-files>' +
                 '</div>' +
                 "<div class='col-12 col-sm-6 p-2'>" +
-                '<ws-load-file ' +
-                "    fid='fileToLoad' " +
-                "    jload='var ftl = document.getElementById(\"fileToLoad\").files[0];" +
-                '           wepsim_file_loadFrom(ftl, ' +
-                '                        function(txt) { ' +
-                '             inputfirm.setValue("Please wait...");' +
-                '                     wsweb_dialog_close("load_save_firmware");' +
-                '             inputfirm.setValue(txt);' +
-                '             wepsim_notify_success("<strong>INFO</strong>", "Loaded!.") ; ' +
-                '                        });' +
-                "           return false;'></ws-load-file>" +
+                "<ws-load-file fid='fileToLoad' data-editor='inputfirm' data-dialog='load_save_firmware'>" +
+                '</ws-load-file>' +
                 '</div>' +
                 '</div>' +
                 '</div>' ;
@@ -254,19 +204,12 @@ export var wsweb_dialogs = {
                 "     style='overflow:auto; -webkit-overflow-scrolling:touch; height:50vh;'> " +
                 "<div class='row m-0 h-100'>" +
                 "<div class='col-12 col-sm-6 p-2'>" +
-                '<ws-share-link ' +
-                "    fid='inputToShareAs2' " +
-                "    jshare='mc' " +
-                '></ws-share-link>' +
+                "<ws-share-link fid='inputToShareAs2' jshare='mc'>" +
+                '</ws-share-link>' +
                 '</div>' +
                 "<div class='col-12 col-sm-6 p-2'>" +
-                '<ws-load-link ' +
-                "    fid='inputToShareAs3' " +
-                "    jload='elto = document.getElementById(\"inputToShareAs3\"); " +
-                '       load_from_uri(elto.value);' +
-                '           wsweb_dialog_close("load_save_firmware");' +
-                '       wepsim_notify_success("<strong>INFO</strong>", "Loaded!.") ; ' +
-                "           return false;'></ws-load-link>" +
+                "<ws-load-link fid='inputToShareAs3' data-dialog='load_save_firmware'>" +
+                '</ws-load-link>' +
                 '</div>' +
                 '</div>' +
                 '</div>' ;
@@ -749,6 +692,17 @@ export var wsweb_dialogs = {
         },
         onshow: function()
         {
+            onClick('cfgset_load', (el) =>
+            {
+                var key = el.querySelector('[data-langkey]')?.textContent;
+                if (key) cfgset_load(key);
+            });
+            onClick('reset_cfg', (el) =>
+            {
+                reset_cfg();
+                wsweb_dialog_close('cfg_confirm_reset');
+            });
+
             // ui lang
             var ws_idiom = get_cfg('ws_idiom') ;
             i18n_update_tags('dialogs', ws_idiom) ;
@@ -909,23 +863,8 @@ export var wsweb_dialogs = {
 
             return "<div class='row m-0'>" +
                 "   <div class='col-12 col-sm-4 p-2'>" +
-                '   <ws-save-file ' +
-                "     fid='FileNameToSaveAs1' " +
-                "     jsave='wepsim_notify_success(\"<strong>INFO</strong>\", " +
-                '                                 "Processing save request...");' +
-                '         var obj_tagName   = document.getElementById("tagToSave1") ;' +
-                '         var checkpointObj = wepsim_checkpoint_get(obj_tagName.value);' +
-                '         wepsim_checkpoint_save("FileNameToSaveAs1", ' +
-                '                                    "tagToSave1", checkpointObj);' +
-                "             return false;'" +
-                "     jshare='wepsim_notify_success(\"<strong>INFO</strong>\", " +
-                '                                   "Processing share request...");' +
-                '         var obj_tagName   = document.getElementById("tagToSave1") ;' +
-                '         var checkpointObj = wepsim_checkpoint_get(obj_tagName.value);' +
-                '         wepsim_checkpoint_share("FileNameToSaveAs1", ' +
-                '                                     "tagToSave1", checkpointObj);' +
-                "             return false;'" +
-                '   ></ws-save-file>' +
+                "   <ws-save-file fid='FileNameToSaveAs1' data-tag-id='tagToSave1'>" +
+                '</ws-save-file>' +
                 "   <input aria-label='associated tag to be saved' id='tagToSave1'" +
                 "          class='form-control btn-outline-secondary' " +
                 "          type='hidden' " +
@@ -934,15 +873,8 @@ export var wsweb_dialogs = {
                 "          style='min-width: 90%;'/>" +
                 '   </div>' +
                 "   <div class='col-12 col-sm-4 p-2'>" +
-                '    <ws-load-file ' +
-                "        fid='fileToLoad31' " +
-                "        jload='var ret = wepsim_checkpoint_load(\"fileToLoad31\") ;" +
-                '           if (ret) {' +
-                '               wsweb_dialog_close("current_checkpoint") ;' +
-                '               wepsim_notify_success("<strong>INFO</strong>", ' +
-                '                                         "Processing load request...") ;' +
-                '           }' +
-                "           return false;'></ws-load-file>" +
+                "    <ws-load-file fid='fileToLoad31' data-mode='checkpoint' data-dialog='current_checkpoint'>" +
+                '    </ws-load-file>' +
                 '   </div>' +
                 "   <div class='col-12 col-sm-4 p-2'>" +
                 "   <div class='card border-secondary h-100'>" +
@@ -992,6 +924,16 @@ export var wsweb_dialogs = {
         size:   'extra-large',
         onshow: function()
         {
+            onClick('wepsim_checkpoint_loadFromCache', (el) =>
+            {
+                wepsim_checkpoint_loadFromCache('browserCacheElto');
+            });
+            onClick('wepsim_checkpoint_clearCache', (el) =>
+            {
+                wepsim_checkpoint_clearCache();
+                wepsim_checkpoint_listCache('browserCacheList1');
+            });
+
             // update content
             wepsim_checkpoint_listCache('browserCacheList1');
             $('.dropify').dropify() ;

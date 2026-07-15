@@ -23,6 +23,7 @@ import { simcore_voice_speak } from '../sim_core/sim_core_voice.js';
 import { simcore_notifications_add } from '../sim_core/sim_core_notify.js';
 import { get_cfg } from '../sim_core/sim_cfg.js';
 import { simcore_record_append_new } from '../sim_core/sim_core_record.js';
+import { onClick } from '../wepsim_web/wepsim_web_actions.js';
 
 /*
      * API - one notification
@@ -56,6 +57,7 @@ export function wepsim_notify_show_notify (ntf_title, ntf_message, ntf_type, ntf
 
     // create the alert div
     var btn1 = $('<button type="button" class="' + btn1_close_class + '" data-bind="click" data-action="notify-close">') ;
+    onClick('notify-close', () => wepsim_notify_close()) ;
     var alert1 = $('<div class="' + ale1_div_class + '">') ;
     ac.prepend(alert1.append(btn1.append('')).append(ntf_message)) ;
 

@@ -19,6 +19,7 @@
  */
 import $ from 'jquery';
 import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { get_cfg } from '../sim_core/sim_cfg.js';
 import { ws_info } from '../sim_core/sim_adt_core.js';
 import { wepsim_mode_getBaseMode } from '../wepsim_core/wepsim_mode.js';
@@ -70,59 +71,6 @@ export class ws_examples extends ws_uielto
 
         var o1 = table_examples_html(ws_info.examples) ;
         $('#' + examdiv_id).html(o1) ;
-    }
-
-    bindElements ()
-    {
-        this.addEventListener('click', (e) =>
-        {
-            const el = e.target.closest('[data-bind="click"]');
-            if (!el) return;
-            e.preventDefault();
-            switch (el.dataset.action)
-            {
-                case 'example-load-firmware':
-                    simcore_record_append_pending();
-                    load_from_example_firmware(el.dataset.hwmcasm, true);
-                    wait_if_uievents(function()
-                    {
-                        wsweb_dialog_close('examples');
-                    }, 50);
-                    break;
-                case 'example-dropdown-firmware':
-                    simcore_record_append_pending();
-                    load_from_example_firmware(el.dataset.hwmcasm, true);
-                    wsweb_dialog_close('examples');
-                    break;
-                case 'example-dropdown-asm':
-                    simcore_record_append_pending();
-                    load_from_example_assembly(el.dataset.hwmcasm, false);
-                    wsweb_dialog_close('examples');
-                    break;
-                case 'example-dropdown-firmware-only':
-                    simcore_record_append_pending();
-                    load_from_example_firmware(el.dataset.hwmcasm, false);
-                    wsweb_dialog_close('examples');
-                    break;
-                case 'example-dropdown-copy-ref':
-                    $('#' + el.dataset.refId).removeClass('d-none');
-                    wepsim_clipboard_CopyFromDiv(el.dataset.refId);
-                    $('#' + el.dataset.refId).addClass('d-none');
-                    wsweb_dialog_close('examples');
-                    break;
-                case 'example-dropdown-share':
-                    wsweb_dialog_close('examples');
-                    share_example(parseInt(el.dataset.exampleIndex), el.dataset.baseUrl);
-                    break;
-                case 'example-set-load':
-                    wepsim_example_reset();
-                    wepsim_example_load(el.dataset.setName);
-                    wsweb_dialog_close('examples');
-                    wsweb_dialog_open('examples');
-                    wepsim_tooltips_hide('[data-bs-toggle=tooltip]');
-                    break;
-            }
-        });
     }
 }
 
@@ -228,8 +176,47 @@ export function table_examples_html(examples)
             '                data-base-url="' + base_url + '" ' +
             '                class="dropdown-item text-white bg-info my-1 wsx_share" href="#"><c><span data-langkey="Share">Share</span></c></a>' +
             '     </div>' +
-            '</div>' +
-            '<div class="col-sm py-1 collapse7 show ' + toggle_cls + '">' +
+            '</div>' ;
+        onClick('example-load-firmware', (el) =>
+        {
+            simcore_record_append_pending();
+            load_from_example_firmware(el.dataset.hwmcasm, true);
+            wait_if_uievents(function()
+            {
+                wsweb_dialog_close('examples');
+            }, 50);
+        }) ;
+        onClick('example-dropdown-firmware', (el) =>
+        {
+            simcore_record_append_pending();
+            load_from_example_firmware(el.dataset.hwmcasm, true);
+            wsweb_dialog_close('examples');
+        }) ;
+        onClick('example-dropdown-asm', (el) =>
+        {
+            simcore_record_append_pending();
+            load_from_example_assembly(el.dataset.hwmcasm, false);
+            wsweb_dialog_close('examples');
+        }) ;
+        onClick('example-dropdown-firmware-only', (el) =>
+        {
+            simcore_record_append_pending();
+            load_from_example_firmware(el.dataset.hwmcasm, false);
+            wsweb_dialog_close('examples');
+        }) ;
+        onClick('example-dropdown-copy-ref', (el) =>
+        {
+            $('#' + el.dataset.refId).removeClass('d-none');
+            wepsim_clipboard_CopyFromDiv(el.dataset.refId);
+            $('#' + el.dataset.refId).addClass('d-none');
+            wsweb_dialog_close('examples');
+        }) ;
+        onClick('example-dropdown-share', (el) =>
+        {
+            wsweb_dialog_close('examples');
+            share_example(parseInt(el.dataset.exampleIndex), el.dataset.baseUrl);
+        }) ;
+        u += '<div class="col-sm py-1 collapse7 show ' + toggle_cls + '">' +
             '    <c>' + e_description + '</c>' +
             '</div>' +
             '<div class="w-100 ' + w100_toggle + ' ' + toggle_cls + '"></div>' ;
@@ -290,13 +277,21 @@ export function table_examplesets_html(div_list, example_sets)
         o += '<li class="list-group-item d-flex justify-content-between align-items-start" ' +
             '    id="exs_' + item.name + '" value="' + i + '" ' +
             '    data-bind="click" data-action="example-set-load" ' +
-            '    data-set-name="' + item.name + '">' +
+            '    data-setname="' + item.name + '">' +
             '  <div class="ms-2 me-auto">' +
             '     <div class="fw-bold">' + item.name + '</div>' +
             item.description +
             '  </div>' +
             '  <span class="badge bg-primary rounded-pill">' + item.size + '</span>' +
             '</li>' ;
+        onClick('example-set-load', (el) =>
+        {
+            wepsim_example_reset();
+            wepsim_example_load(el.dataset.setname);
+            wsweb_dialog_close('examples');
+            wsweb_dialog_open('examples');
+            wepsim_tooltips_hide('[data-bs-toggle=tooltip]');
+        }) ;
     }
     o += '</ul>' ;
 

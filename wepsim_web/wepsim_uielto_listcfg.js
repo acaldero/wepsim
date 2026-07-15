@@ -19,6 +19,7 @@
  */
 import $ from 'jquery';
 import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { cfgset_getSet, cfgset_load } from '../sim_core/sim_cfg.js';
 import { wepsim_notify_success } from '../wepsim_core/wepsim_notify.js';
 import { wepsim_uicfg_restore } from './wepsim_web_simulator.js';
@@ -92,25 +93,12 @@ export class ws_list_cfg extends ws_uielto
         o1 += '</div>' ;
 
         $('#list_cfgs_1').html(o1) ;
-    }
-
-    bindElements ()
-    {
-        this.addEventListener('click', (e) =>
+        onClick('cfg-load', (el) =>
         {
-            const el = e.target.closest('[data-bind="click"]');
-            if (!el) return;
-            e.preventDefault();
-            switch (el.dataset.action)
-            {
-                case 'cfg-load':
-                    cfgset_load(el.dataset.cfgName);
-                    wepsim_notify_success('<strong>INFO</strong>',
-                                          'Configuration loaded!.');
-                    wepsim_uicfg_restore();
-                    break;
-            }
-        });
+            cfgset_load(el.dataset.cfgName);
+            wepsim_notify_success('<strong>INFO</strong>', 'Configuration loaded!.');
+            wepsim_uicfg_restore();
+        }) ;
     }
 }
 

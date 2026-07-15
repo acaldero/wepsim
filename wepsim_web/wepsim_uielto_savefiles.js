@@ -18,11 +18,51 @@
  *
  */
 
-/*
-         *  Save file
-         */
+import { dispatch, onClick } from './wepsim_web_actions.js';
+import { wepsim_save_to_file } from '../wepsim_core/wepsim_url.js';
+import { wepsim_notify_success } from '../wepsim_core/wepsim_notify.js';
+import { get_simware } from '../sim_core/sim_adt_core.js';
+import { mp2bin } from './wepsim_uielto_bin_asm.js';
+import { inputasm, inputfirm } from './wepsim_web_simulator.js';
+import { wepsim_checkpoint_get, wepsim_checkpoint_save } from '../wepsim_core/wepsim_checkpoint.js';
+import { wsweb_save_controlmemory_to_file } from './wepsim_web_api.js';
 
-/* jshint esversion: 6 */
+var saveOptionHandlers = {
+    'asm-save-editor': function(el, host)
+    {
+        var fid = host.getAttribute('fid');
+        var fileNameToSaveAs = document.getElementById(fid).value;
+        var textToWrite = inputasm.getValue();
+        wepsim_save_to_file(textToWrite, fileNameToSaveAs);
+        inputasm.is_modified = false;
+    },
+    'asm-save-binary': function(el, host)
+    {
+        var fid = host.getAttribute('fid');
+        var fileNameToSaveAs = document.getElementById(fid).value;
+        var simware = get_simware();
+        if (simware == null) return;
+        var textToWrite = mp2bin(simware.mp, simware.labels_asm, simware.seg);
+        wepsim_save_to_file(textToWrite, fileNameToSaveAs);
+    },
+    'fir-save-editor': function(el, host)
+    {
+        var fid = host.getAttribute('fid');
+        var fileNameToSaveAs = document.getElementById(fid).value;
+        var textToWrite = inputfirm.getValue();
+        wepsim_save_to_file(textToWrite, fileNameToSaveAs);
+        inputfirm.is_modified = false;
+    },
+    'fir-save-cm2': function(el, host)
+    {
+        wsweb_save_controlmemory_to_file(2);
+    },
+    'fir-save-cm1': function(el, host)
+    {
+        wsweb_save_controlmemory_to_file(1);
+    },
+};
+
 export class ws_save_files_option extends HTMLElement
 {
     static get observedAttributes()
@@ -32,39 +72,28 @@ export class ws_save_files_option extends HTMLElement
 
     constructor ()
     {
-        // parent
         super();
     }
 
     update_internal_attributes ()
     {
-        // fid
         var fid = this.getAttribute('fid') ;
         if (fid === null)
-        {
             this.setAttribute('fid', 'id58') ;
-        }
 
-        // jsrc and label
         var jsrc = this.getAttribute('jsrc') ;
         if (jsrc === null)
-        {
             this.setAttribute('jsrc', '') ;
-        }
 
         var label = this.getAttribute('label') ;
         if (label === null)
-        {
             this.setAttribute('label', 'Save') ;
-        }
     }
 
     render (event_name)
     {
-        // update attributes
         this.update_internal_attributes() ;
 
-        // get html for options...
         var o1 = "  <h6 class='dropdown-header'>" + this.label + ':</h6>' +
             "  <a class='dropdown-item' href='#' " +
             "     data-bind='click' data-action='save-option' data-code='" + this.jsrc + "'><span data-langkey='" + this.label + "'>" +
@@ -80,7 +109,7 @@ export class ws_save_files_option extends HTMLElement
             const el = e.target.closest('[data-bind="click"]');
             if (!el) return;
             e.preventDefault();
-            eval(el.getAttribute('data-code'));
+            if (dispatch('click', el, this, e)) e.stopPropagation();
         });
     }
 
@@ -95,7 +124,6 @@ export class ws_save_files_option extends HTMLElement
         this.render('attributeChangedCallback') ;
     }
 
-    // file-id
     get fid ()
     {
         return this.getAttribute('fid') ;
@@ -106,7 +134,6 @@ export class ws_save_files_option extends HTMLElement
         this.setAttribute('fid', value) ;
     }
 
-    // jsave and label
     get jsave ()
     {
         return this.getAttribute('jsave') ;
@@ -141,26 +168,20 @@ export class ws_save_files extends HTMLElement
 
     constructor ()
     {
-        // parent
         super();
     }
 
     update_internal_attributes ()
     {
-        // fid
         var fid = this.getAttribute('fid') ;
         if (fid === null)
-        {
             this.setAttribute('fid', 'id53') ;
-        }
     }
 
     render (event_name)
     {
-        // update attributes
         this.update_internal_attributes() ;
 
-        // get html for options...
         var eltos = this.querySelectorAll('ws-save-files-option') ;
 
         var o1_list = '' ;
@@ -172,15 +193,12 @@ export class ws_save_files extends HTMLElement
             elto_src.push(eltos[i].getAttribute('jsrc')) ;
             elto_label.push(eltos[i].getAttribute('label')) ;
 
-            // skip empty javascript-save code
             if (null == elto_src[i]) continue ;
             if ('' == elto_src[i]) continue ;
 
-            // add divider in all but last
             if (o1_list != '')
                 o1_list += "  <div class='dropdown-divider'></div>" ;
 
-            // add new option element
             if (0 == i) opt_label = 'Default' ;
             else opt_label = 'Optional ' + i ;
 
@@ -190,7 +208,6 @@ export class ws_save_files extends HTMLElement
                 elto_label[i] + '</span></a>' ;
         }
 
-        // save html
         var o1 = '' ;
         o1 += "<div class='card border-secondary h-100'>" +
             "<div class='card-header border-secondary text-white bg-secondary p-1'>" +
@@ -198,7 +215,7 @@ export class ws_save_files extends HTMLElement
             "  <span class='text-white bg-secondary' data-langkey='Output file'>Output file</span>" +
             "<div class='btn-group float-end'>" +
             "  <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
-            "          data-bind='click' data-action='save' data-code='" + elto_src[0] + "'><span data-langkey='Save'>Save</span></button>" +
+            "          data-bind='click' data-action='save-files' data-code='" + elto_src[0] + "'><span data-langkey='Save'>Save</span></button>" +
             "  <button type='button' " +
             "          class='btn bg-body-tertiary dropdown-toggle dropdown-toggle-split btn-sm' " +
             "          data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>" +
@@ -222,6 +239,28 @@ export class ws_save_files extends HTMLElement
             '</div>' ;
 
         this.innerHTML = o1 ;
+
+        onClick('save-files', (el) =>
+        {
+            var host = el.closest('ws-save-files');
+            if (host)
+            {
+                var code = el.getAttribute('data-code');
+                var handler = saveOptionHandlers[code];
+                if (handler) handler(el, host);
+            }
+        });
+
+        onClick('save-option', (el) =>
+        {
+            var host = el.closest('ws-save-files');
+            if (host)
+            {
+                var code = el.getAttribute('data-code');
+                var handler = saveOptionHandlers[code];
+                if (handler) handler(el, host);
+            }
+        });
     }
 
     bindElements ()
@@ -231,13 +270,12 @@ export class ws_save_files extends HTMLElement
             const el = e.target.closest('[data-bind="click"]');
             if (!el) return;
             e.preventDefault();
-            eval(el.getAttribute('data-code'));
+            if (dispatch('click', el, this, e)) e.stopPropagation();
         });
     }
 
     connectedCallback ()
     {
-        // this.render('connectedCallback') ;
         this.bindElements();
     }
 
@@ -246,7 +284,6 @@ export class ws_save_files extends HTMLElement
         this.render('attributeChangedCallback') ;
     }
 
-    // file-id
     get fid ()
     {
         return this.getAttribute('fid') ;
@@ -257,4 +294,3 @@ export class ws_save_files extends HTMLElement
         this.setAttribute('fid', value) ;
     }
 }
-

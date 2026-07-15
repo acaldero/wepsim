@@ -18,6 +18,7 @@
  *
  */
 import { ws_uielto } from './wepsim_uielto.js';
+import { onInput } from './wepsim_web_actions.js';
 import { wsweb_set_c1c2_size } from './wepsim_web_api.js';
 
 /*
@@ -51,24 +52,10 @@ export class ws_slider_details extends ws_uielto
             '             class="form-range slider col mx-0 px-0"' +
             '             data-bind="input" data-action="slider-details-change">' +
             '</form>' ;
+        onInput('slider-details-change', (el) => wsweb_set_c1c2_size(el.value)) ;
 
         // load html
         this.innerHTML = o1 ;
-    }
-
-    bindElements ()
-    {
-        this.addEventListener('input', function(ev)
-        {
-            var el = ev.target.closest('[data-action]');
-            if (!el) return;
-            switch (el.dataset.action)
-            {
-                case 'slider-details-change':
-                    wsweb_set_c1c2_size(el.value);
-                    break;
-            }
-        });
     }
 }
 

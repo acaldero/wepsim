@@ -47,6 +47,7 @@ import { get_simware, set_simware } from '../sim_core/sim_adt_core.js';
 import { i18n_get } from '../wepsim_i18n/i18n.js';
 import { simcore_compile_firmware, simcore_reset } from '../sim_core/sim_api_core.js';
 import { update_memories, wait_if_uievents } from '../sim_core/sim_core_ctrl.js';
+import { onClick } from './wepsim_web_actions.js';
 import { wepsim_notify_close, wepsim_notify_error, wepsim_notify_success } from '../wepsim_core/wepsim_notify.js';
 import { wsweb_dlg_alert } from '../wepsim_core/wepsim_dialog.js';
 import { asmdbg_update_assembly } from './wepsim_uielto_dbg_asm.js';
@@ -225,6 +226,12 @@ export function showError(Msg, editor)
             '        data-editor="' + editor + '" data-pos="' + pos + '">' +
             ' Go line ' + pos +
             '</button>&nbsp;' ;
+        onClick('go-error', (el) =>
+        {
+            var edt = (el.dataset.editor === 'inputasm') ? inputasm : inputfirm ;
+            wepsim_notify_close() ;
+            goError(edt, parseInt(el.dataset.pos)) ;
+        }) ;
     }
 
     wepsim_notify_error('<strong>ERROR</strong>',
@@ -237,6 +244,7 @@ export function showError(Msg, editor)
                         '<button type="button" class="btn btn-danger" ' +
                         '        data-bind="click" data-action="notify-close"><span data-langkey="Close">Close</span></button>' +
                         '</center>') ;
+    onClick('notify-close', () => wepsim_notify_close()) ;
 }
 
 // Show binaries
@@ -346,28 +354,5 @@ export function wepsim_compile_firmware(textToMCompile)
 
     simcore_reset() ;
     return true;
-}
-
-export function bindElements()
-{
-    this.addEventListener('click', (e) =>
-    {
-        const el = e.target.closest('[data-bind="click"]') ;
-        if (!el) return ;
-        e.preventDefault() ;
-
-        switch (el.dataset.action)
-        {
-            case 'notify-close':
-                wepsim_notify_close() ;
-                break ;
-            case 'go-error': {
-                var edt = (el.dataset.editor === 'inputasm') ? inputasm : inputfirm ;
-                wepsim_notify_close() ;
-                goError(edt, parseInt(el.dataset.pos)) ;
-                break ;
-            }
-        }
-    }) ;
 }
 

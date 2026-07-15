@@ -19,6 +19,7 @@
  */
 import $ from 'jquery';
 import { ws_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { get_cfg, cfg_show_control_memory_delay } from '../sim_core/sim_cfg.js';
 import { get_simware } from '../sim_core/sim_adt_core.js';
 import { get_value } from '../sim_core/sim_core_values.js';
@@ -51,28 +52,6 @@ export class ws_dbg_mc extends ws_uielto
             '</div>' ;
 
         this.innerHTML = o1 ;
-        this.bindElements() ;
-    }
-
-    bindElements()
-    {
-        this.addEventListener('click', function(ev)
-        {
-            var el = ev.target.closest('[data-bind="click"]');
-            if (!el) return;
-            switch (el.dataset.action)
-            {
-                case 'set-breakpoint':
-                    dbg_set_breakpoint(el.dataset.addr);
-                    if (event.stopPropagation) event.stopPropagation();
-                    break;
-                case 'vue-set-breakpoint':
-                    var key = el.getAttribute('data-info');
-                    dbg_set_breakpoint(key);
-                    if (event.stopPropagation) event.stopPropagation();
-                    break;
-            }
-        });
     }
 }
 
@@ -262,7 +241,10 @@ export function control_memory_showrow(memory, key, is_current, revlabels)
         "<td width='1%'  class='col-auto py-0 px-0  " + wcolor + "' id='mcpin" + key + "'>" + trpin + '</td>' +
         "<td             class='col py-0            " + wcolor + "'>" + value + '</td>' +
         '</tr>' ;
-
+    onClick('set-breakpoint', (el) =>
+    {
+        dbg_set_breakpoint(el.dataset.addr) ; if (el.stopPropagation) el.stopPropagation() ;
+    }) ;
     // return HTML
     return o1 ;
 }
@@ -370,7 +352,10 @@ export function control_memory_init_vue(redraw)
         '</tr>' +
         '</tbody>' +
         '</table></center>' ;
-
+    onClick('vue-set-breakpoint', (el) =>
+    {
+        dbg_set_breakpoint(el.getAttribute('data-info')) ; if (el.stopPropagation) el.stopPropagation() ;
+    }) ;
     $('#memory_MC').html(o1) ;
 
     // vue binding

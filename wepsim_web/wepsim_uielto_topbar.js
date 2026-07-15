@@ -18,6 +18,7 @@
  *
  */
 import { ws_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { wepsim_popover_action } from './wepsim_web_ui_popover.js';
 import { wepsim_uicfg_apply } from './wepsim_web_simulator.js';
 import { wsweb_quickmenu_show, wsweb_dialog_open } from './wepsim_web_api.js';
@@ -61,26 +62,12 @@ export class ws_topbar extends ws_uielto
             '</nav>' ;
 
         this.innerHTML = o1 ;
-    }
 
-    bindElements()
-    {
-        this.addEventListener('click', function(ev)
+        onClick('quickmenu-toggle', () =>
         {
-            var el = ev.target.closest('[data-action]');
-            if (!el) return;
-            switch (el.dataset.action)
-            {
-                case 'quickmenu-toggle':
-                    if (typeof wsweb_quickmenu_show === 'function')
-                        wsweb_quickmenu_show();
-                    ev.preventDefault();
-                    break;
-                case 'dialog-about':
-                    wsweb_dialog_open('about');
-                    break;
-            }
-        });
+            if (typeof wsweb_quickmenu_show === 'function') wsweb_quickmenu_show() ;
+        }) ;
+        onClick('dialog-about', () => wsweb_dialog_open('about')) ;
     }
 }
 

@@ -19,6 +19,7 @@
  */
 import $ from 'jquery';
 import { ws_uielto } from './wepsim_uielto.js';
+import { onKeyup } from './wepsim_web_actions.js';
 import { get_simware } from '../sim_core/sim_adt_core.js';
 
 /*
@@ -61,6 +62,14 @@ export class ws_help_swset extends ws_uielto
             '<div class="row justify-content-center" id="' + id_list + '"></div>' +
             '</div>' ;
 
+        onKeyup('sw-search', (el) =>
+        {
+            var value = el.value.toLowerCase();
+            $('.table2 tr').filter(function()
+            {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        }) ;
         this.innerHTML = o1 ;
     }
 
@@ -145,26 +154,6 @@ export class ws_help_swset extends ws_uielto
 
         // load HTML
         $('#' + id_list).html(o1) ;
-    }
-
-    bindElements ()
-    {
-        this.addEventListener('keyup', (e) =>
-        {
-            var el = e.target.closest('[data-bind="keyup"]');
-            if (!el) return;
-
-            switch (el.dataset.action)
-            {
-                case 'sw-search':
-                    var value = el.value.toLowerCase();
-                    $('.table2 tr').filter(function()
-                    {
-                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-                    });
-                    break;
-            }
-        });
     }
 }
 

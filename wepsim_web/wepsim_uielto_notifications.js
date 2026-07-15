@@ -19,6 +19,7 @@
  */
 import $ from 'jquery';
 import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { simcore_notifications_get, simcore_notifications_reset } from '../sim_core/sim_core_notify.js';
 import { wepsim_uicfg_apply } from './wepsim_web_simulator.js';
 import { wsweb_scroll_record } from './wepsim_web_api.js';
@@ -84,6 +85,17 @@ export class ws_notifications extends ws_uielto
             '</div>' ;
 
         this.innerHTML = o1 ;
+
+        onClick('notifications-reset', () =>
+        {
+            simcore_notifications_reset();
+            var notifications = simcore_notifications_get();
+            var ntf_html = table_notifications_html(notifications);
+            $('#scroller-notifications3').html(ntf_html);
+            wepsim_uicfg_apply();
+            wsweb_scroll_record('#scroller-notifications3');
+            simcore_record_captureInit();
+        }) ;
     }
 
     render_populate ()
@@ -91,28 +103,6 @@ export class ws_notifications extends ws_uielto
         var notifications = simcore_notifications_get() ;
         var notifications_html = table_notifications_html(notifications) ;
         $('#scroller-notifications3').html(notifications_html) ;
-    }
-
-    bindElements ()
-    {
-        this.addEventListener('click', (e) =>
-        {
-            const el = e.target.closest('[data-bind="click"]');
-            if (!el) return;
-            e.preventDefault();
-            switch (el.dataset.action)
-            {
-                case 'notifications-reset':
-                    simcore_notifications_reset();
-                    var notifications = simcore_notifications_get();
-                    var ntf_html = table_notifications_html(notifications);
-                    $('#scroller-notifications3').html(ntf_html);
-                    wepsim_uicfg_apply();
-                    wsweb_scroll_record('#scroller-notifications3');
-                    simcore_record_captureInit();
-                    break;
-            }
-        });
     }
 }
 

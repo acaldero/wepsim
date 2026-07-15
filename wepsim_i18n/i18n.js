@@ -19,6 +19,8 @@
  */
 
 import { get_cfg, update_cfg } from '../sim_core/sim_cfg.js';
+import { onChange, onClick } from '../wepsim_web/wepsim_web_actions.js';
+import { wepsim_newbie_tour_reload } from '../wepsim_core/wepsim_tour.js';
 import { i18n_de_register } from './de/register.js' ;
 import { i18n_en_register } from './en/register.js' ;
 import { i18n_es_register } from './es/register.js' ;
@@ -191,6 +193,7 @@ export function i18n_get_select (div_name, extra_components)
         else o += " <option value='" + l + "'>" + i18n.lang[l] + '</option>' ;
     }
     o += ' </select>' ;
+    onChange('idiom-change', (el, comp, event) => i18n_handle_idiom_change(event)) ;
 
     return o ;
 }
@@ -207,6 +210,7 @@ export function i18n_get_selectcfg ()
         o += "  <option value='" + l + "'>" + i18n.lang[l] + '</option>' ;
     }
     o += ' </select>' ;
+    onChange('idiom-change', (el, comp, event) => i18n_handle_idiom_change(event)) ;
 
     return o ;
 }
@@ -242,12 +246,13 @@ export function i18n_get_welcome ()
     for (var key in i18n.lang)
     {
         o += '<a class="btn btn-sm btn-outline-secondary mx-2 my-2 col-auto" href="#" ' +
-            '   onclick="wepsim_newbie_tour_reload(\'' + key + '\');">' +
+            '   data-bind="click" data-action="newbie-tour-reload" data-lang="' + key + '">' +
             i18n_get('gui', key, 'Welcome') +
             '</a>' ;
     }
     o += '</span>' +
         '</div>' ;
+    onClick('newbie-tour-reload', (el) => wepsim_newbie_tour_reload(el.dataset.lang)) ;
 
     return o ;
 }

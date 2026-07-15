@@ -19,6 +19,7 @@
  */
 import $ from 'jquery';
 import { ws_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { simhw_active } from '../sim_hw/sim_hw_index.js';
 import { simhwelto_describe_component, simhwelto_prepare_hash } from '../sim_hw/sim_hw_eltos.js';
 import { value_toString } from '../sim_core/sim_core_values.js';
@@ -39,7 +40,6 @@ export class ws_hw extends ws_uielto
     {
         // parent
         super();
-        this.bindElements();
     }
 
     // render
@@ -51,55 +51,6 @@ export class ws_hw extends ws_uielto
         // render current element
         this.render_skel() ;
         this.render_populate() ;
-    }
-
-    bindElements ()
-    {
-        this.addEventListener('click', (e) =>
-        {
-            var el = e.target.closest('[data-action]');
-            if (!el) return;
-            e.preventDefault();
-            switch (el.dataset.action)
-            {
-                case 'hw-active-signals-toggle':
-                    ws_signals_show_inactive = !ws_signals_show_inactive;
-                    $('.s-ina').toggle();
-                    break;
-                case 'hw-dependencies-toggle':
-                    $('#depgraph1c').collapse('toggle');
-                    show_visgraph(jit_fire_dep, jit_fire_order);
-                    break;
-                case 'hw-signal-dialog':
-                    simcoreui_signal_dialog(el.dataset.signalName);
-                    break;
-                case 'hw-popover-close':
-                    wepsim_popovers_hide('.popover_hw');
-                    break;
-                case 'hw-ctrl-states-toggle':
-                    $('#ctrlstates1').collapse('toggle');
-                    break;
-                case 'hw-active-states-toggle':
-                    ws_states_show_inactive = !ws_states_show_inactive;
-                    $('.t-ina').toggle();
-                    break;
-                case 'quickcfg-hw-filter':
-                    var showInactive = el.dataset.value === 'true';
-                    ws_signals_show_inactive = showInactive;
-                    ws_states_show_inactive = showInactive;
-                    if (showInactive)
-                    {
-                        $('.s-ina').show();
-                        $('.t-ina').show();
-                    }
-                    else
-                    {
-                        $('.s-ina').hide();
-                        $('.t-ina').hide();
-                    }
-                    break;
-            }
-        });
     }
 
     render_skel ()
@@ -140,6 +91,9 @@ export class ws_hw extends ws_uielto
 
 export var ws_signals_show_inactive = true ;
 export var ws_states_show_inactive = true ;
+
+export const set_ws_signals_show_inactive = (value) => ws_signals_show_inactive = value;
+export const set_ws_states_show_inactive = (value) => ws_states_show_inactive = value;
 
 export var simcoreui_hwui_fn = {} ;
 simcoreui_hwui_fn.summary = simcoreui_hw_summary_init ;
@@ -349,6 +303,10 @@ export function simcoreui_hw_btn_active_signals_toggle()
         '      data-bind="click" data-action="hw-active-signals-toggle" ' +
         '      data-langkey="Active">Active</span>' ;
 
+    onClick('hw-active-signals-toggle', () =>
+    {
+        ws_signals_show_inactive = !ws_signals_show_inactive ; $('.s-ina').toggle() ;
+    }) ;
     return o ;
 }
 
@@ -360,6 +318,10 @@ export function simcoreui_hw_btn_signals_dependencies_toggle()
         '      data-bind="click" data-action="hw-dependencies-toggle"' +
         '      data-langkey="Dependencies">Dependencies</span>' ;
 
+    onClick('hw-dependencies-toggle', () =>
+    {
+        $('#depgraph1c').collapse('toggle') ; show_visgraph(jit_fire_dep, jit_fire_order) ;
+    }) ;
     return o ;
 }
 
@@ -400,6 +362,8 @@ export function simcoreui_hw_signals_popup(ahw_signals, elto)
         '        data-bind="click" data-action="hw-popover-close">' +
         '<span data-langkey=\'Close\'>Close</span></button>' +
         '</span>' ;
+    onClick('hw-signal-dialog', (el) => simcoreui_signal_dialog(el.dataset.signalName)) ;
+    onClick('hw-popover-close', () => wepsim_popovers_hide('.popover_hw')) ;
 
     return e ;
 }
@@ -524,6 +488,7 @@ export function simcoreui_hw_init_states_card(content, ahw)
         '      <p class="card-text">' + content + '</p>' +
         ' </div>' +
         '</div>' ;
+    onClick('hw-ctrl-states-toggle', () => $('#ctrlstates1').collapse('toggle')) ;
 
     return o ;
 }
@@ -536,6 +501,10 @@ export function simcoreui_hw_btn_active_states_toggle()
         '      data-bind="click" data-action="hw-active-states-toggle" ' +
         '      data-langkey="Active">Active</span>' ;
 
+    onClick('hw-active-states-toggle', () =>
+    {
+        ws_states_show_inactive = !ws_states_show_inactive ; $('.t-ina').toggle() ;
+    }) ;
     return o ;
 }
 
@@ -585,6 +554,7 @@ export function simcoreui_hw_states_popup(ahw_states, elto)
         '        data-bind="click" data-action="hw-popover-close">' +
         '<span data-langkey=\'Close\'>Close</span></button>' +
         '</span>' ;
+    onClick('hw-popover-close', () => wepsim_popovers_hide('.popover_hw')) ;
 
     return e ;
 }
@@ -654,6 +624,7 @@ export function simcoreui_hw_behaviors_init(ahw, framed)
             '</span>' +
             '"' +
             '   data-bs-html="true" title="">' + elto + '</a></span>' ;
+        onClick('hw-popover-close', () => wepsim_popovers_hide('.popover_hw')) ;
     }
     c = c + '</span>' ;
 
@@ -681,6 +652,7 @@ export function simcoreui_hw_components_popup(ahw, elto)
         '        class=\'btn btn-sm btn-danger w-100 p-0 mt-2\' ' +
         '        data-bind="click" data-action="hw-popover-close">' +
         '<span data-langkey=\'Close\'>Close</span></button>' ;
+    onClick('hw-popover-close', () => wepsim_popovers_hide('.popover_hw')) ;
     return e ;
 }
 
@@ -691,6 +663,7 @@ export function simcoreui_hw_elements_popup(elto_path, elto)
         '        class=\'btn btn-sm btn-danger w-100 p-0 mt-2\' ' +
         '        data-bind="click" data-action="hw-popover-close">' +
         '<span data-langkey=\'Close\'>Close</span></button>' ;
+    onClick('hw-popover-close', () => wepsim_popovers_hide('.popover_hw')) ;
 
     return e ;
 }

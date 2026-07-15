@@ -19,6 +19,7 @@
  */
 import $ from 'jquery';
 import { ws_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { get_cfg, is_cfg_empty } from '../sim_core/sim_cfg.js';
 import { sim } from '../sim_hw/sim_hw_index.js';
 import { simhw_get_processor_names } from '../sim_hw/sim_hw_lazy.js';
@@ -128,7 +129,7 @@ export class ws_toolbar extends ws_uielto
 
     render_switch_microcode (robj)
     {
-        return '<button ' +
+        var o = '<button ' +
             '    class="btn bg-body-tertiary shadow-sm col-auto wsx_microcode mx-1 px-2 border border-secondary"' +
             '    id="btn_micro1"' +
             '    data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"' +
@@ -136,26 +137,41 @@ export class ws_toolbar extends ws_uielto
             '    data-bind="click" data-action="switch-microcode"' +
             '><strong><span class="d-none d-sm-inline-flex" ' +
             ' data-langkey=\'MicroCode\'>MicroCode</span><span class="d-sm-none">&#181;code</span></strong></button>' ;
+        onClick('switch-microcode', () =>
+        {
+            api.wsweb_change_workspace_microcode() ; wepsim_tooltips_hide('[data-bs-toggle=tooltip]') ;
+        }) ;
+        return o ;
     }
 
     render_switch_assembly (robj)
     {
-        return '<button class="btn bg-body-tertiary shadow-sm col-auto mx-1 px-2 border border-secondary"' +
+        var o = '<button class="btn bg-body-tertiary shadow-sm col-auto mx-1 px-2 border border-secondary"' +
             '        id="btn_asm1"' +
             '        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"' +
             '        title="This button switches into the \'Assembly\' editor."' +
             '        data-bind="click" data-action="switch-assembly"' +
             '><strong><span class="d-none d-sm-inline-flex" data-langkey=\'Assembly\'>Assembly</span><span class="d-sm-none" data-langkey=\'Assembly\'>Assembly</span></strong></button>' ;
+        onClick('switch-assembly', () =>
+        {
+            api.wsweb_change_workspace_assembly() ; wepsim_tooltips_hide('[data-bs-toggle=tooltip]') ;
+        }) ;
+        return o ;
     }
 
     render_switch_simulator (robj)
     {
-        return '<button class="btn bg-body-tertiary shadow-sm col-auto mx-1 px-2 border border-secondary"' +
+        var o = '<button class="btn bg-body-tertiary shadow-sm col-auto mx-1 px-2 border border-secondary"' +
             '        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"' +
             '        data-transition="none" data-inline="true"' +
             '        title="This button switches into the \'Simulator\' workspace."' +
             '        data-bind="click" data-action="switch-simulator"' +
             '><strong><span data-langkey=\'Simulator\'>Simulator</span></strong></button>' ;
+        onClick('switch-simulator', () =>
+        {
+            api.wsweb_change_workspace_simulator() ; wepsim_tooltips_hide('[data-bs-toggle=tooltip]') ;
+        }) ;
+        return o ;
     }
 
     //
@@ -201,6 +217,7 @@ export class ws_toolbar extends ws_uielto
         o += (robj.icons_str == 'no') ? '' : '<em class="fas fa-info d-none d-sm-inline text-secondary"></em>' ;
         o += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
         o += '<strong><span data-langkey=\'Help\'>Help</span></strong></button>' ;
+        onClick('btn-help', () => api.wsweb_dialog_open('help')) ;
 
         return o ;
     }
@@ -215,6 +232,7 @@ export class ws_toolbar extends ws_uielto
         o += (robj.icons_str == 'no') ? '' : '<em class="fas fa-cogs d-none d-sm-inline text-secondary"></em>&nbsp;' ;
         o += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
         o += '<strong><span class="d-none d-sm-inline-flex" data-langkey=\'Configuration\'>Configuration</span><span class="d-sm-none">Cfg.</span></strong></button>' ;
+        onClick('btn-config', () => api.wsweb_dialog_open('config')) ;
 
         return o ;
     }
@@ -228,6 +246,7 @@ export class ws_toolbar extends ws_uielto
         o += (robj.icons_str == 'no') ? '' : '<em class="fas fa-comment-alt d-none d-sm-inline text-secondary"></em>&nbsp;' ;
         o += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
         o += '<strong><span class="d-none d-md-inline-flex" data-langkey=\'Notifications\'>Notifications</span><span class="d-md-none">Notif.</span></strong></button>' ;
+        onClick('btn-notifications', () => api.wsweb_dialog_open('notifications')) ;
 
         return o ;
     }
@@ -241,6 +260,7 @@ export class ws_toolbar extends ws_uielto
         o += (robj.icons_str == 'no') ? '' : '<em class="fas fa-circle d-none d-sm-inline text-secondary"></em>&nbsp;' ;
         o += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
         o += '<strong><span data-langkey=\'RecordBar\'>RecordBar</span></strong></button>' ;
+        onClick('btn-recordbar', () => api.wsweb_recordbar_toggle()) ;
 
         return o ;
     }
@@ -254,6 +274,7 @@ export class ws_toolbar extends ws_uielto
         o += (robj.icons_str == 'no') ? '' : '<em class="fas fa-circle d-none d-sm-inline text-secondary"></em>&nbsp;' ;
         o += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
         o += '<strong><span data-langkey=\'microc + c\'>&micro;c + c</span></strong></button>' ;
+        onClick('btn-microcandc', () => api.wsweb_select_action('microcandc')) ;
 
         return o ;
     }
@@ -267,6 +288,10 @@ export class ws_toolbar extends ws_uielto
         o += (robj.icons_str == 'no') ? '' : '<em class="fas fa-camera d-none d-sm-inline text-secondary"></em>&nbsp;' ;
         o += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
         o += '<strong><span data-langkey=\'States\'>States</span></strong></button>' ;
+        onClick('btn-states', () =>
+        {
+            api.wsweb_dialog_open('state') ; $('#bot_check1').carousel(0) ;
+        }) ;
 
         return o ;
     }
@@ -281,6 +306,7 @@ export class ws_toolbar extends ws_uielto
         o += (robj.icons_str == 'no') ? '' : '<em class="fas fa-stream d-none d-sm-inline text-secondary"></em>&nbsp;' ;
         o += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
         o += '<strong><span class="d-none d-md-inline-flex" data-langkey=\'Checkpoint\'>Checkpoint</span><span class="d-md-none">ChkPoint</span></strong></button>' ;
+        onClick('btn-checkpoint', () => api.wsweb_select_action('checkpoint')) ;
 
         return o ;
     }
@@ -291,7 +317,7 @@ export class ws_toolbar extends ws_uielto
 
     render_btndd_action (robj)
     {
-        return '<div class="btn-group col-auto my-1 mx-1 p-0" >' +
+        var o = '<div class="btn-group col-auto my-1 mx-1 p-0" >' +
             '   <button type="button" ' +
             '           class="col-12 btn bg-body-tertiary shadow-sm select6 border border-secondary"' +
             '           data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"' +
@@ -339,6 +365,9 @@ export class ws_toolbar extends ws_uielto
             '\n' +
             '   </div>' +
             '</div>' ;
+        onClick('do-action', (el) => api.wsweb_do_action(el.dataset.value)) ;
+        onClick('sel-action', (el) => api.wsweb_select_action(el.dataset.value)) ;
+        return o ;
     }
 
     render_btndd_mode (robj)
@@ -363,6 +392,14 @@ export class ws_toolbar extends ws_uielto
             '        class="dropdown-menu border border-secondary p-2">' +
             '\n' +
             '     <h6 class="text-white bg-secondary my-1 wsx_morecfg ms-auto border border-secondary"><span data-langkey="Micro & Assembly">Micro & Assembly</span>:</h6>' ;
+        onClick('toggle-mode-dropdown', () =>
+        {
+            wait_if_uievents(function()
+            {
+                $('#dd1').dropdown('toggle');
+            }, 50) ;
+            wepsim_tooltips_hide('[data-bs-toggle=tooltip]') ;
+        }) ;
 
         var item ;
         var wip_class ;
@@ -381,6 +418,13 @@ export class ws_toolbar extends ws_uielto
                 '        data-bind="click" data-action="select-main" data-value="' + item + '"' +
                 '     ><em class="fas fa-microchip"></em>&nbsp;' + item.toUpperCase() + '</a>' ;
         }
+        onClick('select-main', (el) =>
+        {
+            api.wsweb_select_main(el.dataset.value) ;
+            inputfirm.is_compiled = false ;
+            inputasm.is_compiled = false ;
+            $('#dd1').dropdown('toggle');
+        }) ;
 
         o += '\n' +
             '     <h6 class="text-white bg-secondary mt-2 my-1 wsx_morecfg ms-auto border border-secondary"><span data-langkey="Assembly only">Assembly only</span>:</h6>' +
@@ -432,6 +476,10 @@ export class ws_toolbar extends ws_uielto
         o += (robj.icons_str == 'no') ? '' : '<em class="fas fa-stream d-none d-sm-inline text-secondary"></em>' ;
         o += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
         o += '<strong><span data-langkey=\'Examples\'>Examples</span></strong></button>' ;
+        onClick('btn-examples', () =>
+        {
+            wepsim_tooltips_hide('[data-bs-toggle=tooltip]') ; api.wsweb_dialog_open('examples') ;
+        }) ;
         o += '\n' +
             '   <button id="dd3" type="button" ' +
             '           class="btn bg-body-tertiary shadow-sm dropdown-toggle dropdown-toggle-split border border-secondary"' +
@@ -446,82 +494,6 @@ export class ws_toolbar extends ws_uielto
             '</div>' ;
 
         return o ;
-    }
-
-    bindElements ()
-    {
-        this.addEventListener('click', (e) =>
-        {
-            const el = e.target.closest('[data-bind="click"]') ;
-            if (!el) return ;
-            e.preventDefault() ;
-
-            switch (el.dataset.action)
-            {
-                case 'switch-microcode':
-                    api.wsweb_change_workspace_microcode() ;
-                    wepsim_tooltips_hide('[data-bs-toggle=tooltip]') ;
-                    break ;
-                case 'switch-assembly':
-                    api.wsweb_change_workspace_assembly() ;
-                    wepsim_tooltips_hide('[data-bs-toggle=tooltip]') ;
-                    break ;
-                case 'switch-simulator':
-                    api.wsweb_change_workspace_simulator() ;
-                    wepsim_tooltips_hide('[data-bs-toggle=tooltip]') ;
-                    break ;
-                case 'btn-help':
-                    api.wsweb_dialog_open('help') ;
-                    break ;
-                case 'btn-config':
-                    api.wsweb_dialog_open('config') ;
-                    break ;
-                case 'btn-notifications':
-                    api.wsweb_dialog_open('notifications') ;
-                    break ;
-                case 'btn-recordbar':
-                    api.wsweb_recordbar_toggle() ;
-                    break ;
-                case 'btn-microcandc':
-                    api.wsweb_select_action('microcandc') ;
-                    break ;
-                case 'btn-states':
-                    api.wsweb_dialog_open('state') ;
-                    $('#bot_check1').carousel(0) ;
-                    break ;
-                case 'btn-checkpoint':
-                    api.wsweb_select_action('checkpoint') ;
-                    break ;
-                case 'do-action':
-                    api.wsweb_do_action(el.dataset.value) ;
-                    break ;
-                case 'sel-action':
-                    api.wsweb_select_action(el.dataset.value) ;
-                    break ;
-                case 'toggle-mode-dropdown':
-                    wait_if_uievents(function()
-                    {
-                        $('#dd1').dropdown('toggle');
-                    }, 50) ;
-                    wepsim_tooltips_hide('[data-bs-toggle=tooltip]') ;
-                    break ;
-                case 'select-main':
-                    api.wsweb_select_main(el.dataset.value) ;
-                    inputfirm.is_compiled = false ;
-                    inputasm.is_compiled = false ;
-                    break ;
-                case 'btn-examples':
-                    wepsim_tooltips_hide('[data-bs-toggle=tooltip]') ;
-                    api.wsweb_dialog_open('examples') ;
-                    break ;
-                case 'select-example':
-                    wepsim_example_reset() ;
-                    wepsim_example_load(el.dataset.value) ;
-                    wepsim_tooltips_hide('[data-bs-toggle=tooltip]') ;
-                    api.wsweb_dialog_open('examples') ;
-                    break ;
-            }
-        }) ;
     }
 }
 
@@ -562,4 +534,11 @@ export function webui_toolbar_updateExampleSet()
     }
 
     $('#example_menu').html(o) ;
+    onClick('select-example', (el) =>
+    {
+        wepsim_example_reset() ;
+        wepsim_example_load(el.dataset.value) ;
+        wepsim_tooltips_hide('[data-bs-toggle=tooltip]') ;
+        api.wsweb_dialog_open('examples') ;
+    }) ;
 }

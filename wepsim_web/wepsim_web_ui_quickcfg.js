@@ -19,16 +19,18 @@
  */
 
 import $ from 'jquery';
+import { onClick } from './wepsim_web_actions.js';
 import { get_cfg, update_cfg } from '../sim_core/sim_cfg.js';
 import { show_memories_values } from '../sim_core/sim_core_ui.js';
 import { i18n_get, i18n_get_TagFor, i18n_update_tags } from '../wepsim_i18n/i18n.js';
-import { quick_config_rf } from './wepsim_uielto_registers.js';
-import { showhideAsmHeader, wepsim_show_asm_columns_checked, wepsim_click_asm_columns } from './wepsim_uielto_dbg_asm.js';
-import { wepsim_config_button_html_close, wepsim_config_button_html_onoff, wepsim_config_button_pretoggle, wepsim_config_button_pretoggle_val, wepsim_config_button_toggle } from './wepsim_web_ui_config.js';
+import { quick_config_rf, wepsim_show_rf_names, wepsim_refresh_rf_names } from './wepsim_uielto_registers.js';
+import { showhideAsmHeader, wepsim_show_asm_columns_checked } from './wepsim_uielto_dbg_asm.js';
+import { wepsim_config_button_html_close, wepsim_config_button_pretoggle, wepsim_config_button_pretoggle_val, wepsim_config_button_toggle } from './wepsim_web_ui_config.js';
 import { wepsim_popover_init } from './wepsim_web_ui_popover.js';
-import { ws_signals_show_inactive } from './wepsim_uielto_hw.js';
+import { set_ws_signals_show_inactive, set_ws_states_show_inactive, ws_signals_show_inactive } from './wepsim_uielto_hw.js';
 import { wepsim_restore_darkmode, wepsim_keepsync_darkmode_stop, wepsim_keepsync_darkmode_start } from './wepsim_web_simulator.js';
 import { wsweb_dialog_open, wsweb_quickslider_close, wsweb_cpuview_as_text, wsweb_cpuview_as_graph } from './wepsim_web_api.js';
+import { wepsim_refresh_registers } from './wepsim_uielto_registers.js';
 
 //
 // WepSIM quickcfg
@@ -135,6 +137,30 @@ var wsweb_quickcfg = {
             o += quickcfg_html_close('popover-slidercfg') +
                 '</ul>' ;
 
+            onClick('wepsim_config_button_toggle_off', () =>
+            {
+                wepsim_config_button_toggle('ws_skin_dark_mode', 'off', '18');
+                wepsim_restore_darkmode();
+                wepsim_keepsync_darkmode_stop();
+            });
+            onClick('wepsim_config_button_toggle_on', () =>
+            {
+                wepsim_config_button_toggle('ws_skin_dark_mode', 'on', '18');
+                wepsim_restore_darkmode();
+                wepsim_keepsync_darkmode_stop();
+            });
+            onClick('wepsim_config_button_toggle_auto', () =>
+            {
+                wepsim_config_button_toggle('ws_skin_dark_mode', 'auto', '18');
+                wepsim_restore_darkmode();
+                wepsim_keepsync_darkmode_start();
+            });
+            onClick('wsweb_dialog_open_reload', () =>
+            {
+                wsweb_quickslider_close();
+                wsweb_dialog_open('reload');
+            });
+
             return o ;
         },
         fun_ownshown: function(shownEvent)
@@ -158,7 +184,7 @@ var wsweb_quickcfg = {
         val_trigger: 'click',
         fun_content: function(shownEvent)
         {
-            return wepsim_show_asm_columns_checked('popover2_asm') ;
+            return wepsim_show_asm_columns_checked('#popover2_asm') ;
         },
         fun_ownshown: function(shownEvent)
         {
@@ -171,17 +197,17 @@ var wsweb_quickcfg = {
         val_trigger: 'click',
         fun_content: function(shownEvent)
         {
-            return "<div class='container mt-1'>" +
+            var o = "<div class='container mt-1'>" +
                 "<div class='row'>" +
                 quickcfg_html_header('Display format') +
-                quickcfg_html_btn('(*) 0x3B<sub>16</sub>', 'col-6') +
-                quickcfg_html_btn('073<sub>8</sub>', 'col-6') +
-                quickcfg_html_btn('59<sub>10</sub>', 'col-6') +
-                quickcfg_html_btn(';<sub>ascii</sub>', 'col-6') +
+                quickcfg_html_btn('(*) 0x3B<sub>16</sub>', 'col-6', 'MEM_display_format', 'unsigned_16_nofill') +
+                quickcfg_html_btn('073<sub>8</sub>', 'col-6', 'MEM_display_format', 'unsigned_8_nofill') +
+                quickcfg_html_btn('59<sub>10</sub>', 'col-6', 'MEM_display_format', 'unsigned_10_nofill') +
+                quickcfg_html_btn(';<sub>ascii</sub>', 'col-6', 'MEM_display_format', 'char_ascii_nofill') +
                 quickcfg_html_br() +
                 quickcfg_html_header('Display direction') +
-                quickcfg_html_btn('(*) 04 -> 00', 'col-6') +
-                quickcfg_html_btn('00 -> 04', 'col-6') +
+                quickcfg_html_btn('(*) 04 -> 00', 'col-6', 'MEM_display_direction', 'h2l') +
+                quickcfg_html_btn('00 -> 04', 'col-6', 'MEM_display_direction', 'l2h') +
                 quickcfg_html_br() +
                 quickcfg_html_header('Display segments') +
                 quickcfg_html_onoff('19', 'show segments', '(*) ' + i18n_get_TagFor('cfg', 'Off'), i18n_get_TagFor('cfg', 'On'), 'mem-segments') +
@@ -189,13 +215,33 @@ var wsweb_quickcfg = {
                 quickcfg_html_onoff('20', 'show origin', '(*) ' + i18n_get_TagFor('cfg', 'Off'), i18n_get_TagFor('cfg', 'On'), 'mem-source') +
                 quickcfg_html_br() +
                 quickcfg_html_header('Number of words') +
-                quickcfg_html_btn('(*) 1', 'col-4') +
-                quickcfg_html_btn('2', 'col-4') +
-                quickcfg_html_btn('3', 'col-4') +
+                quickcfg_html_btn('(*) 1', 'col-4', 'MEM_show_nwords', '1') +
+                quickcfg_html_btn('2', 'col-4', 'MEM_show_nwords', '2') +
+                quickcfg_html_btn('3', 'col-4', 'MEM_show_nwords', '3') +
                 quickcfg_html_br() +
                 quickcfg_html_close('popover-mem') +
                 '</div>' +
                 '</div>' ;
+
+            onClick('mem-segments', (el) =>
+            {
+                var value = el.dataset.value === 'true';
+                update_cfg('MEM_show_segments', value, '19');
+                if (value) $('#lst_seg1').collapse('show');
+                else $('#lst_seg1').collapse('hide');
+                wepsim_config_button_pretoggle('MEM_show_segments', '19');
+            });
+
+            onClick('mem-source', (el) =>
+            {
+                var value = el.dataset.value === 'true';
+                update_cfg('MEM_show_source', value, '20');
+                if (value) $('.mp_tooltip').collapse('show');
+                else $('.mp_tooltip').collapse('hide');
+                wepsim_config_button_pretoggle('MEM_show_source', '20');
+            });
+
+            return o;
         },
         fun_ownshown: function(shownEvent)
         {
@@ -255,19 +301,7 @@ var wsweb_quickcfg = {
                 '<li class="list-group-item px-2 pt-0 pb-3"> ' +
                 quickcfg_html_br() +
                 quickcfg_html_header('Show states+signals') +
-
-                "<div class='col-12 p-0 btn-group btn-group-toggle d-flex' data-bs-toggle='buttons'>" +
-                "  <label id='labelQ2-false' class='btn btn-sm w-50 btn-outline-secondary p-1 fw-bold' " +
-                "         aria-label='Text shows inactive elements: false' " +
-                '         data-bind="click" data-action="quickcfg-hw-filter" data-value="false">' +
-                "  <input type='radio' class='btn-check' name='options' id='radioQ2-false' " +
-                "         aria-label='Text shows inactive elements: false' autocomplete='off'>Only active</label>" +
-                "  <label id='labelQ2-true' class='btn btn-sm w-50 btn-outline-secondary p-1 fw-bold' " +
-                "         aria-label='Text shows inactive elements: true' " +
-                '         data-bind="click" data-action="quickcfg-hw-filter" data-value="true">' +
-                "  <input type='radio' class='btn-check' name='options' id='radioQ2-true' " +
-                "         aria-label='Text shows inactive elements: true' autocomplete='on'>(*) All</label>" +
-                '</div>' +
+                quickcfg_html_onoff('Q2', 'Text shows inactive elements', i18n_get_TagFor('cfg', 'Only active'), '(*) ' + i18n_get_TagFor('cfg', 'All'), 'quickcfg-hw-filter') +
 
             // <advanced>
             // quickcfg_html_br() +
@@ -286,6 +320,49 @@ var wsweb_quickcfg = {
                 '</ul>' +
                 '</div>' +
                 '</div>' ;
+
+            onClick('quickcfg-hw-filter', (el) =>
+            {
+                var showInactive = el.dataset.value === 'true';
+                if (showInactive)
+                {
+                    var ov = ws_signals_show_inactive;
+                    set_ws_signals_show_inactive(true); $('.s-ina').show();
+                    set_ws_states_show_inactive(true); $('.t-ina').show();
+                    $('#labelQ2-' + ov).button('toggle');
+                    $('#labelQ2-true').button('toggle');
+                }
+                else
+                {
+                    var ov = ws_signals_show_inactive;
+                    set_ws_signals_show_inactive(false); $('.s-ina').hide();
+                    set_ws_states_show_inactive(false); $('.t-ina').hide();
+                    $('#labelQ2-' + ov).button('toggle');
+                    $('#labelQ2-false').button('toggle');
+                }
+            });
+
+            onClick('cpucu-graph', (el) =>
+            {
+                var value = el.dataset.value === 'true';
+                wepsim_config_button_toggle('CPUCU_show_graph', value, 'QD');
+                if (value)
+                {
+                    wsweb_cpuview_as_graph();
+                    $('#collapse_text').hide(); $('#collapse_graph').show();
+                }
+                else
+                {
+                    wsweb_cpuview_as_text();
+                    $('#collapse_text').show(); $('#collapse_graph').hide();
+                }
+            });
+
+            onClick('cpucu-interactive', (el) =>
+            {
+                var value = el.dataset.value === 'true';
+                wepsim_config_button_toggle('is_interactive', value, 'QI');
+            });
 
             return o ;
         },
@@ -360,21 +437,44 @@ export function quickcfg_html_header(label2)
         '</div>' ;
 }
 
-export function quickcfg_html_btn(label2, colwidth2)
+export function quickcfg_html_btn(label2, colwidth2, dataKey, dataValue)
 {
+    onClick('quickcfg_btn', (el) =>
+    {
+        update_cfg(el.dataset.key, el.dataset.value);
+        if (el.dataset.key.startsWith('RF'))
+        {
+            wepsim_refresh_registers();
+        }
+        else // starts with MEM
+        {
+            show_memories_values();
+        }
+    });
     return "<div class='" + colwidth2 + " p-1 d-grid'>" +
         "<buttom class='btn btn-sm btn-outline-secondary col p-1 text-end float-end' " +
-        "        data-bind='click' data-action='quickcfg_btn'>" +
+        "        data-bind='click' data-action='quickcfg_btn'" +
+        "        data-key='" + dataKey + "' data-value='" + dataValue + "'>" +
         "<span class='mx-auto px-1 fw-bold rounded bg-info-subtle text-body' " +
         "      style=''>" + label2 + '</span></buttom>' +
         '</div>' ;
 }
 
-export function quickcfg_html_btnreg(label2, colwidth2)
+export function quickcfg_html_btnreg(label2, colwidth2, dataKey, dataValue, dataIndex)
 {
+    onClick('quickcfg_btnreg', (el) =>
+    {
+        update_cfg(el.dataset.key, el.dataset.value);
+        if (el.dataset.index)
+            wepsim_refresh_rf_names(parseInt(el.dataset.index));
+        else
+            wepsim_show_rf_names();
+    });
     return "<div class='" + colwidth2 + " p-1 d-grid'>" +
         "<buttom class='btn btn-sm btn-outline-secondary col p-1 text-end float-end' " +
-        "        data-bind='click' data-action='quickcfg_btnreg'>" +
+        "        data-bind='click' data-action='quickcfg_btnreg'" +
+        "        data-key='" + dataKey + "' data-value='" + dataValue + "'" +
+        (dataIndex ? " data-index='" + dataIndex + "'" : '') + '>' +
         "<span class='fw-bold font-monospace'>" + label2 + '</span>' + '&nbsp;' +
         "<span class='mx-auto px-1 rounded bg-info-subtle' style=''>0</span></buttom>" +
         '</div>' ;
@@ -398,18 +498,19 @@ export function quickcfg_html_btntoggle(label2, colwidth2)
 
 export function quickcfg_html_onoff(id2, arial2, nm_off2, nm_on2, action_name)
 {
+    var dataAction = action_name;
     var dataKey = action_name || id2;
     return "<div class='col-12 p-0 btn-group btn-group-toggle d-flex' data-bs-toggle='buttons'>" +
         "    <label id='label" + id2 + "-false' " +
         "           class='btn btn-sm w-50 btn-outline-secondary p-1 fw-bold' " +
         "           aria-label='" + arial2 + ": false' " +
-        '           data-bind="click" data-action="quickcfg-toggle" data-key="' + dataKey + '" data-id="' + id2 + '" data-value="false">' +
+        '           data-bind="click" data-action="' + dataAction + '" data-key="' + dataKey + '" data-id="' + id2 + '" data-value="false">' +
         "    <input type='radio' class='btn-check' name='options' id='radio" + id2 + "-false' " +
         "           aria-label='" + arial2 + ": false' autocomplete='off'>" + nm_off2 + '</label>' +
         "    <label id='label" + id2 + "-true' " +
         "           class='btn btn-sm w-50 btn-outline-secondary p-1 fw-bold' " +
         "           aria-label='" + arial2 + ": true' " +
-        '           data-bind="click" data-action="quickcfg-toggle" data-key="' + dataKey + '" data-id="' + id2 + '" data-value="true">' +
+        '           data-bind="click" data-action="' + dataAction + '" data-key="' + dataKey + '" data-id="' + id2 + '" data-value="true">' +
         "    <input type='radio' class='btn-check' name='options' id='radio" + id2 + "-true' " +
         "           aria-label='" + arial2 + ": true' autocomplete='on'>" + nm_on2 + '</label>' +
         '</div>' ;
@@ -419,73 +520,4 @@ export function quickcfg_html_close(btn2_id)
 {
     return wepsim_config_button_html_close(btn2_id) ;
 }
-
-// document-level click handler for quickcfg popover actions
-// (memory, CPU/CU popovers that don't have a dedicated component)
-document.addEventListener('click', (e) =>
-{
-    var el = e.target.closest('[data-action="quickcfg-toggle"]');
-    if (!el) return;
-
-    var key = el.dataset.key;
-    var value = el.dataset.value === 'true';
-    var boolValue = el.dataset.value;
-
-    switch (key)
-    {
-        case 'mem-segments':
-            update_cfg('MEM_show_segments', value, '19');
-            if (value)
-                $('#lst_seg1').collapse('show');
-            else
-                $('#lst_seg1').collapse('hide');
-            wepsim_config_button_pretoggle('MEM_show_segments', '19');
-            break;
-        case 'mem-source':
-            update_cfg('MEM_show_source', value, '20');
-            if (value)
-                $('.mp_tooltip').collapse('show');
-            else
-                $('.mp_tooltip').collapse('hide');
-            wepsim_config_button_pretoggle('MEM_show_source', '20');
-            break;
-        case 'cpucu-graph':
-            update_cfg('CPUCU_show_graph', value, 'QD');
-            if (value)
-            {
-                $('#collapse_text').hide();
-                $('#collapse_graph').show();
-            }
-            else
-            {
-                $('#collapse_text').show();
-                $('#collapse_graph').hide();
-            }
-            wepsim_config_button_pretoggle('CPUCU_show_graph', 'QD');
-            break;
-        case 'cpucu-interactive':
-            update_cfg('is_interactive', value, 'QI');
-            wepsim_config_button_pretoggle('is_interactive', 'QI');
-            break;
-        case 'asm-label':
-            wepsim_click_asm_columns('label', el.dataset.id);
-            break;
-        case 'asm-hex':
-            wepsim_click_asm_columns('hex', el.dataset.id);
-            break;
-        case 'asm-ins':
-            wepsim_click_asm_columns('ins', el.dataset.id);
-            break;
-        case 'asm-pins':
-            wepsim_click_asm_columns('pins', el.dataset.id);
-            break;
-        case 'rf-orientation':
-            wepsim_config_button_toggle('RF_vertical_pack', value, '20');
-            if (value)
-                $('.mp_tooltip').collapse('show');
-            else
-                $('.mp_tooltip').collapse('hide');
-            break;
-    }
-});
 

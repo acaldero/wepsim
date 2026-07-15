@@ -18,6 +18,7 @@
  *
  */
 import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { get_simware } from '../sim_core/sim_adt_core.js';
 import { segments_get_begin_addr } from '../sim_sw/assembly/memory_segments.js';
 
@@ -42,25 +43,6 @@ export class ws_flash_fpga extends ws_uielto
 
         // render current element
         this.render_skel() ;
-        this.bindElements() ;
-    }
-
-    bindElements()
-    {
-        this.addEventListener('click', function(ev)
-        {
-            var el = ev.target.closest('[data-bind="click"]');
-            if (!el) return;
-            switch (el.dataset.action)
-            {
-                case 'flash-microcode':
-                    gateway_do_sendmicro('div_url', 'div_dev', 'div_info');
-                    break;
-                case 'flash-program':
-                    gateway_do_sendasm('div_url', 'div_dev', 'div_info');
-                    break;
-            }
-        });
     }
 
     // render
@@ -156,6 +138,8 @@ export class ws_flash_fpga extends ws_uielto
             '  </div>' +
             '</div>' ;
 
+        onClick('flash-microcode', () => gateway_do_sendmicro('div_url', 'div_dev', 'div_info')) ;
+        onClick('flash-program', () => gateway_do_sendasm('div_url', 'div_dev', 'div_info')) ;
         this.innerHTML = o1 ;
     }
 }

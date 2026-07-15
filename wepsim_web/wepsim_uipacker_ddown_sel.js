@@ -19,6 +19,7 @@
  */
 import $ from 'jquery';
 import { ws_uielto, register_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
 import { uipacker_ddown_info_set_select } from './wepsim_uipacker_ddown_info.js';
 import { wsweb_select_refresh, wsweb_set_details } from './wepsim_web_api.js';
 /*
@@ -71,6 +72,7 @@ export class ws_ddown_sel extends ws_uielto
 
         // load HTML
         this.innerHTML = o1 ;
+        onClick('select-refresh', () => wsweb_select_refresh()) ;
     }
 
     render_populate ()
@@ -117,6 +119,7 @@ export class ws_ddown_sel extends ws_uielto
 
         // load HTML
         $('#dd2_container').html(o1) ;
+        onClick('set-details', (el) => wsweb_set_details(el.dataset.detail)) ;
 
         // reload configuration
         uipacker_ddown_sel_set_select(11) ;
@@ -188,26 +191,6 @@ export class ws_ddown_sel extends ws_uielto
             ed_mp: '      <a class="dropdown-item" href="#" id="s5b_21" value="21"' +
                 ' data-bind="click" data-action="set-details" data-detail="ASM_EDITOR"><span class="bg-dark text-white">Sim</span>&nbsp;Assembly</a>',
         } ;
-    }
-
-    bindElements ()
-    {
-        this.addEventListener('click', (e) =>
-        {
-            const el = e.target.closest('[data-bind="click"]') ;
-            if (!el) return ;
-            e.preventDefault() ;
-
-            switch (el.dataset.action)
-            {
-                case 'select-refresh':
-                    wsweb_select_refresh() ;
-                    break ;
-                case 'set-details':
-                    wsweb_set_details(el.dataset.detail) ;
-                    break ;
-            }
-        }) ;
     }
 }
 
