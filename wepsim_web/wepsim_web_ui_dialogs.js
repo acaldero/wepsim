@@ -338,7 +338,7 @@ export var wsweb_dialogs = {
         body: function()
         {
             return "<div id='scroller-bin2a' class='container-fluid p-1'>" +
-                '<ws-bin_asm></ws-bin_asm>' +
+                '<ws-bin-asm></ws-bin-asm>' +
                 '</div>' ;
         },
         buttons: {
@@ -392,7 +392,7 @@ export var wsweb_dialogs = {
         body: function()
         {
             return "<div id='scroller-bin2b' class='container-fluid p-1'>" +
-                '<ws-bin_mc></ws-bin_mc>' +
+                '<ws-bin-mc></ws-bin-mc>' +
                 '</div>' ;
         },
         buttons: {
