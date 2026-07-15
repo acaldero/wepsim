@@ -146,3 +146,16 @@ export function simcore_native_go_instruction (signature_raw)
     }
 }
 
+export var native_fns = {
+    'simcore_native_get_signal':        simcore_native_get_signal,
+    'simcore_native_set_signal':        simcore_native_set_signal,
+    'simcore_native_get_value':         simcore_native_get_value,
+    'simcore_native_set_value':         simcore_native_set_value,
+    'simcore_native_get_fields':        simcore_native_get_fields,
+    'simcore_native_get_field_from_ir': simcore_native_get_field_from_ir,
+    'simcore_native_deco':              simcore_native_deco,
+    'simcore_native_go_maddr':          simcore_native_go_maddr,
+    'simcore_native_go_opcode':         simcore_native_go_opcode,
+    'simcore_native_go_instruction':    simcore_native_go_instruction,
+} ;
+

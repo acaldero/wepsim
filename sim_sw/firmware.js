@@ -28,7 +28,7 @@ import { firm_begin_read } from './firmware/firm_begin.js';
 import { i18n, i18n_get_TagFor } from '../wepsim_i18n/i18n.js';
 import { resolve_pending_oceoc_v2 } from './firmware/firm_oc_eoc_v2.js';
 import { resolve_pending_oceoc_v1 } from './firmware/firm_oc_eoc_v1.js';
-import { simcore_native_get_fields } from '../sim_core/sim_api_native.js';
+import { native_fns } from '../sim_core/sim_api_native.js';
 import { wepsim_notify_error } from '../wepsim_core/wepsim_notify.js';
 import { get_value } from '../sim_core/sim_core_values.js';
 
@@ -302,7 +302,7 @@ export function loadFirmware (text)
     }
     if (mk_native != '')
     {
-        eval(mk_native) ;
+        new Function('context', ...Object.keys(native_fns), 'wepsim_notify_error', mk_native)(context, ...Object.values(native_fns), wepsim_notify_error) ;
     }
 
     // oc_eoc_hash

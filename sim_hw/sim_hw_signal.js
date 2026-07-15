@@ -22,6 +22,7 @@ import { simhw_sim_signal, simhw_sim_signals } from './sim_hw_index.js';
 import { update_draw, ws_alert } from '../sim_core/sim_core_ui.js';
 import { compute_signal_behavior } from './sim_hw_behavior.js';
 import { get_value, set_value } from '../sim_core/sim_core_values.js';
+import { native_fns } from '../sim_core/sim_api_native.js';
 
 /*
          *  Model/signals (function simhw_signal_...(){})
@@ -214,7 +215,7 @@ export function signal_apply_behaviour_allByLevel (mc_elto)
         if (typeof mc_elto.NATIVE_JIT != 'undefined')
             mc_elto.NATIVE_JIT() ;
         else if (typeof mc_elto.NATIVE != 'undefined')
-            eval(mc_elto.NATIVE) ;
+            new Function(...Object.keys(native_fns), mc_elto.NATIVE)(...Object.values(native_fns)) ;
     }
     else
     {
