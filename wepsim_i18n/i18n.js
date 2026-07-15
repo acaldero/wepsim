@@ -18,25 +18,32 @@
  *
  */
 
-import { get_cfg, update_cfg } from '../sim_core/sim_cfg.js';
+import { get_cfg, is_cfg_empty, update_cfg } from '../sim_core/sim_cfg.js';
 import { onChange, onClick } from '../wepsim_web/wepsim_web_actions.js';
 import { wepsim_newbie_tour_reload } from '../wepsim_core/wepsim_tour.js';
-import { i18n_de_register } from './de/register.js' ;
-import { i18n_en_register } from './en/register.js' ;
-import { i18n_es_register } from './es/register.js' ;
-import { i18n_fr_register } from './fr/register.js' ;
-import { i18n_hi_register } from './hi/register.js' ;
-import { i18n_it_register } from './it/register.js' ;
-import { i18n_ja_register } from './ja/register.js' ;
-import { i18n_kr_register } from './kr/register.js' ;
-import { i18n_pt_register } from './pt/register.js' ;
-import { i18n_ru_register } from './ru/register.js' ;
-import { i18n_sv_register } from './sv/register.js' ;
-import { i18n_zh_cn_register } from './zh_cn/register.js' ;
 
 /*
-     * Initialize...
-     */
+*  Lazy language loaders — dynamic imports for code splitting
+*/
+
+var lang_loaders = {
+    de:    () => import('./de/wepsim_i18n_de.js'),
+    en:    () => import('./en/wepsim_i18n_en.js'),
+    es:    () => import('./es/wepsim_i18n_es.js'),
+    fr:    () => import('./fr/wepsim_i18n_fr.js'),
+    hi:    () => import('./hi/wepsim_i18n_hi.js'),
+    it:    () => import('./it/wepsim_i18n_it.js'),
+    ja:    () => import('./ja/wepsim_i18n_ja.js'),
+    kr:    () => import('./kr/wepsim_i18n_kr.js'),
+    pt:    () => import('./pt/wepsim_i18n_pt.js'),
+    ru:    () => import('./ru/wepsim_i18n_ru.js'),
+    sv:    () => import('./sv/wepsim_i18n_sv.js'),
+    zh_cn: () => import('./zh_cn/wepsim_i18n_zh_cn.js'),
+} ;
+
+/*
+* Initialize...
+*/
 
 export var i18n = {
     lang: {
@@ -52,6 +59,20 @@ export var i18n = {
         ru:    'русский язык - Google-translate',
         sv:    'Svenska - Google-translate',
         de:    'Deutsch - Google-translate',
+    },
+    welcome: {
+        en:    'Welcome',
+        es:    'Bienvenido+a',
+        it:    'Benvenuto',
+        kr:    '환영합니다',
+        hi:    'स्वागत हे',
+        fr:    'Bienvenue',
+        pt:    'Bem vindo',
+        ja:    'ようこそ',
+        zh_cn: '欢迎',
+        ru:    'желанный',
+        sv:    'Välkommen',
+        de:    'Herzlich willkommen',
     },
     eltos: {
         // main-screen user interface
@@ -91,26 +112,51 @@ export function i18n_init ()
             i18n.eltos[e][l] = {} ;
         }
     }
-
-    i18n_de_register(i18n) ;
-    i18n_en_register(i18n) ;
-    i18n_es_register(i18n) ;
-    i18n_fr_register(i18n) ;
-    i18n_hi_register(i18n) ;
-    i18n_it_register(i18n) ;
-    i18n_ja_register(i18n) ;
-    i18n_kr_register(i18n) ;
-    i18n_pt_register(i18n) ;
-    i18n_ru_register(i18n) ;
-    i18n_sv_register(i18n) ;
-    i18n_zh_cn_register(i18n) ;
-
-    return true ;
+    let ws_idiom;
+    if (is_cfg_empty())
+    {
+        ws_idiom = Object.keys(i18n.lang)[0];
+    }
+    else
+    {
+        ws_idiom = get_cfg('ws_mode') ;
+    }
+    return i18n_load_lang(ws_idiom);
 }
 
 /*
-     *  i18n Public Interface
-     */
+*  Lazy-load a single language module
+*/
+
+export async function i18n_load_lang (lang)
+{
+    if (!lang_loaders[lang])
+    {
+        return Promise.resolve(false) ;
+    }
+
+    // Already loaded — skip
+    if (i18n.eltos.gui[lang] && Object.keys(i18n.eltos.gui[lang]).length > 0)
+    {
+        return Promise.resolve(true) ;
+    }
+
+    // Initialize sub-objects for this language
+    for (var e in i18n.eltos)
+    {
+        i18n.eltos[e][lang] = {} ;
+    }
+
+    return lang_loaders[lang]().then(function (mod)
+    {
+        mod['i18n_' + lang + '_register'](i18n) ;
+        return true ;
+    }) ;
+}
+
+/*
+*  i18n Public Interface
+*/
 
 export function i18n_update_tags (component)
 {
@@ -125,17 +171,18 @@ export function i18n_update_tagsFor (component, lang)
     {
         return ;
     }
-
-    var tags = document.querySelectorAll('span') ;
-
-    Array.from(tags).forEach(function(value, index)
+    i18n_load_lang(lang).then(() =>
     {
-        var key = value.dataset.langkey ;
-        if (i18n.eltos[component][lang][key])
+        var tags = document.querySelectorAll('span') ;
+        Array.from(tags).forEach(function(value, index)
         {
-            value.innerHTML = i18n.eltos[component][lang][key] ;
-        }
-    }) ;
+            var key = value.dataset.langkey ;
+            if (i18n.eltos[component][lang][key])
+            {
+                value.innerHTML = i18n.eltos[component][lang][key] ;
+            }
+        }) ;
+    });
 }
 
 export function i18n_get (component, lang, key)
@@ -144,7 +191,7 @@ export function i18n_get (component, lang, key)
     {
         return key ;
     }
-
+    i18n_load_lang(lang);
     var translation = i18n.eltos[component][lang][key] ;
 
     if (typeof translation === 'undefined')
@@ -161,13 +208,14 @@ export function i18n_get_TagFor (component, key)
     try
     {
         ws_idiom = get_cfg('ws_idiom') ;
+        i18n_load_lang(ws_idiom);
     }
     catch (e)
     {
         ws_idiom = 'en' ;
     }
 
-    var translation = key + ' ' ;
+    var translation ;
     if (typeof i18n.eltos[component][ws_idiom][key] !== 'undefined')
     {
         translation = i18n.eltos[component][ws_idiom][key] ;
@@ -247,7 +295,7 @@ export function i18n_get_welcome ()
     {
         o += '<a class="btn btn-sm btn-outline-secondary mx-2 my-2 col-auto" href="#" ' +
             '   data-bind="click" data-action="newbie-tour-reload" data-lang="' + key + '">' +
-            i18n_get('gui', key, 'Welcome') +
+            i18n.welcome[key] +
             '</a>' ;
     }
     o += '</span>' +

@@ -9,6 +9,7 @@ import { mkdir, writeFile } from 'fs/promises';
 import { exec } from 'child_process';
 import path from 'path';
 import { promisify } from 'util';
+import { PreRenderedChunk } from 'rollup';
 
 const rootDir = process.cwd();
 
@@ -156,7 +157,12 @@ export default defineConfig({
             },
             output: {
                 entryFileNames: '[name].js',
-                chunkFileNames: 'chunks/[name].js',
+                chunkFileNames: (function (chunkInfo: PreRenderedChunk): string
+                {
+                    let name = chunkInfo.name;
+                    if (chunkInfo.moduleIds.some((mod)=>mod.includes('/node_modules/tone/'))) name = 'vendor-tone';
+                    return 'chunks/' + name + '.js';
+                } as any),
                 assetFileNames: '[name][extname]',
                 codeSplitting:  {
                     includeDependenciesRecursively: false,
@@ -165,7 +171,9 @@ export default defineConfig({
                         {
                             if (id.includes('node_modules'))
                             {
-                                if (id.includes('/tone/') || id.includes('/standardized-audio-context/')) return 'vendor-tone';
+                                if (id.includes('/tone/') ||
+                                    id.includes('/standardized-audio-context/') ||
+                                    id.includes('/automation-events/')) return null;
                                 if (id.includes('/codemirror/')) return 'vendor-codemirror';
                                 if (id.includes('/jquery') ||
                                     id.includes('/bootstrap-tokenfield/') ||
@@ -173,13 +181,6 @@ export default defineConfig({
                                 if (id.includes('/bootstrap/')) return 'vendor-bootstrap';
                                 if (id.includes('/vue/') || id.includes('/vuex/')) return 'vendor-vue';
                                 return 'vendor';
-                            }
-                            if (id.includes('wepsim_i18n'))
-                            {
-                                const parts = path.dirname(id).split(path.sep);
-                                const idx = parts.lastIndexOf('wepsim_i18n');
-                                if (idx >= 0 && idx + 1 < parts.length) return 'wepsim_i18n-' + parts[idx + 1];
-                                return 'wepsim_i18n';
                             }
                             const dirs = ['wepsim_core', 'wepsim_web', 'sim_core', 'sim_sw'];
                             for (const dir of dirs)

@@ -703,7 +703,7 @@ export async function wsweb_do_action(opt)
             break ;
 
         case 'intro':
-            wepsim_newbie_tour('tour1') ;
+            await wepsim_newbie_tour('tour1') ;
             break ;
 
         case 'hw_summary':

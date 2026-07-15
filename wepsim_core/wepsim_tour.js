@@ -21,7 +21,7 @@
 import $ from 'jquery';
 import introJs from 'intro.js';
 import { get_cfg, save_cfg, set_cfg } from '../sim_core/sim_cfg.js';
-import { i18n, i18n_get, i18n_update_tags } from '../wepsim_i18n/i18n.js';
+import { i18n, i18n_get, i18n_load_lang, i18n_update_tags } from '../wepsim_i18n/i18n.js';
 import { wsweb_dialog_close, wsweb_select_main } from '../wepsim_web/wepsim_web_api.js';
 import { simcore_ga } from '../sim_core/sim_core_ga.js';
 import { ws_info } from '../sim_core/sim_adt_core.js';
@@ -31,7 +31,7 @@ export var ws_tour = null ;
 export var ws_tour_name = 'tour1' ;
 
 // tour API
-export function wepsim_newbie_tour (tour_name)
+export async function wepsim_newbie_tour (tour_name)
 {
     // get newbie tour...
     var newbie_tour1 = ws_info.tours[tour_name] ;
@@ -42,8 +42,13 @@ export function wepsim_newbie_tour (tour_name)
 
     // setup lang
     var ws_idiom = get_cfg('ws_idiom') ;
+    await i18n_load_lang(ws_idiom);
     wepsim_newbie_tour_setLang(tour_name, ws_idiom) ;
 
+    if (ws_tour != null && ws_tour.isActive())
+    {
+        ws_tour.exit();
+    }
     // setup tour
     ws_tour = introJs.tour() ;
 
@@ -115,6 +120,6 @@ export function wepsim_newbie_tour_reload (lang)
     // update interface
     i18n_update_tags('gui') ;
 
-    // wepsim_newbie_tour(ws_tour_name) ;
+    wepsim_newbie_tour(ws_tour_name) ;
 }
 

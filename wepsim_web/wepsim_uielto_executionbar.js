@@ -140,6 +140,7 @@ export class ws_executionbar extends ws_uielto
                     '        class="btn bg-secondary-subtle border-secondary w-75"' +
                     '        accesskey="r" ' +
                     '        data-bind="click" data-action="exec-run" style="">' ;
+                onClick('exec-run', () => wsweb_execution_run()) ;
                 o += (this.icons_str == 'no') ? '' : '<em class="fa fa-play"></em>' ;
                 o += (this.icons_str == 'up') ? '<br>' : '&nbsp;' ;
                 o += '<span class="fw-bold" data-langkey="Run">Run</span>' +

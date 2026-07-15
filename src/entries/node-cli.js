@@ -35,10 +35,10 @@ import { upgrade_cfg } from '../../sim_core/sim_cfg.js';
 import { wepsim_register_core } from '../../wepsim_core/wepsim_register_core.js';
 import { i18n_init } from '../../wepsim_i18n/i18n.js';
 
-i18n_init();
-wepsim_register_core();
 try
 {
+    await i18n_init();
+    wepsim_register_core();
     simcore_init(true);
     upgrade_cfg();
 }

@@ -133,7 +133,7 @@ export async function wepsim_mode_change (optValue)
     // newbie mode...
     if ('newbie' == optValue)
     {
-        wepsim_newbie_tour('tour2') ;
+        await wepsim_newbie_tour('tour2') ;
         return true ;
     }
 
