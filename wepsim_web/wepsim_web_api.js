@@ -215,7 +215,6 @@ export function wsweb_change_show_processor()
     $('#tab26').tab('show') ;
 
     wepsim_svg_start_drawing() ;
-    cpucu_show_graph() ;
 
     // add if recording
     simcore_record_append_new('Show processor details',
