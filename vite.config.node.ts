@@ -14,6 +14,7 @@ export default defineConfig({
             typescript: true,
         }),
         eslint({
+            include:     ['src/**/*.js', 'src/**/*.vue', 'sim_core/**/*.js', 'sim_hw/**/*.js', 'sim_hw/**/*.ts', 'sim_sw/**/*.js', 'wepsim_core/**/*.js', 'wepsim_web/**/*.js', 'wepsim_i18n/**/*.js'],
             exclude:     ['node_modules/**', 'ws_dist/**', 'external/**', 'repo/**', 'devel/**'],
             emitWarning: true,
             emitError:   true,

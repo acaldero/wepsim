@@ -316,7 +316,7 @@ export function wepsim_keepsync_darkmode_stop()
 
 // hardware reload
 
-export function wepsim_reload_hw(p_name)
+export async function wepsim_reload_hw(p_name)
 {
     // try to load
     var ret = simhw_hwset_load(p_name) ;
@@ -326,7 +326,7 @@ export function wepsim_reload_hw(p_name)
     }
 
     // select the loaded one
-    wsweb_select_main(p_name) ;
+    await wsweb_select_main(p_name) ;
     return true ;
 }
 
@@ -713,7 +713,7 @@ export function wepsim_init_default_preloadFromHash(url_hash)
     }
 }
 
-export function wepsim_init_default()
+export async function wepsim_init_default()
 {
     // Get URL params
     var url_hash = wepsim_preload_get2hash(location,
@@ -723,7 +723,8 @@ export function wepsim_init_default()
 
     // 1.A.- Pre-load hardware...
     simhw_hwset_init() ;
-    simcore_init_hw('ep') ;
+    var ws_mode = get_cfg('ws_mode');
+    await simcore_init_hw(ws_mode) ;
 
     // 1.B.- Pre-load examples
     var ws_examples_index_url = get_cfg('example_url') ;
@@ -738,8 +739,7 @@ export function wepsim_init_default()
     wepsim_uicfg_restore() ;
 
     // 2.B.- Set mode
-    var ws_mode = get_cfg('ws_mode');
-    wsweb_select_main(ws_mode) ;
+    await wsweb_select_main(ws_mode) ;
     if (simhw_active() !== null)
     {
         simcore_reset();

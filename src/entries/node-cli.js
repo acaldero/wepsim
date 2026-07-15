@@ -30,14 +30,12 @@ if (typeof localStorage === 'undefined' || localStorage === null)
 }
 
 // WepSIM web entry — bootstrap
-import { sim_hw_register_hw } from '../../sim_hw/sim_hw_register_hw.js';
 import { simcore_init } from '../../sim_core/sim_api_core.js';
 import { upgrade_cfg } from '../../sim_core/sim_cfg.js';
 import { wepsim_register_core } from '../../wepsim_core/wepsim_register_core.js';
 import { i18n_init } from '../../wepsim_i18n/i18n.js';
 
 i18n_init();
-sim_hw_register_hw();
 wepsim_register_core();
 try
 {
@@ -52,4 +50,4 @@ catch (err)
 // Run CLI
 import { ws_main } from '../../wepsim_nodejs/wepsim_node_cli.mjs';
 
-ws_main();
+await ws_main();

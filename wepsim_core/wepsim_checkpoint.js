@@ -71,7 +71,7 @@ export function wepsim_checkpoint_get (tagName)
     return elements ;
 }
 
-export function wepsim_checkpoint_loadFromObj (checkpointObj, obj_fileToLoad)
+export async function wepsim_checkpoint_loadFromObj (checkpointObj, obj_fileToLoad)
 {
     var o = '' ;
     var u ;
@@ -110,8 +110,8 @@ export function wepsim_checkpoint_loadFromObj (checkpointObj, obj_fileToLoad)
 
     // 3.- restore firmware + assembly
 
-    // set associated mode
-    wsweb_select_main(checkpointObj.mode) ;
+    // set associated mode (processor may be dynamically loaded)
+    await wsweb_select_main(checkpointObj.mode) ;
 
     // firmware + assembly: load into editor
     inputfirm.setValue(checkpointObj.firmware) ;

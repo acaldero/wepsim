@@ -37,7 +37,7 @@ import { wepsim_newbie_tour } from '../wepsim_core/wepsim_tour.js';
 import { wepsim_save_to_file } from '../wepsim_core/wepsim_url.js';
 import { wepsim_update_signal_dialog, wepsim_update_signal_quick } from '../wepsim_core/wepsim_signal.js';
 import { wsweb_dlg_alert, wsweb_dlg_close, wsweb_dlg_open } from '../wepsim_core/wepsim_dialog.js';
-import { inputasm, inputfirm, set_ab_size, sim_change_workspace, wepsim_general_exception_handler, wepsim_init_default } from './wepsim_web_simulator.js';
+import { inputasm, inputfirm, set_ab_size, sim_change_workspace } from './wepsim_web_simulator.js';
 import { cpucu_show_graph, show_cpuview_view } from './wepsim_uipacker_cpu_cu.js';
 import { fullshow_asmdbg_pc } from './wepsim_uielto_dbg_asm.js';
 import { scroll_memory_to_lastaddress } from './wepsim_uielto_mem.js';
@@ -646,14 +646,14 @@ export function wsweb_select_refresh()
 
 //  Workspace simulator: Mode
 
-export function wsweb_select_main(opt)
+export async function wsweb_select_main(opt)
 {
     // save ws_mode
     set_cfg('ws_mode', opt) ;
     save_cfg() ;
 
     // update select4
-    wepsim_mode_change(opt) ;
+    await wepsim_mode_change(opt) ;
 
     // set button label...
     webui_toolbar_updateMode(opt) ;
@@ -670,7 +670,7 @@ export function wsweb_select_main(opt)
     return true ;
 }
 
-export function wsweb_do_action(opt)
+export async function wsweb_do_action(opt)
 {
     switch (opt)
     {
@@ -699,7 +699,7 @@ export function wsweb_do_action(opt)
             break ;
 
         case 'welcome':
-            wsweb_select_main('intro') ;
+            await wsweb_select_main('intro') ;
             setTimeout(wsweb_record_play, 1000) ;
             break ;
 

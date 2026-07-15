@@ -26,7 +26,7 @@ export function wepsim_show_rf_names()
 {}
 export function asmdbg_update_assembly()
 {}
-export function wsweb_select_main()
+export async function wsweb_select_main()
 {}
 export function wepsim_show_cache_memory_config()
 {}

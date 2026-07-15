@@ -19,7 +19,8 @@
  */
 
 import { get_cfg, reset_cfg_values, restore_cfg, set_cfg } from './sim_cfg.js';
-import { simhw_add, simhw_getIdByName, simhw_getObjByName, simhw_internalState, simhw_internalState_get, simhw_setActive, simhw_sim_components, simhw_sim_ctrlStates_get, simhw_sim_signal, simhw_sim_signals, simhw_sim_state, simhw_sim_state_getref } from '../sim_hw/sim_hw_index.js';
+import { simhw_add, simhw_getIdByName, simhw_getObjByName, simhw_hwset_load, simhw_internalState, simhw_internalState_get, simhw_setActive, simhw_sim_components, simhw_sim_ctrlStates_get, simhw_sim_signal, simhw_sim_signals, simhw_sim_state, simhw_sim_state_getref } from '../sim_hw/sim_hw_index.js';
+import { simhw_ensure_processor_loaded } from '../sim_hw/sim_hw_lazy.js';
 import { get_simware, set_simware } from './sim_adt_core.js';
 import { control_memory_get } from './sim_adt_ctrlmemory.js';
 import { get_value, set_value } from './sim_core_values.js';
@@ -58,7 +59,7 @@ export function simcore_init (with_ui)
          * Initialize simulator Hardware.
          * @param {string} simhw_name - hardware name
          */
-export function simcore_init_hw (simhw_name)
+export async function simcore_init_hw (simhw_name)
 {
     var ret = {} ;
     ret.msg = '' ;
@@ -66,6 +67,17 @@ export function simcore_init_hw (simhw_name)
 
     // hardware
     var hwid = simhw_getIdByName(simhw_name) ;
+    if (hwid < 0)
+    {
+        // try lazy load (built-in) then external JSON fallback
+        var loaded = await simhw_ensure_processor_loaded(simhw_name) ;
+        if (!loaded)
+            loaded = simhw_hwset_load(simhw_name) ;
+
+        if (loaded)
+            hwid = simhw_getIdByName(simhw_name) ;
+    }
+
     if (hwid < 0)
     {
         ret.msg = 'ERROR: unknown hardware: ' + simhw_name + '.<br>\n' ;

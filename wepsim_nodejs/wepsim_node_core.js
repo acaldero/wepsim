@@ -652,7 +652,7 @@ export function wepsim_nodejs_runInteractiveCmd (answers, data, options)
      * WepSIM nodejs API
      */
 
-export function wepsim_nodejs_init (data)
+export async function wepsim_nodejs_init (data)
 {
     var ret = simcore_init(false) ;
     if (false === ret.ok)
@@ -662,7 +662,7 @@ export function wepsim_nodejs_init (data)
 
     set_cfg('ws_idiom', data.idiom) ;
 
-    ret = simcore_init_hw(data.mode) ;
+    ret = await simcore_init_hw(data.mode) ;
     if (false === ret.ok)
     {
         return wepsim_nodejs_retfill(false, 'ERROR: initialize: ' + ret.msg + '.\n') ;
@@ -696,10 +696,10 @@ export function wepsim_nodejs_prepareCode (data, options)
     return wepsim_nodejs_retfill(true, ret.msg) ;
 }
 
-export function wepsim_nodejs_get_instructionset (data, options)
+export async function wepsim_nodejs_get_instructionset (data, options)
 {
     // 1) initialization
-    var ret = wepsim_nodejs_init(data) ;
+    var ret = await wepsim_nodejs_init(data) ;
     if (false === ret.ok)
     {
         return wepsim_nodejs_retfill(false, ret.msg + '.\n') ;
@@ -722,10 +722,10 @@ export function wepsim_nodejs_get_instructionset (data, options)
     return ret ;
 }
 
-export function wepsim_nodejs_get_instructionset_filtered (data, options)
+export async function wepsim_nodejs_get_instructionset_filtered (data, options)
 {
     // 1) initialization
-    var ret = wepsim_nodejs_init(data) ;
+    var ret = await wepsim_nodejs_init(data) ;
     if (false === ret.ok)
     {
         return wepsim_nodejs_retfill(false, ret.msg + '.\n') ;
@@ -783,10 +783,10 @@ export function wepsim_nodejs_get_instructionset_filtered (data, options)
     return ret ;
 }
 
-export function wepsim_nodejs_get_asmbin (data, options)
+export async function wepsim_nodejs_get_asmbin (data, options)
 {
     // 1) initialization
-    var ret = wepsim_nodejs_init(data) ;
+    var ret = await wepsim_nodejs_init(data) ;
     if (false === ret.ok)
     {
         return wepsim_nodejs_retfill(false, ret.msg + '.\n') ;
@@ -811,10 +811,10 @@ export function wepsim_nodejs_get_asmbin (data, options)
 }
 
 // execution
-export function wepsim_nodejs_runApp (data, options)
+export async function wepsim_nodejs_runApp (data, options)
 {
     // 1) initialization
-    var ret = wepsim_nodejs_init(data) ;
+    var ret = await wepsim_nodejs_init(data) ;
     if (false === ret.ok)
     {
         return wepsim_nodejs_retfill(false, ret.msg + '.\n') ;
@@ -854,7 +854,7 @@ export function wepsim_nodejs_check (data, options)
 export async function wepsim_nodejs_runAppInteractive (data, options)
 {
     // 1) initialization
-    var ret = wepsim_nodejs_init(data) ;
+    var ret = await wepsim_nodejs_init(data) ;
     if (false === ret.ok)
     {
         return wepsim_nodejs_retfill(false, 'ERROR: Assembly: ' + ret.msg + '.\n') ;

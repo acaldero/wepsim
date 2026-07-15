@@ -109,13 +109,13 @@ export class ws_web_main extends ws_uielto
         upgrade_cfg() ;
 
         // ...and full initialization after jquery-ready
-        $(document).ready(function()
+        $(document).ready(async function()
         {
             // try
             // {
             wepsim_init_ui() ;
             wepsim_example_reset() ;
-            wepsim_init_default() ;
+            await wepsim_init_default() ;
             // }
             // catch(err)
             // {

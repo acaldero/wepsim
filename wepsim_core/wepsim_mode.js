@@ -19,6 +19,8 @@
  */
 
 import { simhw_getIdByName } from '../sim_hw/sim_hw_index.js';
+import { simhw_hwset_load } from '../sim_hw/sim_hw_index.js';
+import { simhw_ensure_processor_loaded } from '../sim_hw/sim_hw_lazy.js';
 import { wepsim_activehw, wepsim_activeview } from '../wepsim_web/wepsim_web_simulator.js';
 import { get_cfg } from '../sim_core/sim_cfg.js';
 import { load_from_example_firmware, wepsim_example_load } from './wepsim_example.js';
@@ -79,11 +81,26 @@ export function wepsim_mode_getBaseMode (derive_model)
 }
 
 // Change WepSIM mode -> activate_hw + UI view
-export function wepsim_mode_change (optValue)
+export async function wepsim_mode_change (optValue)
 {
     // switch active hardware by name...
     var bm = wepsim_mode_getBaseMode(optValue) ;
     var hwid = simhw_getIdByName(bm) ;
+
+    // lazy load processor if not yet registered
+    if (hwid < 0)
+    {
+        var loaded = await simhw_ensure_processor_loaded(bm) ;
+        if (!loaded)
+        {
+            // fallback: try external JSON hardware
+            loaded = simhw_hwset_load(bm) ;
+        }
+
+        if (loaded)
+            hwid = simhw_getIdByName(bm) ;
+    }
+
     if (hwid != -1)
     {
         wepsim_activehw(hwid) ;

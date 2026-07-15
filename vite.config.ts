@@ -126,7 +126,7 @@ export default defineConfig({
         ]),
         wepsimPostBuildPlugin(),
         // Visualizer of chunks
-        // visualizer({ open: true, filename: 'dist/stats.html' }),
+        // visualizer({ open: true, filename: 'ws_dist/stats.html' }),
     ],
     build: {
         outDir:          'ws_dist',
@@ -172,7 +172,7 @@ export default defineConfig({
                                 if (idx >= 0 && idx + 1 < parts.length) return 'wepsim_i18n-' + parts[idx + 1];
                                 return 'wepsim_i18n';
                             }
-                            const dirs = ['wepsim_core', 'wepsim_web', 'sim_core', 'sim_hw', 'sim_sw'];
+                            const dirs = ['wepsim_core', 'wepsim_web', 'sim_core', 'sim_sw'];
                             for (const dir of dirs)
                             {
                                 if (id.includes(dir)) return dir;

@@ -21,6 +21,7 @@ import $ from 'jquery';
 import { ws_uielto } from './wepsim_uielto.js';
 import { get_cfg, is_cfg_empty } from '../sim_core/sim_cfg.js';
 import { sim } from '../sim_hw/sim_hw_index.js';
+import { simhw_get_processor_names } from '../sim_hw/sim_hw_lazy.js';
 import { ws_info } from '../sim_core/sim_adt_core.js';
 import * as api from './wepsim_web_api.js';
 import { wepsim_tooltips_hide } from './wepsim_web_ui_tooltip.js';
@@ -365,9 +366,10 @@ export class ws_toolbar extends ws_uielto
 
         var item ;
         var wip_class ;
-        for (var i = 0; i < sim.systems.length; i++)
+        var allProcs = simhw_get_processor_names() ;
+        for (var i = 0; i < allProcs.length; i++)
         {
-            item = sim.systems[i].sim_short_name ;
+            item = allProcs[i] ;
 
             wip_class = '' ;
             if (item == 'poc') wip_class = 'wsx_poc' ;
