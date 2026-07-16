@@ -119,9 +119,21 @@ export class ws_compilationbar extends ws_uielto
                     '\n' +
                     '   </div>' +
                     '</div>' ;
-                onClick('dlg-firmware-txt', () => wsweb_dialog_open('load_save_firmware')) ;
-                onClick('dlg-firmware-link', () => wsweb_dialog_open('load_save_firmware_link')) ;
-                onClick('dlg-firmware-checkpoint', () => wsweb_dialog_open('current_checkpoint')) ;
+                onClick('dlg-firmware-txt', () =>
+                {
+                    wsweb_dialog_open('load_save_firmware');
+                    $('[id="dd8a"].dropdown-toggle').dropdown('hide');
+                }) ;
+                onClick('dlg-firmware-link', () =>
+                {
+                    wsweb_dialog_open('load_save_firmware_link');
+                    $('[id="dd8a"].dropdown-toggle').dropdown('hide');
+                }) ;
+                onClick('dlg-firmware-checkpoint', () =>
+                {
+                    wsweb_dialog_open('current_checkpoint');
+                    $('[id="dd8a"].dropdown-toggle').dropdown('hide');
+                }) ;
                 break ;
 
             case 'btn_mcompile':
@@ -182,9 +194,21 @@ export class ws_compilationbar extends ws_uielto
                     '\n' +
                     '   </div>' +
                     '</div>' ;
-                onClick('dlg-assembly-txt', () => wsweb_dialog_open('load_save_assembly')) ;
-                onClick('dlg-assembly-link', () => wsweb_dialog_open('load_save_assembly_link')) ;
-                onClick('dlg-assembly-checkpoint', () => wsweb_dialog_open('current_checkpoint')) ;
+                onClick('dlg-assembly-txt', () =>
+                {
+                    wsweb_dialog_open('load_save_assembly');
+                    $('[id="dd8a"].dropdown-toggle').dropdown('hide');
+                }) ;
+                onClick('dlg-assembly-link', () =>
+                {
+                    wsweb_dialog_open('load_save_assembly_link');
+                    $('[id="dd8a"].dropdown-toggle').dropdown('hide');
+                }) ;
+                onClick('dlg-assembly-checkpoint', () =>
+                {
+                    wsweb_dialog_open('current_checkpoint');
+                    $('[id="dd8a"].dropdown-toggle').dropdown('hide');
+                }) ;
                 break ;
 
             case 'btn_acompile':

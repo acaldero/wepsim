@@ -119,7 +119,11 @@ export class ws_ddown_sel extends ws_uielto
 
         // load HTML
         $('#dd2_container').html(o1) ;
-        onClick('set-details', (el) => wsweb_set_details(el.dataset.detail)) ;
+        onClick('set-details', (el) =>
+        {
+            wsweb_set_details(el.dataset.detail);
+            $('[id="dd2"].dropdown-toggle').dropdown('hide');
+        }) ;
 
         // reload configuration
         uipacker_ddown_sel_set_select(11) ;

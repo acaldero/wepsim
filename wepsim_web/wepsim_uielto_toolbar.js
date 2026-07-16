@@ -366,7 +366,11 @@ export class ws_toolbar extends ws_uielto
             '   </div>' +
             '</div>' ;
         onClick('do-action', (el) => api.wsweb_do_action(el.dataset.value)) ;
-        onClick('sel-action', (el) => api.wsweb_select_action(el.dataset.value)) ;
+        onClick('sel-action', (el) =>
+        {
+            api.wsweb_select_action(el.dataset.value);
+            $('[id="dd2a"].dropdown-toggle').dropdown('hide');
+        }) ;
         return o ;
     }
 
@@ -423,7 +427,7 @@ export class ws_toolbar extends ws_uielto
             api.wsweb_select_main(el.dataset.value) ;
             inputfirm.is_compiled = false ;
             inputasm.is_compiled = false ;
-            $('#dd1').dropdown('toggle');
+            $('[id="dd1"].dropdown-toggle').dropdown('hide');
         }) ;
 
         o += '\n' +
@@ -478,7 +482,8 @@ export class ws_toolbar extends ws_uielto
         o += '<strong><span data-langkey=\'Examples\'>Examples</span></strong></button>' ;
         onClick('btn-examples', () =>
         {
-            wepsim_tooltips_hide('[data-bs-toggle=tooltip]') ; api.wsweb_dialog_open('examples') ;
+            wepsim_tooltips_hide('[data-bs-toggle=tooltip]') ;
+            api.wsweb_dialog_open('examples') ;
         }) ;
         o += '\n' +
             '   <button id="dd3" type="button" ' +
@@ -540,5 +545,6 @@ export function webui_toolbar_updateExampleSet()
         wepsim_example_load(el.dataset.value) ;
         wepsim_tooltips_hide('[data-bs-toggle=tooltip]') ;
         api.wsweb_dialog_open('examples') ;
+        $('[id="dd3"].dropdown-toggle').dropdown('hide');
     }) ;
 }
