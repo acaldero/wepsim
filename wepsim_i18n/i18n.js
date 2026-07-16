@@ -21,6 +21,8 @@
 import { get_cfg, is_cfg_empty, update_cfg } from '../sim_core/sim_cfg.js';
 import { onChange, onClick } from '../wepsim_web/wepsim_web_actions.js';
 import { wepsim_newbie_tour_reload } from '../wepsim_core/wepsim_tour.js';
+import $ from 'jquery';
+import { update_signal_loadhelp } from '../wepsim_core/wepsim_help.js';
 
 /*
 *  Lazy language loaders — dynamic imports for code splitting
@@ -284,6 +286,13 @@ export function i18n_handle_idiom_change (ev)
                 i18n_update_tagsFor(c, optValue);
             }
         });
+    }
+    if (ev.target.id == 'select7b')
+    {
+        $('#bot_signal').carousel(1);
+        var shval = $('#ask_shard').val();
+        var shkey = $('#ask_skey').val();
+        update_signal_loadhelp('#help2', shval, shkey);
     }
 }
 

@@ -27,6 +27,7 @@ import { wepsim_config_dialog_dropdown } from '../wepsim_web/wepsim_web_ui_confi
 import { wsweb_dialogbox_close_updatesignal, wsweb_scroll_record } from '../wepsim_web/wepsim_web_api.js';
 import { wsweb_dlg_open } from './wepsim_dialog.js';
 import { update_signal_loadhelp } from './wepsim_help.js';
+import { onClick } from '../wepsim_web/wepsim_web_actions.js';
 
 /* global vis */
 
@@ -38,9 +39,21 @@ export function wepsim_update_signal_dialog_title(key)
         '<button data-bind="click" data-action="signal-carousel-help"' +
         '        type="button" class="btn btn-success">Help</button>' ;
 
+    onClick('signal-carousel-value', function()
+    {
+        $('#bot_signal').carousel(0);
+    });
+
+    onClick('signal-carousel-help', function()
+    {
+        $('#bot_signal').carousel(1);
+        var shval = $('#ask_shard').val();
+        var shkey = $('#ask_skey').val();
+        update_signal_loadhelp('#help2', shval, shkey);
+    });
     return wepsim_config_dialog_dropdown('success',
                                          b_btns,
-                                         '') ;
+                                         'dialogs') ;
 }
 
 export function wepsim_update_signal_dialog_body(key, signal_obj)
@@ -217,16 +230,6 @@ export function wepsim_update_signal_dialog(key)
             // uicfg and events
             wsweb_scroll_record('#scroller-signal') ;
             simcore_record_captureInit() ;
-
-            // bind idiom change to reload signal help
-            $('#dlg_updatesignal').on('change',
-                                      '[data-action="idiom-change"]',
-                                      function()
-                                      {
-                                          var shval = $('#ask_shard').val();
-                                          var shkey = $('#ask_skey').val();
-                                          update_signal_loadhelp('#help2', shval, shkey);
-                                      });
         },
         size: 'large',
     } ;

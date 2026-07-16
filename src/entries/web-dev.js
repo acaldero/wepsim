@@ -29,6 +29,8 @@ for (const name of Object.keys(bootstrapMod))
 window.global = window;
 await import('bootstrap-tokenfield');
 
+await import('jquery-knob');
+
 await import('dropify');
 
 // Main app — static import would hoist before bootstrap, breaking ordering

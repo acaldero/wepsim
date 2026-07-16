@@ -41,6 +41,7 @@ import 'codemirror/mode/xml/xml';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/css/css';
 import 'codemirror/mode/htmlmixed/htmlmixed';
+import 'codemirror/mode/gas/gas';
 import $ from 'jquery';
 import { get_cfg } from '../sim_core/sim_cfg.js';
 import { get_simware, set_simware } from '../sim_core/sim_adt_core.js';
