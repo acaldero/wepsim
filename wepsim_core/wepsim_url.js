@@ -242,23 +242,23 @@ export function wepsim_load_from_url (url, do_next)
     }
 }
 
-export function wepsim_url_getJSON (url_json)
+export async function wepsim_url_getJSON (url_json)
 {
-    var jstr ;
-    var jobj ;
-
     try
     {
-        jstr = $.getJSON({ 'url': url_json, 'async': false }) ;
-        jobj = JSON.parse(jstr.responseText) ;
+        var response = await fetch(url_json);
+        if (!response.ok)
+        {
+            ws_alert("Unable to load '" + url_json + "': " + response.status + '.\n') ;
+            return [] ;
+        }
+        return await response.json();
     }
     catch (e)
     {
         ws_alert("Unable to load '" + url_json + "': " + e + '.\n') ;
-        jobj = [] ;
+        return [] ;
     }
-
-    return jobj ;
 }
 
 export function wepsim_url_json (json_url, do_after)

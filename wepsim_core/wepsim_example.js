@@ -52,7 +52,7 @@ export function wepsim_example_reset()
     webui_toolbar_updateExampleSet() ;
 }
 
-export function wepsim_example_load(e_name)
+export async function wepsim_example_load(e_name)
 {
     var jobj ;
     // try to load each one
@@ -69,7 +69,7 @@ export function wepsim_example_load(e_name)
             continue ;
         }
 
-        jobj                   = wepsim_url_getJSON(ws_info.example_set[i].url) ;
+        jobj                   = await wepsim_url_getJSON(ws_info.example_set[i].url) ;
         ws_info.examples       = ws_info.examples.concat(jobj) ;
         ws_info.example_active = i ;
 
@@ -81,10 +81,10 @@ export function wepsim_example_load(e_name)
     return ws_info.examples ;
 }
 
-export function wepsim_example_loadSet(url_example_set)
+export async function wepsim_example_loadSet(url_example_set)
 {
     // try to load the set
-    ws_info.example_set = wepsim_url_getJSON(url_example_set) ;
+    ws_info.example_set = await wepsim_url_getJSON(url_example_set) ;
 
     return ws_info.example_set ;
 }

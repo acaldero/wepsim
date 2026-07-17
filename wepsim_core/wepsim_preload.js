@@ -26,7 +26,7 @@ import { ws_info } from '../sim_core/sim_adt_core.js';
 // Preload work
 //
 
-export function wepsim_preload_fromHash (hash)
+export async function wepsim_preload_fromHash (hash)
 {
     var key ;
     var act ;
@@ -40,7 +40,7 @@ export function wepsim_preload_fromHash (hash)
 
         if (hash[key] !== '')
         {
-            o = o + act(hash) ;
+            o = o + await act(hash) ;
         }
     }
 

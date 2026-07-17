@@ -424,10 +424,10 @@ export class ws_toolbar extends ws_uielto
         }
         onClick('select-main', (el) =>
         {
-            api.wsweb_select_main(el.dataset.value) ;
+            $('[id="dd1"].dropdown-toggle').dropdown('hide');
             inputfirm.is_compiled = false ;
             inputasm.is_compiled  = false ;
-            $('[id="dd1"].dropdown-toggle').dropdown('hide');
+            api.wsweb_select_main(el.dataset.value) ;
         }) ;
 
         o += '\n' +
@@ -539,10 +539,10 @@ export function webui_toolbar_updateExampleSet()
     }
 
     $('#example_menu').html(o) ;
-    onClick('select-example', (el) =>
+    onClick('select-example', async (el) =>
     {
         wepsim_example_reset() ;
-        wepsim_example_load(el.dataset.value) ;
+        await wepsim_example_load(el.dataset.value) ;
         wepsim_tooltips_hide('[data-bs-toggle=tooltip]') ;
         api.wsweb_dialog_open('examples') ;
         $('[id="dd3"].dropdown-toggle').dropdown('hide');

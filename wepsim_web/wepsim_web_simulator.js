@@ -319,7 +319,7 @@ export function wepsim_keepsync_darkmode_stop()
 export async function wepsim_reload_hw(p_name)
 {
     // try to load
-    var ret = simhw_hwset_load(p_name) ;
+    var ret = await simhw_hwset_load(p_name) ;
     if (false === ret)
     {
         return false ;
@@ -688,10 +688,10 @@ export function wepsim_init_ui()
     }
 }
 
-export function wepsim_init_default_preloadFromHash(url_hash)
+export async function wepsim_init_default_preloadFromHash(url_hash)
 {
     // Preload from hash...
-    var o = wepsim_preload_fromHash(url_hash) ;
+    var o = await wepsim_preload_fromHash(url_hash) ;
 
     // ...And to notify of the preloaded work to the user
     if (o !== '')
@@ -722,16 +722,16 @@ export async function wepsim_init_default()
     // 1.- Pre-load defaults
 
     // 1.A.- Pre-load hardware...
-    simhw_hwset_init() ;
+    await simhw_hwset_init() ;
     var ws_mode = get_cfg('ws_mode');
     await simcore_init_hw(ws_mode) ;
 
     // 1.B.- Pre-load examples
     var ws_examples_index_url = get_cfg('example_url') ;
-    wepsim_example_loadSet(ws_examples_index_url) ;
+    await wepsim_example_loadSet(ws_examples_index_url) ;
 
     // 1.C.- Pre-load UI configuration
-    cfgset_init() ;
+    await cfgset_init() ;
 
     // 2.- Restore configuration
 
@@ -750,7 +750,7 @@ export async function wepsim_init_default()
     simcore_record_captureInit() ;
 
     // Load/Configuration following URL params
-    wepsim_init_default_preloadFromHash(url_hash) ;
+    await wepsim_init_default_preloadFromHash(url_hash) ;
 }
 
 export function wepsim_init_PWA()

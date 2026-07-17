@@ -92,10 +92,10 @@ export class ws_list_example extends ws_uielto
             '</div>' ;
 
         $('#list_examples_' + this.name_str).html(o1) ;
-        onClick('example-load', (el) =>
+        onClick('example-load', async (el) =>
         {
             wepsim_example_reset();
-            wepsim_example_load(el.getAttribute('data-name'));
+            await wepsim_example_load(el.getAttribute('data-name'));
             wepsim_notify_success('<strong>INFO</strong>', 'Examples list loaded!.');
         }) ;
 

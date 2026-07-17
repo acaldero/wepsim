@@ -44,6 +44,11 @@ export class ws_cpusvg extends ws_uielto
         var o1 = "<div class='container-fluid m-0 p-2'>" +
             "<div class='row'>" +
             "   <div class='col' id='eltos_cpu_a' style='padding:0 5 0 0;'>" +
+            "       <div id='svg_p_loading' class='d-flex justify-content-center align-items-center d-none' style='padding: 40px;'>" +
+            "           <div class='spinner-border text-secondary' role='status'>" +
+            "               <span class='visually-hidden'>Loading...</span>" +
+            '           </div>' +
+            '       </div>' +
             "       <object id='svg_p'" +
             "               title='processor'" +
             "               data=''" +
@@ -53,6 +58,11 @@ export class ws_cpusvg extends ws_uielto
             '       </object>' +
             '   </div>' +
             "   <div class='col' id='eltos_cpu_b' style='padding:0 5 0 5;'>" +
+            "       <div id='svg_cu_loading' class='d-flex justify-content-center align-items-center d-none' style='padding: 40px;'>" +
+            "           <div class='spinner-border text-secondary' role='status'>" +
+            "               <span class='visually-hidden'>Loading...</span>" +
+            '           </div>' +
+            '       </div>' +
             "       <object id='svg_cu'" +
             "               title='control unit'" +
             "               data=''" +
@@ -419,6 +429,10 @@ export function eventhandler_load_svg_set_darkmode(obj)
     var obj_target = obj.target ;
     wepsim_svg_apply_darkmode(obj.currentTarget.id) ;
 
+    // hide loading placeholder
+    var loadingEl = document.getElementById(obj.currentTarget.id + '_loading');
+    if (loadingEl) loadingEl.classList.add('d-none');
+
     // trick because safari fires load event again if setProperty set display to block :-(
     if (false == obj_target.img_first)
     {
@@ -474,6 +488,10 @@ export function wepsim_svg_reload(id_arr, img_arr)
             $('#slider2b').val(14) ;
             set_ab_size('#eltos_cpu_a', '#eltos_cpu_b', 14) ;
         }
+
+        // show loading placeholder
+        var loadingEl = document.getElementById(id_arr[i] + '_loading');
+        if (loadingEl) loadingEl.classList.remove('d-none');
 
         // set dark-mode after load
         o.style.setProperty('visibility', 'hidden') ;

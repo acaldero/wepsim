@@ -18,7 +18,6 @@
  *
  */
 
-import $ from 'jquery';
 import { simcore_ga } from './sim_core_ga.js';
 import { simcore_record_append_new } from './sim_core_record.js';
 import { wepsim_url_getJSON } from '../wepsim_core/wepsim_url.js';
@@ -398,12 +397,12 @@ export function set_secondary_cfg ()
 export var ws_cfg_hash = {} ;
 export var ws_cfg_set = [] ;
 
-export function cfgset_init ()
+export async function cfgset_init ()
 {
     var url_list = get_cfg('cfg_url') ;
 
     // try to load the index
-    ws_cfg_set = wepsim_url_getJSON(url_list) ;
+    ws_cfg_set = await wepsim_url_getJSON(url_list) ;
 
     // build reference hash
     for (var i = 0; i < ws_cfg_set.length; i++)
@@ -419,10 +418,9 @@ export function cfgset_getSet ()
     return ws_cfg_hash ;
 }
 
-export function cfgset_load (cfg_name)
+export async function cfgset_load (cfg_name)
 {
     var ret = null ;
-    var jobj ;
 
     if (typeof ws_cfg_hash[cfg_name] === 'undefined')
     {
@@ -432,9 +430,17 @@ export function cfgset_load (cfg_name)
     // try to import the requested one
     try
     {
-        jobj = $.getJSON({ 'url': ws_cfg_hash[cfg_name], 'async': false }) ;
-        jobj = JSON.parse(jobj.responseText) ;
-        ret  = cfgset_import(jobj) ;
+        var response = await fetch(ws_cfg_hash[cfg_name]);
+        if (!response.ok)
+        {
+            ws_alert("WepSIM can not import the configuration from URL: \n'" +
+                ws_cfg_hash[cfg_name] + "'.\n" +
+                'Found following error: \n' +
+                response.status) ;
+            return ret;
+        }
+        var jobj = await response.json();
+        ret      = cfgset_import(jobj) ;
     }
     catch (e)
     {

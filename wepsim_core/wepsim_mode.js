@@ -94,7 +94,7 @@ export async function wepsim_mode_change (optValue)
         if (!loaded)
         {
             // fallback: try external JSON hardware
-            loaded = simhw_hwset_load(bm) ;
+            loaded = await simhw_hwset_load(bm) ;
         }
 
         if (loaded)
@@ -109,8 +109,8 @@ export async function wepsim_mode_change (optValue)
     // load default example set
     var eset_name = get_cfg('ws_examples_set') ;
     if (eset_name != 'Empty')
-        wepsim_example_load(eset_name) ;
-    else wepsim_example_load(ws_info.default_example[optValue]) ;
+        await wepsim_example_load(eset_name) ;
+    else await wepsim_example_load(ws_info.default_example[optValue]) ;
 
     // show/hide microcode...
     wepsim_activeview('extra_mcode', true) ;

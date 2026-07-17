@@ -72,7 +72,7 @@ export async function simcore_init_hw (simhw_name)
         // try lazy load (built-in) then external JSON fallback
         var loaded = await simhw_ensure_processor_loaded(simhw_name) ;
         if (!loaded)
-            loaded = simhw_hwset_load(simhw_name) ;
+            loaded = await simhw_hwset_load(simhw_name) ;
 
         if (loaded)
             hwid = simhw_getIdByName(simhw_name) ;

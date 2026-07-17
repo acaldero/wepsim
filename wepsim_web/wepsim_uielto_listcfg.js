@@ -93,9 +93,9 @@ export class ws_list_cfg extends ws_uielto
         o1 += '</div>' ;
 
         $('#list_cfgs_1').html(o1) ;
-        onClick('cfg-load', (el) =>
+        onClick('cfg-load', async (el) =>
         {
-            cfgset_load(el.dataset.cfgName);
+            await cfgset_load(el.dataset.cfgName);
             wepsim_notify_success('<strong>INFO</strong>', 'Configuration loaded!.');
             wepsim_uicfg_restore();
         }) ;

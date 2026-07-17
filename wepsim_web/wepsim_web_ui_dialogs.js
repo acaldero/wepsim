@@ -692,10 +692,10 @@ export var wsweb_dialogs = {
         },
         onshow: function()
         {
-            onClick('cfgset_load', (el) =>
+            onClick('cfgset_load', async (el) =>
             {
                 var key = el.querySelector('[data-langkey]')?.textContent;
-                if (key) cfgset_load(key);
+                if (key) await cfgset_load(key);
             });
             onClick('reset_cfg', (el) =>
             {

@@ -645,28 +645,46 @@ export function wsweb_select_refresh()
 
 //  Workspace simulator: Mode
 
+var wsweb_is_busy = false;
+
 export async function wsweb_select_main(opt)
 {
+    if (wsweb_is_busy) return;
+    wsweb_is_busy = true;
+
     // save ws_mode
     set_cfg('ws_mode', opt) ;
     save_cfg() ;
 
-    // update select4
-    await wepsim_mode_change(opt) ;
+    // disable mode selector + show spinner
+    $('#select4, #dd1').prop('disabled', true);
+    $('#select4').html('<span class="spinner-border spinner-border-sm" role="status"></span>');
 
-    // set button label...
-    webui_toolbar_updateMode(opt) ;
+    try
+    {
+        // update select4
+        await wepsim_mode_change(opt) ;
 
-    // adapt to idiom
-    var ws_idiom = get_cfg('ws_idiom') ;
-    i18n_update_tags('gui', ws_idiom) ;
+        // set button label...
+        webui_toolbar_updateMode(opt) ;
 
-    // add if recording
-    simcore_record_append_new('Set main work mode to ' + opt,
-                              'wsweb_select_main("' + opt + '");\n') ;
+        // adapt to idiom
+        var ws_idiom = get_cfg('ws_idiom') ;
+        i18n_update_tags('gui', ws_idiom) ;
 
-    // return ok
-    return true ;
+        // add if recording
+        simcore_record_append_new('Set main work mode to ' + opt,
+                                  'wsweb_select_main("' + opt + '");\n') ;
+
+        // return ok
+        return true ;
+    }
+    finally
+    {
+        wsweb_is_busy = false;
+        $('#select4, #dd1').prop('disabled', false);
+        webui_toolbar_updateMode(get_cfg('ws_mode'));
+    }
 }
 
 export async function wsweb_do_action(opt)

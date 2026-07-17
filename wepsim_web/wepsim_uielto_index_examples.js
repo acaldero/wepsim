@@ -284,10 +284,10 @@ export function table_examplesets_html(div_list, example_sets)
             '  </div>' +
             '  <span class="badge bg-primary rounded-pill">' + item.size + '</span>' +
             '</li>' ;
-        onClick('example-set-load', (el) =>
+        onClick('example-set-load', async (el) =>
         {
             wepsim_example_reset();
-            wepsim_example_load(el.dataset.setname);
+            await wepsim_example_load(el.dataset.setname);
             wsweb_dialog_close('examples');
             wsweb_dialog_open('examples');
             wepsim_tooltips_hide('[data-bs-toggle=tooltip]');
