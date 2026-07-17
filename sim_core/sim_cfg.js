@@ -227,10 +227,17 @@ export function is_mobile ()
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ;
 }
 
+export function is_electron ()
+{
+    return typeof window !== 'undefined' && window.electronAPI?.platform !== undefined;
+}
+
 export function is_cordova ()
 {
     // https://stackoverflow.com/questions/8068052/phonegap-detect-if-running-on-desktop-browser
-    return document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1;
+    return !is_electron() &&
+        document.URL.indexOf('http://') === -1 &&
+        document.URL.indexOf('https://') === -1;
 }
 
 export function is_darkmode ()

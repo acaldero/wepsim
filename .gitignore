@@ -1,3 +1,4 @@
 node_modules/
 package-lock.json
 ws_dist
+electron_dist

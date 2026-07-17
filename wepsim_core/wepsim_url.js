@@ -20,7 +20,7 @@
 
 import $ from 'jquery';
 import { wepsim_notify_do_notify, wepsim_notify_error, wepsim_notify_success } from './wepsim_notify.js';
-import { get_cfg, is_cordova, is_mobile } from '../sim_core/sim_cfg.js';
+import { get_cfg, is_cordova, is_electron, is_mobile } from '../sim_core/sim_cfg.js';
 import { ws_alert } from '../sim_core/sim_core_ui.js';
 
 /*
@@ -182,7 +182,18 @@ export function wepsim_save_to_file (textToWrite, fileNameToSaveAs)
 {
     var ret ;
 
-    if (is_cordova())
+    if (is_electron())
+    {
+        window.electronAPI.showSaveDialog(textToWrite, fileNameToSaveAs)
+            .then(function (saved)
+            {
+                if (saved)
+                    wepsim_notify_success('<strong>INFO</strong>',
+                                          'File saved: ' + fileNameToSaveAs);
+            });
+        ret = true ;
+    }
+    else if (is_cordova())
         ret = wepsim_file_saveTo(textToWrite, fileNameToSaveAs) ;
     else ret = wepsim_file_downloadTo(textToWrite, fileNameToSaveAs) ;
 

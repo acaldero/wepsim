@@ -1,4 +1,4 @@
-import { defineConfig, build } from 'vite';
+import { defineConfig, build, UserConfig } from 'vite';
 
 import eslint from 'vite-plugin-eslint';
 import checker from 'vite-plugin-checker';
@@ -102,7 +102,7 @@ function wepsimPostBuildPlugin()
     };
 }
 
-export default defineConfig({
+export const vite_config_ts:UserConfig = {
     resolve: {
         alias: {
             'vue':         'vue/dist/vue.esm.js',
@@ -194,4 +194,6 @@ export default defineConfig({
             },
         },
     },
-});
+};
+
+export default defineConfig(vite_config_ts);
