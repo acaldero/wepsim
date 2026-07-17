@@ -52,9 +52,9 @@ export function wepsim_file_saveTo (textToWrite, fileNameToSaveAs)
 
     var onWriteFile = function(fileWriter)
     {
-        var textFileAsBlob = new Blob([textToWrite],
-                                      { type: 'text/plain' });
-        fileWriter.onerror = koHandler ;
+        var textFileAsBlob    = new Blob([textToWrite],
+                                         { type: 'text/plain' });
+        fileWriter.onerror    = koHandler ;
         fileWriter.onwriteend = okHandler ;
         fileWriter.write(textFileAsBlob);
     } ;
@@ -122,15 +122,15 @@ export function wepsim_file_loadFrom (fileToLoad, functionOnLoad)
 
 export function wepsim_file_downloadTo (textToWrite, fileNameToSaveAs)
 {
-    var windowURL = (window.webkitURL || window.URL) ;
+    var windowURL      = (window.webkitURL || window.URL) ;
     var textFileAsBlob = new Blob([textToWrite], { type: 'text/plain' }) ;
 
-    var downloadLink = document.createElement('a');
-    downloadLink.innerHTML = 'Download File';
+    var downloadLink           = document.createElement('a');
+    downloadLink.innerHTML     = 'Download File';
     downloadLink.style.display = 'none';
-    downloadLink.download = fileNameToSaveAs;
-    downloadLink.href = windowURL.createObjectURL(textFileAsBlob);
-    downloadLink.onclick = function (event)
+    downloadLink.download      = fileNameToSaveAs;
+    downloadLink.href          = windowURL.createObjectURL(textFileAsBlob);
+    downloadLink.onclick       = function (event)
     {
         document.body.removeChild(event.target);
     } ;

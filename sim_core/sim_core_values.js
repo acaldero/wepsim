@@ -49,7 +49,7 @@ export function set_value (sim_obj, value)
     // set value
     if (sim_obj.value != value)
     {
-        sim_obj.value = value ;
+        sim_obj.value   = value ;
         sim_obj.changed = true ;
     }
 }
@@ -67,7 +67,7 @@ export function reset_value (sim_obj)
     if (typeof sim_obj.default_value == 'object')
     {
         sim_obj.changed = true ;
-        sim_obj.value = Object.create(sim_obj.default_value) ;
+        sim_obj.value   = Object.create(sim_obj.default_value) ;
         return ;
     }
 

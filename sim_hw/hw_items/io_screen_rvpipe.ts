@@ -31,7 +31,7 @@ const IO_SCR_DSR_ID = 0x1004;
 
 export function io_screen_rvpipe_register(sim_p: Simulator): Simulator
 {
-    const DEBUG = false;
+    const DEBUG                = false;
     sim_p.components['SCREEN'] = {
         name:      'SCREEN',
         version:   '1',
@@ -47,7 +47,7 @@ export function io_screen_rvpipe_register(sim_p: Simulator): Simulator
                 vec['SCREEN'] = {};
             }
             const sim_screen = sim_p.internal_states.screen_content;
-            const sim_lines = sim_screen.trim().split('\n');
+            const sim_lines  = sim_screen.trim().split('\n');
             for (let i = 0; i < sim_lines.length; i++)
             {
                 const value = sim_lines[i];
@@ -86,8 +86,8 @@ export function io_screen_rvpipe_register(sim_p: Simulator): Simulator
         get_state: function (line: string): string | null
         {
             const sim_screen = sim_p.internal_states.screen_content;
-            const sim_lines = sim_screen.trim().split('\n');
-            const index = parseInt(line);
+            const sim_lines  = sim_screen.trim().split('\n');
+            const index      = parseInt(line);
             if (typeof sim_lines[index] != 'undefined')
                 return sim_lines[index];
             return null;
@@ -130,8 +130,8 @@ export function io_screen_rvpipe_register(sim_p: Simulator): Simulator
         operation:   function (s_expr: string[]): void
         {
             const bus_ab = get_value(sim_p.states[s_expr[1]]);
-            const ddr = get_value(sim_p.states[s_expr[3]]);
-            const dsr = get_value(sim_p.states[s_expr[4]]);
+            const ddr    = get_value(sim_p.states[s_expr[3]]);
+            const dsr    = get_value(sim_p.states[s_expr[4]]);
             if (DEBUG) console.log('[SCR_IOR] bus_ab=' + bus_ab + ' ddr=' + ddr + ' dsr=' + dsr);
             if (bus_ab == IO_SCR_DDR_ID)
                 set_value(sim_p.states[s_expr[2]], ddr);
@@ -141,8 +141,8 @@ export function io_screen_rvpipe_register(sim_p: Simulator): Simulator
         verbal: function (s_expr: string[]): string
         {
             const bus_ab = get_value(sim_p.states[s_expr[1]]);
-            const ddr = get_value(sim_p.states[s_expr[3]]);
-            const dsr = get_value(sim_p.states[s_expr[4]]);
+            const ddr    = get_value(sim_p.states[s_expr[3]]);
+            const dsr    = get_value(sim_p.states[s_expr[4]]);
             if (bus_ab == IO_SCR_DDR_ID)
                 return 'Try to read from the screen the DDR value ' + ddr + '. ';
             if (bus_ab == IO_SCR_DSR_ID)
@@ -163,8 +163,8 @@ export function io_screen_rvpipe_register(sim_p: Simulator): Simulator
                 return;
             }
             const bus_db = get_value(sim_p.states[s_expr[2]]);
-            const clk = get_value(sim_p.states[s_expr[5]]);
-            const ch = String.fromCharCode(bus_db);
+            const clk    = get_value(sim_p.states[s_expr[5]]);
+            const ch     = String.fromCharCode(bus_db);
 
             if (ch == String.fromCharCode(0x0007))
             { // '\a'
@@ -192,8 +192,8 @@ export function io_screen_rvpipe_register(sim_p: Simulator): Simulator
         {
             const bus_ab = get_value(sim_p.states[s_expr[1]]);
             const bus_db = get_value(sim_p.states[s_expr[2]]);
-            const clk = get_value(sim_p.states[s_expr[5]]);
-            const ch = String.fromCharCode(bus_db);
+            const clk    = get_value(sim_p.states[s_expr[5]]);
+            const ch     = String.fromCharCode(bus_db);
             if (bus_ab == IO_SCR_DDR_ID)
             {
                 return 'Try to write into the screen the code ' + ch + ' at clock cycle ' + clk + '. ';

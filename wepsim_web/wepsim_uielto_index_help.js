@@ -69,12 +69,12 @@ export class ws_help extends ws_uielto
         // id + arguments
         var helpdiv_hash = '#scroller-help1' ; // -> '#scroller-' + this.name_str ;
         var type_ref_arr = this.components_str.split(':') ;
-        var help_type = type_ref_arr[0] ;
-        var help_arg = type_ref_arr[1] ;
+        var help_type    = type_ref_arr[0] ;
+        var help_arg     = type_ref_arr[1] ;
 
         // content
         var seg_idiom = get_cfg('ws_idiom') ;
-        var ahw = simhw_active() ;
+        var ahw       = simhw_active() ;
         var seg_hardw = ahw.sim_short_name ;
 
         var helpurl ;
@@ -82,7 +82,7 @@ export class ws_help extends ws_uielto
         switch (help_type)
         {
             case 'relative':
-                var r = help_arg.split('#') ;
+                var r   = help_arg.split('#') ;
                 helpurl = 'help/' + r[0] + '-' + seg_idiom + '.html' ;
                 resolve_html_url(helpdiv_hash, helpurl, '#' + r[1], uielto_help_scrolltothetop) ;
                 simcore_ga('help', 'help.rel', 'help.rel.' + help_arg) ;
@@ -130,7 +130,7 @@ export class ws_help extends ws_uielto
 export function uielto_help_scrolltothetop()
 {
     var helpdiv_hash_container = 'scroller-help1' ;
-    var elto = document.getElementById(helpdiv_hash_container) ;
+    var elto                   = document.getElementById(helpdiv_hash_container) ;
     if (elto != null)
         elto.scrollTop = 0 ;
 }
@@ -165,12 +165,12 @@ export function table_helps_html(helps)
     var toggle_cls ;
     var fmt_header ;
     var e_title ;
-    var e_itype = '' ;
-    var e_utype = '' ;
+    var e_itype    = '' ;
+    var e_utype    = '' ;
     var e_uclass ;
     var e_reference ;
     var e_description ;
-    var e_id = '' ;
+    var e_id       = '' ;
     var t_index ;
     var m ;
 
@@ -194,12 +194,12 @@ export function table_helps_html(helps)
                 '</div>' ;
         }
 
-        e_title = helps[m].title ;
-        e_utype = helps[m].u_type ;
-        e_uclass = helps[m].u_class ;
-        e_reference = helps[m].reference ;
+        e_title       = helps[m].title ;
+        e_utype       = helps[m].u_type ;
+        e_uclass      = helps[m].u_class ;
+        e_reference   = helps[m].reference ;
         e_description = helps[m].description ;
-        e_id = helps[m].id ;
+        e_id          = helps[m].id ;
 
         if (fmt_toggle === '')
             fmt_toggle = 'bg-body-tertiary' ;

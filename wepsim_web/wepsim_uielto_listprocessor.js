@@ -84,7 +84,7 @@ export class ws_list_processor extends ws_uielto
         for (var e_hw in e_hws)
         {
             var ename = e_hw.toUpperCase() ;
-            o1 += '<button type="button" ' +
+            o1       += '<button type="button" ' +
                 '    class="text-danger btn border-secondary m-1 btn-block" ' +
                 '    data-bind="click" data-action="processor-load" ' +
                 '    data-hw-name="' + e_hw + '">' +

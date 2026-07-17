@@ -53,7 +53,7 @@ export function mem_poc_register (sim_p)
                 value = parseInt(value) ;
                 if (value != 0)
                 {
-                    key = parseInt(index).toString(16) ;
+                    key                    = parseInt(index).toString(16) ;
                     vec.MEMORY['0x' + key] = { 'type':          'memory',
                         'default_value': 0x0,
                         'id':            '0x' + key,
@@ -109,14 +109,14 @@ export function mem_poc_register (sim_p)
         set_value: function (elto, value)
         {
             // PC
-            var origin = '' ;
+            var origin  = '' ;
             var r_value = main_memory_get_program_counter() ;
             if (r_value != null)
             {
                 origin = 'PC=0x' + r_value.toString(16) ;
             }
 
-            var melto = {
+            var melto  = {
                 'value':           (value >>> 0),
                 'source_tracking': [origin],
                 'comments':        null,
@@ -139,11 +139,11 @@ export function mem_poc_register (sim_p)
      */
 
     sim_p.internal_states.segments = {} ;
-    sim_p.internal_states.MP = {} ;
-    sim_p.internal_states.MP_wc = { read: { value: 0 }, write: { value: 0 } } ;
+    sim_p.internal_states.MP       = {} ;
+    sim_p.internal_states.MP_wc    = { read: { value: 0 }, write: { value: 0 } } ;
 
     sim_p.internal_states.CM_cfg = [] ;
-    sim_p.internal_states.CM = [] ;
+    sim_p.internal_states.CM     = [] ;
 
     /*
          *  Signals
@@ -199,11 +199,11 @@ export function mem_poc_register (sim_p)
             var address = sim_p.states[s_expr[1]].value;
             //   var dbvalue = sim_p.states[s_expr[2]].value;
             var dbvalue ;
-            var bw = sim_p.signals[s_expr[3]].value;
+            var bw  = sim_p.signals[s_expr[3]].value;
             var clk = get_value(sim_p.states[s_expr[5]]) ;
 
             sim_p.signals[s_expr[4]].value = 0;
-            var remain = get_value(sim_p.internal_states.MP_wc.read);
+            var remain                     = get_value(sim_p.internal_states.MP_wc.read);
             if (
                 (typeof sim_p.events.mem[clk - 1] != 'undefined') &&
                 (sim_p.events.mem[clk - 1] > 0)
@@ -211,26 +211,26 @@ export function mem_poc_register (sim_p)
             {
                 remain = sim_p.events.mem[clk - 1] - 1;
             }
-            var first_time = typeof sim_p.events.mem[clk] == 'undefined' ;
+            var first_time        = typeof sim_p.events.mem[clk] == 'undefined' ;
             sim_p.events.mem[clk] = remain;
             if (remain > 0)
             {
                 return;
             }
 
-            var wordress = address & 0xFFFFFFFC ;
-            var value = main_memory_getvalue(sim_p.internal_states.MP, wordress) ;
+            var wordress    = address & 0xFFFFFFFC ;
+            var value       = main_memory_getvalue(sim_p.internal_states.MP, wordress) ;
             var full_redraw = false ;
             if (typeof value === 'undefined')
             {
-                value = 0 ;
+                value       = 0 ;
                 full_redraw = true ;
             }
 
             // bit-width
             dbvalue = main_memory_extractvalues(value, bw, (address & 0x00000003), 0) ;
 
-            sim_p.states[s_expr[2]].value = (dbvalue >>> 0);
+            sim_p.states[s_expr[2]].value  = (dbvalue >>> 0);
             sim_p.signals[s_expr[4]].value = 1;
             show_main_memory(sim_p.internal_states.MP, wordress, full_redraw, false) ;
 
@@ -252,8 +252,8 @@ export function mem_poc_register (sim_p)
 
             var address = sim_p.states[s_expr[1]].value;
             var dbvalue = sim_p.states[s_expr[2]].value;
-            var bw = sim_p.signals[s_expr[3]].value;
-            var clk = get_value(sim_p.states[s_expr[5]]) ;
+            var bw      = sim_p.signals[s_expr[3]].value;
+            var clk     = get_value(sim_p.states[s_expr[5]]) ;
 
             // bit-width
             let bw_type ;
@@ -289,11 +289,11 @@ export function mem_poc_register (sim_p)
         {
             var address = sim_p.states[s_expr[1]].value;
             var dbvalue = sim_p.states[s_expr[2]].value;
-            var bw = sim_p.signals[s_expr[3]].value;
-            var clk = get_value(sim_p.states[s_expr[5]]) ;
+            var bw      = sim_p.signals[s_expr[3]].value;
+            var clk     = get_value(sim_p.states[s_expr[5]]) ;
 
             sim_p.signals[s_expr[4]].value = 0;
-            var remain = get_value(sim_p.internal_states.MP_wc.write);
+            var remain                     = get_value(sim_p.internal_states.MP_wc.write);
             if (
                 (typeof sim_p.events.mem[clk - 1] != 'undefined') &&
                 (sim_p.events.mem[clk - 1] > 0)
@@ -301,20 +301,20 @@ export function mem_poc_register (sim_p)
             {
                 remain = sim_p.events.mem[clk - 1] - 1;
             }
-            var first_time = typeof sim_p.events.mem[clk] == 'undefined' ;
+            var first_time        = typeof sim_p.events.mem[clk] == 'undefined' ;
             sim_p.events.mem[clk] = remain;
             if (remain > 0)
             {
                 return;
             }
 
-            var wordress = address & 0xFFFFFFFC ;
-            var value = main_memory_getvalue(sim_p.internal_states.MP,
-                                             wordress) ;
+            var wordress    = address & 0xFFFFFFFC ;
+            var value       = main_memory_getvalue(sim_p.internal_states.MP,
+                                                   wordress) ;
             var full_redraw = false ;
             if (typeof value === 'undefined')
             {
-                value = 0 ;
+                value       = 0 ;
                 full_redraw = true ;
             }
 
@@ -325,7 +325,7 @@ export function mem_poc_register (sim_p)
                                              (address & 0x00000003)) ;
 
             // PC
-            var origin = '' ;
+            var origin  = '' ;
             var r_value = main_memory_get_program_counter() ;
             if (r_value != null)
             {
@@ -337,9 +337,9 @@ export function mem_poc_register (sim_p)
                 'source_tracking': [origin],
                 'comments':        null,
             } ;
-            var elto = main_memory_set(sim_p.internal_states.MP,
-                                       wordress,
-                                       melto) ;
+            var elto  = main_memory_set(sim_p.internal_states.MP,
+                                        wordress,
+                                        melto) ;
 
             sim_p.signals[s_expr[4]].value = 1 ;
             show_main_memory(sim_p.internal_states.MP, wordress, full_redraw, true) ;
@@ -362,8 +362,8 @@ export function mem_poc_register (sim_p)
 
             var address = sim_p.states[s_expr[1]].value;
             var dbvalue = sim_p.states[s_expr[2]].value;
-            var bw = sim_p.signals[s_expr[3]].value;
-            var clk = get_value(sim_p.states[s_expr[5]]) ;
+            var bw      = sim_p.signals[s_expr[3]].value;
+            var clk     = get_value(sim_p.states[s_expr[5]]) ;
 
             // bit-width
             let bw_type ;

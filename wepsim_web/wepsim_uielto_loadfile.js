@@ -79,8 +79,8 @@ export class ws_load_file extends HTMLElement
             var loadLink = el.closest('ws-load-link');
             if (loadFile)
             {
-                var fid = loadFile.getAttribute('fid');
-                var mode = loadFile.getAttribute('data-mode');
+                var fid        = loadFile.getAttribute('fid');
+                var mode       = loadFile.getAttribute('data-mode');
                 var dialogName = loadFile.getAttribute('data-dialog');
                 if (mode === 'checkpoint')
                 {
@@ -94,7 +94,7 @@ export class ws_load_file extends HTMLElement
                     return;
                 }
                 var editorName = loadFile.getAttribute('data-editor') || 'inputasm';
-                var ftl = document.getElementById(fid).files[0];
+                var ftl        = document.getElementById(fid).files[0];
                 if (!ftl) return;
                 var editor = (editorName === 'inputfirm') ? inputfirm : inputasm;
                 wepsim_file_loadFrom(ftl, function(txt)
@@ -106,9 +106,9 @@ export class ws_load_file extends HTMLElement
             }
             else if (loadLink)
             {
-                var fid = loadLink.getAttribute('fid');
+                var fid        = loadLink.getAttribute('fid');
                 var dialogName = loadLink.getAttribute('data-dialog');
-                var elto = document.getElementById(fid);
+                var elto       = document.getElementById(fid);
                 load_from_uri(elto.value);
                 if (dialogName) wsweb_dialog_close(dialogName);
                 wepsim_notify_success('<strong>INFO</strong>', 'Loaded!.');

@@ -48,7 +48,7 @@ export class ws_load_link extends HTMLElement
         this.update_internal_attributes() ;
 
         var o1 = '' ;
-        o1 += "<div class='card border-secondary h-100'>" +
+        o1    += "<div class='card border-secondary h-100'>" +
             "<div class='card-header border-secondary text-white bg-secondary p-1'>" +
             " <h5 class='m-0'>" +
             " <span class='text-white bg-secondary' data-langkey='Input link'>Input link</span>" +

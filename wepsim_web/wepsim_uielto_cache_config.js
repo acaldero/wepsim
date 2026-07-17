@@ -49,7 +49,7 @@ export class ws_cache_config extends ws_uielto
 
     render_skel ()
     {
-        var div_id = 'config_CACHE_sel' ;
+        var div_id    = 'config_CACHE_sel' ;
         var style_dim = 'height:58vh; width:inherit; ' ;
         var style_ovf = 'overflow:auto; -webkit-overflow-scrolling:touch; ' ;
 
@@ -375,7 +375,7 @@ export function wepsim_show_cache_memory_cfg(div_hash, memory_cfg)
 
 export function wepsim_cm_add_cachelevel(div_hash, cache_id)
 {
-    var curr_cm = simhw_internalState('CM') ;
+    var curr_cm  = simhw_internalState('CM') ;
     var curr_cfg = simhw_internalState('CM_cfg') ;
 
     // check arguments
@@ -390,7 +390,7 @@ export function wepsim_cm_add_cachelevel(div_hash, cache_id)
 
     // update cm_cfg and cm
     curr_cfg[cache_id] = cache_memory_init(cache_id, 12, 5, 6, 'fifo', 'unified', 1, -1) ;
-    curr_cm[cache_id] = cache_memory_init_eltofromcfg(curr_cfg[cache_id].cfg) ;
+    curr_cm[cache_id]  = cache_memory_init_eltofromcfg(curr_cfg[cache_id].cfg) ;
     cache_memory_init_eltonextcache(curr_cm, curr_cfg[cache_id], curr_cm[cache_id]) ;
 
     simhw_internalState_reset('CM_cfg', curr_cfg) ;
@@ -403,7 +403,7 @@ export function wepsim_cm_add_cachelevel(div_hash, cache_id)
 
 export function wepsim_cm_rm_cachelevel(div_hash, cache_id)
 {
-    var curr_cm = simhw_internalState('CM') ;
+    var curr_cm  = simhw_internalState('CM') ;
     var curr_cfg = simhw_internalState('CM_cfg') ;
 
     // check arguments
@@ -421,7 +421,7 @@ export function wepsim_cm_rm_cachelevel(div_hash, cache_id)
     {
         if (curr_cfg[i].cfg.next_cache == cache_id)
         {
-            curr_cm[i].cfg.next_cache = null ;
+            curr_cm[i].cfg.next_cache  = null ;
             curr_cfg[i].cfg.next_cache = -1 ;
         }
     }
@@ -440,8 +440,8 @@ export function wepsim_cm_rm_cachelevel(div_hash, cache_id)
 
 export function wepsim_cm_update_cfg(index, field, value)
 {
-    var curr_cm = simhw_internalState('CM') ;
-    var curr_cfg = simhw_internalState('CM_cfg') ;
+    var curr_cm     = simhw_internalState('CM') ;
+    var curr_cfg    = simhw_internalState('CM_cfg') ;
     var actual_next = -1 ;
 
     if (0 == curr_cfg.length)
@@ -461,7 +461,7 @@ export function wepsim_cm_update_cfg(index, field, value)
     if ('next_cache' == field)
     {
         actual_next = curr_cfg[index].cfg.next_cache ;
-        value = parseInt(value) ;
+        value       = parseInt(value) ;
     }
 
     set_var(curr_cfg[index].cfg[field], value) ;
@@ -502,7 +502,7 @@ export function wepsim_cm_update_placement(index, value)
     if ('sa' == value)
     {
         var curr_cfg = simhw_internalState('CM_cfg') ;
-        curr_sz = parseInt(get_var(curr_cfg[index].cfg.via_size)) ;
+        curr_sz      = parseInt(get_var(curr_cfg[index].cfg.via_size)) ;
         wepsim_cm_update_cfg(index, 'set_size', curr_sz) ;
         $('#cpp_sa').show();
     }
@@ -510,7 +510,7 @@ export function wepsim_cm_update_placement(index, value)
     // Direct-mapped
     if ('dm' == value)
     {
-        curr_cfg = simhw_internalState('CM_cfg') ;
+        curr_cfg    = simhw_internalState('CM_cfg') ;
         var curr_sz = 0 ;
         if ((typeof curr_cfg != 'undefined') &&
             (typeof curr_cfg[index] != 'undefined'))
@@ -529,7 +529,7 @@ export function wepsim_cm_update_placement(index, value)
 
 export function wepsim_show_cache_memory_config()
 {
-    var o1 = '' ;
+    var o1       = '' ;
     var div_hash = '#config_CACHE_sel' ;
 
     // default content

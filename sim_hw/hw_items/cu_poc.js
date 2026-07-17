@@ -40,7 +40,7 @@ export function cu_poc_register (sim_p)
      *  Internal States
      */
 
-    sim_p.internal_states.MC = {} ;
+    sim_p.internal_states.MC  = {} ;
     sim_p.internal_states.ROM = {} ;
 
     sim_p.internal_states.FIRMWARE = ws_empty_firmware ;
@@ -53,27 +53,27 @@ export function cu_poc_register (sim_p)
     sim_p.states['REG_MICROADDR'] = { name:          'µADDR', verbal:        'Microaddress Register',
         visible:       true, nbits:         '12', value:         0, default_value: 0,
         draw_data:     ['svg_cu:text4667'] };
-    sim_p.states['REG_MICROINS'] = { name:          'µINS', verbal:        'Microinstruction Register',
+    sim_p.states['REG_MICROINS']  = { name:          'µINS', verbal:        'Microinstruction Register',
         visible:       true, nbits:         '77', value:         {}, default_value: {},
         draw_data:     [] };
 
-    sim_p.states['FETCH'] = { name:          'FETCH', verbal:        'Input Fetch',
+    sim_p.states['FETCH']    = { name:          'FETCH', verbal:        'Input Fetch',
         visible:       false, nbits:         '12', value:         0, default_value: 0,
         draw_data:     [] };
     sim_p.states['ROM_MUXA'] = { name:          'ROM_MUXA', verbal:        'Input ROM',
         visible:       false, nbits:         '12', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states['SUM_ONE'] = { name:          'SUM_ONE', verbal:        'Input next microinstruction',
+    sim_p.states['SUM_ONE']  = { name:          'SUM_ONE', verbal:        'Input next microinstruction',
         visible:       false, nbits:         '12', value:         1, default_value: 1,
         draw_data:     [] };
 
     sim_p.states['MUXA_MICROADDR'] = { name:          'MUXA_MICROADDR', verbal:        'Input microaddress',
         visible:       false, nbits:         '12', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states['MUXC_MUXB'] = { name:          'MUXC_MUXB', verbal:        'Output of MUX C',
+    sim_p.states['MUXC_MUXB']      = { name:          'MUXC_MUXB', verbal:        'Output of MUX C',
         visible:       false, nbits:         '1', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states['INEX'] = { name:          'INEX', verbal:        'Illegal Instruction Exception',
+    sim_p.states['INEX']           = { name:          'INEX', verbal:        'Illegal Instruction Exception',
         visible:       false, nbits:         '1', value:         0, default_value: 0,
         draw_data:     [] };
 
@@ -82,7 +82,7 @@ export function cu_poc_register (sim_p)
      */
 
     /* CONTROL UNIT */
-    sim_p.signals['C'] = { name:          'C', visible:       true, type:          'L', value:         0, default_value: 0, nbits:         '4',
+    sim_p.signals['C']  = { name:          'C', visible:       true, type:          'L', value:         0, default_value: 0, nbits:         '4',
         behavior:      ['MV MUXC_MUXB VAL_ZERO; FIRE_IFCHANGED B MUXC_MUXB; RESET_CHANGED MUXC_MUXB',
             'MBIT MUXC_MUXB INT 0 1; FIRE_IFCHANGED B MUXC_MUXB; RESET_CHANGED MUXC_MUXB',
             'MBIT MUXC_MUXB IORDY 0 1; FIRE_IFCHANGED B MUXC_MUXB; RESET_CHANGED MUXC_MUXB',
@@ -107,7 +107,7 @@ export function cu_poc_register (sim_p)
             ['svg_cu:path3484-9'],
             ['svg_cu:path3108-3', 'svg_cu:path3260-3-8-6', 'svg_cu:path3260-3-8', 'svg_cu:path3260-3']],
         draw_name: [['svg_cu:path3496', 'svg_cu:path3414', 'svg_cu:path3194-08']] };
-    sim_p.signals['B'] = { name:          'B', visible:       true, type:          'L', value:         0, default_value: 0, nbits:         '1',
+    sim_p.signals['B']  = { name:          'B', visible:       true, type:          'L', value:         0, default_value: 0, nbits:         '1',
         behavior:      ['MV A1 MUXC_MUXB; FIRE A1',
             'NOT_ES A1 MUXC_MUXB; FIRE A1'],
         depends_on: ['CLK'],

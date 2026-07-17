@@ -82,7 +82,7 @@ export function table_examples_html(examples)
 {
     // harware
     var mode = get_cfg('ws_mode') ;
-    var ahw = wepsim_mode_getBaseMode(mode) ;
+    var ahw  = wepsim_mode_getBaseMode(mode) ;
 
     // examples
     var base_url = get_cfg('base_url') ;
@@ -120,16 +120,16 @@ export function table_examples_html(examples)
         }
 
         // add example to the example summary
-        e_title = examples[m].title ;
-        e_type = examples[m].type ;
-        e_level = 'actual' ;
-        e_mc = examples[m].microcode ;
-        e_asm = examples[m].assembly ;
+        e_title       = examples[m].title ;
+        e_type        = examples[m].type ;
+        e_level       = 'actual' ;
+        e_mc          = examples[m].microcode ;
+        e_asm         = examples[m].assembly ;
         e_description = examples[m].description ;
-        e_id = examples[m].id ;
+        e_id          = examples[m].id ;
 
         t_hwmcasm = e_hw + ':' + e_mc + ':' + e_asm ;
-        t_index = (m + 1).toString().padStart(2, ' ').replace(/ /g, '&nbsp;') ;
+        t_index   = (m + 1).toString().padStart(2, ' ').replace(/ /g, '&nbsp;') ;
 
         if (fmt_toggle === '')
             fmt_toggle = 'bg-body-tertiary' ;

@@ -92,17 +92,17 @@ export function share_as_uri (share_eltos)
 
         if (share_eltos.includes('mc'))
         {
-            txt_enc = LZString.compressToEncodedURIComponent(inputfirm.getValue()) ;
+            txt_enc      = LZString.compressToEncodedURIComponent(inputfirm.getValue()) ;
             url_to_share = url_to_share + '&mc=' + txt_enc ;
         }
         if (share_eltos.includes('asm'))
         {
-            txt_enc = LZString.compressToEncodedURIComponent(inputasm.getValue()) ;
+            txt_enc      = LZString.compressToEncodedURIComponent(inputasm.getValue()) ;
             url_to_share = url_to_share + '&asm=' + txt_enc ;
         }
         if (share_eltos.includes('cache'))
         {
-            var cm_cfg = [] ;
+            var cm_cfg   = [] ;
             var curr_cfg = simhw_internalState('CM_cfg') ;
             for (var i = 0; i < curr_cfg.length; i++)
             {
@@ -111,7 +111,7 @@ export function share_as_uri (share_eltos)
             }
 
             let json_enc = JSON.stringify(cm_cfg) ;
-            txt_enc = LZString.compressToEncodedURIComponent(json_enc) ;
+            txt_enc      = LZString.compressToEncodedURIComponent(json_enc) ;
             url_to_share = url_to_share + '&cache=' + txt_enc ;
         }
     }
@@ -129,7 +129,7 @@ export function load_from_uri (url_to_share)
 {
     var elto_shared = {} ;
     elto_shared.asm = null ;
-    elto_shared.mc = null ;
+    elto_shared.mc  = null ;
     elto_shared.cmc = null ;
 
     // build from the associate URI
@@ -160,8 +160,8 @@ export function load_from_uri (url_to_share)
             if ('cache' == b[0])
             {
                 elto_shared.cmc = LZString.decompressFromEncodedURIComponent(b[1]) ;
-                var cm_cfg = JSON.parse(elto_shared.cmc) ;
-                var cm = cache_memory_init_cm(cm_cfg) ;
+                var cm_cfg      = JSON.parse(elto_shared.cmc) ;
+                var cm          = cache_memory_init_cm(cm_cfg) ;
                 simhw_internalState_reset('CM_cfg', cm_cfg) ;
                 simhw_internalState_reset('CM', cm) ;
                 wepsim_show_cache_memory_config() ;
@@ -183,8 +183,8 @@ export function share_uri (info_shared, share_title, share_text, share_url)
     var data = {} ;
 
     data.title = share_title ;
-    data.text = share_text ;
-    data.url = share_url ;
+    data.text  = share_text ;
+    data.url   = share_url ;
 
     // try to share data
     try

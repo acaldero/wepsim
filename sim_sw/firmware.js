@@ -44,11 +44,11 @@ export function saveFirmware (SIMWARE, firm_version)
     // Saving as version 2 by default ;-)
     if (typeof SIMWARE.metadata == 'undefined')
     {
-        SIMWARE.metadata = new Object() ;
-        SIMWARE.metadata.version = 2 ;
-        SIMWARE.metadata.rel_mult = 4 ;
+        SIMWARE.metadata               = new Object() ;
+        SIMWARE.metadata.version       = 2 ;
+        SIMWARE.metadata.rel_mult      = 4 ;
         SIMWARE.metadata.pc_rel_offset = 0 ;
-        SIMWARE.metadata.endian = 'little' ;
+        SIMWARE.metadata.endian        = 'little' ;
     }
     // But honor the firm_version argument
     if (typeof firm_version != 'undefined')
@@ -92,29 +92,29 @@ export function loadFirmware (text)
     var i ;
     var key ;
 
-    var xr_info = simhw_sim_ctrlStates_get() ;
+    var xr_info     = simhw_sim_ctrlStates_get() ;
     var all_ones_oc = '1'.repeat(xr_info.ir.default_eltos.oc.length) ;
 
-    var context = {} ;
+    var context  = {} ;
     context.line = 1 ;
     //  context.error           = null ;
-    context.i = 0 ;
-    context.contadorMC = 0 ;
-    context.etiquetas = {} ;
-    context.labelsNotFound = [] ;
-    context.instrucciones = [] ;
-    context.oc_eoc = {} ;
-    context.oc_eoc = {} ;
-    context.registers = [] ;
-    context.text = text ;
-    context.tokens = [] ;
-    context.token_types = [] ;
-    context.t = 0 ;
-    context.newlines = [] ;
+    context.i                  = 0 ;
+    context.contadorMC         = 0 ;
+    context.etiquetas          = {} ;
+    context.labelsNotFound     = [] ;
+    context.instrucciones      = [] ;
+    context.oc_eoc             = {} ;
+    context.oc_eoc             = {} ;
+    context.registers          = [] ;
+    context.text               = text ;
+    context.tokens             = [] ;
+    context.token_types        = [] ;
+    context.t                  = 0 ;
+    context.newlines           = [] ;
     context.pseudoInstructions = [];
-    context.stackRegister = null ;
-    context.comments = [] ;
-    context.metadata = { version: 1 } ;
+    context.stackRegister      = null ;
+    context.comments           = [] ;
+    context.metadata           = { version: 1 } ;
 
     frm_nextToken(context) ;
     //
@@ -327,13 +327,13 @@ export function loadFirmware (text)
         if (typeof context.instrucciones[fi].eoc == 'undefined')
         {
             context.hash_oceoc[fioc].witheoc = false ;
-            context.hash_oceoc[fioc].i = context.instrucciones[fi] ;
+            context.hash_oceoc[fioc].i       = context.instrucciones[fi] ;
         }
         else
         {
-            fieoc = context.instrucciones[fi].eoc ;
+            fieoc                            = context.instrucciones[fi].eoc ;
             context.hash_oceoc[fioc].witheoc = true ;
-            context.hash_oceoc[fioc][fieoc] = context.instrucciones[fi] ;
+            context.hash_oceoc[fioc][fieoc]  = context.instrucciones[fi] ;
         }
     }
 
@@ -345,17 +345,17 @@ export function loadFirmware (text)
     }
 
     // return results
-    ret = {} ;
-    ret.error = null ;
-    ret.metadata = context.metadata ;
-    ret.firmware = context.instrucciones ;
-    ret.labels_firm = context.etiquetas ;
-    ret.mp = {} ;
-    ret.seg = {} ;
-    ret.registers = context.registers ;
-    ret.pseudoInstructions = context.pseudoInstructions ;
-    ret.stackRegister = context.stackRegister ;
-    ret.hash_oceoc = context.hash_oceoc ;
+    ret                      = {} ;
+    ret.error                = null ;
+    ret.metadata             = context.metadata ;
+    ret.firmware             = context.instrucciones ;
+    ret.labels_firm          = context.etiquetas ;
+    ret.mp                   = {} ;
+    ret.seg                  = {} ;
+    ret.registers            = context.registers ;
+    ret.pseudoInstructions   = context.pseudoInstructions ;
+    ret.stackRegister        = context.stackRegister ;
+    ret.hash_oceoc           = context.hash_oceoc ;
     ret.hash_labels_firm_rev = context.revlabels ;
 
     return ret ;
@@ -383,7 +383,7 @@ export function decode_instruction (curr_firm, ep_ir, binstruction)
     var bits = binstruction.toString(2).padStart(32, '0') ;
 
     // oc/op-code
-    var oc = bits.substr(ep_ir.default_eltos.oc.begin, ep_ir.default_eltos.oc.length) ;
+    var oc      = bits.substr(ep_ir.default_eltos.oc.begin, ep_ir.default_eltos.oc.length) ;
     ret.oc_code = parseInt(oc, 2) ;
 
     var hash_entry = curr_firm.hash_oceoc[oc] ;
@@ -411,8 +411,8 @@ export function decode_instruction (curr_firm, ep_ir, binstruction)
             if (eoc.length < masklen) continue ;
 
             ret.oinstruction = hash_entry[eoc] ;
-            ret.eoc_code = parseInt(eoc, 2) ;
-            masklen = eoc.length ;
+            ret.eoc_code     = parseInt(eoc, 2) ;
+            masklen          = eoc.length ;
         }
     }
 
@@ -422,13 +422,13 @@ export function decode_instruction (curr_firm, ep_ir, binstruction)
 export function decode_ram ()
 {
     var curr_ircfg = simhw_sim_ctrlStates_get().ir ;
-    var curr_firm = simhw_internalState('FIRMWARE') ;
-    var curr_MP = simhw_internalState('MP') ;
+    var curr_firm  = simhw_internalState('FIRMWARE') ;
+    var curr_MP    = simhw_internalState('MP') ;
 
     var sram = '\n' ;
     for (var address in curr_MP)
     {
-        var value = get_value(curr_MP[address]) ;
+        var value        = get_value(curr_MP[address]) ;
         var binstruction = value.toString(2).padStart(32, '0') ;
         var oinstruction = decode_instruction(curr_firm, curr_ircfg, binstruction).oinstruction ;
 

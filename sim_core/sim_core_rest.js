@@ -82,7 +82,7 @@ export function simcore_rest_call (name, method, uri, data)
 
     // build request
     var basic_auth = 'Basic ' + btoa(rest_info.user + ':' + rest_info.pass) ;
-    var enc_data = JSON.stringify(data) ;
+    var enc_data   = JSON.stringify(data) ;
 
     var request = {
         url:         api_endpoint + uri,

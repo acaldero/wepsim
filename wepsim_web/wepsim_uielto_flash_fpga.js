@@ -161,7 +161,7 @@ export async function gateway_do_request (req_url, req_args, div_info)
 
     try
     {
-        var res = await fetch(req_url, fetch_args) ;
+        var res  = await fetch(req_url, fetch_args) ;
         var jres = await res.json() ;
     }
     catch (e)
@@ -186,7 +186,7 @@ export function gateway_request_status(status_url, info_div)
             return ;
         }
 
-        info_div.value += event.data + '\n' ;
+        info_div.value    += event.data + '\n' ;
         info_div.scrollTop = info_div.scrollHeight;
     };
 }
@@ -221,7 +221,7 @@ export function gateway_do_sendmicro(div_url_name, div_dev_name, div_info_name)
     } ;
 
     // (1/3) prepare firmware...
-    var SIMWARE = get_simware() ;
+    var SIMWARE        = get_simware() ;
     farg.microprograms = SIMWARE.firmware.map((v) =>
     {
         return {
@@ -248,8 +248,8 @@ export function gateway_do_sendmicro(div_url_name, div_dev_name, div_info_name)
 
     // >> do remote request to "http://<url>/build" ...
     idiv.value = 'Flashing...\n' ;
-    var furl = udiv.value ;
-    var ret = gateway_do_request(furl + '/build', farg, idiv);
+    var furl   = udiv.value ;
+    var ret    = gateway_do_request(furl + '/build', farg, idiv);
 
     // << working with the async result...
     ret.then((result) =>
@@ -291,8 +291,8 @@ export function gateway_do_sendasm(div_url_name, div_dev_name, div_info_name)
 
     // (1/3) prepare data...
     var SIMWARE = get_simware() ;
-    farg.data = Object.entries(SIMWARE.mp).map(([k, v]) => [k, v.value]) ;
-    farg.data = Object.fromEntries(farg.data) ;
+    farg.data   = Object.entries(SIMWARE.mp).map(([k, v]) => [k, v.value]) ;
+    farg.data   = Object.fromEntries(farg.data) ;
 
     // (2/3) prepare entrypoint...
     farg.entrypoint = segments_get_begin_addr('.text') ;
@@ -306,8 +306,8 @@ export function gateway_do_sendasm(div_url_name, div_dev_name, div_info_name)
 
     // >> do remote request to "http://<url>/build" ...
     idiv.value = 'Flashing...\n' ;
-    var furl = udiv.value ;
-    var ret = gateway_do_request(furl + '/flash', farg, idiv);
+    var furl   = udiv.value ;
+    var ret    = gateway_do_request(furl + '/flash', farg, idiv);
 
     // working with the async result...
     ret.then((result) =>

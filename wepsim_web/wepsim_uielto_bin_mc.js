@@ -92,7 +92,7 @@ export function firmware2html(fir, showBinary)
 
     var filter = simhw_internalState('filter_signals') ;
 
-    var h = '<tr>' +
+    var h           = '<tr>' +
         "<td class='border-secondary'></td>" +
         "<td class='border-secondary bg-info    text-dark'>co</td>" +
         "<td class='                 bg-warning text-dark' align='center'><small><b>&#181;dir</b></small></td>" +
@@ -104,14 +104,14 @@ export function firmware2html(fir, showBinary)
         n = simhw_sim_signals()[s] ;
         if (typeof n == 'undefined')
             continue ;
-        n = n.name ;
+        n  = n.name ;
         h += "<td class='border border-secondary bg-warning-subtle' align='center'><small><b>" + n + '</b></small></td>';
         contSignals++;
     }
     h += '</tr>' ;
 
     var o = '<center>';
-    o += "<table class='border border-0'>";
+    o    += "<table class='border border-0'>";
 
     var l = 0;
     var line ;
@@ -121,7 +121,7 @@ export function firmware2html(fir, showBinary)
     for (i = 0; i < fir.length; i++)
     {
         var mstart = fir[i]['mc-start'];
-        var mcode = fir[i].microcode;
+        var mcode  = fir[i].microcode;
         for (var j = 0; j < mcode.length; j++)
         {
             if ((++l % 10) == 1)
@@ -144,7 +144,7 @@ export function firmware2html(fir, showBinary)
                 madd = '0x' + (mstart + j).toString(16) ;
             else madd = mstart + j ;
 
-            line += "<td class='border border-secondary' align='center'>" + madd + '</td>' +
+            line    += "<td class='border border-secondary' align='center'>" + madd + '</td>' +
                 "<td class='border border-0'>&nbsp;</td>" ;
             var mins = mcode[j] ;
             for (var k = 0; k < filter.length; k++)
@@ -189,14 +189,14 @@ export function firmware2html(fir, showBinary)
 
                 if (showBinary)
                 {
-                    fragment = svalue.toString(2) ;
+                    fragment  = svalue.toString(2) ;
                     var nbits = parseInt(simhw_sim_signals()[s].nbits);
-                    svalue = '00000000000000000000000000000000'.substring(0, nbits - fragment.length) + fragment;
+                    svalue    = '00000000000000000000000000000000'.substring(0, nbits - fragment.length) + fragment;
 
                     var ngreen = filter[k].split(',')[1] ;
-                    var part1 = svalue.substring(0, ngreen);
-                    var part2 = svalue.substring(ngreen);
-                    svalue = '<font color=green>' + part1 + '</font>' + part2 ;
+                    var part1  = svalue.substring(0, ngreen);
+                    var part2  = svalue.substring(ngreen);
+                    svalue     = '<font color=green>' + part1 + '</font>' + part2 ;
                 }
 
                 if (newval)

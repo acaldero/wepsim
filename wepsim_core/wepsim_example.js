@@ -39,14 +39,14 @@ import { inputasm, inputfirm } from '../wepsim_web/wepsim_web_simulator.js';
 
 export function wepsim_example_register()
 {
-    ws_info.examples = [] ;
-    ws_info.example_set = [{ 'name': 'Empty', 'url': '', 'url_base_asm': '', 'url_base_mc': '' }] ;
+    ws_info.examples       = [] ;
+    ws_info.example_set    = [{ 'name': 'Empty', 'url': '', 'url_base_asm': '', 'url_base_mc': '' }] ;
     ws_info.example_active = -1 ;
 }
 
 export function wepsim_example_reset()
 {
-    ws_info.examples = [] ;
+    ws_info.examples       = [] ;
     ws_info.example_active = -1 ;
 
     webui_toolbar_updateExampleSet() ;
@@ -69,8 +69,8 @@ export function wepsim_example_load(e_name)
             continue ;
         }
 
-        jobj = wepsim_url_getJSON(ws_info.example_set[i].url) ;
-        ws_info.examples = ws_info.examples.concat(jobj) ;
+        jobj                   = wepsim_url_getJSON(ws_info.example_set[i].url) ;
+        ws_info.examples       = ws_info.examples.concat(jobj) ;
         ws_info.example_active = i ;
 
         set_cfg('ws_examples_set', e_name) ;
@@ -143,7 +143,7 @@ export function load_from_example_assembly(example_id, chain_next_step)
 
     // example_id -> url
     var eltos = example_id2hash(example_id) ;
-    var url = ws_info.example_set[ws_info.example_active].url_base_asm + '/' + eltos.sample_asm ;
+    var url   = ws_info.example_set[ws_info.example_active].url_base_asm + '/' + eltos.sample_asm ;
 
     // do next
     var do_next = function(mcode)
@@ -152,11 +152,11 @@ export function load_from_example_assembly(example_id, chain_next_step)
         inputasm.refresh();
 
         // compile it
-        var ok = false ;
+        var ok      = false ;
         var SIMWARE = get_simware() ;
         if (SIMWARE.firmware.length !== 0)
         {
-            ok = wepsim_compile_assembly(mcode) ;
+            ok                   = wepsim_compile_assembly(mcode) ;
             inputasm.is_compiled = ok ;
         }
 
@@ -208,7 +208,7 @@ export function load_from_example_firmware(example_id, chain_next_step)
 
     // example_id -> url
     var eltos = example_id2hash(example_id) ;
-    var url = ws_info.example_set[ws_info.example_active].url_base_mc + '/' + eltos.sample_mc ;
+    var url   = ws_info.example_set[ws_info.example_active].url_base_mc + '/' + eltos.sample_mc ;
 
     // do next
     var do_next = function(mcode)
@@ -216,7 +216,7 @@ export function load_from_example_firmware(example_id, chain_next_step)
         inputfirm.setValue(mcode);
         inputfirm.refresh();
 
-        var ok = wepsim_compile_firmware(mcode);
+        var ok                = wepsim_compile_firmware(mcode);
         inputfirm.is_compiled = ok ;
 
         // stop here if error is found
@@ -263,15 +263,15 @@ export function share_example(m, base_url)
 {
     // example information
     var e_description = ws_info.examples[m].description ;
-    e_description = e_description.replace(/<[^>]+>/g, '') ;
-    var e_id = ws_info.examples[m].id ;
-    var e_hw = ws_info.examples[m].hardware ;
-    var es_name = ws_info.example_set[ws_info.example_active].name ;
+    e_description     = e_description.replace(/<[^>]+>/g, '') ;
+    var e_id          = ws_info.examples[m].id ;
+    var e_hw          = ws_info.examples[m].hardware ;
+    var es_name       = ws_info.example_set[ws_info.example_active].name ;
 
     // share information
     var share_title = 'WepSIM example ' + e_id + '...' ;
-    var share_text = 'This is a link to the WepSIM example ' + e_id + ' (' + e_description + '):\n' ;
-    var share_url = '' + base_url + '?mode=' + e_hw +
+    var share_text  = 'This is a link to the WepSIM example ' + e_id + ' (' + e_description + '):\n' ;
+    var share_url   = '' + base_url + '?mode=' + e_hw +
         '&examples_set=' + es_name +
         '&example=' + m ;
 

@@ -31,7 +31,7 @@ import { cache_memory_access } from '../../sim_core/sim_adt_cachememory.js';
 
 export function mem_rvpipe_register(sim_p: Simulator): Simulator
 {
-    const DEBUG = false;
+    const DEBUG             = false;
     sim_p.components.MEMORY = {
         name:      'MEMORY',
         version:   '1',
@@ -47,7 +47,7 @@ export function mem_rvpipe_register(sim_p: Simulator): Simulator
             if (typeof vec.MEMORY == 'undefined')
                 vec.MEMORY = {};
 
-            let key: any = 0;
+            let key: any   = 0;
             let value: any = 0;
             for (const index in sim_p.internal_states.MP)
             {
@@ -56,7 +56,7 @@ export function mem_rvpipe_register(sim_p: Simulator): Simulator
                 if (typeof value === 'undefined') value = 0;
                 if (value != 0)
                 {
-                    key = parseInt(index).toString(16);
+                    key                    = parseInt(index).toString(16);
                     vec.MEMORY['0x' + key] = {
                         'type':          'memory',
                         'default_value': 0x0,
@@ -113,14 +113,14 @@ export function mem_rvpipe_register(sim_p: Simulator): Simulator
         set_value: function (elto, value)
         {
             // PC
-            let origin = '';
+            let origin    = '';
             const r_value = main_memory_get_program_counter();
             if (r_value != null)
             {
                 origin = 'PC=0x' + r_value.toString(16);
             }
 
-            const melto = {
+            const melto  = {
                 'value':           (value >>> 0),
                 'source_tracking': [origin],
                 'comments':        null,
@@ -143,11 +143,11 @@ export function mem_rvpipe_register(sim_p: Simulator): Simulator
      */
 
     sim_p.internal_states.segments = {};
-    sim_p.internal_states.MP = {};
-    sim_p.internal_states.MP_wc = { read: { value: 0 }, write: { value: 0 } };
+    sim_p.internal_states.MP       = {};
+    sim_p.internal_states.MP_wc    = { read: { value: 0 }, write: { value: 0 } };
 
     sim_p.internal_states.CM_cfg = [];
-    sim_p.internal_states.CM = [];
+    sim_p.internal_states.CM     = [];
 
     /*
      *  States
@@ -176,12 +176,12 @@ export function mem_rvpipe_register(sim_p: Simulator): Simulator
         types:       ['E', 'E', 'E', 'E', 'E'],
         operation:   function (s_expr: string[]): void
         {
-            const addr_val = get_value(sim_p.states[s_expr[1]]) >>> 0;
+            const addr_val     = get_value(sim_p.states[s_expr[1]]) >>> 0;
             const address: any = '0x' + addr_val.toString(16);
-            let dbvalue = get_value(sim_p.states[s_expr[2]]);
-            const bw = get_value(sim_p.states[s_expr[3]]);
-            const se = get_value(sim_p.states[s_expr[4]]);
-            const clk = get_value(sim_p.states[s_expr[5]]);
+            let dbvalue        = get_value(sim_p.states[s_expr[2]]);
+            const bw           = get_value(sim_p.states[s_expr[3]]);
+            const se           = get_value(sim_p.states[s_expr[4]]);
+            const clk          = get_value(sim_p.states[s_expr[5]]);
             if (DEBUG) console.log(s_expr, 'address', address, 'dbvalue', dbvalue, 'bw', bw, 'se', se, 'clk', clk);
 
             let remain = get_value(sim_p.internal_states.MP_wc.read);
@@ -192,7 +192,7 @@ export function mem_rvpipe_register(sim_p: Simulator): Simulator
             {
                 remain = sim_p.events.mem[clk - 1] - 1;
             }
-            const first_time = typeof sim_p.events.mem[clk] == 'undefined';
+            const first_time      = typeof sim_p.events.mem[clk] == 'undefined';
             sim_p.events.mem[clk] = remain;
             if (remain > 0)
             {
@@ -201,12 +201,12 @@ export function mem_rvpipe_register(sim_p: Simulator): Simulator
 
             const align_address = addr_val & 0xFFFFFFFC;
             if (DEBUG) console.log('MEM_READ: aligned address=0x' + address.toString(16));
-            let value = main_memory_getvalue(sim_p.internal_states.MP,
-                                             align_address);
+            let value       = main_memory_getvalue(sim_p.internal_states.MP,
+                                                   align_address);
             let full_redraw = false;
             if (typeof value === 'undefined')
             {
-                value = 0;
+                value       = 0;
                 full_redraw = true;
                 if (DEBUG) console.log('MEM_READ: address 0x' + address.toString(16) + ' undefined, default 0');
             }
@@ -241,8 +241,8 @@ export function mem_rvpipe_register(sim_p: Simulator): Simulator
 
             const address = '0x' + get_value(sim_p.states[s_expr[1]]).toString(16);
             const dbvalue = get_value(sim_p.states[s_expr[2]]);
-            const bw = get_value(sim_p.states[s_expr[3]]);
-            const clk = get_value(sim_p.states[s_expr[4]]);
+            const bw      = get_value(sim_p.states[s_expr[3]]);
+            const clk     = get_value(sim_p.states[s_expr[4]]);
 
             let bw_type = 'word';
             if (bw == 1)
@@ -274,12 +274,12 @@ export function mem_rvpipe_register(sim_p: Simulator): Simulator
         types:       ['E', 'E', 'E', 'E', 'E'],
         operation:   function (s_expr: string[]): void
         {
-            const addr_val = get_value(sim_p.states[s_expr[1]]) >>> 0;
+            const addr_val   = get_value(sim_p.states[s_expr[1]]) >>> 0;
             let address: any = '0x' + addr_val.toString(16);
-            const dbvalue = get_value(sim_p.states[s_expr[2]]);
-            const bw = get_value(sim_p.states[s_expr[3]]);
-            const se = get_value(sim_p.states[s_expr[4]]);
-            const clk = get_value(sim_p.states[s_expr[5]]);
+            const dbvalue    = get_value(sim_p.states[s_expr[2]]);
+            const bw         = get_value(sim_p.states[s_expr[3]]);
+            const se         = get_value(sim_p.states[s_expr[4]]);
+            const clk        = get_value(sim_p.states[s_expr[5]]);
             if (DEBUG) console.log(s_expr, 'address', address, 'dbvalue', dbvalue, 'bw', bw, 'clk', clk);
 
             let remain = get_value(sim_p.internal_states.MP_wc.write);
@@ -290,7 +290,7 @@ export function mem_rvpipe_register(sim_p: Simulator): Simulator
             {
                 remain = sim_p.events.mem[clk - 1] - 1;
             }
-            const first_time = typeof sim_p.events.mem[clk] == 'undefined';
+            const first_time      = typeof sim_p.events.mem[clk] == 'undefined';
             sim_p.events.mem[clk] = remain;
             if (remain > 0)
             {
@@ -299,12 +299,12 @@ export function mem_rvpipe_register(sim_p: Simulator): Simulator
 
             address = addr_val & 0xFFFFFFFC;
             if (DEBUG) console.log('MEM_WRITE: aligned address=0x' + address.toString(16) + ' dbvalue=0x' + (dbvalue >>> 0).toString(16) + ' bw=' + bw);
-            let value = main_memory_getvalue(sim_p.internal_states.MP,
-                                             address) ?? 0;
+            let value       = main_memory_getvalue(sim_p.internal_states.MP,
+                                                   address) ?? 0;
             let full_redraw = false;
             if (typeof value === 'undefined')
             {
-                value = 0;
+                value       = 0;
                 full_redraw = true;
                 if (DEBUG) console.log('MEM_WRITE: address 0x' + address.toString(16) + ' undefined, default 0');
             }
@@ -317,7 +317,7 @@ export function mem_rvpipe_register(sim_p: Simulator): Simulator
             value = main_memory_updatevalues(value, dbvalue, bw, (addr_val & 0x00000003));
 
             // PC
-            let origin = '';
+            let origin    = '';
             const r_value = main_memory_get_program_counter();
             if (r_value != null)
             {
@@ -325,7 +325,7 @@ export function mem_rvpipe_register(sim_p: Simulator): Simulator
             }
 
             // set memory value+source
-            const melto = {
+            const melto  = {
                 'value':           (value >>> 0),
                 'source_tracking': [origin],
                 'comments':        null,
@@ -356,8 +356,8 @@ export function mem_rvpipe_register(sim_p: Simulator): Simulator
 
             const address = '0x' + get_value(sim_p.states[s_expr[1]]).toString(16);
             const dbvalue = get_value(sim_p.states[s_expr[2]]);
-            const bw = get_value(sim_p.states[s_expr[3]]);
-            const clk = get_value(sim_p.states[s_expr[4]]);
+            const bw      = get_value(sim_p.states[s_expr[3]]);
+            const clk     = get_value(sim_p.states[s_expr[4]]);
 
             let bw_type = 'word';
             if (bw == 0)

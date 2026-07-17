@@ -30,26 +30,26 @@ import { wsweb_save_controlmemory_to_file } from './wepsim_web_api.js';
 var saveOptionHandlers = {
     'asm-save-editor': function(el, host)
     {
-        var fid = host.getAttribute('fid');
+        var fid              = host.getAttribute('fid');
         var fileNameToSaveAs = document.getElementById(fid).value;
-        var textToWrite = inputasm.getValue();
+        var textToWrite      = inputasm.getValue();
         wepsim_save_to_file(textToWrite, fileNameToSaveAs);
         inputasm.is_modified = false;
     },
     'asm-save-binary': function(el, host)
     {
-        var fid = host.getAttribute('fid');
+        var fid              = host.getAttribute('fid');
         var fileNameToSaveAs = document.getElementById(fid).value;
-        var simware = get_simware();
+        var simware          = get_simware();
         if (simware == null) return;
         var textToWrite = mp2bin(simware.mp, simware.labels_asm, simware.seg);
         wepsim_save_to_file(textToWrite, fileNameToSaveAs);
     },
     'fir-save-editor': function(el, host)
     {
-        var fid = host.getAttribute('fid');
+        var fid              = host.getAttribute('fid');
         var fileNameToSaveAs = document.getElementById(fid).value;
-        var textToWrite = inputfirm.getValue();
+        var textToWrite      = inputfirm.getValue();
         wepsim_save_to_file(textToWrite, fileNameToSaveAs);
         inputfirm.is_modified = false;
     },
@@ -184,9 +184,9 @@ export class ws_save_files extends HTMLElement
 
         var eltos = this.querySelectorAll('ws-save-files-option') ;
 
-        var o1_list = '' ;
+        var o1_list    = '' ;
         var opt_label ;
-        var elto_src = [] ;
+        var elto_src   = [] ;
         var elto_label = [] ;
         for (var i = 0; i < eltos.length; i++)
         {
@@ -209,7 +209,7 @@ export class ws_save_files extends HTMLElement
         }
 
         var o1 = '' ;
-        o1 += "<div class='card border-secondary h-100'>" +
+        o1    += "<div class='card border-secondary h-100'>" +
             "<div class='card-header border-secondary text-white bg-secondary p-1'>" +
             "  <h5 class='m-0'>" +
             "  <span class='text-white bg-secondary' data-langkey='Output file'>Output file</span>" +
@@ -245,7 +245,7 @@ export class ws_save_files extends HTMLElement
             var host = el.closest('ws-save-files');
             if (host)
             {
-                var code = el.getAttribute('data-code');
+                var code    = el.getAttribute('data-code');
                 var handler = saveOptionHandlers[code];
                 if (handler) handler(el, host);
             }
@@ -256,7 +256,7 @@ export class ws_save_files extends HTMLElement
             var host = el.closest('ws-save-files');
             if (host)
             {
-                var code = el.getAttribute('data-code');
+                var code    = el.getAttribute('data-code');
                 var handler = saveOptionHandlers[code];
                 if (handler) handler(el, host);
             }

@@ -42,7 +42,7 @@ export function wepsim_show_breakpoint_icon_list()
     {
         if (ws_info.breakpoint_icon_list[elto].type != prev_type)
         {
-            o = o + '</div>' +
+            o         = o + '</div>' +
                 "<div class='row p-1'>" +
                 "<div class='float-none text-left text-capitalize font-weight-bold col-12 border-bottom border-secondary'>" + ws_info.breakpoint_icon_list[elto].type + '</div>' +
                 '</div>' +
@@ -60,7 +60,7 @@ export function wepsim_show_breakpoint_icon_list()
         '</div>';
     onClick('breakpoint-icon-select', (el) =>
     {
-        var src = el.getAttribute('src');
+        var src       = el.getAttribute('src');
         var iconMatch = src.match(/stop_(.+)\.gif/);
         if (!iconMatch) return;
         var iconName = iconMatch[1];
@@ -278,8 +278,8 @@ export function wepsim_config_button_pretoggle_val(config_name, set_id, val_tag)
 export function wepsim_config_button_pretoggle_val2(cfg_id, value, set_id)
 {
     var optValue = get_cfg(cfg_id).split(':') ;
-    var index = optValue.indexOf(value) ;
-    var active = (index > -1) ;
+    var index    = optValue.indexOf(value) ;
+    var active   = (index > -1) ;
 
     var label_prefix = '#label' + set_id + '-' + value + '-' + active ;
     if ($(label_prefix).hasClass('active') == false)

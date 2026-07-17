@@ -96,10 +96,10 @@ export const set_ws_signals_show_inactive = (value) => ws_signals_show_inactive 
 export const set_ws_states_show_inactive = (value) => ws_states_show_inactive = value;
 
 export var simcoreui_hwui_fn = {} ;
-simcoreui_hwui_fn.summary = simcoreui_hw_summary_init ;
-simcoreui_hwui_fn.elements = simcoreui_hw_elements_init ; // simulated
-simcoreui_hwui_fn.signals = simcoreui_hw_signals_init ; // simulation
-simcoreui_hwui_fn.states = simcoreui_hw_states_init ; // simulation
+simcoreui_hwui_fn.summary   = simcoreui_hw_summary_init ;
+simcoreui_hwui_fn.elements  = simcoreui_hw_elements_init ; // simulated
+simcoreui_hwui_fn.signals   = simcoreui_hw_signals_init ; // simulation
+simcoreui_hwui_fn.states    = simcoreui_hw_states_init ; // simulation
 simcoreui_hwui_fn.behaviors = simcoreui_hw_behaviors_init ; // simulation
 
 export function simcoreui_init_hw(div_name, components_arr)
@@ -114,7 +114,7 @@ export function simcoreui_init_hw(div_name, components_arr)
     }
 
     // build HTML...
-    var o = '' ;
+    var o      = '' ;
     var framed = (components_arr.length > 1) ;
     for (var i = 0; i < components_arr.length; i++)
     {
@@ -156,7 +156,7 @@ export function simcoreui_init_hw(div_name, components_arr)
             return ;
 
         var pid = e.target.getAttribute('aria-describedby') ;
-        var p = $('#' + pid).html() ;
+        var p   = $('#' + pid).html() ;
 
         var elto_type = e.currentTarget.dataset.hwclass ;
         switch (elto_type)
@@ -200,7 +200,7 @@ export function simcoreui_hw_summary_init(ahw, framed)
 {
     // card with list
     var o = '' ;
-    o += '<div class="card m-2">' +
+    o    += '<div class="card m-2">' +
         '    <div class="card-header bg-tertiary border border-tertiary p-2">' +
         '      <h5 class="card-title">' +
         '        <span class="row">' +
@@ -242,7 +242,7 @@ export function simcoreui_hw_signals_init(ahw, framed)
     for (var elto in ahw.signals)
     {
         elto_c = 'hw_signal_strong_' + elto ;
-        e = 'signal ' + elto ; // simcoreui_hw_signals_popup(ahw.signals, elto) ;
+        e      = 'signal ' + elto ; // simcoreui_hw_signals_popup(ahw.signals, elto) ;
 
         c += '<span class="' + elto_c + ' s-ina col fw-normal">' +
             '<a href="#" id="hw_signal_tt_' + elto + '" ' +
@@ -336,7 +336,7 @@ export function simcoreui_hw_signals_popup(ahw_signals, elto)
     }
 
     // value
-    var elto_v = ahw_signals[elto].value ;
+    var elto_v  = ahw_signals[elto].value ;
     var elto_dv = ahw_signals[elto].default_value ;
 
     // v != dv
@@ -344,7 +344,7 @@ export function simcoreui_hw_signals_popup(ahw_signals, elto)
         's-ina col fw-normal' ;
 
     // value (hex)
-    elto_v = '0x' + elto_v.toString(16) ;
+    elto_v  = '0x' + elto_v.toString(16) ;
     elto_dv = '0x' + elto_dv.toString(16) ;
 
     e = '<span style=\'text-align:left\'>' +
@@ -379,7 +379,7 @@ export function simcoreui_hw_signals_update(ahw, framed)
     {
         e = '' ; // simcoreui_hw_signals_popup(ahw.signals, elto) ;
 
-        var id_tt = 'hw_signal_tt_' + elto ;
+        var id_tt     = 'hw_signal_tt_' + elto ;
         var id_strong = 'hw_signal_strong_' + elto ;
 
         // reset
@@ -389,7 +389,7 @@ export function simcoreui_hw_signals_update(ahw, framed)
         $('.' + id_strong).show() ;
 
         // set
-        elto_v = ahw.signals[elto].value ;
+        elto_v  = ahw.signals[elto].value ;
         elto_dv = ahw.signals[elto].default_value ;
         if (elto_v == elto_dv)
         {
@@ -419,7 +419,7 @@ export function simcoreui_hw_states_init(ahw, framed)
     for (var elto in ahw.states)
     {
         elto_c = 'hw_state_strong_' + elto ;
-        e = 'state ' + elto ; // simcoreui_hw_states_popup(ahw.states, elto) ;
+        e      = 'state ' + elto ; // simcoreui_hw_states_popup(ahw.states, elto) ;
 
         c += '<span class="' + elto_c + ' t-ina col fw-normal">' +
             '<a href="#" ' +
@@ -519,7 +519,7 @@ export function simcoreui_hw_states_popup(ahw_states, elto)
     }
 
     // get value and default value
-    var elto_v = value_toString(ahw_states[elto].value) ;
+    var elto_v  = value_toString(ahw_states[elto].value) ;
     var elto_dv = value_toString(ahw_states[elto].default_value) ;
 
     // v != dv
@@ -573,7 +573,7 @@ export function simcoreui_hw_states_update(ahw)
         // popup
         e = '' ; // simcoreui_hw_states_popup(ahw.states, elto) ;
 
-        id_tt = 'hw_state_tt_' + elto ;
+        id_tt     = 'hw_state_tt_' + elto ;
         id_strong = 'hw_state_strong_' + elto ;
 
         // reset
@@ -583,7 +583,7 @@ export function simcoreui_hw_states_update(ahw)
         $('.' + id_strong).attr('class', 'col-auto fw-bold ' + id_strong) ;
 
         // set if equal
-        elto_v = value_toString(ahw.states[elto].value) ;
+        elto_v  = value_toString(ahw.states[elto].value) ;
         elto_dv = value_toString(ahw.states[elto].default_value) ;
         if (elto_v == elto_dv)
         {
@@ -706,7 +706,7 @@ export function simcoreui_hw_elements_init(ahw, framed)
         for (var j = 0; j < ahw.elements_hash.by_belong[b].length; j++)
         {
             // new row
-            var elto = ahw.elements_hash.by_belong[b][j] ;
+            var elto      = ahw.elements_hash.by_belong[b][j] ;
             var elto_path = ahw.sim_short_name + ':' + elto.key ;
 
             // 1) name
@@ -725,10 +725,10 @@ export function simcoreui_hw_elements_init(ahw, framed)
             for (i = 0; i < elto.states_inputs.length; i++)
             {
                 state_ref_orig = elto.states[elto.states_inputs[i]].ref ;
-                state_ref = state_ref_orig.split('/')[0] ;
+                state_ref      = state_ref_orig.split('/')[0] ;
 
                 elto_c = 'hw_state_strong_' + state_ref ;
-                p = 'state ' + state_ref; // simcoreui_hw_states_popup(ahw.states, state_ref) ;
+                p      = 'state ' + state_ref; // simcoreui_hw_states_popup(ahw.states, state_ref) ;
 
                 o += '<span class="' + elto_c + ' t-ina col fw-normal">' +
                     '<a href="#" ' +
@@ -750,7 +750,7 @@ export function simcoreui_hw_elements_init(ahw, framed)
                 state_ref = elto.states[elto.states_outputs[i]].ref ;
 
                 elto_c = 'hw_state_strong_' + state_ref ;
-                p = 'state ' + state_ref ; // simcoreui_hw_states_popup(ahw.states, state_ref) ;
+                p      = 'state ' + state_ref ; // simcoreui_hw_states_popup(ahw.states, state_ref) ;
 
                 o += '<span class="' + elto_c + ' t-ina col fw-normal">' +
                     '<a href="#" ' +
@@ -772,7 +772,7 @@ export function simcoreui_hw_elements_init(ahw, framed)
                 var signal_ref = elto.signals[es].ref ;
 
                 elto_c = 'hw_signal_strong_' + signal_ref ;
-                var e = 'signal ' + signal_ref ; // simcoreui_hw_signals_popup(ahw.signals, signal_ref) ;
+                var e  = 'signal ' + signal_ref ; // simcoreui_hw_signals_popup(ahw.signals, signal_ref) ;
 
                 // value
                 o += '<span class="' + elto_c + ' s-ina col fw-normal">' +

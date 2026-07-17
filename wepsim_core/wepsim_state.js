@@ -30,7 +30,7 @@ import { ws_info } from '../sim_core/sim_adt_core.js';
 export function wepsim_state_get_clk ()
 {
     var reg_maddr = get_value(simhw_sim_state('REG_MICROADDR')) ;
-    var reg_clk = get_value(simhw_sim_state('CLK')) ;
+    var reg_clk   = get_value(simhw_sim_state('CLK')) ;
     var timestamp = new Date().getTime() ;
 
     return {
@@ -52,7 +52,7 @@ export function wepsim_state_history_reset ()
 
 export function wepsim_state_history_add ()
 {
-    var ret = wepsim_state_get_clk() ;
+    var ret       = wepsim_state_get_clk() ;
     var state_obj = simcore_simstate_current2state() ;
 
     ret.content = simcore_simstate_state2checklist(state_obj, '') ;

@@ -1,0 +1,13 @@
+diff --git a/node_modules/eslint-plugin-align-assignments/lib/rules/align-assignments.js b/node_modules/eslint-plugin-align-assignments/lib/rules/align-assignments.js
+index 4f2ab9c..36087d9 100644
+--- a/node_modules/eslint-plugin-align-assignments/lib/rules/align-assignments.js
++++ b/node_modules/eslint-plugin-align-assignments/lib/rules/align-assignments.js
+@@ -19,7 +19,7 @@ module.exports = {
+   create(context) {
+     const { options }  = context;
+     const requiresOnly = options && options.length > 0 && options[0].requiresOnly;
+-    const sourceCode   = context.getSourceCode();
++    const sourceCode   = typeof context.getSourceCode === 'function' ? context.getSourceCode() : context.sourceCode;
+     const groups       = [];
+     let previousNode;
+ 

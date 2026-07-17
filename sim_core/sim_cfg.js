@@ -173,7 +173,7 @@ export function reset_cfg_values ()
 export function upgrade_cfg ()
 {
     var wscfg = get_primary_cfg() ;
-    var item = null ;
+    var item  = null ;
 
     // repair old broken fields
     for (item in wscfg)
@@ -346,10 +346,10 @@ export function get_primary_cfg ()
     if (is_mobile())
     {
         wscfg.NOTIF_delay.value = 2000 ;
-        wscfg.ICON_theme.value = 'cat1' ;
-        wscfg.CPUCU_size.value = 7 ;
-        wscfg.C1C2_size.value = 14 ;
-        wscfg.ws_skin_ui.value = 'compact' ;
+        wscfg.ICON_theme.value  = 'cat1' ;
+        wscfg.CPUCU_size.value  = 7 ;
+        wscfg.C1C2_size.value   = 14 ;
+        wscfg.ws_skin_ui.value  = 'compact' ;
     }
 
     return wscfg ;
@@ -369,21 +369,21 @@ export function set_secondary_cfg ()
 
     if (dbg_delay < 100)
     {
-        cfg_show_rf_delay = 350 ;
-        cfg_show_eltos_delay = 350 ;
-        cfg_show_main_memory_delay = 450 ;
+        cfg_show_rf_delay             = 350 ;
+        cfg_show_eltos_delay          = 350 ;
+        cfg_show_main_memory_delay    = 450 ;
         cfg_show_control_memory_delay = 360 ;
-        cfg_show_dbg_ir_delay = 300 ;
-        cfg_show_rf_refresh_delay = 120 ;
+        cfg_show_dbg_ir_delay         = 300 ;
+        cfg_show_rf_refresh_delay     = 120 ;
     }
     else
     {
-        cfg_show_rf_delay = 100 ;
-        cfg_show_eltos_delay = 100 ;
-        cfg_show_main_memory_delay = 150 ;
+        cfg_show_rf_delay             = 100 ;
+        cfg_show_eltos_delay          = 100 ;
+        cfg_show_main_memory_delay    = 150 ;
         cfg_show_control_memory_delay = 120 ;
-        cfg_show_dbg_ir_delay = 100 ;
-        cfg_show_rf_refresh_delay = 30 ;
+        cfg_show_dbg_ir_delay         = 100 ;
+        cfg_show_rf_refresh_delay     = 30 ;
     }
 
     cfg_show_asmdbg_pc_delay = 50 ;
@@ -434,7 +434,7 @@ export function cfgset_load (cfg_name)
     {
         jobj = $.getJSON({ 'url': ws_cfg_hash[cfg_name], 'async': false }) ;
         jobj = JSON.parse(jobj.responseText) ;
-        ret = cfgset_import(jobj) ;
+        ret  = cfgset_import(jobj) ;
     }
     catch (e)
     {

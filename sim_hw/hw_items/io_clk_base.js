@@ -95,7 +95,7 @@ export function io_clk_base_register (sim_p)
      *  States - IO parameters
      */
 
-    sim_p.internal_states.io_int_factory = [] ;
+    sim_p.internal_states.io_int_factory    = [] ;
     sim_p.internal_states.io_int_factory[0] = { period: { value: 0 }, probability: { value: 0.5 }, accumulated: { value: 0 }, active: { value: false } } ;
     sim_p.internal_states.io_int_factory[1] = { period: { value: 0 }, probability: { value: 0.5 }, accumulated: { value: 0 }, active: { value: false } } ;
     sim_p.internal_states.io_int_factory[2] = { period: { value: 0 }, probability: { value: 0.5 }, accumulated: { value: 0 }, active: { value: false } } ;
@@ -180,9 +180,9 @@ export function io_clk_base_register (sim_p)
         operation:   function (s_expr)
         {
             var bus_ab = get_value(sim_p.states[s_expr[1]]) ;
-            var iosr = get_value(sim_p.states[s_expr[3]]) ;
-            var iocr = get_value(sim_p.states[s_expr[4]]) ;
-            var iodr = get_value(sim_p.states[s_expr[5]]) ;
+            var iosr   = get_value(sim_p.states[s_expr[3]]) ;
+            var iocr   = get_value(sim_p.states[s_expr[4]]) ;
+            var iodr   = get_value(sim_p.states[s_expr[5]]) ;
 
             if (bus_ab == IOSR_ID)
                 set_value(sim_p.states[s_expr[2]], iosr);
@@ -196,9 +196,9 @@ export function io_clk_base_register (sim_p)
             var verbal = '' ;
 
             var bus_ab = get_value(sim_p.states[s_expr[1]]) ;
-            var iosr = get_value(sim_p.states[s_expr[3]]) ;
-            var iocr = get_value(sim_p.states[s_expr[4]]) ;
-            var iodr = get_value(sim_p.states[s_expr[5]]) ;
+            var iosr   = get_value(sim_p.states[s_expr[3]]) ;
+            var iocr   = get_value(sim_p.states[s_expr[4]]) ;
+            var iodr   = get_value(sim_p.states[s_expr[5]]) ;
 
             if (bus_ab == IOSR_ID)
                 verbal = 'I/O device read at IOSR of value ' + iosr + '. ' ;

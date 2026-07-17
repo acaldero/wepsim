@@ -53,7 +53,7 @@ export function wepsim_notify_show_notify (ntf_title, ntf_message, ntf_type, ntf
 
     // div configuration...
     var btn1_close_class = 'btn-close border border-secondary float-end alert-dismissible' ;
-    var ale1_div_class = 'alert alert-' + ntf_type + ' shadow border border-tertiary' ;
+    var ale1_div_class   = 'alert alert-' + ntf_type + ' shadow border border-tertiary' ;
 
     // create the alert div
     var btn1 = $('<button type="button" class="' + btn1_close_class + '" data-bind="click" data-action="notify-close">') ;
@@ -72,19 +72,19 @@ export function wepsim_notify_show_notify (ntf_title, ntf_message, ntf_type, ntf
 
     // audio
     var msg = 'Notification type ' + ntf_type + ' and title ' + ntf_title + ':' + ntf_message + '. ' ;
-    msg = $('</p>').html(msg).text() ;
+    msg     = $('</p>').html(msg).text() ;
     simcore_voice_speak(msg) ;
 }
 
 export function wepsim_notify_do_notify (ntf_title, ntf_message, ntf_type, ntf_delay)
 {
     var title_text = ntf_title ;
-    var mesg_text = ntf_message ;
+    var mesg_text  = ntf_message ;
 
     if (typeof document != 'undefined')
     {
         title_text = $('<p>').html(ntf_title).text() ;
-        mesg_text = $('<p>').html(ntf_message).text() ;
+        mesg_text  = $('<p>').html(ntf_message).text() ;
     }
 
     // add to notifications

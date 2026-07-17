@@ -49,7 +49,7 @@ export function io_screen_base_register (sim_p)
             }
 
             var sim_screen = sim_p.internal_states.screen_content ;
-            var sim_lines = sim_screen.trim().split('\n') ;
+            var sim_lines  = sim_screen.trim().split('\n') ;
             for (var i = 0; i < sim_lines.length; i++)
             {
                 let value = sim_lines[i] ;
@@ -87,8 +87,8 @@ export function io_screen_base_register (sim_p)
         get_state: function (line)
         {
             var sim_screen = sim_p.internal_states.screen_content ;
-            var sim_lines = sim_screen.trim().split('\n') ;
-            var index = parseInt(line) ;
+            var sim_lines  = sim_screen.trim().split('\n') ;
+            var index      = parseInt(line) ;
             if (typeof sim_lines[index] != 'undefined')
                 return sim_lines[index] ;
 
@@ -158,8 +158,8 @@ export function io_screen_base_register (sim_p)
         operation:   function (s_expr)
         {
             var bus_ab = get_value(sim_p.states[s_expr[1]]) ;
-            var ddr = get_value(sim_p.states[s_expr[3]]) ;
-            var dsr = get_value(sim_p.states[s_expr[4]]) ;
+            var ddr    = get_value(sim_p.states[s_expr[3]]) ;
+            var dsr    = get_value(sim_p.states[s_expr[4]]) ;
 
             if (bus_ab == DDR_ID)
                 set_value(sim_p.states[s_expr[2]], ddr) ;
@@ -171,8 +171,8 @@ export function io_screen_base_register (sim_p)
             var verbal = '' ;
 
             var bus_ab = get_value(sim_p.states[s_expr[1]]) ;
-            var ddr = get_value(sim_p.states[s_expr[3]]) ;
-            var dsr = get_value(sim_p.states[s_expr[4]]) ;
+            var ddr    = get_value(sim_p.states[s_expr[3]]) ;
+            var dsr    = get_value(sim_p.states[s_expr[4]]) ;
 
             if (bus_ab == DDR_ID)
                 verbal = 'Try to read from the screen the DDR value ' + ddr + '. ' ;
@@ -194,8 +194,8 @@ export function io_screen_base_register (sim_p)
             }
 
             var bus_db = get_value(sim_p.states[s_expr[2]]) ;
-            var clk = get_value(sim_p.states[s_expr[5]]) ;
-            var ch = String.fromCharCode(bus_db);
+            var clk    = get_value(sim_p.states[s_expr[5]]) ;
+            var ch     = String.fromCharCode(bus_db);
 
             if (ch == String.fromCharCode(0x0007)) // '\a'
             {
@@ -221,8 +221,8 @@ export function io_screen_base_register (sim_p)
 
             var bus_ab = get_value(sim_p.states[s_expr[1]]) ;
             var bus_db = get_value(sim_p.states[s_expr[2]]) ;
-            var clk = get_value(sim_p.states[s_expr[5]]) ;
-            var ch = String.fromCharCode(bus_db);
+            var clk    = get_value(sim_p.states[s_expr[5]]) ;
+            var ch     = String.fromCharCode(bus_db);
 
             if (bus_ab == DDR_ID)
             {

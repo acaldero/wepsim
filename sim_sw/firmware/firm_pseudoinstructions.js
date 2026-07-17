@@ -118,19 +118,19 @@ export function firm_pseudoinstructions_read (context)
     while (! frm_isToken(context, '}'))
     {
         var pseudoInstructionAux = {} ;
-        var pseudoInitial = {} ;
-        pseudoInitial.signature = '' ;
-        pseudoInitial.name = '' ;
-        pseudoInitial.fields = [] ;
-        pseudoInitial.name = frm_getToken(context) ;
-        pseudoInitial.signature = pseudoInitial.signature + frm_getToken(context) + ',' ;
+        var pseudoInitial        = {} ;
+        pseudoInitial.signature  = '' ;
+        pseudoInitial.name       = '' ;
+        pseudoInitial.fields     = [] ;
+        pseudoInitial.name       = frm_getToken(context) ;
+        pseudoInitial.signature  = pseudoInitial.signature + frm_getToken(context) + ',' ;
 
         frm_nextToken(context);
         while (! frm_isToken(context, '{'))
         {
-            var pseudoFieldAux = {};
-            pseudoFieldAux.name = '' ;
-            pseudoFieldAux.type = '' ;
+            var pseudoFieldAux      = {};
+            pseudoFieldAux.name     = '' ;
+            pseudoFieldAux.type     = '' ;
             pseudoFieldAux.indirect = false ;
 
             // *(name)*=type
@@ -189,13 +189,13 @@ export function firm_pseudoinstructions_read (context)
         }
 
         frm_nextToken(context);
-        pseudoInitial.signature = pseudoInitial.signature.substr(0, pseudoInitial.signature.length - 1).replace(/num/g, 'imm');
+        pseudoInitial.signature      = pseudoInitial.signature.substr(0, pseudoInitial.signature.length - 1).replace(/num/g, 'imm');
         pseudoInstructionAux.initial = pseudoInitial;
 
         // new ".finish" field in "pseudo" element
-        var pseudoFinishAux = {} ;
+        var pseudoFinishAux       = {} ;
         pseudoFinishAux.signature = '' ;
-        pseudoFinishAux.source = '' ;
+        pseudoFinishAux.source    = '' ;
 
         // read ".finish" field...
         var inStart = 0 ;
@@ -218,14 +218,14 @@ export function firm_pseudoinstructions_read (context)
             else inStart++ ;
 
             pseudoFinishAux.signature = pseudoFinishAux.signature + tok + ' ' ;
-            pseudoFinishAux.source = pseudoFinishAux.source + tok + ' ' ;
+            pseudoFinishAux.source    = pseudoFinishAux.source + tok + ' ' ;
 
             frm_nextToken(context) ;
         }
 
-        pseudoInstructionAux.finish = pseudoFinishAux ;
+        pseudoInstructionAux.finish           = pseudoFinishAux ;
         pseudoInstructionAux.finish.signature = pseudoInstructionAux.finish.signature.replace(';', ' ') ;
-        pseudoInstructionAux.finish.source = pseudoInstructionAux.finish.source.replace(';', '\n') ;
+        pseudoInstructionAux.finish.source    = pseudoInstructionAux.finish.source.replace(';', '\n') ;
         context.pseudoInstructions.push(pseudoInstructionAux) ;
         frm_nextToken(context) ;
     }

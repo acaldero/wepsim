@@ -170,7 +170,7 @@ var wsweb_quickcfg = {
 
             var optValue ;
             var skinUser = get_cfg('ws_skin_user') ;
-            optValue = (skinUser.split(':')[1] == 'on') ? true : false ;
+            optValue     = (skinUser.split(':')[1] == 'on') ? true : false ;
             $('#label16-' + optValue).button('toggle') ;
             optValue = (skinUser.split(':')[3] == 'on') ? true : false ;
             $('#label17-' + optValue).button('toggle') ;
@@ -268,12 +268,12 @@ var wsweb_quickcfg = {
         val_trigger: 'click',
         fun_content: function(shownEvent)
         {
-            var got = get_cfg('CPUCU_show_graph') ;
-            var show_text = '' ;
+            var got        = get_cfg('CPUCU_show_graph') ;
+            var show_text  = '' ;
             var show_graph = '' ;
             if (got)
                 show_graph = 'show' ;
-            else show_text = 'show' ;
+            else show_text  = 'show' ;
 
             var o = "<div class='container mt-1 p-1'>" +
                 "<div class='row'>" +
@@ -499,7 +499,7 @@ export function quickcfg_html_btntoggle(label2, colwidth2)
 export function quickcfg_html_onoff(id2, arial2, nm_off2, nm_on2, action_name)
 {
     var dataAction = action_name;
-    var dataKey = action_name || id2;
+    var dataKey    = action_name || id2;
     return "<div class='col-12 p-0 btn-group btn-group-toggle d-flex' data-bs-toggle='buttons'>" +
         "    <label id='label" + id2 + "-false' " +
         "           class='btn btn-sm w-50 btn-outline-secondary p-1 fw-bold' " +

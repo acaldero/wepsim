@@ -56,10 +56,10 @@ export function wsasm_prepare_oc (elto, aux)
     }
 
     // copy start/stop from ir.default_eltos by default
-    var xr_info = simhw_sim_ctrlStates_get() ;
+    var xr_info              = simhw_sim_ctrlStates_get() ;
     elto.oc.asm_start_bit[0] = parseInt(xr_info.ir.default_eltos.oc.begin) ;
     elto.oc.asm_stop_bit [0] = parseInt(xr_info.ir.default_eltos.oc.end) ;
-    elto.oc.asm_n_bits = elto.oc.asm_stop_bit[0] - elto.oc.asm_start_bit[0] + 1 ;
+    elto.oc.asm_n_bits       = elto.oc.asm_stop_bit[0] - elto.oc.asm_start_bit[0] + 1 ;
 
     // IF firmware v1 -> return elto...
     if (typeof aux.fields_all == 'undefined')
@@ -108,16 +108,16 @@ export function wsasm_prepare_eoc (elto, aux)
     }
 
     // copy start/stop from ir.default_eltos by default
-    var xr_info = simhw_sim_ctrlStates_get() ;
+    var xr_info               = simhw_sim_ctrlStates_get() ;
     elto.eoc.asm_start_bit[0] = parseInt(xr_info.ir.default_eltos.eoc[0].begin) ;
     elto.eoc.asm_stop_bit [0] = parseInt(xr_info.ir.default_eltos.eoc[0].end) ;
-    elto.eoc.asm_n_bits = elto.eoc.asm_stop_bit[0] - elto.eoc.asm_start_bit[0] + 1 ;
+    elto.eoc.asm_n_bits       = elto.eoc.asm_stop_bit[0] - elto.eoc.asm_start_bit[0] + 1 ;
 
     // IF empty 'eoc' -> return elto...
     if (0 == elto.eoc.value.length)
     {
         elto.eoc.asm_start_bit[0] = elto.eoc.asm_stop_bit[0] + 1 ; // in order to skip empty eoc
-        elto.eoc.asm_n_bits = 0 ;
+        elto.eoc.asm_n_bits       = 0 ;
         return elto ;
     }
 
@@ -160,8 +160,8 @@ export function wsasm_prepare_context_firmware (context, CU_data)
     let start_bit ;
     let stop_bit ;
     let lower_bit = 0 ;
-    let w_n_bits = 0 ;
-    let w_index = 0 ;
+    let w_n_bits  = 0 ;
+    let w_index   = 0 ;
     let n_bits ;
     var om ;
 
@@ -173,17 +173,17 @@ export function wsasm_prepare_context_firmware (context, CU_data)
         // elto: initial fields...
         elto = {} ;
 
-        elto.name = aux.name.toLowerCase() ;
+        elto.name                = aux.name.toLowerCase() ;
         elto.isPseudoinstruction = false ;
-        elto.nwords = parseInt(aux.nwords) ;
-        elto.oc = {} ; // computed later
-        elto.eoc = {} ; // computed later
-        elto.fields = [] ; // computed later
-        elto.signature = aux.signature ;
-        elto.signature_type_str = aux.name ;
-        elto.signature_type_arr = [] ; // computed later
-        elto.signature_size_str = '' ; // computed later
-        elto.signature_size_arr = [] ; // computed later
+        elto.nwords              = parseInt(aux.nwords) ;
+        elto.oc                  = {} ; // computed later
+        elto.eoc                 = {} ; // computed later
+        elto.fields              = [] ; // computed later
+        elto.signature           = aux.signature ;
+        elto.signature_type_str  = aux.name ;
+        elto.signature_type_arr  = [] ; // computed later
+        elto.signature_size_str  = '' ; // computed later
+        elto.signature_size_arr  = [] ; // computed later
 
         if (typeof aux.signatureUser !== 'undefined')
         {
@@ -192,8 +192,8 @@ export function wsasm_prepare_context_firmware (context, CU_data)
 
         // tooltip with details...
         elto['mc-start'] = aux['mc-start'] ;
-        elto.microcode = aux.microcode ;
-        elto.help = aux.help ;
+        elto.microcode   = aux.microcode ;
+        elto.help        = aux.help ;
 
         // fields: oc + eoc
         wsasm_prepare_oc (elto, aux) ;
@@ -210,7 +210,7 @@ export function wsasm_prepare_context_firmware (context, CU_data)
         {
             // initial values...
             start_bit = [] ;
-            stop_bit = [] ;
+            stop_bit  = [] ;
 
             if ('forwards' == context.options.field_multipart_order)
             {
@@ -224,7 +224,7 @@ export function wsasm_prepare_context_firmware (context, CU_data)
             {
                 for (let m = 0; m < elto.fields[j].bits_start.length; m++)
                 {
-                    om = elto.fields[j].bits_start.length - 1 - m ;
+                    om           = elto.fields[j].bits_start.length - 1 - m ;
                     start_bit[m] = parseInt(elto.fields[j].bits_start[om]) ;
                     stop_bit[m]  = parseInt(elto.fields[j].bits_stop[om]) ;
                 }
@@ -245,7 +245,7 @@ export function wsasm_prepare_context_firmware (context, CU_data)
         elto.signature_type_str = base_replaceAll(elto.signature_type_str, 'inm', 'imm') ; // TODO: temporal fix
         elto.signature_size_str = elto.signature_size_arr.join(' ') ;
         elto.signature_type_arr = elto.signature_type_str.split(' ') ;
-        elto.signature_user = wsasm_make_signature_user(elto, '') ;
+        elto.signature_user     = wsasm_make_signature_user(elto, '') ;
 
         // add elto to firmware
         if (typeof context.firmware[elto.name] === 'undefined')
@@ -269,7 +269,7 @@ export function wsasm_prepare_context_pseudoinstructions (context, CU_data)
     for (let i = 0; i < CU_data.pseudoInstructions.length; i++)
     {
         initial = CU_data.pseudoInstructions[i].initial ;
-        finish = CU_data.pseudoInstructions[i].finish ;
+        finish  = CU_data.pseudoInstructions[i].finish ;
 
         if (typeof context.pseudoInstructions[initial.name] === 'undefined')
         {
@@ -285,12 +285,12 @@ export function wsasm_prepare_context_pseudoinstructions (context, CU_data)
         // initial elto fields...
         elto = {} ;
 
-        elto.name = initial.name ;
+        elto.name                = initial.name ;
         elto.isPseudoinstruction = true ;
-        elto.fields = [] ;
-        elto.finish = finish.signature ;
-        elto.signature = initial.signature ;
-        elto.signature_type_str = initial.signature.replace(/,/g, ' ') ;
+        elto.fields              = [] ;
+        elto.finish              = finish.signature ;
+        elto.signature           = initial.signature ;
+        elto.signature_type_str  = initial.signature.replace(/,/g, ' ') ;
 
         if (typeof initial.fields !== 'undefined') elto.fields = initial.fields ;
 
@@ -299,7 +299,7 @@ export function wsasm_prepare_context_pseudoinstructions (context, CU_data)
         elto.signature_type_arr = elto.signature_type_str.split(' ') ;
         elto.signature_size_arr = Array(elto.signature_type_arr.length).fill(WORD_BYTES * BYTE_LENGTH);
         elto.signature_size_str = elto.signature_size_arr.join(' ') ;
-        elto.signature_user = wsasm_make_signature_user(elto, '') ;
+        elto.signature_user     = wsasm_make_signature_user(elto, '') ;
 
         // pseudoinstructions occupy at least 1 word (overridden in find_candidates if expand to more)
         elto.nwords = 1 ;
@@ -321,8 +321,8 @@ export function wsasm_prepare_registers (context, CU_data)
     {
         cu_data_rf_i = CU_data.registers[key] ;
 
-        context_rf_i = {} ;
-        context_rf_i.name = key ;
+        context_rf_i           = {} ;
+        context_rf_i.name      = key ;
         context_rf_i.registers = [] ;
         for (let j = 0; j < cu_data_rf_i.registers.length; j++)
         {
@@ -332,7 +332,7 @@ export function wsasm_prepare_registers (context, CU_data)
             }
             for (var k = 0; k < cu_data_rf_i.registers[j].length; k++)
             {
-                assoc_name = cu_data_rf_i.registers[j][k] ;
+                assoc_name                         = cu_data_rf_i.registers[j][k] ;
                 context_rf_i.registers[assoc_name] = j ;
             }
         }
@@ -356,22 +356,22 @@ export function wsasm_prepare_context (CU_data, options)
     }
 
     // Initialize context...
-    var context = {} ;
-    context.line = 1 ; // here
-    context.error = null ;
-    context.i = 0 ; // here
-    context.text = '' ; // here
-    context.tokens = [] ;
-    context.token_types = [] ;
-    context.t = 0 ; // here
-    context.comments = [] ;
-    context.newlines = [] ;
-    context.registers = {} ; // here
-    context.firmware = {} ; // here
+    var context                = {} ;
+    context.line               = 1 ; // here
+    context.error              = null ;
+    context.i                  = 0 ; // here
+    context.text               = '' ; // here
+    context.tokens             = [] ;
+    context.token_types        = [] ;
+    context.t                  = 0 ; // here
+    context.comments           = [] ;
+    context.newlines           = [] ;
+    context.registers          = {} ; // here
+    context.firmware           = {} ; // here
     context.pseudoInstructions = []; // here
-    context.stackRegister = null ;
-    context.metadata = CU_data.metadata ;
-    context.options = {} ; // here
+    context.stackRegister      = null ;
+    context.metadata           = CU_data.metadata ;
+    context.options            = {} ; // here
 
     // Fill the assembler configuration
     context.options = wsasm_expand_options(options) ;
@@ -390,7 +390,7 @@ export function wsasm_prepare_context (CU_data, options)
     context = wsasm_prepare_registers(context, CU_data) ;
 
     // Fill firmware
-    var xr_info = simhw_sim_ctrlStates_get() ;
+    var xr_info             = simhw_sim_ctrlStates_get() ;
     context.oc_size_default = parseInt(xr_info.ir.default_eltos.oc.length) ;
 
     context = wsasm_prepare_context_firmware(context, CU_data) ;

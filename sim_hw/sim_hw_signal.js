@@ -42,17 +42,17 @@ export function firedep_to_fireorder (jit_fire_dep)
     var signal_obj ;
     var allfireto ;
     var ndep ;
-    var sid = 0 ;
+    var sid         = 0 ;
 
     // build dependency graph
     jit_fire_order = [] ;
-    jit_fire_ndep = [] ;
+    jit_fire_ndep  = [] ;
     for (var sig in all_signals)
     {
         // add "id" field to each signal
-        signal_obj = simhw_sim_signal(sig) ;
+        signal_obj    = simhw_sim_signal(sig) ;
         signal_obj.id = sid ;
-        sid = sid + 1 ;
+        sid           = sid + 1 ;
 
         // (1/2) no signal related to signal (sig) -> add to jit_fire_order
         if (typeof jit_fire_dep[sig] == 'undefined')
@@ -62,7 +62,7 @@ export function firedep_to_fireorder (jit_fire_dep)
         }
 
         // compute # fire from other signals (ndep) + all behaviors fire signal
-        ndep = 0 ;
+        ndep      = 0 ;
         allfireto = false ; // all behaviors of (sigorg) fire signal (sig) <- false
         for (var sigorg in jit_fire_dep[sig])
         {
@@ -173,7 +173,7 @@ export function signal_fireL ()
 export function signal_reset_and_apply (sim_p_signals, mc_elto)
 {
     // var signal_obj = null ;
-    var all_signals = Object.entries(sim_p_signals) ;
+    var all_signals    = Object.entries(sim_p_signals) ;
     var active_signals = Object.entries(get_value(mc_elto)) ;
 
     // set all signals to default value

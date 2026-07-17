@@ -108,7 +108,7 @@ export function showhideAsmElements()
 
     for (var tli = 0; tli < tlabel.length; tli++)
     {
-        var label_name = 'SHOWCODE_' + tlabel[tli] ;
+        var label_name  = 'SHOWCODE_' + tlabel[tli] ;
         var column_name = 'table .asm_' + tlabel[tli] ;
         var column_show = get_cfg(label_name) ;
 
@@ -125,7 +125,7 @@ export function showhideAsmHeader()
     for (var tli = 0; tli < tlabel.length; tli++)
     {
         var label_name = 'SHOWCODE_' + tlabel[tli] ;
-        var btn_show = get_cfg(label_name) ;
+        var btn_show   = get_cfg(label_name) ;
 
         wepsim_config_button_pretoggle(label_name, 'C' + tli) ;
     }
@@ -238,7 +238,7 @@ export function assembly2html(mp, labels, seg)
     for (l in seg)
     {
         if ('.binary' == l) continue ;
-        var laddr = '0x' + seg[l].begin.toString(16) ;
+        var laddr  = '0x' + seg[l].begin.toString(16) ;
         a2s[laddr] = l;
     }
 
@@ -258,8 +258,8 @@ export function assembly2html(mp, labels, seg)
     for (l in mp)
     {
         // get address and instruction/value
-        a = parseInt(l) ;
-        p = '0x' + a.toString(16) ;
+        a      = parseInt(l) ;
+        p      = '0x' + a.toString(16) ;
         s3_val = get_value(mp[l]) ;
 
         // <skip data segments>
@@ -281,12 +281,12 @@ export function assembly2html(mp, labels, seg)
 
         if (n_ellipsis > 0)
         {
-            o_tde = "<td class='font-monospace col-auto pb-0' " +
+            o_tde      = "<td class='font-monospace col-auto pb-0' " +
                 "    style='line-height:0.9;' align='left'></td>" ;
-            o_tdf = "<td class='font-monospace col-auto pb-0' " +
+            o_tdf      = "<td class='font-monospace col-auto pb-0' " +
                 "    style='line-height:0.9;' align='left'>" +
                 '&vellip;&vellip; &times;' + n_ellipsis + '</td>' ;
-            o += '<tr>' + o_tde + o_tdf + o_tde + o_tde + o_tdf + o_tde + o_tde + o_tdf + '</tr>' ;
+            o         += '<tr>' + o_tde + o_tdf + o_tde + o_tde + o_tdf + o_tde + o_tde + o_tdf + '</tr>' ;
             n_ellipsis = 0 ;
         }
         old_s3_val = s3_val ;
@@ -327,10 +327,10 @@ export function assembly2html_data_row(mp, l, s_label)
 {
     // data value
     var s2_instr = main_memory_getsrc(mp, l) ;
-    var s3_val = get_value(mp[l]) ;
-    var s4_hex = parseInt(s3_val).toString(16) ;
-    s4_hex = '0x' + s4_hex.padStart(1 * 8, '0') ;
-    var p = '0x' + parseInt(l).toString(16) ;
+    var s3_val   = get_value(mp[l]) ;
+    var s4_hex   = parseInt(s3_val).toString(16) ;
+    s4_hex       = '0x' + s4_hex.padStart(1 * 8, '0') ;
+    var p        = '0x' + parseInt(l).toString(16) ;
 
     // join the pieces...
     var o = "<tr id='asmdbg" + p + "'>" +
@@ -367,10 +367,10 @@ export function assembly2html_code_row(mp, l, s_label)
     // instruction
     var s1_instr = mp[l].source ;
     var s2_instr = main_memory_getsrc(mp, l) ;
-    var s3_val = get_value(mp[l]) ;
-    var s4_hex = parseInt(s3_val).toString(16) ;
-    s4_hex = '0x' + s4_hex.padStart(1 * 8, '0') ;
-    var p = '0x' + parseInt(l).toString(16) ;
+    var s3_val   = get_value(mp[l]) ;
+    var s4_hex   = parseInt(s3_val).toString(16) ;
+    s4_hex       = '0x' + s4_hex.padStart(1 * 8, '0') ;
+    var p        = '0x' + parseInt(l).toString(16) ;
 
     // mark pseudo + n-words
     if (s1_instr === '')
@@ -392,7 +392,7 @@ export function assembly2html_code_row(mp, l, s_label)
     }) ;
     // join the pieces...
     var o = '' ;
-    o += "<tr id='asmdbg" + p + "'>" +
+    o    += "<tr id='asmdbg" + p + "'>" +
         "<td class='asm_label  font-monospace col-auto collapse pb-0' " +
         "    style='line-height:0.9;' align='right' " + oclk + '>' + s_label +
         '</td>' +
@@ -432,7 +432,7 @@ export function assembly2html_code_row(mp, l, s_label)
 export function wepsim_click_asm_columns(name, lbl_id)
 {
     var label_name = 'SHOWCODE_' + name ;
-    var show_elto = get_cfg(label_name) ;
+    var show_elto  = get_cfg(label_name) ;
 
     show_elto = !show_elto ;
 
@@ -545,10 +545,10 @@ export function instruction2tooltip(mp, l)
     var wsi = get_cfg('ws_idiom') ;
 
     // prepare data: ins_quoted + firmware_reference
-    var ins_quoted = main_memory_getsrcbin(mp, l) ;
-    ins_quoted = ins_quoted.replace(/"/g, '&quot;').replace(/'/g, '&apos;') ;
+    var ins_quoted     = main_memory_getsrcbin(mp, l) ;
+    ins_quoted         = ins_quoted.replace(/"/g, '&quot;').replace(/'/g, '&apos;') ;
     var firm_reference = mp[l].firm_reference ;
-    var nwords = parseInt(mp[l].firm_reference.nwords) ;
+    var nwords         = parseInt(mp[l].firm_reference.nwords) ;
 
     // prepare data: ins_bin
     var next ;
@@ -646,11 +646,11 @@ export function fullshow_asmdbg_pc()
         return o1 ;
     }
 
-    var curr_mp = simhw_internalState('MP') ;
-    var pc_name = simhw_sim_ctrlStates_get().pc.state ;
-    var reg_pc = get_value(simhw_sim_state(pc_name)) ;
+    var curr_mp       = simhw_internalState('MP') ;
+    var pc_name       = simhw_sim_ctrlStates_get().pc.state ;
+    var reg_pc        = get_value(simhw_sim_state(pc_name)) ;
     var curr_addr_hex = '0x' + reg_pc.toString(16) ;
-    var old_addr_hex = '0x' + old_addr.toString(16) ;
+    var old_addr_hex  = '0x' + old_addr.toString(16) ;
 
     // check if assembly is loaded
     if (typeof curr_mp === 'undefined')
@@ -669,7 +669,7 @@ export function fullshow_asmdbg_pc()
     {
         for (var l in curr_mp)
         {
-            p = '0x' + l.toString(16) ;
+            p  = '0x' + l.toString(16) ;
             o1 = $('#asmdbg' + p + ' td') ;
             o1.removeClass('bg-debug-asm') ;
         }
@@ -689,7 +689,7 @@ export function fullshow_asmdbg_pc()
     // if AutoScroll is enabled...
     if (get_cfg('AS_enable'))
     {
-        var obj_byid = $('#asm_debugger_container') ;
+        var obj_byid  = $('#asm_debugger_container') ;
         var ani_delay = get_cfg('AS_delay') ;
 
         if ((typeof obj_byid !== 'undefined') &&
@@ -721,7 +721,7 @@ export function asmdbg_set_breakpoint(addr)
     }
 
     // toggle
-    var hexaddr = '0x' + addr.toString(16) ;
+    var hexaddr  = '0x' + addr.toString(16) ;
     var bp_state = wepsim_execute_toggle_breakpoint(hexaddr) ;
 
     // update ui
@@ -729,13 +729,13 @@ export function asmdbg_set_breakpoint(addr)
     if (bp_state !== true)
     {
         var icon_theme = get_cfg('ICON_theme') ;
-        inner_elto = sim_core_breakpointicon_get(icon_theme) ;
+        inner_elto     = sim_core_breakpointicon_get(icon_theme) ;
     }
 
     // update content
     $("span[rel='tooltip1']").tooltip('hide') ;
 
-    var o1 = document.getElementById('bp' + hexaddr) ;
+    var o1       = document.getElementById('bp' + hexaddr) ;
     o1.innerHTML = "<span data-bs-toggle='tooltip' rel='tooltip1' title='click to toggle breakpoint'>" +
         inner_elto +
         '</span>' ;
@@ -825,7 +825,7 @@ export function asmdbg_loadContent(asmdbg_content)
             title:   function(obj)
             {
                 $("span[rel='tooltip1']").tooltip('hide') ;
-                var l = $(obj).attr('data-l') ;
+                var l       = $(obj).attr('data-l') ;
                 var curr_mp = simhw_internalState('MP') ;
                 return instruction2tooltip(curr_mp, l) ;
             },

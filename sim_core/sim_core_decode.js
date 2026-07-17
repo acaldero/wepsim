@@ -39,9 +39,9 @@ export var control_sequences = {
 
 export function treatControlSequences (possible_value)
 {
-    var ret = {} ;
+    var ret    = {} ;
     ret.string = '' ;
-    ret.error = false ;
+    ret.error  = false ;
 
     for (var i = 0; i < possible_value.length; i++)
     {
@@ -58,7 +58,7 @@ export function treatControlSequences (possible_value)
             ret.string = i18n_get_TagFor('compiler', 'UNKNOWN ESCAPE CHAR') +
                 'Unknown escape char' +
                 " '\\" + possible_value[i] + "'" ;
-            ret.error = true ;
+            ret.error  = true ;
             return ret ;
         }
 
@@ -87,7 +87,7 @@ export function treatHTMLSequences (text_with_html)
 
     for (key in html_sequences)
     {
-        re = new RegExp(key, 'gi');
+        re             = new RegExp(key, 'gi');
         text_with_html = text_with_html.replace(re, html_sequences[key]) ;
     }
 

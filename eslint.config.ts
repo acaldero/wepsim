@@ -2,6 +2,7 @@ import js from '@eslint/js';
 import globals from 'globals';
 import stylistic from '@stylistic/eslint-plugin';
 import typescriptEslint from 'typescript-eslint';
+import alignAssignments from 'eslint-plugin-align-assignments';
 import { defineConfig } from 'eslint/config';
 
 // https://eslint.style/rules#rules
@@ -16,7 +17,7 @@ const formattingRules = {
     '@stylistic/brace-style':             ['error', 'allman'],
     '@stylistic/comma-spacing':           ['error', { before: false, after: true }],
     '@stylistic/comma-style':             ['error', 'last'],
-    '@stylistic/no-multi-spaces':         ['error'],
+    '@stylistic/no-multi-spaces':         ['error', { exceptions: { Property: true, ImportAttribute: true, VariableDeclarator: true, AssignmentExpression: true } }],
     '@stylistic/key-spacing':             ['error', { beforeColon: false, afterColon: true, 'align': 'value' }],
     '@stylistic/keyword-spacing':         ['error', { before: true, after: true }],
     '@stylistic/space-before-blocks':     ['error', 'always'],
@@ -30,6 +31,7 @@ const formattingRules = {
     '@stylistic/no-multiple-empty-lines': ['error', { max: 1, maxBOF: 0, maxEOF: 1 }],
     '@stylistic/operator-linebreak':      ['error', 'after'],
     '@stylistic/spaced-comment':          ['error', 'always'],
+    'align-assignments/align-assignments': ['error'],
 };
 
 const rules = {
@@ -70,7 +72,8 @@ export default defineConfig([
     {
         files:   ['**/*.js', '**/*.mjs'],
         plugins: {
-            '@stylistic': stylistic,
+            '@stylistic':       stylistic,
+            'align-assignments': alignAssignments,
         },
         languageOptions: {
             ecmaVersion: 'latest',
@@ -90,7 +93,8 @@ export default defineConfig([
     {
         files:   ['**/*.ts'],
         plugins: {
-            '@stylistic': stylistic,
+            '@stylistic':       stylistic,
+            'align-assignments': alignAssignments,
         },
         languageOptions: {
             parser:      typescriptEslint.parser,

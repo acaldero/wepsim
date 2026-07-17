@@ -99,12 +99,12 @@ export function io_ldm_base_register (sim_p)
          *  States - LEDM parameters
          */
 
-    sim_p.internal_states.ledm_dim = 24 ;
+    sim_p.internal_states.ledm_dim    = 24 ;
     sim_p.internal_states.ledm_neltos = Math.pow(sim_p.internal_states.ledm_dim, 2) ;
-    sim_p.internal_states.ledm_state = Array.from({ length: sim_p.internal_states.ledm_neltos }, () => ({ color: { value: 0 } })) ;
+    sim_p.internal_states.ledm_state  = Array.from({ length: sim_p.internal_states.ledm_neltos }, () => ({ color: { value: 0 } })) ;
     sim_p.internal_states.ledm_colors = colors_clone('') ;
-    sim_p.internal_states.ledm_frame = '0'.repeat(sim_p.internal_states.ledm_neltos) ;
-    sim_p.internal_states.ledm_sync = false ;
+    sim_p.internal_states.ledm_frame  = '0'.repeat(sim_p.internal_states.ledm_neltos) ;
+    sim_p.internal_states.ledm_sync   = false ;
 
     sim_p.internal_states.io_hash[LEDMSR_ID] = 'LEDMSR' ;
     sim_p.internal_states.io_hash[LEDMCR_ID] = 'LEDMCR' ;
@@ -151,9 +151,9 @@ export function io_ldm_base_register (sim_p)
         operation:   function (s_expr)
         {
             var bus_ab = get_value(sim_p.states[s_expr[1]]) ;
-            var iosr = get_value(sim_p.states[s_expr[3]]) ;
-            var iocr = get_value(sim_p.states[s_expr[4]]) ;
-            var iodr = get_value(sim_p.states[s_expr[5]]) ;
+            var iosr   = get_value(sim_p.states[s_expr[3]]) ;
+            var iocr   = get_value(sim_p.states[s_expr[4]]) ;
+            var iodr   = get_value(sim_p.states[s_expr[5]]) ;
 
             // get
             if (bus_ab == LEDMCR_ID)
@@ -179,9 +179,9 @@ export function io_ldm_base_register (sim_p)
             var verbal = '' ;
 
             var bus_ab = get_value(sim_p.states[s_expr[1]]) ;
-            var iosr = get_value(sim_p.states[s_expr[3]]) ;
-            var iocr = get_value(sim_p.states[s_expr[4]]) ;
-            var iodr = get_value(sim_p.states[s_expr[5]]) ;
+            var iosr   = get_value(sim_p.states[s_expr[3]]) ;
+            var iocr   = get_value(sim_p.states[s_expr[4]]) ;
+            var iodr   = get_value(sim_p.states[s_expr[5]]) ;
 
             if (bus_ab == LEDMSR_ID)
             {
@@ -281,10 +281,10 @@ export function io_ldm_base_register (sim_p)
                     neltos = sim_p.internal_states.ledm_colors.length ;
                     for (p = 0; p < neltos; p++)
                     {
-                        s = simcore_native_get_value('MEMORY', dr + p * 4) ;
-                        s = (s & 0xFFFFFF00) >>> 8 ;
-                        s = s.toString(16) ;
-                        c = '#' + simcoreui_pack(s, 6) ;
+                        s                                    = simcore_native_get_value('MEMORY', dr + p * 4) ;
+                        s                                    = (s & 0xFFFFFF00) >>> 8 ;
+                        s                                    = s.toString(16) ;
+                        c                                    = '#' + simcoreui_pack(s, 6) ;
                         sim_p.internal_states.ledm_colors[p] = c ;
                     }
 
@@ -345,9 +345,9 @@ export function io_ldm_base_register (sim_p)
                     var dr = get_value(sim_p.states[s_expr[5]]) ;
                     if (0x10 & bus_db)
                     {
-                        var x = (dr & 0xFF000000) >>> 24 ;
-                        var y = (dr & 0x00FF0000) >>> 16 ;
-                        var s = (dr & 0x000000FF) ;
+                        var x  = (dr & 0xFF000000) >>> 24 ;
+                        var y  = (dr & 0x00FF0000) >>> 16 ;
+                        var s  = (dr & 0x000000FF) ;
                         verbal = 'I/O device write at LEDMCR with value ' + bus_db + ' (set pixel x:' + x + ', y:' + y + ', with color:' + s + '). ' ;
 
                     }
@@ -387,8 +387,8 @@ export function io_ldm_base_register (sim_p)
             }
 
             // REST
-            var n = Math.pow(sim_p.internal_states.ledm_dim, 2) ;
-            var o = '0'.repeat(n) ;
+            var n                            = Math.pow(sim_p.internal_states.ledm_dim, 2) ;
+            var o                            = '0'.repeat(n) ;
             sim_p.internal_states.ledm_frame = o ;
             simcore_rest_call('LEDM', 'POST', '/', { 'frame': o }) ;
             // 201 (Created) -> ok
@@ -412,7 +412,7 @@ export function io_ldm_base_register (sim_p)
 
             // internal state -> frame in REST
             var ledmstates = sim_p.internal_states.ledm_state ;
-            var o = '' ;
+            var o          = '' ;
             var p ;
             for (var j = 0; j < sim_p.internal_states.ledm_dim; j++)
             {

@@ -55,8 +55,8 @@ export class ws_mem_config extends ws_uielto
 
     render_populate ()
     {
-        var o1 = '' ;
-        var div_hash = '#config_MP_' + this.name_str ;
+        var o1        = '' ;
+        var div_hash  = '#config_MP_' + this.name_str ;
         var input_div = this.name_str ;
 
         // if no active hardware -> empty

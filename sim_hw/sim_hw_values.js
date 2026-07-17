@@ -30,13 +30,13 @@ export function compute_references ()
 {
     for (var key in simhw_sim_signals())
     {
-        sim_references[key] = simhw_sim_signal(key) ;
+        sim_references[key]           = simhw_sim_signal(key) ;
         simhw_sim_signal(key).changed = false ;
     }
 
     for (key in simhw_sim_states())
     {
-        sim_references[key] = simhw_sim_state(key) ;
+        sim_references[key]          = simhw_sim_state(key) ;
         simhw_sim_state(key).changed = false ;
     }
 }

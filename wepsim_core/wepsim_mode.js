@@ -56,7 +56,7 @@ export function wepsim_register_modes()
         'ep2_asm_z80':  'ep2:ep2_js2_l3:z80_s7e3',
     } ;
 
-    ws_info.modes_ep = ['newbie', 'intro', 'asm_mips', 'asm_rv32', 'asm_z80'] ;
+    ws_info.modes_ep  = ['newbie', 'intro', 'asm_mips', 'asm_rv32', 'asm_z80'] ;
     ws_info.modes_ep2 = ['newbie', 'intro', 'ep2_asm_mips', 'ep2_asm_rv32', 'ep2_asm_z80'] ;
 }
 
@@ -84,7 +84,7 @@ export function wepsim_mode_getBaseMode (derive_model)
 export async function wepsim_mode_change (optValue)
 {
     // switch active hardware by name...
-    var bm = wepsim_mode_getBaseMode(optValue) ;
+    var bm   = wepsim_mode_getBaseMode(optValue) ;
     var hwid = simhw_getIdByName(bm) ;
 
     // lazy load processor if not yet registered

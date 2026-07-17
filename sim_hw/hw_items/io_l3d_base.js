@@ -97,10 +97,10 @@ export function io_l3d_base_register (sim_p)
      *  States - L3D parameters
      */
 
-    sim_p.internal_states.l3d_dim = 4 ;
+    sim_p.internal_states.l3d_dim    = 4 ;
     sim_p.internal_states.l3d_neltos = Math.pow(sim_p.internal_states.l3d_dim, 3) ;
-    sim_p.internal_states.l3d_state = Array.from({ length: sim_p.internal_states.l3d_neltos }, () => ({ active: { value: false } })) ;
-    sim_p.internal_states.l3d_frame = '0'.repeat(sim_p.internal_states.l3d_neltos) ;
+    sim_p.internal_states.l3d_state  = Array.from({ length: sim_p.internal_states.l3d_neltos }, () => ({ active: { value: false } })) ;
+    sim_p.internal_states.l3d_frame  = '0'.repeat(sim_p.internal_states.l3d_neltos) ;
 
     sim_p.internal_states.io_hash[L3DSR_ID] = 'L3DSR' ;
     sim_p.internal_states.io_hash[L3DCR_ID] = 'L3DCR' ;
@@ -147,9 +147,9 @@ export function io_l3d_base_register (sim_p)
         operation:   function (s_expr)
         {
             var bus_ab = get_value(sim_p.states[s_expr[1]]) ;
-            var iosr = get_value(sim_p.states[s_expr[3]]) ;
-            var iocr = get_value(sim_p.states[s_expr[4]]) ;
-            var iodr = get_value(sim_p.states[s_expr[5]]) ;
+            var iosr   = get_value(sim_p.states[s_expr[3]]) ;
+            var iocr   = get_value(sim_p.states[s_expr[4]]) ;
+            var iodr   = get_value(sim_p.states[s_expr[5]]) ;
 
             // get
             if (bus_ab == L3DCR_ID)
@@ -178,9 +178,9 @@ export function io_l3d_base_register (sim_p)
             var verbal = '' ;
 
             var bus_ab = get_value(sim_p.states[s_expr[1]]) ;
-            var iosr = get_value(sim_p.states[s_expr[3]]) ;
-            var iocr = get_value(sim_p.states[s_expr[4]]) ;
-            var iodr = get_value(sim_p.states[s_expr[5]]) ;
+            var iosr   = get_value(sim_p.states[s_expr[3]]) ;
+            var iocr   = get_value(sim_p.states[s_expr[4]]) ;
+            var iodr   = get_value(sim_p.states[s_expr[5]]) ;
 
             if (bus_ab == L3DSR_ID)
                 verbal = 'I/O device read at L3DSR of value ' + iosr + '. ' ;
@@ -273,8 +273,8 @@ export function io_l3d_base_register (sim_p)
             }
 
             // REST
-            n = Math.pow(sim_p.internal_states.l3d_dim, 3) ;
-            var o = '0'.repeat(n) ;
+            n                               = Math.pow(sim_p.internal_states.l3d_dim, 3) ;
+            var o                           = '0'.repeat(n) ;
             sim_p.internal_states.l3d_frame = o ;
             simcore_rest_call('L3D', 'POST', '/', { 'frame': o }) ;
             // 201 (Created) -> ok
@@ -291,9 +291,9 @@ export function io_l3d_base_register (sim_p)
         {
             // internal state -> frame in REST
             var l3dstates = sim_p.internal_states.l3d_state ;
-            var o = '' ;
+            var o         = '' ;
             var p ;
-            var n = sim_p.internal_states.l3d_dim ;
+            var n         = sim_p.internal_states.l3d_dim ;
             for (var i = 0; i < n; i++)
             {
                 for (var j = 0; j < n; j++)

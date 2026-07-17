@@ -48,9 +48,9 @@ export class ws_help_swset extends ws_uielto
 
     render_skel ()
     {
-        var o1 = '' ;
+        var o1        = '' ;
         var id_search = this.name_str + '_sws_input1' ;
-        var id_list = this.name_str + '_sws_list1' ;
+        var id_list   = this.name_str + '_sws_list1' ;
 
         // build HTML
         o1 += '<div class="container">' +
@@ -75,9 +75,9 @@ export class ws_help_swset extends ws_uielto
 
     render_populate ()
     {
-        var o1 = '' ;
+        var o1        = '' ;
         var id_search = this.name_str + '_sws_input1' ;
-        var id_list = this.name_str + '_sws_list1' ;
+        var id_list   = this.name_str + '_sws_list1' ;
 
         // check firmware
         var ws_firmware = get_simware() ;
@@ -100,7 +100,7 @@ export class ws_help_swset extends ws_uielto
         }
 
         // tables by first letter...
-        var t = {} ;
+        var t    = {} ;
         var ins_name ;
         var ins_help ;
         var first_l ;

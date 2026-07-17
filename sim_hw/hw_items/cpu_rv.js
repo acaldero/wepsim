@@ -119,7 +119,7 @@ export function cpu_rv_register (sim_p)
                 return '0x' + value.toString(16) ;
             }
 
-            r_reg = r_reg.replace('R', '') ;
+            r_reg     = r_reg.replace('R', '') ;
             var index = parseInt(r_reg) ;
             if (typeof sim_p.states.BR[index] != 'undefined')
             {
@@ -163,22 +163,22 @@ export function cpu_rv_register (sim_p)
      *  Control States, and Default elements at the Instruction Register (IR)
      */
 
-    sim_p.ctrl_states.pc = {
+    sim_p.ctrl_states.pc  = {
         name:       'PC',
         state:      'REG_PC',
         is_pointer: true,
     } ;
-    sim_p.ctrl_states.sp = {
+    sim_p.ctrl_states.sp  = {
         name:       'SP',
         state:      'BR.29',
         is_pointer: true,
     } ;
-    sim_p.ctrl_states.fp = {
+    sim_p.ctrl_states.fp  = {
         name:       'FP',
         state:      'BR.30',
         is_pointer: true,
     } ;
-    sim_p.ctrl_states.ir = {
+    sim_p.ctrl_states.ir  = {
         name:          'IR',
         state:         'REG_IR',
         default_eltos: {
@@ -197,56 +197,56 @@ export function cpu_rv_register (sim_p)
      *  Internal States
      */
 
-    sim_p.internal_states.MC = {} ;
+    sim_p.internal_states.MC  = {} ;
     sim_p.internal_states.ROM = {} ;
 
     sim_p.internal_states.FIRMWARE = ws_empty_firmware ;
-    sim_p.internal_states.io_hash = {} ;
+    sim_p.internal_states.io_hash  = {} ;
 
     sim_p.internal_states.tri_state_names = [] ;
-    sim_p.internal_states.fire_visible = { 'databus': false, 'internalbus': false } ;
-    sim_p.internal_states.filter_states = ['REG_IR_DECO,virtual', 'REG_IR,real',
+    sim_p.internal_states.fire_visible    = { 'databus': false, 'internalbus': false } ;
+    sim_p.internal_states.filter_states   = ['REG_IR_DECO,virtual', 'REG_IR,real',
         'REG_PC,real',
         'REG_OUT,real',
         'REG_MICROADDR,real'] ;
-    sim_p.internal_states.filter_signals = ['CU,0', 'ALUOP,0', 'M1,0', 'M2,0', 'M3,0', 'M4,0', 'JUMP,0', 'PCWRITE,0',
+    sim_p.internal_states.filter_signals  = ['CU,0', 'ALUOP,0', 'M1,0', 'M2,0', 'M3,0', 'M4,0', 'JUMP,0', 'PCWRITE,0',
         'IMR,0', 'IRWRITE,0', 'RW,0', 'WOUT,0', 'DMR,0', 'DMW,0', 'WBE,0', 'SE,0'] ;
-    sim_p.internal_states.alu_flags = { 'flag_n': 0, 'flag_z': 0 } ;
+    sim_p.internal_states.alu_flags       = { 'flag_n': 0, 'flag_z': 0 } ;
 
     /*
      *  States
      */
 
     /* REGISTER FILE STATES */
-    sim_p.states.BR = [] ;
-    sim_p.states.BR[0] = { name:          'R0', verbal:        'Register 0',
+    sim_p.states.BR     = [] ;
+    sim_p.states.BR[0]  = { name:          'R0', verbal:        'Register 0',
         visible:       true, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states.BR[1] = { name:          'R1', verbal:        'Register 1',
+    sim_p.states.BR[1]  = { name:          'R1', verbal:        'Register 1',
         visible:       true, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states.BR[2] = { name:          'R2', verbal:        'Register 2',
+    sim_p.states.BR[2]  = { name:          'R2', verbal:        'Register 2',
         visible:       true, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states.BR[3] = { name:          'R3', verbal:        'Register 3',
+    sim_p.states.BR[3]  = { name:          'R3', verbal:        'Register 3',
         visible:       true, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states.BR[4] = { name:          'R4', verbal:        'Register 4',
+    sim_p.states.BR[4]  = { name:          'R4', verbal:        'Register 4',
         visible:       true, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states.BR[5] = { name:          'R5', verbal:        'Register 5',
+    sim_p.states.BR[5]  = { name:          'R5', verbal:        'Register 5',
         visible:       true, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states.BR[6] = { name:          'R6', verbal:        'Register 6',
+    sim_p.states.BR[6]  = { name:          'R6', verbal:        'Register 6',
         visible:       true, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states.BR[7] = { name:          'R7', verbal:        'Register 7',
+    sim_p.states.BR[7]  = { name:          'R7', verbal:        'Register 7',
         visible:       true, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states.BR[8] = { name:          'R8', verbal:        'Register 8',
+    sim_p.states.BR[8]  = { name:          'R8', verbal:        'Register 8',
         visible:       true, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states.BR[9] = { name:          'R9', verbal:        'Register 9',
+    sim_p.states.BR[9]  = { name:          'R9', verbal:        'Register 9',
         visible:       true, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
     sim_p.states.BR[10] = { name:          'R10', verbal:        'Register 10',
@@ -316,10 +316,10 @@ export function cpu_rv_register (sim_p)
         visible:       true, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
 
-    sim_p.states['REG_PC'] = { name:          'PC', verbal:        'Program Counter Register',
+    sim_p.states['REG_PC']  = { name:          'PC', verbal:        'Program Counter Register',
         visible:       true, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states['REG_IR'] = { name:          'IR', verbal:        'Instruction Register',
+    sim_p.states['REG_IR']  = { name:          'IR', verbal:        'Instruction Register',
         visible:       true, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
     sim_p.states['REG_OUT'] = { name:          'OUT', verbal:        'Out Register',
@@ -327,7 +327,7 @@ export function cpu_rv_register (sim_p)
         draw_data:     [] };
 
     /* REGISTER PC (RELATED) STATES */
-    sim_p.states['M4_PC'] = { name:          'M4_PC', verbal:        'Input PCWrite via M4',
+    sim_p.states['M4_PC']  = { name:          'M4_PC', verbal:        'Input PCWrite via M4',
         visible:       false, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
     sim_p.states['C_JUMP'] = { name:          'C_JUMP', verbal:        'Input JUMP via MUX-C',
@@ -335,10 +335,10 @@ export function cpu_rv_register (sim_p)
         draw_data:     [] };
 
     /* ALU (RELATED) STATES */
-    sim_p.states['M2_ALU'] = { name:          'M2_ALU', verbal:        'Input ALU via M2',
+    sim_p.states['M2_ALU']   = { name:          'M2_ALU', verbal:        'Input ALU via M2',
         visible:       false, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states['M3_ALU'] = { name:          'M3_ALU', verbal:        'Input ALU via M3',
+    sim_p.states['M3_ALU']   = { name:          'M3_ALU', verbal:        'Input ALU via M3',
         visible:       false, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
     sim_p.states['ALU_WOUT'] = { name:          'ALU_WOUT', verbal:        'Input of OUT Register',
@@ -356,11 +356,11 @@ export function cpu_rv_register (sim_p)
     sim_p.states['REG_MICROADDR'] = { name:          'µADDR', verbal:        'Microaddress Register',
         visible:       true, nbits:         '12', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states['REG_MICROINS'] = { name:          'µINS', verbal:        'Microinstruction Register',
+    sim_p.states['REG_MICROINS']  = { name:          'µINS', verbal:        'Microinstruction Register',
         visible:       true, nbits:         '77', value:         {}, default_value: {},
         draw_data:     [] };
 
-    sim_p.states['FETCH'] = { name:          'FETCH', verbal:        'Input Fetch',
+    sim_p.states['FETCH']    = { name:          'FETCH', verbal:        'Input Fetch',
         visible:       false, nbits:         '12', value:         0, default_value: 0,
         draw_data:     [] };
     sim_p.states['ROM_MUXA'] = { name:          'ROM_MUXA', verbal:        'Input ROM',
@@ -370,18 +370,18 @@ export function cpu_rv_register (sim_p)
     sim_p.states['MUXA_MICROADDR'] = { name:          'MUXA_MICROADDR', verbal:        'Input microaddress',
         visible:       false, nbits:         '12', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states['MUXC_MUXB'] = { name:          'MUXC_MUXB', verbal:        'Output of MUX C',
+    sim_p.states['MUXC_MUXB']      = { name:          'MUXC_MUXB', verbal:        'Output of MUX C',
         visible:       false, nbits:         '1', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states['INEX'] = { name:          'INEX', verbal:        'Illegal Instruction Exception',
+    sim_p.states['INEX']           = { name:          'INEX', verbal:        'Illegal Instruction Exception',
         visible:       false, nbits:         '1', value:         0, default_value: 0,
         draw_data:     [] };
 
     /* DEVICES AND BUSES */
-    sim_p.states['INTV'] = { name:          'INTV', verbal:        'Interruption Vector',
+    sim_p.states['INTV']   = { name:          'INTV', verbal:        'Interruption Vector',
         visible:       false, nbits:         '8', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states['IORdy'] = { name:          'IORdy', verbal:        'From MUX-C/1 to JUMP',
+    sim_p.states['IORdy']  = { name:          'IORdy', verbal:        'From MUX-C/1 to JUMP',
         visible:       false, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
     sim_p.states['BUS_DB'] = { name:          'BUS_DB', verbal:        'Data Bus',
@@ -400,13 +400,13 @@ export function cpu_rv_register (sim_p)
     sim_p.states['VAL_ZERO'] = { name:          'VAL_ZERO', verbal:        'Wired Zero',
         visible:       false, nbits:         '1', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states['VAL_ONE'] = { name:          'VAL_ONE', verbal:        'Wired One',
+    sim_p.states['VAL_ONE']  = { name:          'VAL_ONE', verbal:        'Wired One',
         visible:       false, nbits:         '32', value:         1, default_value: 1,
         draw_data:     [] };
     sim_p.states['VAL_FOUR'] = { name:          'VAL_FOUR', verbal:        'Wired Four',
         visible:       false, nbits:         '32', value:         4, default_value: 4,
         draw_data:     [] };
-    sim_p.states['VAL_IMM'] = { name:          'VAL_IMM', verbal:        'Immediate Value Generator',
+    sim_p.states['VAL_IMM']  = { name:          'VAL_IMM', verbal:        'Immediate Value Generator',
         visible:       false, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
 
@@ -416,19 +416,19 @@ export function cpu_rv_register (sim_p)
         draw_data:     [] };
 
     /* VIRTUAL */
-    sim_p.states['CLK'] = { name:          'CLK', verbal:        'Clock',
+    sim_p.states['CLK']         = { name:          'CLK', verbal:        'Clock',
         visible:       false, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
     sim_p.states['REG_IR_DECO'] = { name:          'IR_DECO', verbal:        'Instruction Decoded',
         visible:       true, nbits:         '0', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states['DECO_INS'] = { name:          'DECO_INS', verbal:        'Instruction decoded in binary',
+    sim_p.states['DECO_INS']    = { name:          'DECO_INS', verbal:        'Instruction decoded in binary',
         visible:       true, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states['ACC_TIME'] = { name:          'ACC_TIME', verbal:        'Accumulated CPU time',
+    sim_p.states['ACC_TIME']    = { name:          'ACC_TIME', verbal:        'Accumulated CPU time',
         visible:       false, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
-    sim_p.states['TTCPU'] = { name:          'TTCPU', verbal:        'Several Tristates to the internal data bus in CPU activated',
+    sim_p.states['TTCPU']       = { name:          'TTCPU', verbal:        'Several Tristates to the internal data bus in CPU activated',
         visible:       false, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
     sim_p.signals['DB_UPDATED'] = { name:          'DB_UPDATED', visible:       false, type:          'L', value:         0, default_value: 0, nbits:         '1',
@@ -464,14 +464,14 @@ export function cpu_rv_register (sim_p)
         fire_name:     ['svg_p:text7155'],
         draw_data:     [[]],
         draw_name:     [['svg_p:path7135', 'svg_p:path7125', 'svg_p:path7137']] };
-    sim_p.signals['JUMP'] = { name:          'JUMP', visible:       true, type:          'E', value:         0, default_value: 0, nbits:         '1',
+    sim_p.signals['JUMP']    = { name:          'JUMP', visible:       true, type:          'E', value:         0, default_value: 0, nbits:         '1',
         behavior:      ['NOP', 'LOAD_J REG_PC M4_PC; UPDATEDPC'],
         fire_name:     ['svg_p:text7173'],
         draw_data:     [[]],
         draw_name:     [[],
             ['svg_p:path7133', 'svg_p:path7143', 'svg_p:path7145',
                 'svg_p:path7147', 'svg_p:path7125', 'svg_p:path7165-6']] };
-    sim_p.signals['C'] = { name:          'C', visible:       true, type:          'L', value:         0, default_value: 0, nbits:         '2',
+    sim_p.signals['C']       = { name:          'C', visible:       true, type:          'L', value:         0, default_value: 0, nbits:         '2',
         behavior:      ['MV C_JUMP INT; FIRE JUMP',
             'MV C_JUMP IORdy; FIRE JUMP',
             'MV C_JUMP FLAG_Z; FIRE JUMP',
@@ -495,24 +495,24 @@ export function cpu_rv_register (sim_p)
         fire_name:     ['svg_p:text7300'],
         draw_data:     [['svg_p:path6981', 'svg_p:path6903', 'svg_p:path:6904']],
         draw_name:     [['svg_p:path7146']] };
-    sim_p.signals['SE_IMM'] = { name:          'SE_IMM', visible:       true, type:          'L', value:         0, default_value: 1, nbits:         '1',
+    sim_p.signals['SE_IMM']  = { name:          'SE_IMM', visible:       true, type:          'L', value:         0, default_value: 1, nbits:         '1',
         verbal:        ['Set superior bits of immediate value to 0.',
             'Extend sign of immediate value.'],
         behavior:  ['NOP', 'NOP'],
         fire_name: ['svg_p:text7301'],
         draw_data: [[]],
         draw_name: [['svg_p:path7292', 'svg_p:path7292']] };
-    sim_p.signals['SIZE'] = { name:          'SIZE', visible:       true, type:          'L', value:         0, default_value: 0, nbits:         '5',
+    sim_p.signals['SIZE']    = { name:          'SIZE', visible:       true, type:          'L', value:         0, default_value: 0, nbits:         '5',
         behavior:      ['NOP'],
         fire_name:     ['svg_p:text7302'],
         draw_data:     [[]],
         draw_name:     [['svg_p:path7293']] };
-    sim_p.signals['OFFSET'] = { name:          'OFFSET', visible:       true, type:          'L', value:         0, default_value: 0, nbits:         '5',
+    sim_p.signals['OFFSET']  = { name:          'OFFSET', visible:       true, type:          'L', value:         0, default_value: 0, nbits:         '5',
         behavior:      ['NOP'],
         fire_name:     ['svg_p:text7303'],
         draw_data:     [[]],
         draw_name:     [['svg_p:path7294']] };
-    sim_p.signals['X2_IMM'] = { name:          'X2_IMM', visible:       true, type:          'L', value:         0, default_value: 0, nbits:         '1',
+    sim_p.signals['X2_IMM']  = { name:          'X2_IMM', visible:       true, type:          'L', value:         0, default_value: 0, nbits:         '1',
         verbal:        ['Multiply by 1.',
             'Multiply by 2.'],
         behavior:  ['NOP', 'NOP'],
@@ -544,7 +544,7 @@ export function cpu_rv_register (sim_p)
         draw_data:     [[]],
         draw_name:     [[]] };
 
-    sim_p.states['M1_RW'] = { name:          'M1_RW', verbal:        'Input Register File via M1',
+    sim_p.states['M1_RW']  = { name:          'M1_RW', verbal:        'Input Register File via M1',
         visible:       false, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
     sim_p.states['W_DATA'] = { name:          'W_DATA', verbal:        'Write Data',
@@ -677,7 +677,7 @@ export function cpu_rv_register (sim_p)
             'svg_p:path6911-8-3', 'svg_p:path7567-0-5-0',
             'svg_p:path6911-8', 'svg_p:path7421', 'svg_p:path7423']],
         draw_name: [['svg_p:path7529', 'svg_p:path7425']] };
-    sim_p.signals['SE'] = { name:          'SE', visible:       true, type:          'L', value:         0, default_value: 1, nbits:         '1',
+    sim_p.signals['SE']  = { name:          'SE', visible:       true, type:          'L', value:         0, default_value: 1, nbits:         '1',
         verbal:        ['If WBE is enabled, set superior bits of Word to 0.',
             'If WBE is enabled, extend byte sign to Word.'],
         behavior:  ['NOP', 'NOP'],
@@ -720,7 +720,7 @@ export function cpu_rv_register (sim_p)
      *  Syntax of behaviors
      */
 
-    sim_p.behaviors['NOP'] = { nparameters: 1,
+    sim_p.behaviors['NOP']     = { nparameters: 1,
         operation:   function(s_expr)
         { },
         verbal: function(s_expr)
@@ -747,13 +747,13 @@ export function cpu_rv_register (sim_p)
         {
             let sim_elto_org = get_reference(s_expr[2]) ;
             let sim_elto_dst = get_reference(s_expr[1]) ;
-            let newval = get_value(sim_elto_org) ;
+            let newval       = get_value(sim_elto_org) ;
             set_value(sim_elto_dst, newval) ;
         },
         verbal: function (s_expr)
         {
             var sim_elto_org = get_reference(s_expr[2]) ;
-            var newval = get_value(sim_elto_org) ;
+            var newval       = get_value(sim_elto_org) ;
 
             var verbose = get_cfg('verbal_verbose') ;
             if (verbose !== 'math')
@@ -773,13 +773,13 @@ export function cpu_rv_register (sim_p)
         {
             var sim_elto_org = get_reference(s_expr[2]) ;
             var sim_elto_dst = get_reference(s_expr[1]) ;
-            var newval = get_value(sim_elto_org) ;
+            var newval       = get_value(sim_elto_org) ;
             set_value(sim_elto_dst, newval) ;
         },
         verbal: function (s_expr)
         {
             var sim_elto_org = get_reference(s_expr[2]) ;
-            var newval = get_value(sim_elto_org) ;
+            var newval       = get_value(sim_elto_org) ;
 
             var verbose = get_cfg('verbal_verbose') ;
             if (verbose !== 'math')
@@ -805,14 +805,14 @@ export function cpu_rv_register (sim_p)
 
             var sim_elto_org = get_reference(s_expr[2]) ;
             var sim_elto_dst = get_reference(s_expr[1]) ;
-            var newval = get_value(sim_elto_org) ;
+            var newval       = get_value(sim_elto_org) ;
             set_value(sim_elto_dst, newval) ;
         },
         verbal: function (s_expr)
         {
             var sim_elto_org = get_reference(s_expr[2]) ;
             var sim_elto_dst = get_reference(s_expr[1]) ;
-            var newval = get_value(sim_elto_org) ;
+            var newval       = get_value(sim_elto_org) ;
 
             return "Jump if N or Z (new value is '" + newval + "' )" ;
         },
@@ -821,11 +821,11 @@ export function cpu_rv_register (sim_p)
         types:       ['X', 'X'],
         operation:   function(s_expr)
         {
-            let r = s_expr[2].split('/') ;
+            let r            = s_expr[2].split('/') ;
             let sim_elto_org = get_reference(r[0]) ;
 
             let newval = get_value(sim_elto_org) ;
-            newval = newval[r[1]] ;
+            newval     = newval[r[1]] ;
             if (typeof newval != 'undefined')
             {
                 let sim_elto_dst = get_reference(s_expr[1]) ;
@@ -835,7 +835,7 @@ export function cpu_rv_register (sim_p)
         verbal: function (s_expr)
         {
             var newval ;
-            var r = s_expr[2].split('/') ;
+            var r            = s_expr[2].split('/') ;
             var sim_elto_org = get_reference(r[0]) ;
             var sim_elto_dst = get_reference(r[1]) ;
             if (typeof sim_elto_dst == 'undefined')
@@ -866,17 +866,17 @@ export function cpu_rv_register (sim_p)
         {
             if (get_value(sim_p.states['FLAG_N']) != parseInt(s_expr[4]))
             {
-                var a = get_value(sim_p.states[s_expr[3]]) << 0 ;
+                var a      = get_value(sim_p.states[s_expr[3]]) << 0 ;
                 var result = a + 1 ;
                 set_value(sim_p.states[s_expr[1]], result >>> 0) ;
             }
             else
             {
-                let r = s_expr[2].split('/') ;
+                let r            = s_expr[2].split('/') ;
                 let sim_elto_org = get_reference(r[0]) ;
 
                 let newval = get_value(sim_elto_org) ;
-                newval = newval[r[1]] ;
+                newval     = newval[r[1]] ;
                 if (typeof newval != 'undefined')
                 {
                     let sim_elto_dst = get_reference(s_expr[1]) ;
@@ -943,17 +943,17 @@ export function cpu_rv_register (sim_p)
         {
             if (get_value(sim_p.states['FLAG_Z']) != parseInt(s_expr[4]))
             {
-                var a = get_value(sim_p.states[s_expr[3]]) << 0 ;
+                var a      = get_value(sim_p.states[s_expr[3]]) << 0 ;
                 var result = a + 1 ;
                 set_value(sim_p.states[s_expr[1]], result >>> 0) ;
             }
             else
             {
-                let r = s_expr[2].split('/') ;
+                let r            = s_expr[2].split('/') ;
                 let sim_elto_org = get_reference(r[0]) ;
 
                 let newval = get_value(sim_elto_org) ;
-                newval = newval[r[1]] ;
+                newval     = newval[r[1]] ;
                 if (typeof newval != 'undefined')
                 {
                     let sim_elto_dst = get_reference(s_expr[1]) ;
@@ -1061,7 +1061,7 @@ export function cpu_rv_register (sim_p)
             // Example: "SET BR REG_W2 M1_RW"
             // Example: "SET BR RC     BUS_IB"
 
-            var rf_name = s_expr[1] ;
+            var rf_name    = s_expr[1] ;
             var reg_w_name = s_expr[2] ;
             var state_name = s_expr[3] ;
 
@@ -1088,11 +1088,11 @@ export function cpu_rv_register (sim_p)
         },
         verbal: function (s_expr)
         {
-            var value = get_value(sim_p.states[s_expr[3]]) ;
-            var rf_name = s_expr[1] ;
+            var value      = get_value(sim_p.states[s_expr[3]]) ;
+            var rf_name    = s_expr[1] ;
             var reg_w_name = s_expr[2] ;
-            var reg_w_obj = sim_p.signals[reg_w_name] ;
-            var o_ref = sim_p.states[rf_name][reg_w_obj.value] ;
+            var reg_w_obj  = sim_p.signals[reg_w_name] ;
+            var o_ref      = sim_p.states[rf_name][reg_w_obj.value] ;
 
             var o_verbal = o_ref.name ;
             if (typeof o_ref.verbal != 'undefined')
@@ -1296,7 +1296,7 @@ export function cpu_rv_register (sim_p)
         operation:   function(s_expr)
         {
             var rotations = get_value(sim_p.states[s_expr[3]]) ;
-            var result = ((get_value(sim_p.states[s_expr[2]])) >>> rotations) | (((get_value(sim_p.states[s_expr[2]])) & rotations) << 31) ;
+            var result    = ((get_value(sim_p.states[s_expr[2]])) >>> rotations) | (((get_value(sim_p.states[s_expr[2]])) & rotations) << 31) ;
             set_value(sim_p.states[s_expr[1]], result >>> 0) ;
 
             sim_p.internal_states.alu_flags.flag_n = (result < 0) ? 1 : 0 ;
@@ -1307,7 +1307,7 @@ export function cpu_rv_register (sim_p)
         verbal: function (s_expr)
         {
             var rotations = get_value(sim_p.states[s_expr[3]]) ;
-            var result = ((get_value(sim_p.states[s_expr[2]])) >>> rotations) | (((get_value(sim_p.states[s_expr[2]])) & rotations) << 31) ;
+            var result    = ((get_value(sim_p.states[s_expr[2]])) >>> rotations) | (((get_value(sim_p.states[s_expr[2]])) & rotations) << 31) ;
 
             var verbose = get_cfg('verbal_verbose') ;
             if (verbose !== 'math')
@@ -1323,7 +1323,7 @@ export function cpu_rv_register (sim_p)
         operation:   function(s_expr)
         {
             var rotations = get_value(sim_p.states[s_expr[3]]) ;
-            var result = ((get_value(sim_p.states[s_expr[2]])) << rotations) | (((get_value(sim_p.states[s_expr[2]])) & 0X80000000) >>> 31) ;
+            var result    = ((get_value(sim_p.states[s_expr[2]])) << rotations) | (((get_value(sim_p.states[s_expr[2]])) & 0X80000000) >>> 31) ;
             set_value(sim_p.states[s_expr[1]], result >>> 0) ;
 
             sim_p.internal_states.alu_flags.flag_n = (result < 0) ? 1 : 0 ;
@@ -1334,7 +1334,7 @@ export function cpu_rv_register (sim_p)
         verbal: function (s_expr)
         {
             var rotations = get_value(sim_p.states[s_expr[3]]) ;
-            var result = ((get_value(sim_p.states[s_expr[2]])) << rotations) | (((get_value(sim_p.states[s_expr[2]])) & 0X80000000) >>> 31) ;
+            var result    = ((get_value(sim_p.states[s_expr[2]])) << rotations) | (((get_value(sim_p.states[s_expr[2]])) & 0X80000000) >>> 31) ;
 
             var verbose = get_cfg('verbal_verbose') ;
             if (verbose !== 'math')
@@ -1349,8 +1349,8 @@ export function cpu_rv_register (sim_p)
         types:       ['E', 'E', 'E'],
         operation:   function(s_expr)
         {
-            var a = get_value(sim_p.states[s_expr[2]]) << 0 ;
-            var b = get_value(sim_p.states[s_expr[3]]) << 0 ;
+            var a      = get_value(sim_p.states[s_expr[2]]) << 0 ;
+            var b      = get_value(sim_p.states[s_expr[3]]) << 0 ;
             var result = a + b ;
             set_value(sim_p.states[s_expr[1]], result >>> 0) ;
 
@@ -1366,8 +1366,8 @@ export function cpu_rv_register (sim_p)
         },
         verbal: function (s_expr)
         {
-            var a = get_value(sim_p.states[s_expr[2]]) << 0 ;
-            var b = get_value(sim_p.states[s_expr[3]]) << 0 ;
+            var a      = get_value(sim_p.states[s_expr[2]]) << 0 ;
+            var b      = get_value(sim_p.states[s_expr[3]]) << 0 ;
             var result = a + b ;
 
             var verbose = get_cfg('verbal_verbose') ;
@@ -1383,8 +1383,8 @@ export function cpu_rv_register (sim_p)
         types:       ['E', 'E', 'E'],
         operation:   function(s_expr)
         {
-            var a = get_value(sim_p.states[s_expr[2]]) << 0 ;
-            var b = get_value(sim_p.states[s_expr[3]]) << 0 ;
+            var a      = get_value(sim_p.states[s_expr[2]]) << 0 ;
+            var b      = get_value(sim_p.states[s_expr[3]]) << 0 ;
             var result = a - b ;
             set_value(sim_p.states[s_expr[1]], result >>> 0) ;
 
@@ -1400,8 +1400,8 @@ export function cpu_rv_register (sim_p)
         },
         verbal: function (s_expr)
         {
-            var a = get_value(sim_p.states[s_expr[2]]) << 0 ;
-            var b = get_value(sim_p.states[s_expr[3]]) << 0 ;
+            var a      = get_value(sim_p.states[s_expr[2]]) << 0 ;
+            var b      = get_value(sim_p.states[s_expr[3]]) << 0 ;
             var result = a - b ;
 
             var verbose = get_cfg('verbal_verbose') ;
@@ -1417,8 +1417,8 @@ export function cpu_rv_register (sim_p)
         types:       ['E', 'E', 'E'],
         operation:   function(s_expr)
         {
-            var a = get_value(sim_p.states[s_expr[2]]) << 0 ;
-            var b = get_value(sim_p.states[s_expr[3]]) << 0 ;
+            var a      = get_value(sim_p.states[s_expr[2]]) << 0 ;
+            var b      = get_value(sim_p.states[s_expr[3]]) << 0 ;
             var result = a * b ;
             set_value(sim_p.states[s_expr[1]], result >>> 0) ;
 
@@ -1434,8 +1434,8 @@ export function cpu_rv_register (sim_p)
         },
         verbal: function (s_expr)
         {
-            var a = get_value(sim_p.states[s_expr[2]]) << 0 ;
-            var b = get_value(sim_p.states[s_expr[3]]) << 0 ;
+            var a      = get_value(sim_p.states[s_expr[2]]) << 0 ;
+            var b      = get_value(sim_p.states[s_expr[3]]) << 0 ;
             var result = a * b ;
 
             var verbose = get_cfg('verbal_verbose') ;
@@ -1569,8 +1569,8 @@ export function cpu_rv_register (sim_p)
         types:       ['E', 'E', 'E'],
         operation:   function(s_expr)
         {
-            var a = get_value(sim_p.states[s_expr[2]]) >>> 0 ;
-            var b = get_value(sim_p.states[s_expr[3]]) >>> 0 ;
+            var a      = get_value(sim_p.states[s_expr[2]]) >>> 0 ;
+            var b      = get_value(sim_p.states[s_expr[3]]) >>> 0 ;
             var result = a + b ;
             set_value(sim_p.states[s_expr[1]], result >>> 0) ;
 
@@ -1586,8 +1586,8 @@ export function cpu_rv_register (sim_p)
         },
         verbal: function (s_expr)
         {
-            var a = get_value(sim_p.states[s_expr[2]]) >>> 0 ;
-            var b = get_value(sim_p.states[s_expr[3]]) >>> 0 ;
+            var a      = get_value(sim_p.states[s_expr[2]]) >>> 0 ;
+            var b      = get_value(sim_p.states[s_expr[3]]) >>> 0 ;
             var result = a + b ;
 
             var verbose = get_cfg('verbal_verbose') ;
@@ -1603,8 +1603,8 @@ export function cpu_rv_register (sim_p)
         types:       ['E', 'E', 'E'],
         operation:   function(s_expr)
         {
-            var a = get_value(sim_p.states[s_expr[2]]) >>> 0 ;
-            var b = get_value(sim_p.states[s_expr[3]]) >>> 0 ;
+            var a      = get_value(sim_p.states[s_expr[2]]) >>> 0 ;
+            var b      = get_value(sim_p.states[s_expr[3]]) >>> 0 ;
             var result = a - b ;
             set_value(sim_p.states[s_expr[1]], result >>> 0) ;
 
@@ -1620,8 +1620,8 @@ export function cpu_rv_register (sim_p)
         },
         verbal: function (s_expr)
         {
-            var a = get_value(sim_p.states[s_expr[2]]) >>> 0 ;
-            var b = get_value(sim_p.states[s_expr[3]]) >>> 0 ;
+            var a      = get_value(sim_p.states[s_expr[2]]) >>> 0 ;
+            var b      = get_value(sim_p.states[s_expr[3]]) >>> 0 ;
             var result = a - b ;
 
             var verbose = get_cfg('verbal_verbose') ;
@@ -1637,8 +1637,8 @@ export function cpu_rv_register (sim_p)
         types:       ['E', 'E', 'E'],
         operation:   function(s_expr)
         {
-            var a = get_value(sim_p.states[s_expr[2]]) >>> 0 ;
-            var b = get_value(sim_p.states[s_expr[3]]) >>> 0 ;
+            var a      = get_value(sim_p.states[s_expr[2]]) >>> 0 ;
+            var b      = get_value(sim_p.states[s_expr[3]]) >>> 0 ;
             var result = a * b ;
             set_value(sim_p.states[s_expr[1]], result >>> 0) ;
 
@@ -1654,8 +1654,8 @@ export function cpu_rv_register (sim_p)
         },
         verbal: function (s_expr)
         {
-            var a = get_value(sim_p.states[s_expr[2]]) >>> 0 ;
-            var b = get_value(sim_p.states[s_expr[3]]) >>> 0 ;
+            var a      = get_value(sim_p.states[s_expr[2]]) >>> 0 ;
+            var b      = get_value(sim_p.states[s_expr[3]]) >>> 0 ;
             var result = a * b ;
 
             var verbose = get_cfg('verbal_verbose') ;
@@ -1981,13 +1981,13 @@ export function cpu_rv_register (sim_p)
         types:       ['E', 'E'],
         operation:   function(s_expr)
         {
-            var a = get_value(sim_p.states[s_expr[2]]) << 0 ;
+            var a      = get_value(sim_p.states[s_expr[2]]) << 0 ;
             var result = a + 1 ;
             set_value(sim_p.states[s_expr[1]], result >>> 0) ;
         },
         verbal: function (s_expr)
         {
-            var a = get_value(sim_p.states[s_expr[2]]) << 0 ;
+            var a      = get_value(sim_p.states[s_expr[2]]) << 0 ;
             var result = a + 1 ;
 
             var verbose = get_cfg('verbal_verbose') ;
@@ -2007,13 +2007,13 @@ export function cpu_rv_register (sim_p)
         types:       ['E', 'E'],
         operation:   function(s_expr)
         {
-            var a = get_value(sim_p.states[s_expr[2]]) << 0 ;
+            var a      = get_value(sim_p.states[s_expr[2]]) << 0 ;
             var result = a + 4 ;
             set_value(sim_p.states[s_expr[1]], result >>> 0) ;
         },
         verbal: function (s_expr)
         {
-            var a = get_value(sim_p.states[s_expr[2]]) << 0 ;
+            var a      = get_value(sim_p.states[s_expr[2]]) << 0 ;
             var result = a + 4 ;
 
             var verbose = get_cfg('verbal_verbose') ;
@@ -2067,12 +2067,12 @@ export function cpu_rv_register (sim_p)
         {
             var sim_elto_dst = get_reference(s_expr[1]) ;
             var sim_elto_org = get_reference(s_expr[2]) ;
-            var offset = parseInt(s_expr[3]) ;
-            var size = parseInt(s_expr[4]) ;
+            var offset       = parseInt(s_expr[3]) ;
+            var size         = parseInt(s_expr[4]) ;
 
             var n1 = get_value(sim_elto_org).toString(2); // to binary
             var n2 = '00000000000000000000000000000000'.substring(0, 32 - n1.length) + n1;
-            n2 = n2.substr(31 - (offset + size - 1), size);
+            n2     = n2.substr(31 - (offset + size - 1), size);
 
             set_value(sim_elto_dst, parseInt(n2, 2));
         },
@@ -2080,12 +2080,12 @@ export function cpu_rv_register (sim_p)
         {
             var sim_elto_dst = get_reference(s_expr[1]) ;
             var sim_elto_org = get_reference(s_expr[2]) ;
-            var offset = parseInt(s_expr[3]) ;
-            var size = parseInt(s_expr[4]) ;
+            var offset       = parseInt(s_expr[3]) ;
+            var size         = parseInt(s_expr[4]) ;
 
             var n1 = get_value(sim_elto_org).toString(2) ; // to binary
             var n2 = '00000000000000000000000000000000'.substring(0, 32 - n1.length) + n1 ;
-            n2 = n2.substr(31 - (offset + size - 1), size) ;
+            n2     = n2.substr(31 - (offset + size - 1), size) ;
             var n3 = parseInt(n2, 2) ;
 
             var verbose = get_cfg('verbal_verbose') ;
@@ -2105,7 +2105,7 @@ export function cpu_rv_register (sim_p)
         operation:   function (s_expr)
         {
             var base = 0;
-            var r = s_expr[3].split('/');
+            var r    = s_expr[3].split('/');
             if (1 == r.length)
                 base = get_value(sim_p.states[s_expr[3]]);
             else
@@ -2131,7 +2131,7 @@ export function cpu_rv_register (sim_p)
         {
             // value
             var base = 0;
-            var r = s_expr[3].split('/');
+            var r    = s_expr[3].split('/');
             if (1 == r.length)
                 base = get_value(sim_p.states[s_expr[3]]);
             else
@@ -2179,7 +2179,7 @@ export function cpu_rv_register (sim_p)
             //    0             1    2  3
             //   SBIT_SIGNAL  A0A1   1  0
             var new_value = sim_elto_dst.value ;
-            var mask = (1 << s_expr[3]) ;
+            var mask      = (1 << s_expr[3]) ;
             if (s_expr[2] == '1')
                 new_value = new_value | mask ;
             else new_value = new_value & ~mask ;
@@ -2192,7 +2192,7 @@ export function cpu_rv_register (sim_p)
 
             // return verbal of the compound signal/value
             var new_value = sim_elto_dst.value ;
-            var mask = (1 << s_expr[3]) ;
+            var mask      = (1 << s_expr[3]) ;
             if (s_expr[2] == '1')
                 new_value = new_value | mask ;
             else new_value = new_value & ~mask ;
@@ -2233,11 +2233,11 @@ export function cpu_rv_register (sim_p)
         operation:   function(s_expr)
         {
             var offset = parseInt(sim_p.signals[s_expr[4]].value) ;
-            var size = parseInt(sim_p.signals[s_expr[5]].value) ;
+            var size   = parseInt(sim_p.signals[s_expr[5]].value) ;
 
             var n1 = get_value(sim_p.states[s_expr[3]]).toString(2); // to binary
             var n2 = ('00000000000000000000000000000000'.substring(0, 32 - n1.length) + n1) ;
-            n2 = n2.substr(31 - (offset + size - 1), size);
+            n2     = n2.substr(31 - (offset + size - 1), size);
 
             var n3 = '00000000000000000000000000000000'.substring(0, 32 - n2.length) + n2;
             if (('1' == sim_p.signals[s_expr[7]].value) && ('1' == n2.substr(0, 1)))
@@ -2250,11 +2250,11 @@ export function cpu_rv_register (sim_p)
         verbal: function (s_expr)
         {
             var offset = parseInt(sim_p.signals[s_expr[4]].value) ;
-            var size = parseInt(sim_p.signals[s_expr[5]].value) ;
+            var size   = parseInt(sim_p.signals[s_expr[5]].value) ;
 
             var n1 = get_value(sim_p.states[s_expr[3]]).toString(2); // to binary
             var n2 = ('00000000000000000000000000000000'.substring(0, 32 - n1.length) + n1) ;
-            n2 = n2.substr(31 - (offset + size - 1), size);
+            n2     = n2.substr(31 - (offset + size - 1), size);
 
             var n3 = '00000000000000000000000000000000'.substring(0, 32 - n2.length) + n2;
             if (('1' == sim_p.signals[s_expr[7]].value) && ('1' == n2.substr(0, 1)))
@@ -2283,9 +2283,9 @@ export function cpu_rv_register (sim_p)
         types:       ['E', 'I', 'E', 'S', 'S', 'I', 'S', 'S'],
         operation:   function(s_expr)
         {
-            var oi = decode_instruction(sim_p.internal_states.FIRMWARE,
-                                        sim_p.ctrl_states.ir,
-                                        get_value(sim_p.states['REG_IR'])) ;
+            var oi   = decode_instruction(sim_p.internal_states.FIRMWARE,
+                                          sim_p.ctrl_states.ir,
+                                          get_value(sim_p.states['REG_IR'])) ;
             var bits = [];
             var startbit;
             var stopbit;
@@ -2301,7 +2301,7 @@ export function cpu_rv_register (sim_p)
                     }
                     else
                     {
-                        bits[0] = new Array(2);
+                        bits[0]    = new Array(2);
                         bits[0][0] = oi.oinstruction.fields[i].startbit;
                         bits[0][1] = oi.oinstruction.fields[i].stopbit;
                     }
@@ -2309,10 +2309,10 @@ export function cpu_rv_register (sim_p)
             }
 
             var offset = parseInt(sim_p.signals[s_expr[4]].value) ;
-            var size = parseInt(sim_p.signals[s_expr[5]].value) ;
+            var size   = parseInt(sim_p.signals[s_expr[5]].value) ;
 
             var n1 = get_value(sim_p.states[s_expr[3]]).toString(2); // to binary
-            n1 = ('00000000000000000000000000000000'.substring(0, 32 - n1.length) + n1) ;
+            n1     = ('00000000000000000000000000000000'.substring(0, 32 - n1.length) + n1) ;
 
             var n2 = '';
             for (i = bits.length - 1; i >= 0; i--)
@@ -2357,29 +2357,29 @@ export function cpu_rv_register (sim_p)
         {
             var posd = parseInt(s_expr[2]) ;
             var poso = parseInt(s_expr[5]) ;
-            var len = parseInt(s_expr[3]) ;
+            var len  = parseInt(s_expr[3]) ;
 
             var n1 = get_value(sim_p.states[s_expr[4]]).toString(2); // to binary
             var n2 = '00000000000000000000000000000000'.substring(0, 32 - n1.length) + n1 ;
-            n2 = n2.substr(31 - (poso + len) + 1, len);
+            n2     = n2.substr(31 - (poso + len) + 1, len);
             var n3 = '00000000000000000000000000000000'.substring(0, 32 - n2.length) + n2;
             var n4 = '00000000000000000000000000000000'.substr(0, posd);
-            n3 = n3 + n4;
+            n3     = n3 + n4;
 
             set_value(sim_p.states[s_expr[1]], parseInt(n3, 2));
         },
         verbal: function (s_expr)
         {
             var posd = parseInt(s_expr[2]) ;
-            var len = parseInt(s_expr[3]) ;
+            var len  = parseInt(s_expr[3]) ;
             var poso = parseInt(s_expr[5]) ;
 
             var n1 = get_value(sim_p.states[s_expr[4]]).toString(2); // to binary
             var n2 = '00000000000000000000000000000000'.substring(0, 32 - n1.length) + n1 ;
-            n2 = n2.substr(31 - (poso + len) + 1, len);
+            n2     = n2.substr(31 - (poso + len) + 1, len);
             var n3 = '00000000000000000000000000000000'.substring(0, 32 - n2.length) + n2;
             var n4 = '00000000000000000000000000000000'.substr(0, posd);
-            n3 = n3 + n4;
+            n3     = n3 + n4;
             var n5 = parseInt(n3, 2) ;
 
             var verbose = get_cfg('verbal_verbose') ;
@@ -2400,17 +2400,17 @@ export function cpu_rv_register (sim_p)
         operation:   function(s_expr)
         {
             // Pre-defined positions and length
-            var posd = parseInt(s_expr[3]) ;
-            var poso = parseInt(s_expr[4]) ;
-            var len = parseInt(s_expr[5]) ;
+            var posd     = parseInt(s_expr[3]) ;
+            var poso     = parseInt(s_expr[4]) ;
+            var len      = parseInt(s_expr[5]) ;
             var sign_ext = sim_p.signals[s_expr[6]].value;
 
             var n1 = get_value(sim_p.states[s_expr[2]]).toString(2); // to binary
             var n2 = '00000000000000000000000000000000'.substring(0, 32 - n1.length) + n1 ;
-            n2 = n2.substr(31 - (poso + len) + 1, len);
+            n2     = n2.substr(31 - (poso + len) + 1, len);
             var n3 = '00000000000000000000000000000000'.substring(0, 32 - n2.length) + n2;
             var n4 = '00000000000000000000000000000000'.substr(0, posd);
-            n3 = n3 + n4;
+            n3     = n3 + n4;
 
             if (sign_ext)
             {
@@ -2434,17 +2434,17 @@ export function cpu_rv_register (sim_p)
         },
         verbal: function (s_expr)
         {
-            var posd = parseInt(s_expr[3]) ;
-            var poso = parseInt(s_expr[4]) ;
-            var len = parseInt(s_expr[5]) ;
+            var posd     = parseInt(s_expr[3]) ;
+            var poso     = parseInt(s_expr[4]) ;
+            var len      = parseInt(s_expr[5]) ;
             var sign_ext = sim_p.signals[s_expr[6]].value;
 
             var n1 = get_value(sim_p.states[s_expr[2]]).toString(2);
             var n2 = '00000000000000000000000000000000'.substring(0, 32 - n1.length) + n1 ;
-            n2 = n2.substr(31 - (poso + len) + 1, len);
+            n2     = n2.substr(31 - (poso + len) + 1, len);
             var n3 = '00000000000000000000000000000000'.substring(0, 32 - n2.length) + n2;
             var n4 = '00000000000000000000000000000000'.substr(0, posd);
-            n3 = n3 + n4;
+            n3     = n3 + n4;
 
             if (sign_ext)
             {
@@ -2473,7 +2473,7 @@ export function cpu_rv_register (sim_p)
             }
             else
             {
-                value = parseInt(n3, 2);
+                value   = parseInt(n3, 2);
                 verbose = get_cfg('verbal_verbose') ;
                 if (verbose !== 'math')
                 {
@@ -2526,14 +2526,14 @@ export function cpu_rv_register (sim_p)
         {
             var posd = parseInt(s_expr[2]) ;
             var poso = 0 ;
-            var len = parseInt(s_expr[3]) ;
+            var len  = parseInt(s_expr[3]) ;
 
             var n1 = sim_p.signals[s_expr[4]].value.toString(2); // to binary signal origin
-            n1 = ('00000000000000000000000000000000'.substring(0, 32 - n1.length) + n1);
-            n1 = n1.substr(31 - poso - len + 1, len);
+            n1     = ('00000000000000000000000000000000'.substring(0, 32 - n1.length) + n1);
+            n1     = n1.substr(31 - poso - len + 1, len);
 
             var n2 = sim_p.signals[s_expr[1]].value.toString(2); // to binary signal destiny
-            n2 = ('00000000000000000000000000000000'.substring(0, 32 - n2.length) + n2) ;
+            n2     = ('00000000000000000000000000000000'.substring(0, 32 - n2.length) + n2) ;
             var m1 = n2.substr(0, 32 - (posd + len));
             var m2 = n2.substr(31 - posd + 1, posd);
             var n3 = m1 + n1 + m2;
@@ -2552,14 +2552,14 @@ export function cpu_rv_register (sim_p)
         {
             var posd = parseInt(s_expr[2]) ;
             var poso = parseInt(s_expr[5]) ;
-            var len = parseInt(s_expr[3]) ;
+            var len  = parseInt(s_expr[3]) ;
 
             var n1 = get_value(sim_p.states[s_expr[4]]).toString(2); // to state signal origin
-            n1 = ('00000000000000000000000000000000'.substring(0, 32 - n1.length) + n1);
-            n1 = n1.substr(31 - poso - len + 1, len);
+            n1     = ('00000000000000000000000000000000'.substring(0, 32 - n1.length) + n1);
+            n1     = n1.substr(31 - poso - len + 1, len);
 
             var n2 = sim_p.signals[s_expr[1]].value.toString(2); // to binary signal destiny
-            n2 = ('00000000000000000000000000000000'.substring(0, 32 - n2.length) + n2);
+            n2     = ('00000000000000000000000000000000'.substring(0, 32 - n2.length) + n2);
             var m1 = n2.substr(0, 32 - (posd + len));
             var m2 = n2.substr(31 - posd + 1, posd);
             var n3 = m1 + n1 + m2;
@@ -2576,7 +2576,7 @@ export function cpu_rv_register (sim_p)
         operation:   function(s_expr)
         {
             var address = get_value(sim_p.states['REG_PC']);
-            var clk = get_value(sim_p.states['CLK']) ;
+            var clk     = get_value(sim_p.states['CLK']) ;
 
             var remain = get_value(sim_p.internal_states.MP_wc);
             if (
@@ -2586,16 +2586,16 @@ export function cpu_rv_register (sim_p)
             {
                 remain = sim_p.events.mem[clk - 1] - 1;
             }
-            var first_time = typeof sim_p.events.mem[clk] == 'undefined' ;
+            var first_time        = typeof sim_p.events.mem[clk] == 'undefined' ;
             sim_p.events.mem[clk] = remain;
             if (remain > 0)
             {
                 return;
             }
 
-            address = address & 0xFFFFFFFC;
-            var value = main_memory_getvalue(sim_p.internal_states.MP,
-                                             address) ;
+            address         = address & 0xFFFFFFFC;
+            var value       = main_memory_getvalue(sim_p.internal_states.MP,
+                                                   address) ;
             var full_redraw = false ;
             if (typeof value === 'undefined')
             {
@@ -2618,7 +2618,7 @@ export function cpu_rv_register (sim_p)
         {
             var verbal ;
             var address = get_value(sim_p.states['REG_PC']);
-            var value = main_memory_getvalue(sim_p.internal_states.MP, address) ;
+            var value   = main_memory_getvalue(sim_p.internal_states.MP, address) ;
 
             if (typeof value === 'undefined')
                 value = 0 ;
@@ -2666,7 +2666,7 @@ export function cpu_rv_register (sim_p)
                     oc_eoc_info + ')') ;
 
                 sim_p.states['ROM_MUXA'].value = 0 ;
-                sim_p.states['INEX'].value = 1 ;
+                sim_p.states['INEX'].value     = 1 ;
                 return -1;
             }
 
@@ -2691,7 +2691,7 @@ export function cpu_rv_register (sim_p)
             set_value(sim_p.states['DECO_INS'], val + 1);
 
             // 5.- Update UI
-            var pc = get_value(sim_p.states['REG_PC']) - 4 ;
+            var pc     = get_value(sim_p.states['REG_PC']) - 4 ;
             var decins = get_deco_from_pc(pc) ;
             set_value(sim_p.states['REG_IR_DECO'], decins) ;
             show_dbg_ir(get_value(sim_p.states['REG_IR_DECO']));
@@ -2753,7 +2753,7 @@ export function cpu_rv_register (sim_p)
         types:       ['X'],
         operation:   function (s_expr)
         {
-            let sim_elto = get_reference(s_expr[1]) ;
+            let sim_elto     = get_reference(s_expr[1]) ;
             sim_elto.changed = false ; // Disable by Default
         },
         verbal: function (s_expr)
@@ -2778,7 +2778,7 @@ export function cpu_rv_register (sim_p)
 
             // 2.- To treat the (Falling) Edge signals
             new_maddr = get_value(sim_p.states['REG_MICROADDR']);
-            mcelto = sim_p.internal_states['MC'][new_maddr];
+            mcelto    = sim_p.internal_states['MC'][new_maddr];
             signal_apply_behaviour_allByEdge(mcelto) ;
 
             // 3.- The (Falling) Edge part of the Control Unit...
@@ -2792,7 +2792,7 @@ export function cpu_rv_register (sim_p)
                     is_native: false,
                 } ;
             }
-            var new_mins = Object.create(get_value(mcelto));
+            var new_mins                       = Object.create(get_value(mcelto));
             sim_p.states['REG_MICROINS'].value = new_mins;
 
             // 4.- update signals

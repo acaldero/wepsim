@@ -30,8 +30,8 @@ export function find_first_oceoc_v2 (context, curr_instruction, first_oc, last_o
     var xr_info = simhw_sim_ctrlStates_get() ;
     var eoc_len = xr_info.ir.default_eltos.eoc[0].length ;
 
-    var ret = {} ;
-    ret.label_oc = '' ;
+    var ret       = {} ;
+    ret.label_oc  = '' ;
     ret.label_eoc = '' ;
 
     // analize if instruction has any field that uses eoc bits... -> m points to
@@ -54,7 +54,7 @@ export function find_first_oceoc_v2 (context, curr_instruction, first_oc, last_o
         // (1/3) check for free oc-0000...
         if (typeof context.oc_eoc[ret.label_oc] === 'undefined')
         {
-            context.oc_eoc[ret.label_oc] = {} ;
+            context.oc_eoc[ret.label_oc]         = {} ;
             context.oc_eoc[ret.label_oc].witheoc = false ;
             return ret ;
         }
@@ -89,7 +89,7 @@ export function find_first_oceoc_v2 (context, curr_instruction, first_oc, last_o
 
         // new initial oc-eoc...
         var first_eoc = 0 ;
-        var last_eoc = (1 << eoc_len) - 1 ; // Math.pow(2, eoc_len) - 1 ;
+        var last_eoc  = (1 << eoc_len) - 1 ; // Math.pow(2, eoc_len) - 1 ;
         for (k = first_eoc; k < last_eoc; k++)
         {
             ret.label_eoc = k.toString(2).padStart(eoc_len, '0') ;
@@ -139,7 +139,7 @@ export function resolve_pending_oceoc_v2 (context)
 
         // try to find first free 'oc-eoc' code
         last_oc = parseInt(all_oc_ones_str, 2) >>> 0 ;
-        var r = find_first_oceoc_v2(context, curr_instruction, first_oc, last_oc) ;
+        var r   = find_first_oceoc_v2(context, curr_instruction, first_oc, last_oc) ;
         if ('' == r.label_oc)
         {
             return frm_langError(context,
@@ -149,14 +149,14 @@ export function resolve_pending_oceoc_v2 (context)
         // work with this free 'oc-eoc' code
         first_oc = parseInt(r.label_oc, 2) ;
 
-        curr_instruction.oc = r.label_oc ;
+        curr_instruction.oc                  = r.label_oc ;
         context.oc_eoc[r.label_oc].signature = curr_instruction.signature ;
 
         if (r.label_eoc !== '')
         {
-            curr_instruction.eoc = r.label_eoc ;
+            curr_instruction.eoc                        = r.label_eoc ;
             context.oc_eoc[r.label_oc].eoc[r.label_eoc] = curr_instruction.signature ;
-            context.oc_eoc[r.label_oc].witheoc = true ;
+            context.oc_eoc[r.label_oc].witheoc          = true ;
         }
 
         // updating the opcode pattern (e.g.: "------10101-----1100") again, with the new oc/eoc

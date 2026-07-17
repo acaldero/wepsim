@@ -40,7 +40,7 @@ export function simcore_init (with_ui)
 {
     var ret = {} ;
     ret.msg = '' ;
-    ret.ok = true ;
+    ret.ok  = true ;
 
     // cfg
     if (with_ui)
@@ -63,7 +63,7 @@ export async function simcore_init_hw (simhw_name)
 {
     var ret = {} ;
     ret.msg = '' ;
-    ret.ok = true ;
+    ret.ok  = true ;
 
     // hardware
     var hwid = simhw_getIdByName(simhw_name) ;
@@ -81,7 +81,7 @@ export async function simcore_init_hw (simhw_name)
     if (hwid < 0)
     {
         ret.msg = 'ERROR: unknown hardware: ' + simhw_name + '.<br>\n' ;
-        ret.ok = false ;
+        ret.ok  = false ;
         return ret ;
     }
     simhw_setActive(hwid) ;
@@ -91,7 +91,7 @@ export async function simcore_init_hw (simhw_name)
     if (false === ret1.ok)
     {
         ret.msg = ret.msg ;
-        ret.ok = false ;
+        ret.ok  = false ;
         return ret ;
     }
 
@@ -106,7 +106,7 @@ export function simcore_welcome ()
 {
     var ret = {} ;
     ret.msg = '' ;
-    ret.ok = true ;
+    ret.ok  = true ;
 
     console.log('') ;
     console.log('██╗    ██╗███████╗██████╗ ███████╗██╗███╗   ███╗') ;
@@ -133,7 +133,7 @@ export function simcore_init_ui (hash_detail2init)
 {
     var ret = {} ;
     ret.msg = '' ;
-    ret.ok = true ;
+    ret.ok  = true ;
 
     // display the information holders
     var detail_id ;
@@ -286,7 +286,7 @@ export function simcore_check_if_can_execute ()
 {
     var ret = {} ;
     ret.msg = '' ;
-    ret.ok = true ;
+    ret.ok  = true ;
 
     var curr_segments = simhw_internalState('segments') ;
 
@@ -295,7 +295,7 @@ export function simcore_check_if_can_execute ()
     {
         ret.msg = 'code segment .ktext/.text does not exist!<br>\n' +
             'Please load some assembly code.<br>' ;
-        ret.ok = false ;
+        ret.ok  = false ;
         return ret ;
     }
 
@@ -307,7 +307,7 @@ export function simcore_check_if_can_execute ()
     )
     {
         ret.msg = "labels 'kmain' (in .ktext) or 'main' (in .text) do not exist!" ;
-        ret.ok = false ;
+        ret.ok  = false ;
         return ret ;
     }
 
@@ -322,8 +322,8 @@ export function simcore_packerror_at (reg_maddr, msg)
     var ret = {} ;
 
     var hex_maddr = '0x' + parseInt(reg_maddr).toString(16) ;
-    ret.ok = false ;
-    ret.msg = msg + ' at maddr=' + hex_maddr + '.' ;
+    ret.ok        = false ;
+    ret.msg       = msg + ' at maddr=' + hex_maddr + '.' ;
 
     return ret ;
 }
@@ -331,12 +331,12 @@ export function simcore_packerror_at (reg_maddr, msg)
 export function simcore_check_if_can_continue2 (reg_maddr, reg_pc)
 {
     var ret = {} ;
-    ret.ok = true ;
+    ret.ok  = true ;
     ret.msg = '' ;
 
     // if (MC[reg_maddr] == undefined) -> cannot continue
     var curr_MC = simhw_internalState('MC') ;
-    var mcelto = control_memory_get(curr_MC, reg_maddr) ;
+    var mcelto  = control_memory_get(curr_MC, reg_maddr) ;
     if (typeof mcelto === 'undefined')
     {
         return simcore_packerror_at(reg_maddr, 'Error: undefined microinstruction') ;
@@ -380,17 +380,17 @@ export function simcore_check_if_can_continue2 (reg_maddr, reg_pc)
     }
 
     // e.o.c. -> cannot continue
-    ret.ok = false ;
+    ret.ok  = false ;
     ret.msg = 'The program has finished because the PC register points outside .ktext/.text code segments' ;
     return ret ;
 }
 
 export function simcore_check_if_can_continue ()
 {
-    var pc_name = simhw_sim_ctrlStates_get().pc.state ;
-    var reg_pc = parseInt(get_value(simhw_sim_state(pc_name)));
+    var pc_name    = simhw_sim_ctrlStates_get().pc.state ;
+    var reg_pc     = parseInt(get_value(simhw_sim_state(pc_name)));
     var maddr_name = simhw_sim_ctrlStates_get().mpc.state ;
-    var reg_maddr = get_value(simhw_sim_state(maddr_name)) ;
+    var reg_maddr  = get_value(simhw_sim_state(maddr_name)) ;
 
     return simcore_check_if_can_continue2(reg_maddr, reg_pc) ;
 }
@@ -404,26 +404,26 @@ export function simcore_reset ()
 {
     var ret = {} ;
     ret.msg = '' ;
-    ret.ok = true ;
+    ret.ok  = true ;
 
     // current elements
-    var SIMWARE = get_simware() ;
-    var curr_firm = simhw_internalState('FIRMWARE') ;
-    var curr_segments = simhw_internalState('segments') ;
-    var curr_MC = simhw_internalState('MC') ;
+    var SIMWARE        = get_simware() ;
+    var curr_firm      = simhw_internalState('FIRMWARE') ;
+    var curr_segments  = simhw_internalState('segments') ;
+    var curr_MC        = simhw_internalState('MC') ;
     var sim_components = simhw_sim_components() ;
-    var ctrl_states = simhw_sim_ctrlStates_get() ;
+    var ctrl_states    = simhw_sim_ctrlStates_get() ;
 
     // get PC and SP
-    var pc_name = ctrl_states.pc.state ;
+    var pc_name  = ctrl_states.pc.state ;
     var pc_state = simhw_sim_state_getref(pc_name) ;
 
-    var sp_name = ctrl_states.sp.state ;
+    var sp_name  = ctrl_states.sp.state ;
     var sp_state = simhw_sim_state_getref(sp_name) ;
     if (curr_firm.stackRegister != null)
     {
         var sp_rfid = curr_firm.stackRegister.rf_name ;
-        sp_name = curr_firm.stackRegister.r_name ;
+        sp_name     = curr_firm.stackRegister.r_name ;
 
         var simware_registers_keys = Object.keys(SIMWARE.registers) ;
         if (simware_registers_keys.length > 1)
@@ -459,7 +459,7 @@ export function simcore_reset ()
 
     // If not NATIVE code, fire one clock signal to initialize at first microinstruction
     var new_maddr = get_value(simhw_sim_state('MUXA_MICROADDR')) ;
-    var mcelto = control_memory_get(curr_MC, new_maddr) ;
+    var mcelto    = control_memory_get(curr_MC, new_maddr) ;
     if (typeof mcelto === 'undefined')
     {
         mcelto = {
@@ -544,11 +544,11 @@ export function simcore_execute_microprogram (options)
     //              execute micro-instructions
     //
     var before_state = null ;
-    var after_state = null ;
-    var curr_mpc = '' ;
-    var curr_MC = simhw_internalState('MC') ;
-    var maddr_name = simhw_sim_ctrlStates_get().mpc.state ;
-    var maddr_state = simhw_sim_state(maddr_name) ;
+    var after_state  = null ;
+    var curr_mpc     = '' ;
+    var curr_MC      = simhw_internalState('MC') ;
+    var maddr_name   = simhw_sim_ctrlStates_get().mpc.state ;
+    var maddr_state  = simhw_sim_state(maddr_name) ;
 
     if (typeof options.before_microinstruction === 'undefined')
     {
@@ -559,11 +559,11 @@ export function simcore_execute_microprogram (options)
         options.after_microinstruction = simcore_do_nothing_handler ;
     }
 
-    var i_clks = 0 ;
+    var i_clks    = 0 ;
     var limitless = (options.cycles_limit < 0) ;
-    var cur_addr = 0 ;
-    var mcelto = null ;
-    var oolimits = false ;
+    var cur_addr  = 0 ;
+    var mcelto    = null ;
+    var oolimits  = false ;
 
     do
     {
@@ -580,16 +580,16 @@ export function simcore_execute_microprogram (options)
         if ((limitless === false) && (i_clks >= options.cycles_limit))
         {
             ret.msg = 'Warning: clock cycles limit reached in a single instruction.' ;
-            ret.ok = false ;
+            ret.ok  = false ;
             break ;
         }
 
         cur_addr = get_value(maddr_state) ;
-        mcelto = control_memory_get(curr_MC, cur_addr) ;
+        mcelto   = control_memory_get(curr_MC, cur_addr) ;
         if (typeof mcelto === 'undefined')
         {
             ret.msg = 'Error: undefined microinstruction at ' + cur_addr + '.' ;
-            ret.ok = false ;
+            ret.ok  = false ;
             break ;
         }
 
@@ -625,15 +625,15 @@ export function simcore_execute_microprogram (options)
 export function simcore_execute_program (options)
 {
     var ret = {} ;
-    ret.ok = true ;
+    ret.ok  = true ;
     ret.msg = '' ;
 
     // execute firmware-assembly
     var curr_segments = simhw_internalState('segments') ;
-    var pc_name = simhw_sim_ctrlStates_get().pc.state ;
-    var pc_state = simhw_sim_state(pc_name) ;
+    var pc_name       = simhw_sim_ctrlStates_get().pc.state ;
+    var pc_state      = simhw_sim_state(pc_name) ;
 
-    var reg_pc = get_value(pc_state) ;
+    var reg_pc        = get_value(pc_state) ;
     var reg_pc_before = get_value(pc_state) - 4 ;
 
     var code_begin = 0 ;
@@ -690,13 +690,13 @@ export function simcore_execute_program (options)
         ins_executed++ ;
         if ((ins_executed > options.instruction_limit) && (-1 != options.instruction_limit))
         {
-            ret.ok = false ;
+            ret.ok  = false ;
             ret.msg = 'more than ' + options.instruction_limit + ' instructions executed before application ends.';
             return ret ;
         }
 
         reg_pc_before = reg_pc ;
-        reg_pc = get_value(pc_state) ;
+        reg_pc        = get_value(pc_state) ;
     }
 
     return ret ;
@@ -721,13 +721,13 @@ export function simcore_compile_firmware (textToMCompile)
 {
     var ret = {} ;
     ret.msg = '' ;
-    ret.ok = true ;
+    ret.ok  = true ;
 
     // check empty
     if ('' == textToMCompile)
     {
         ret.msg = 'Empty Firmware' ;
-        ret.ok = false ;
+        ret.ok  = false ;
         return ret ;
     }
 
@@ -735,7 +735,7 @@ export function simcore_compile_firmware (textToMCompile)
     var preSM ;
     try
     {
-        preSM = loadFirmware(textToMCompile) ;
+        preSM       = loadFirmware(textToMCompile) ;
         ret.simware = preSM ;
     }
     catch (e)
@@ -760,7 +760,7 @@ export function simcore_compile_firmware (textToMCompile)
     if (preSM.error != null)
     {
         ret.msg = preSM.error ;
-        ret.ok = false ;
+        ret.ok  = false ;
         return ret ;
     }
 
@@ -778,24 +778,24 @@ export function simcore_compile_assembly (textToCompile)
 {
     var ret = {} ;
     ret.msg = '' ;
-    ret.ok = true ;
+    ret.ok  = true ;
 
     // get SIMWARE.firmware
     var SIMWARE = get_simware() ;
     if (SIMWARE.firmware.length === 0)
     {
         ret.msg = 'Empty microcode, please load the microcode first.' ;
-        ret.ok = false;
+        ret.ok  = false;
         return ret;
     }
 
     // compile Assembly and show message
     var SIMWAREaddon = wsasm_src2mem(SIMWARE, textToCompile, {});
-    ret.simware = SIMWAREaddon ;
+    ret.simware      = SIMWAREaddon ;
     if (SIMWAREaddon.error != null)
     {
         ret.msg = SIMWAREaddon.error ;
-        ret.ok = false;
+        ret.ok  = false;
         return ret;
     }
 
@@ -811,24 +811,24 @@ export function simcore_assembly_to_binasm (textToCompile)
 {
     var ret = {} ;
     ret.msg = '' ;
-    ret.ok = true ;
+    ret.ok  = true ;
 
     // get SIMWARE.firmware
     var SIMWARE = get_simware() ;
     if (SIMWARE.firmware.length === 0)
     {
         ret.msg = 'Empty microcode, please load the microcode first.' ;
-        ret.ok = false;
+        ret.ok  = false;
         return ret;
     }
 
     // Get assembly as binary segment
     var SIMWAREaddon = wsasm_src2binsrc(SIMWARE, textToCompile, {});
-    ret.simware = SIMWAREaddon ;
+    ret.simware      = SIMWAREaddon ;
     if (SIMWAREaddon.error != null)
     {
         ret.msg = SIMWAREaddon.error ;
-        ret.ok = false;
+        ret.ok  = false;
         return ret;
     }
 
@@ -846,7 +846,7 @@ export function simcore_hardware_export (hw_name)
 {
     var ret = {} ;
     ret.msg = '{}' ;
-    ret.ok = false ;
+    ret.ok  = false ;
 
     var hw_obj = simhw_getObjByName(hw_name) ;
     if (null === hw_obj)
@@ -856,7 +856,7 @@ export function simcore_hardware_export (hw_name)
 
     // export to json
     // based on: https://stackoverflow.com/questions/36517173/how-to-store-a-javascript-function-in-json
-    ret.ok = true ;
+    ret.ok  = true ;
     ret.msg = JSON.stringify(hw_obj,
                              function(key, value)
                              {
@@ -879,7 +879,7 @@ export function simcore_hardware_import (hw_json)
 {
     var ret = {} ;
     ret.msg = '' ;
-    ret.ok = true ;
+    ret.ok  = true ;
 
     // import json
     // based on: https://stackoverflow.com/questions/36517173/how-to-store-a-javascript-function-in-json

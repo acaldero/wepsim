@@ -135,8 +135,8 @@ export var hash_opt_wsx = {
 
 export function wepsim_restore_view(view)
 {
-    var all_classes = [] ;
-    var new_classes = [] ;
+    var all_classes   = [] ;
+    var new_classes   = [] ;
     var cur_skin_user = view.split(':') ;
 
     // get associated classes for base, extra, beta, etc.
@@ -173,7 +173,7 @@ export function wepsim_toggle_history_ui()
     try
     {
         var history_enabled = (get_cfg('history_enable') === true);
-        var bars = document.querySelectorAll('ws-executionbar');
+        var bars            = document.querySelectorAll('ws-executionbar');
         for (var i = 0; i < bars.length; i++)
         {
             var comps = bars[i].getAttribute('components');
@@ -577,7 +577,7 @@ export function wepsim_confirm_exit(e)
 {
     wepsim_checkpoint_addCurrentToCache() ;
 
-    var confirmationMessage = '\o/';
+    var confirmationMessage  = '\o/';
     (e || event).returnValue = confirmationMessage; // Gecko + IE
     return confirmationMessage; // Webkit, Safari, Chrome
 }
@@ -609,7 +609,7 @@ export function wepsim_init_quickfixes()
         String.prototype.padStart = function padStart(targetLength, padString)
         {
             targetLength >>= 0; // truncate if number, or convert non-number to 0;
-            padString = String(typeof padString !== 'undefined' ? padString : ' ');
+            padString      = String(typeof padString !== 'undefined' ? padString : ' ');
             if (this.length >= targetLength)
             {
                 return String(this);
@@ -675,10 +675,10 @@ export function wepsim_init_ui()
 
     // initialize editors
     inputfirm_cfg = sim_cm_get_firmcfg() ;
-    inputfirm = sim_init_editor('inputFirmware', inputfirm_cfg) ;
+    inputfirm     = sim_init_editor('inputFirmware', inputfirm_cfg) ;
 
     inputasm_cfg = sim_cm_get_asmcfg() ;
-    inputasm = sim_init_editor('inputAssembly', inputasm_cfg) ;
+    inputasm     = sim_init_editor('inputAssembly', inputasm_cfg) ;
 
     // init: voice
     wepsim_voice_init() ;
@@ -774,19 +774,19 @@ export function wepsim_init_firefoxOS()
     // Firefox OS
     if ('mozApps' in navigator)
     {
-        var manifest_url = location.href + 'manifest.webapp';
-        var installCheck = navigator.mozApps.checkInstalled(manifest_url);
+        var manifest_url       = location.href + 'manifest.webapp';
+        var installCheck       = navigator.mozApps.checkInstalled(manifest_url);
         installCheck.onsuccess = function()
         {
             if (!installCheck.result)
             {
-                var installLocFind = navigator.mozApps.install(manifest_url);
+                var installLocFind       = navigator.mozApps.install(manifest_url);
                 installLocFind.onsuccess = function(data)
                 {
                     wepsim_notify_success('<h4>Info:<br/></h4>',
                                           'WepSIM was installed.');
                 } ;
-                installLocFind.onerror = function()
+                installLocFind.onerror   = function()
                 {
                     wepsim_notify_error('<h4>Warning:<br/>' + installLocFind.error.name + '</h4>',
                                         'FirefoxOS/KaiOS installation was cancelled.') ;

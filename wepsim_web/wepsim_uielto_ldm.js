@@ -63,9 +63,9 @@ export class ws_ledm extends ws_uielto
 
     render_populate ()
     {
-        var o1 = '' ;
+        var o1       = '' ;
         var div_hash = '#config_LEDM_' + this.name_str ;
-        var offset = 0 ;
+        var offset   = 0 ;
         var i ;
 
         // if no active hardware -> empty
@@ -77,7 +77,7 @@ export class ws_ledm extends ws_uielto
 
         // default content
         var ledm_states = simhw_internalState('ledm_state') ;
-        var ledm_dim = simhw_internalState('ledm_dim') ;
+        var ledm_dim    = simhw_internalState('ledm_dim') ;
         if ((typeof ledm_states == 'undefined') || (typeof ledm_dim == 'undefined'))
         {
             $(div_hash).html(o1) ;
@@ -174,7 +174,7 @@ export function webui_ledm_value2color(value)
     var colors = simhw_internalState('ledm_colors') ;
     if (typeof colors != 'undefined')
     {
-        len = colors.length ;
+        len   = colors.length ;
         color = colors[value % len] ;
     }
 

@@ -119,7 +119,7 @@ export class ws_uiscreen_classic extends ws_uielto
 
     render_populate_classic_toolbars ()
     {
-        var o1 = '' ;
+        var o1  = '' ;
         var ui1 = '' ;
 
         ui1 += '[,btn_examples,btn_help,btndd_mode,]' ;
@@ -426,8 +426,8 @@ export function wepsim_offcanvas_helponhw(offcanvas_id, content_name)
         wepsim_offcanvas_set_content(offcanvas_id, 'Hardware signals', true, c, '') ;
 
         var seg_idiom = get_cfg('ws_idiom') ;
-        var ahw = simhw_active() ;
-        var helpurl = 'repo/hardware/' + ahw.sim_short_name + '/help/signals-' + seg_idiom + '.html' ;
+        var ahw       = simhw_active() ;
+        var helpurl   = 'repo/hardware/' + ahw.sim_short_name + '/help/signals-' + seg_idiom + '.html' ;
         resolve_html_url('#' + offcanvas_id + 'help', helpurl, '#', function()
         {}) ;
     }

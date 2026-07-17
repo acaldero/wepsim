@@ -106,7 +106,7 @@ export var jit_fire_dep = {};
 // behaviors
 export function compile_behaviors ()
 {
-    var jit_bes = '';
+    var jit_bes  = '';
     jit_fire_dep = {};
 
     var sig_obj ;
@@ -119,7 +119,7 @@ export function compile_behaviors ()
         for (var val in simhw_sim_signal(sig).behavior)
         {
             var input_behavior = simhw_sim_signal(sig).behavior[val] ;
-            var jit_be = '';
+            var jit_be         = '';
 
             // 1.- Split several behaviors, e.g.: "MV D1 O1; MV D2 O2"
             var s_exprs = input_behavior.split(';');
@@ -143,7 +143,7 @@ export function compile_behaviors ()
                 // 2.3b.- ...build the fire graph
                 if (s_expr[0].startsWith('FIRE'))
                 {
-                    sig_obj = simhw_sim_signal(sig) ;
+                    sig_obj  = simhw_sim_signal(sig) ;
                     expr_obj = simhw_sim_signal(s_expr[1]) ;
 
                     if (typeof expr_obj == 'undefined')
@@ -223,7 +223,7 @@ export function compile_verbals ()
         for (var val in simhw_sim_signal(sig).behavior)
         {
             var input_behavior = simhw_sim_signal(sig).behavior[val] ;
-            var jit_be = ' var r = ""; ';
+            var jit_be         = ' var r = ""; ';
 
             // 1.- Split several behaviors, e.g.: "MV D1 O1; MV D2 O2"
             var s_exprs = input_behavior.split(';');

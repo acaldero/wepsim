@@ -77,7 +77,7 @@ export function firm_registers_write (context)
                 o += '\t' + i + '=' + r + ' (stack_pointer),' + '\n' ;
             else o += '\t' + i + '=' + r + ',' + '\n' ;
         }
-        o = o.substr(0, o.length - 2) ;
+        o  = o.substr(0, o.length - 2) ;
         o += '\n' +
             '}\n' ;
     }
@@ -133,7 +133,7 @@ export function firm_registers_read (context)
     rf_item = context.registers[rf_name] ;
     if (typeof rf_item == 'undefined')
     {
-        rf_item = { name: 'default', registers: [] } ;
+        rf_item                    = { name: 'default', registers: [] } ;
         context.registers[rf_name] = rf_item ;
     }
 
@@ -203,9 +203,9 @@ export function firm_registers_read (context)
                                      i18n_get_TagFor('compiler', 'NO SP')) ;
             }
 
-            context.stackRegister = {} ;
+            context.stackRegister         = {} ;
             context.stackRegister.rf_name = rf_item.name ;
-            context.stackRegister.r_name = nombre_reg ;
+            context.stackRegister.r_name  = nombre_reg ;
 
             frm_nextToken(context);
             if (! frm_isToken(context, ')'))

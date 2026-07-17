@@ -50,7 +50,7 @@ export function wepsim_preload_fromHash (hash)
 
 export function wepsim_preload_get2hash (window_location, f_preload_fromHash)
 {
-    var hash = {} ;
+    var hash    = {} ;
     var hash_field ;
     var uri_obj = null ;
 
@@ -64,7 +64,7 @@ export function wepsim_preload_get2hash (window_location, f_preload_fromHash)
     var parameters = new URL(window_location).searchParams ;
     for (let i = 0; i < ws_info.preload_tasks.length; i++)
     {
-        hash_field = ws_info.preload_tasks[i].name ;
+        hash_field       = ws_info.preload_tasks[i].name ;
         hash[hash_field] = parameters.get(hash_field) ;
 
         // overwrite null with default values

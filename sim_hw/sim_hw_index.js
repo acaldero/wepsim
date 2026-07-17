@@ -44,8 +44,8 @@ export function simhw_add (newElto)
         if (sim.systems[m].sim_short_name == newElto.sim_short_name)
         {
             sim.systems[m] = newElto ;
-            sim.index = m ;
-            found = m ;
+            sim.index      = m ;
+            found          = m ;
         }
     }
 
@@ -56,7 +56,7 @@ export function simhw_add (newElto)
     }
 
     // 2.- add a new element
-    sim.active = newElto ;
+    sim.active                  = newElto ;
     sim[newElto.sim_short_name] = newElto ;
 
     // 3.- check if default behaviors are ok
@@ -80,7 +80,7 @@ export function simhw_setActive (newActive)
         (sim.systems.length >= newActive))
     {
         sim.active = sim.systems[newActive] ;
-        sim.index = newActive ;
+        sim.index  = newActive ;
     }
 
     // pre-compile behaviors & references

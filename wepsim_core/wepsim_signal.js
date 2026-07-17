@@ -65,7 +65,7 @@ export function wepsim_update_signal_dialog_body(key, signal_obj)
     var input_help = '' ;
     var behav_raw ;
     var behav_str ;
-    var notif = '' ;
+    var notif      = '' ;
     var n10 ;
     var n2 ;
 
@@ -95,7 +95,7 @@ export function wepsim_update_signal_dialog_body(key, signal_obj)
             }
 
             n10 = k.toString(10) ;
-            n2 = k.toString(2).padStart(signal_obj.nbits, '0') ;
+            n2  = k.toString(2).padStart(signal_obj.nbits, '0') ;
 
             if (nvalues != 2)
             {
@@ -189,7 +189,7 @@ export function wepsim_update_signal_dialog(key)
                 className: 'btn-info btn-sm col col-md-3 float-right',
                 callback:  function ()
                 {
-                    key = $('#ask_skey').val();
+                    key            = $('#ask_skey').val();
                     var user_input = $("input[name='ask_svalue']:checked").val();
                     if (typeof user_input == 'undefined')
                     {
@@ -247,9 +247,9 @@ export function wepsim_update_signal_quick(key)
     }
 
     // update signal
-    var nvalues = 1 << simhw_sim_signal(key).nbits ; // Math.pow(2, simhw_sim_signal(key).nbits) ;
+    var nvalues    = 1 << simhw_sim_signal(key).nbits ; // Math.pow(2, simhw_sim_signal(key).nbits) ;
     var user_input = simhw_sim_signal(key).value ;
-    user_input = (user_input + 1) % nvalues ;
+    user_input     = (user_input + 1) % nvalues ;
 
     wepsim_update_signal_with_value(key, user_input) ;
 }
@@ -271,10 +271,10 @@ export var jit_dep_network = null ;
 
 export function show_visgraph(jit_fire_dep, jit_fire_order)
 {
-    var sig = {} ;
-    var tmp_hash = {} ;
+    var sig       = {} ;
+    var tmp_hash  = {} ;
     var tmp_nodes = [] ;
-    var tmp_id = 0;
+    var tmp_id    = 0;
 
     for (sig in simhw_sim_signals())
     {
@@ -303,12 +303,12 @@ export function show_visgraph(jit_fire_dep, jit_fire_order)
     var jit_dep_edges = new vis.DataSet(tmp_edges) ;
 
     var jit_dep_container = document.getElementById('depgraph1c') ;
-    var jit_dep_data = { nodes: jit_dep_nodes,
+    var jit_dep_data      = { nodes: jit_dep_nodes,
         edges: jit_dep_edges } ;
-    var jit_dep_options = { interaction: { hover: true },
+    var jit_dep_options   = { interaction: { hover: true },
         height:      '255px',
         nodes:       { borderWidth: 2, shadow: true },
         edges:       { width: 2, shadow: true } } ;
-    jit_dep_network = new vis.Network(jit_dep_container, jit_dep_data, jit_dep_options) ;
+    jit_dep_network       = new vis.Network(jit_dep_container, jit_dep_data, jit_dep_options) ;
 }
 

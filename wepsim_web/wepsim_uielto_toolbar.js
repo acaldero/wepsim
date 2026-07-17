@@ -89,7 +89,7 @@ export class ws_toolbar extends ws_uielto
         var o1 = '' ;
         for (var i = 0; i < this.components.length; i++)
         {
-            var elto = this.components_arr[i] ;
+            var elto            = this.components_arr[i] ;
             var render_function = this.render_hash[elto] ;
 
             if (typeof render_function !== 'undefined')
@@ -214,9 +214,9 @@ export class ws_toolbar extends ws_uielto
             '        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"' +
             '        title="This button opens the \'Help\' dialog."' +
             '        data-bind="click" data-action="btn-help">' ;
-        o += (robj.icons_str == 'no') ? '' : '<em class="fas fa-info d-none d-sm-inline text-secondary"></em>' ;
-        o += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
-        o += '<strong><span data-langkey=\'Help\'>Help</span></strong></button>' ;
+        o    += (robj.icons_str == 'no') ? '' : '<em class="fas fa-info d-none d-sm-inline text-secondary"></em>' ;
+        o    += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
+        o    += '<strong><span data-langkey=\'Help\'>Help</span></strong></button>' ;
         onClick('btn-help', () => api.wsweb_dialog_open('help')) ;
 
         return o ;
@@ -229,9 +229,9 @@ export class ws_toolbar extends ws_uielto
             '        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"' +
             '        title="This button opens the \'Configuration\' dialog."' +
             '        data-bind="click" data-action="btn-config">' ;
-        o += (robj.icons_str == 'no') ? '' : '<em class="fas fa-cogs d-none d-sm-inline text-secondary"></em>&nbsp;' ;
-        o += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
-        o += '<strong><span class="d-none d-sm-inline-flex" data-langkey=\'Configuration\'>Configuration</span><span class="d-sm-none">Cfg.</span></strong></button>' ;
+        o    += (robj.icons_str == 'no') ? '' : '<em class="fas fa-cogs d-none d-sm-inline text-secondary"></em>&nbsp;' ;
+        o    += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
+        o    += '<strong><span class="d-none d-sm-inline-flex" data-langkey=\'Configuration\'>Configuration</span><span class="d-sm-none">Cfg.</span></strong></button>' ;
         onClick('btn-config', () => api.wsweb_dialog_open('config')) ;
 
         return o ;
@@ -243,9 +243,9 @@ export class ws_toolbar extends ws_uielto
             '        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"' +
             '        title="This button opens the \'Notifications\' dialog."' +
             '        data-bind="click" data-action="btn-notifications">' ;
-        o += (robj.icons_str == 'no') ? '' : '<em class="fas fa-comment-alt d-none d-sm-inline text-secondary"></em>&nbsp;' ;
-        o += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
-        o += '<strong><span class="d-none d-md-inline-flex" data-langkey=\'Notifications\'>Notifications</span><span class="d-md-none">Notif.</span></strong></button>' ;
+        o    += (robj.icons_str == 'no') ? '' : '<em class="fas fa-comment-alt d-none d-sm-inline text-secondary"></em>&nbsp;' ;
+        o    += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
+        o    += '<strong><span class="d-none d-md-inline-flex" data-langkey=\'Notifications\'>Notifications</span><span class="d-md-none">Notif.</span></strong></button>' ;
         onClick('btn-notifications', () => api.wsweb_dialog_open('notifications')) ;
 
         return o ;
@@ -257,9 +257,9 @@ export class ws_toolbar extends ws_uielto
             '        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"' +
             '        title="This button toggles the \'Record\' bar."' +
             '        data-bind="click" data-action="btn-recordbar">' ;
-        o += (robj.icons_str == 'no') ? '' : '<em class="fas fa-circle d-none d-sm-inline text-secondary"></em>&nbsp;' ;
-        o += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
-        o += '<strong><span data-langkey=\'RecordBar\'>RecordBar</span></strong></button>' ;
+        o    += (robj.icons_str == 'no') ? '' : '<em class="fas fa-circle d-none d-sm-inline text-secondary"></em>&nbsp;' ;
+        o    += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
+        o    += '<strong><span data-langkey=\'RecordBar\'>RecordBar</span></strong></button>' ;
         onClick('btn-recordbar', () => api.wsweb_recordbar_toggle()) ;
 
         return o ;
@@ -271,9 +271,9 @@ export class ws_toolbar extends ws_uielto
             '        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"' +
             '        title="This button microcompiles and compiles."' +
             '        data-bind="click" data-action="btn-microcandc">' ;
-        o += (robj.icons_str == 'no') ? '' : '<em class="fas fa-circle d-none d-sm-inline text-secondary"></em>&nbsp;' ;
-        o += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
-        o += '<strong><span data-langkey=\'microc + c\'>&micro;c + c</span></strong></button>' ;
+        o    += (robj.icons_str == 'no') ? '' : '<em class="fas fa-circle d-none d-sm-inline text-secondary"></em>&nbsp;' ;
+        o    += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
+        o    += '<strong><span data-langkey=\'microc + c\'>&micro;c + c</span></strong></button>' ;
         onClick('btn-microcandc', () => api.wsweb_select_action('microcandc')) ;
 
         return o ;
@@ -285,9 +285,9 @@ export class ws_toolbar extends ws_uielto
             '        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"' +
             '        title="This button opens the \'state management\' dialog: it shows the current state, saves the current state, and shows the differences between two states."' +
             '        data-bind="click" data-action="btn-states">' ;
-        o += (robj.icons_str == 'no') ? '' : '<em class="fas fa-camera d-none d-sm-inline text-secondary"></em>&nbsp;' ;
-        o += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
-        o += '<strong><span data-langkey=\'States\'>States</span></strong></button>' ;
+        o    += (robj.icons_str == 'no') ? '' : '<em class="fas fa-camera d-none d-sm-inline text-secondary"></em>&nbsp;' ;
+        o    += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
+        o    += '<strong><span data-langkey=\'States\'>States</span></strong></button>' ;
         onClick('btn-states', () =>
         {
             api.wsweb_dialog_open('state') ; $('#bot_check1').carousel(0) ;
@@ -303,9 +303,9 @@ export class ws_toolbar extends ws_uielto
             '        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"' +
             '        title="This button opens the \'Configuration\' dialog."' +
             '        data-bind="click" data-action="btn-checkpoint">' ;
-        o += (robj.icons_str == 'no') ? '' : '<em class="fas fa-stream d-none d-sm-inline text-secondary"></em>&nbsp;' ;
-        o += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
-        o += '<strong><span class="d-none d-md-inline-flex" data-langkey=\'Checkpoint\'>Checkpoint</span><span class="d-md-none">ChkPoint</span></strong></button>' ;
+        o    += (robj.icons_str == 'no') ? '' : '<em class="fas fa-stream d-none d-sm-inline text-secondary"></em>&nbsp;' ;
+        o    += (robj.icons_str == 'up') ? '<br>' : '&nbsp;' ;
+        o    += '<strong><span class="d-none d-md-inline-flex" data-langkey=\'Checkpoint\'>Checkpoint</span><span class="d-md-none">ChkPoint</span></strong></button>' ;
         onClick('btn-checkpoint', () => api.wsweb_select_action('checkpoint')) ;
 
         return o ;
@@ -426,7 +426,7 @@ export class ws_toolbar extends ws_uielto
         {
             api.wsweb_select_main(el.dataset.value) ;
             inputfirm.is_compiled = false ;
-            inputasm.is_compiled = false ;
+            inputasm.is_compiled  = false ;
             $('[id="dd1"].dropdown-toggle').dropdown('hide');
         }) ;
 

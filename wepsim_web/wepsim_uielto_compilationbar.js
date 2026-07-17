@@ -49,7 +49,7 @@ export class ws_compilationbar extends ws_uielto
     render_skel ()
     {
         // render toolbar container
-        var o1 = '';
+        var o1         = '';
         this.innerHTML = o1 ;
     }
 
@@ -60,7 +60,7 @@ export class ws_compilationbar extends ws_uielto
         for (var i = 0; i < this.components_arr.length; i++)
         {
             var name = this.components_arr[i] ;
-            o1 += this.render_btns(name) ;
+            o1      += this.render_btns(name) ;
         }
 
         this.innerHTML = o1 ;

@@ -104,7 +104,7 @@ export function sim_tutorial_showframe (tutorial_name, step)
 
     // 4.- dialog +
     //     code_post (next button) | cancel tutorials
-    var wsi = get_cfg('ws_idiom') ;
+    var wsi  = get_cfg('ws_idiom') ;
     var bbbt = {} ;
 
     bbbt.cancel = {

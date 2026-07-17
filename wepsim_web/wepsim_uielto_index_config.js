@@ -192,11 +192,11 @@ export function table_config_html(config)
     var config_groupby_type = {} ;
     for (var n = 0; n < config.length; n++)
     {
-        e_type = config[n].type ;
-        e_u_class = config[n].u_class ;
-        e_code_cfg = config[n].code_cfg ;
+        e_type        = config[n].type ;
+        e_u_class     = config[n].u_class ;
+        e_code_cfg    = config[n].code_cfg ;
         e_description = config[n].description ;
-        e_id = config[n].id ;
+        e_id          = config[n].id ;
 
         // related row
         e_class_1 = '                ' + e_u_class + ' ' ;
@@ -232,7 +232,7 @@ export function table_config_html(config)
     var l2 ;
     for (var m in config_groupby_type)
     {
-        u = '' ;
+        u  = '' ;
         l2 = {} ;
         for (n = 0; n < config_groupby_type[m].length; n++)
         {

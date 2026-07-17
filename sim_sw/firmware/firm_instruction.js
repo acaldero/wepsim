@@ -109,18 +109,18 @@ export function firm_instruction_read (context, xr_info, all_ones_oc)
     //             }
     // }
 
-    var instruccionAux = {};
-    instruccionAux.name = frm_getToken(context) ;
-    instruccionAux['mc-start'] = context.contadorMC ;
-    instruccionAux.nwords = 1 ;
-    instruccionAux.is_native = false ;
-    instruccionAux.help = '' ;
-    instruccionAux.overlapping = {} ;
+    var instruccionAux            = {};
+    instruccionAux.name           = frm_getToken(context) ;
+    instruccionAux['mc-start']    = context.contadorMC ;
+    instruccionAux.nwords         = 1 ;
+    instruccionAux.is_native      = false ;
+    instruccionAux.help           = '' ;
+    instruccionAux.overlapping    = {} ;
     instruccionAux.opcode_pattern = [] ; // v2
-    instruccionAux.numeroCampos = 0 ;
-    instruccionAux.fields = [] ;
-    instruccionAux.fields_all = [] ;
-    instruccionAux.fields_eoc = [] ; // v2
+    instruccionAux.numeroCampos   = 0 ;
+    instruccionAux.fields         = [] ;
+    instruccionAux.fields_all     = [] ;
+    instruccionAux.fields_eoc     = [] ; // v2
 
     // semantic check: valid instruction name
     var re_name = '[a-zA-Z_0-9\.]*' ;
@@ -136,7 +136,7 @@ export function firm_instruction_read (context, xr_info, all_ones_oc)
     var firmaGlobal = '';
     var firmaUsuario ;
 
-    firma = frm_getToken(context) + ',';
+    firma        = frm_getToken(context) + ',';
     firmaUsuario = frm_getToken(context) + ' ';
     frm_nextToken(context);
 
@@ -164,15 +164,15 @@ export function firm_instruction_read (context, xr_info, all_ones_oc)
 
             if (auxValue[auxValue.length - 1] == '+')
             {
-                auxValue = auxValue.substring(0, auxValue.length - 1);
+                auxValue   = auxValue.substring(0, auxValue.length - 1);
                 plus_found = true;
             }
 
-            campoAux.name = auxValue ;
+            campoAux.name     = auxValue ;
             campoAux.indirect = false ;
             instruccionAux.fields.push(campoAux);
             instruccionAux.numeroCampos++;
-            firma = firma + auxValue ;
+            firma        = firma + auxValue ;
             firmaUsuario = firmaUsuario + auxValue;
             frm_nextToken(context);
 
@@ -196,7 +196,7 @@ export function firm_instruction_read (context, xr_info, all_ones_oc)
         // match optional "(" FIELD ")"
         if (frm_isToken(context, '('))
         {
-            firma = firma + ',(';
+            firma          = firma + ',(';
             var current_oc = '*unknown* instruction' ;
             if (
                 (typeof instruccionAux.oc != 'undefined') &&
@@ -216,13 +216,13 @@ export function firm_instruction_read (context, xr_info, all_ones_oc)
 
             if (!frm_isToken(context, ',') && !frm_isToken(context, '(') && !frm_isToken(context, ')'))
             {
-                campoAux = {};
-                campoAux.name = frm_getToken(context) ;
+                campoAux          = {};
+                campoAux.name     = frm_getToken(context) ;
                 campoAux.indirect = true ;
                 instruccionAux.fields.push(campoAux);
                 instruccionAux.numeroCampos++;
 
-                firma = firma + frm_getToken(context) ;
+                firma        = firma + frm_getToken(context) ;
                 firmaUsuario = firmaUsuario + frm_getToken(context);
 
                 frm_nextToken(context);
@@ -236,7 +236,7 @@ export function firm_instruction_read (context, xr_info, all_ones_oc)
 
             if (frm_isToken(context, ')'))
             {
-                firma = firma + ')';
+                firma        = firma + ')';
                 firmaUsuario = firmaUsuario + ')';
 
                 frm_nextToken(context);
@@ -249,18 +249,18 @@ export function firm_instruction_read (context, xr_info, all_ones_oc)
             }
         }
 
-        firma = firma + ',';
+        firma        = firma + ',';
         firmaUsuario = firmaUsuario + ' ';
     }
 
-    firma = firma.substr(0, firma.length - 1);
-    firma = firma.replace(/,,/g, ',') ;
-    firmaUsuario = firmaUsuario.substr(0, firmaUsuario.length - 1);
-    firmaUsuario = firmaUsuario.replace(/ {2}/g, ' ') ;
-    instruccionAux.signature = firma;
+    firma                          = firma.substr(0, firma.length - 1);
+    firma                          = firma.replace(/,,/g, ',') ;
+    firmaUsuario                   = firmaUsuario.substr(0, firmaUsuario.length - 1);
+    firmaUsuario                   = firmaUsuario.replace(/ {2}/g, ' ') ;
+    instruccionAux.signature       = firma;
     instruccionAux.signatureGlobal = firma;
-    instruccionAux.signatureUser = firmaUsuario;
-    instruccionAux.signatureRaw = firmaUsuario;
+    instruccionAux.signatureUser   = firmaUsuario;
+    instruccionAux.signatureRaw    = firmaUsuario;
 
     // li reg val {
     //             *co=000000,
@@ -308,8 +308,8 @@ export function firm_instruction_read (context, xr_info, all_ones_oc)
         return ret ;
     }
 
-    instruccionAux.NATIVE = ret.NATIVE ;
-    instruccionAux.microcode = ret.microprograma ;
+    instruccionAux.NATIVE        = ret.NATIVE ;
+    instruccionAux.microcode     = ret.microprograma ;
     instruccionAux.microcomments = ret.microcomments ;
     context.instrucciones.push(instruccionAux);
 

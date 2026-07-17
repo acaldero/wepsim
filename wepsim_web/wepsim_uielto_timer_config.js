@@ -56,7 +56,7 @@ export class ws_io_config extends ws_uielto
     render_populate ()
     {
         var i ;
-        var o1 = '' ;
+        var o1       = '' ;
         var div_hash = '#config_IO_' + this.name_str ;
 
         // if no active hardware -> empty

@@ -53,7 +53,7 @@ export function SelectText (element)
     else if (window.getSelection)
     {
         selection = window.getSelection();
-        range = document.createRange();
+        range     = document.createRange();
         range.selectNodeContents(text);
         selection.removeAllRanges();
         selection.addRange(range);
@@ -71,7 +71,7 @@ export function wepsim_clipboard_CopyFromDiv (element_name)
         if (document.execCommand('copy'))
         {
             ws_info.clipboard_copy = $('#' + element_name).text() ;
-            msg = 'successful' ;
+            msg                    = 'successful' ;
         }
     }
     catch (e)

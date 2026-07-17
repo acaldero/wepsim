@@ -139,7 +139,7 @@ export function simcore_sound_ascii2note (word, bytesInWord)
 
     for (var i = 0; i < bytesInWord; i++)
     {
-        b = word & 0xFF ;
+        b    = word & 0xFF ;
         word = word >> 8 ;
         if (b != 0)
         {
@@ -157,7 +157,7 @@ export function simcore_sound_word2note (word, bytesInWord)
 
     for (var i = 0; i < bytesInWord; i++)
     {
-        b = word & 0xFF ;
+        b    = word & 0xFF ;
         word = word >> 8 ;
         if (b != 0)
         {

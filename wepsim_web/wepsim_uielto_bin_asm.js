@@ -146,7 +146,7 @@ export function mp2html(mp, labels, seg)
 
     // output...
     var o = '';
-    o += '<center>' +
+    o    += '<center>' +
         "<table class='border-0' style='table-layout:auto; border-style: solid; border-width:0px;'>" +
         '<tr>' +
         "<th class='border border-0'>labels</th>" +
@@ -185,11 +185,11 @@ export function mp2html(mp, labels, seg)
         }
 
         var c_begin = slimits[skey].m_begin ;
-        var c_end = slimits[skey].m_end ;
-        color = slimits[skey].color ;
+        var c_end   = slimits[skey].m_end ;
+        color       = slimits[skey].color ;
 
         var rows = 0 ;
-        var x = '' ;
+        var x    = '' ;
         var p ;
         var v ;
 
@@ -228,8 +228,8 @@ export function mp2html(mp, labels, seg)
 
         if (0 == rows)
         {
-            o += p + '<td rowspan=' ;
-            x += p + '<td>&nbsp;</td>' + '</tr>' ;
+            o   += p + '<td rowspan=' ;
+            x   += p + '<td>&nbsp;</td>' + '</tr>' ;
             rows = 2 ;
         }
 

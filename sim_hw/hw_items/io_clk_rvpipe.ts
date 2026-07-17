@@ -34,7 +34,7 @@ const IO_CLK_IODR_ID = 0x1108;
 
 export function io_clk_rvpipe_register(sim_p: Simulator): Simulator
 {
-    const DEBUG = false;
+    const DEBUG            = false;
     sim_p.components['IO'] = {
         name:      'IO',
         version:   '1',
@@ -138,7 +138,7 @@ export function io_clk_rvpipe_register(sim_p: Simulator): Simulator
             const bus_ab = get_value(sim_p.states[s_expr[1]]);
             if (bus_ab == IO_CLK_IOSR_ID)
             {
-                const idx = get_value(sim_p.states[s_expr[4]]);
+                const idx    = get_value(sim_p.states[s_expr[4]]);
                 let iosr_val = 0;
                 if (idx >= 0 && idx < 8)
                 {
@@ -230,9 +230,9 @@ export function io_clk_rvpipe_register(sim_p: Simulator): Simulator
         operation:   function (s_expr: string[]): void
         {
             if (DEBUG) console.log(JSON.stringify(s_expr), sim_p.behaviors[s_expr[0] ?? 'NOP']?.verbal(s_expr));
-            const int = sim_p.states[s_expr[1]];
-            const intv = sim_p.states[s_expr[2]];
-            const ref = get_reference(s_expr[3]);
+            const int     = sim_p.states[s_expr[1]];
+            const intv    = sim_p.states[s_expr[2]];
+            const ref     = get_reference(s_expr[3]);
             const reg_epc = get_value(ref);
             if (reg_epc !== 0) return;
             for (let i = sim_p.internal_states.io_int_factory.length - 1; i >= 0; i--)
@@ -275,9 +275,9 @@ export function io_clk_rvpipe_register(sim_p: Simulator): Simulator
         operation:   function (s_expr: string[]): void
         {
             const inta = get_value(sim_p.states[s_expr[1]]);
-            const int = sim_p.states[s_expr[2]];
+            const int  = sim_p.states[s_expr[2]];
             const intv = get_value(sim_p.states[s_expr[3]]);
-            const clk = get_value(sim_p.states[s_expr[4]]);
+            const clk  = get_value(sim_p.states[s_expr[4]]);
             if (get_value(int) == 1 && inta == 1 && intv >= 0 && intv < sim_p.internal_states.io_int_factory.length)
             {
                 if (DEBUG) console.log(JSON.stringify(s_expr), sim_p.behaviors[s_expr[0] ?? 'NOP']?.verbal(s_expr));

@@ -54,7 +54,7 @@ export function mem_ep2_register (sim_p)
                 value = parseInt(value) ;
                 if (value != 0)
                 {
-                    key = parseInt(index).toString(16) ;
+                    key                    = parseInt(index).toString(16) ;
                     vec.MEMORY['0x' + key] = { 'type':          'memory',
                         'default_value': 0x0,
                         'id':            '0x' + key,
@@ -87,7 +87,7 @@ export function mem_ep2_register (sim_p)
         get_state: function (pos)
         {
             var index = parseInt(pos) ;
-            let elto = index ;
+            let elto  = index ;
             var value = main_memory_getvalue(sim_p.internal_states.MP,
                                              elto) ;
             if (typeof value === 'undefined')
@@ -108,14 +108,14 @@ export function mem_ep2_register (sim_p)
         set_value: function (elto, value)
         {
             // PC
-            var origin = '' ;
+            var origin  = '' ;
             var r_value = main_memory_get_program_counter() ;
             if (r_value != null)
             {
                 origin = 'PC=0x' + r_value.toString(16) ;
             }
 
-            var melto = {
+            var melto  = {
                 'value':           (value >>> 0),
                 'source_tracking': [origin],
                 'comments':        null,
@@ -138,11 +138,11 @@ export function mem_ep2_register (sim_p)
          */
 
     sim_p.internal_states.segments = {} ;
-    sim_p.internal_states.MP = {} ;
-    sim_p.internal_states.MP_wc = { read: { value: 1 }, write: { value: 0 } } ;
+    sim_p.internal_states.MP       = {} ;
+    sim_p.internal_states.MP_wc    = { read: { value: 1 }, write: { value: 0 } } ;
 
     sim_p.internal_states.CM_cfg = [] ;
-    sim_p.internal_states.CM = [] ;
+    sim_p.internal_states.CM     = [] ;
 
     /*
      *  States
@@ -157,7 +157,7 @@ export function mem_ep2_register (sim_p)
          *  Signals
          */
 
-    sim_p.signals.MMR = { name:          'MMR',
+    sim_p.signals.MMR  = { name:          'MMR',
         visible:       false, type:          'E', value:         0, default_value: 0, nbits:         '1',
         depends_on:    ['CLK'],
         behavior:      ['MV MAR_MEM_R BUS_AB', 'MV MAR_MEM_R BUS_AB'],
@@ -171,14 +171,14 @@ export function mem_ep2_register (sim_p)
         fire_name:     ['svg_p:tspan3916', 'svg_p:text3909'],
         draw_data:     [[], ['svg_p:path3895', 'svg_p:path3541']],
         draw_name:     [[], []] };
-    sim_p.signals.R = { name:          'R',
+    sim_p.signals.R    = { name:          'R',
         visible:       true, type:          'L', value:         0, default_value: 0, nbits:         '1',
         behavior:      ['NOP; CHECK_RTD',
             'MEM_READ MAR_MEM_R BUS_DB BW SE CLK MRDY; FIRE M1; FIRE MRDY; CHECK_RTD'],
         fire_name: ['svg_p:text3533-5-2', 'svg_p:text3713'],
         draw_data: [[], ['svg_p:path3557', 'svg_p:path3571']],
         draw_name: [[], []] };
-    sim_p.signals.W = { name:          'W',
+    sim_p.signals.W    = { name:          'W',
         visible:       true, type:          'L', value:         0, default_value: 0, nbits:         '1',
         behavior:      ['NOP',
             'MEM_WRITE BUS_AB BUS_DB BW SE CLK MRDY; FIRE M1; FIRE MRDY'],
@@ -210,13 +210,13 @@ export function mem_ep2_register (sim_p)
         {
             var address = sim_p.states[s_expr[1]].value;
             var dbvalue = sim_p.states[s_expr[2]].value;
-            var bw = sim_p.signals[s_expr[3]].value;
-            var se = sim_p.signals[s_expr[4]].value;
-            var clk = get_value(sim_p.states[s_expr[5]]) ;
+            var bw      = sim_p.signals[s_expr[3]].value;
+            var se      = sim_p.signals[s_expr[4]].value;
+            var clk     = get_value(sim_p.states[s_expr[5]]) ;
 
             // remaining clk cycles of the current operation
             var read_clk = get_value(sim_p.internal_states.MP_wc.read);
-            var remain = read_clk ;
+            var remain   = read_clk ;
             if (
                 (typeof sim_p.events.mem[clk - 1] != 'undefined') &&
                 (sim_p.events.mem[clk - 1].remain > 0)
@@ -231,12 +231,12 @@ export function mem_ep2_register (sim_p)
                 sim_p.events.mem = [] ;
 
                 // set new event
-                sim_p.events.mem[clk] = {};
+                sim_p.events.mem[clk]         = {};
                 sim_p.events.mem[clk].address = address ;
                 sim_p.events.mem[clk].dbvalue = dbvalue ;
-                sim_p.events.mem[clk].bw = bw ;
-                sim_p.events.mem[clk].se = se ;
-                sim_p.events.mem[clk].remain = remain;
+                sim_p.events.mem[clk].bw      = bw ;
+                sim_p.events.mem[clk].se      = se ;
+                sim_p.events.mem[clk].remain  = remain;
 
                 // MRDY=0
                 sim_p.signals[s_expr[6]].value = 0;
@@ -273,19 +273,19 @@ export function mem_ep2_register (sim_p)
             }
 
             // memory update (and related work)...
-            var wordress = address & 0xFFFFFFFC ;
-            var value = main_memory_getvalue(sim_p.internal_states.MP, wordress) ;
+            var wordress    = address & 0xFFFFFFFC ;
+            var value       = main_memory_getvalue(sim_p.internal_states.MP, wordress) ;
             var full_redraw = false ;
             if (typeof value === 'undefined')
             {
-                value = 0 ;
+                value       = 0 ;
                 full_redraw = true ;
             }
 
             // bit-width
             dbvalue = main_memory_extractvalues(value, bw, (address & 0x00000003), se) ;
 
-            sim_p.states[s_expr[2]].value = (dbvalue >>> 0) ;
+            sim_p.states[s_expr[2]].value  = (dbvalue >>> 0) ;
             sim_p.signals[s_expr[6]].value = 1;
             show_main_memory(sim_p.internal_states.MP, wordress, full_redraw, false) ;
         },
@@ -295,8 +295,8 @@ export function mem_ep2_register (sim_p)
 
             var address = sim_p.states [s_expr[1]].value;
             var dbvalue = sim_p.states [s_expr[2]].value;
-            var bw = sim_p.signals[s_expr[3]].value;
-            var clk = get_value(sim_p.states[s_expr[5]]) ;
+            var bw      = sim_p.signals[s_expr[3]].value;
+            var clk     = get_value(sim_p.states[s_expr[5]]) ;
 
             // bit-width
             let bw_type ;
@@ -332,13 +332,13 @@ export function mem_ep2_register (sim_p)
         {
             var address = sim_p.states[s_expr[1]].value;
             var dbvalue = sim_p.states[s_expr[2]].value;
-            var bw = sim_p.signals[s_expr[3]].value;
-            var se = sim_p.signals[s_expr[4]].value; // se not used on write operation
-            var clk = get_value(sim_p.states[s_expr[5]]) ;
+            var bw      = sim_p.signals[s_expr[3]].value;
+            var se      = sim_p.signals[s_expr[4]].value; // se not used on write operation
+            var clk     = get_value(sim_p.states[s_expr[5]]) ;
 
             // remaining clk cycles of the current operation
             var write_clk = get_value(sim_p.internal_states.MP_wc.write);
-            var remain = write_clk ;
+            var remain    = write_clk ;
             if (
                 (typeof sim_p.events.mem[clk - 1] != 'undefined') &&
                 (sim_p.events.mem[clk - 1].remain > 0)
@@ -353,12 +353,12 @@ export function mem_ep2_register (sim_p)
                 sim_p.events.mem = [] ;
 
                 // set new event
-                sim_p.events.mem[clk] = {};
+                sim_p.events.mem[clk]         = {};
                 sim_p.events.mem[clk].address = address ;
                 sim_p.events.mem[clk].dbvalue = dbvalue ;
-                sim_p.events.mem[clk].bw = bw ;
-                sim_p.events.mem[clk].se = se ;
-                sim_p.events.mem[clk].remain = remain;
+                sim_p.events.mem[clk].bw      = bw ;
+                sim_p.events.mem[clk].se      = se ;
+                sim_p.events.mem[clk].remain  = remain;
 
                 // MRDY=0
                 sim_p.signals[s_expr[6]].value = 0;
@@ -395,12 +395,12 @@ export function mem_ep2_register (sim_p)
             }
 
             // memory update (and related work)...
-            var wordress = address & 0xFFFFFFFC ;
-            var value = main_memory_getvalue(sim_p.internal_states.MP, wordress) ;
+            var wordress    = address & 0xFFFFFFFC ;
+            var value       = main_memory_getvalue(sim_p.internal_states.MP, wordress) ;
             var full_redraw = false ;
             if (typeof value === 'undefined')
             {
-                value = 0 ;
+                value       = 0 ;
                 full_redraw = true ;
             }
 
@@ -408,7 +408,7 @@ export function mem_ep2_register (sim_p)
             value = main_memory_updatevalues(value, dbvalue, bw, (address & 0x00000003)) ;
 
             // PC
-            var origin = '' ;
+            var origin  = '' ;
             var r_value = main_memory_get_program_counter() ;
             if (r_value != null)
             {
@@ -420,7 +420,7 @@ export function mem_ep2_register (sim_p)
                 'source_tracking': [origin],
                 'comments':        null,
             } ;
-            var elto = main_memory_set(sim_p.internal_states.MP, wordress, melto) ;
+            var elto  = main_memory_set(sim_p.internal_states.MP, wordress, melto) ;
 
             sim_p.signals[s_expr[6]].value = 1 ;
             show_main_memory(sim_p.internal_states.MP, wordress, full_redraw, true) ;
@@ -432,9 +432,9 @@ export function mem_ep2_register (sim_p)
 
             var address = get_value(sim_p.states [s_expr[1]]) ;
             var dbvalue = get_value(sim_p.states [s_expr[2]]) ;
-            var bw = get_value(sim_p.signals[s_expr[3]]) ;
-            var se = get_value(sim_p.signals[s_expr[4]]) ;
-            var clk = get_value(sim_p.states [s_expr[5]]) ;
+            var bw      = get_value(sim_p.signals[s_expr[3]]) ;
+            var se      = get_value(sim_p.signals[s_expr[4]]) ;
+            var clk     = get_value(sim_p.states [s_expr[5]]) ;
 
             // bit-width
             let bw_type ;

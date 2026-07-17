@@ -62,7 +62,7 @@ export class ws_dbg_mc extends ws_uielto
 export function dbg_set_breakpoint(addr)
 {
     // toggle
-    var hexaddr = '0x' + parseInt(addr).toString(16) ;
+    var hexaddr  = '0x' + parseInt(addr).toString(16) ;
     var bp_state = wepsim_execute_toggle_microbreakpoint(hexaddr) ;
 
     // toggle UI
@@ -89,17 +89,17 @@ export function dbg_set_breakpoint_ui(addr, bp_state)
     if (false == bp_state)
     {
         var icon_theme = get_cfg('ICON_theme') ;
-        o1_content = sim_core_breakpointicon_get(icon_theme) ;
+        o1_content     = sim_core_breakpointicon_get(icon_theme) ;
     }
 
-    var o1 = document.getElementById('mcpin' + addr) ;
+    var o1       = document.getElementById('mcpin' + addr) ;
     o1.innerHTML = o1_content ;
 }
 
 export function wepsim_show_dbg_mpc()
 {
     var maddr_name = simhw_sim_ctrlStates_get().mpc.state ;
-    var reg_maddr = get_value(simhw_sim_state(maddr_name)) ;
+    var reg_maddr  = get_value(simhw_sim_state(maddr_name)) ;
 
     light_refresh_control_memory(simhw_internalState('MC'), reg_maddr) ;
 }
@@ -128,7 +128,7 @@ export function wepsim_show_control_memory(memory, index, redraw)
 
 export function hard_refresh_control_memory(memory, index, redraw)
 {
-    var o1 = '' ;
+    var o1      = '' ;
     var SIMWARE = get_simware() ;
 
     // in case of empty control memory...
@@ -200,7 +200,7 @@ export function control_memory_showrow(memory, key, is_current, revlabels)
     if (typeof revlabels[key] !== 'undefined')
     {
         var htmllabel = revlabels[key] ;
-        var htmlfill = 5 - htmllabel.length ;
+        var htmlfill  = 5 - htmllabel.length ;
         if (htmlfill > 0)
         {
             for (var i = 0; i < htmlfill; i++)
@@ -223,7 +223,7 @@ export function control_memory_showrow(memory, key, is_current, revlabels)
         if (true == memory[key].breakpoint)
         {
             var icon_theme = get_cfg('ICON_theme') ;
-            trpin = sim_core_breakpointicon_get(icon_theme) ;
+            trpin          = sim_core_breakpointicon_get(icon_theme) ;
         }
     }
 
@@ -281,7 +281,7 @@ export function ctrmem_init_vue_computed_value_init(elto)
     }
 
     // ui-value
-    var memory = simhw_internalState('MC') ;
+    var memory    = simhw_internalState('MC') ;
     var value_str = control_memory_lineToString(memory, elto.key) ;
 
     // return elto.ui...
@@ -301,7 +301,7 @@ export function ctrmem_init_vue_computed_value_update(elto)
 {
     // ui-breakpoint-icon
     var icon_theme = get_cfg('ICON_theme') ;
-    var icon_pin = '&nbsp;' ;
+    var icon_pin   = '&nbsp;' ;
     if (elto.breakpoint)
     {
         icon_pin = sim_core_breakpointicon_get(icon_theme) ;
@@ -310,8 +310,8 @@ export function ctrmem_init_vue_computed_value_update(elto)
 
     // ui-style
     var maddr_name = simhw_sim_ctrlStates_get().mpc.state ;
-    var index = get_value(simhw_sim_state(maddr_name)) ;
-    var style_obj = { fontSize: 'small', color: '', fontWeight: 'normal' } ;
+    var index      = get_value(simhw_sim_state(maddr_name)) ;
+    var style_obj  = { fontSize: 'small', color: '', fontWeight: 'normal' } ;
     if (elto.key == index)
     {
         style_obj = { fontSize: 'small', color: 'blue', fontWeight: 'bold' } ;
@@ -328,9 +328,9 @@ export function ctrmem_init_vue_computed_value_update(elto)
 
 export function control_memory_init_vue(redraw)
 {
-    var memory = simhw_internalState('MC') ;
+    var memory     = simhw_internalState('MC') ;
     var maddr_name = simhw_sim_ctrlStates_get().mpc.state ;
-    var index = get_value(simhw_sim_state(maddr_name)) ;
+    var index      = get_value(simhw_sim_state(maddr_name)) ;
 
     // in case of empty control memory...
     if (typeof memory[index] == 'undefined')

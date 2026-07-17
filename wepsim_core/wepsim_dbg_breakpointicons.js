@@ -60,7 +60,7 @@ export function sim_core_breakpointicon_get (icon_name)
     if (typeof icon_obj === 'undefined')
     {
         icon_name = 'classic' ;
-        icon_obj = ws_info.breakpoint_icon_list[icon_name] ;
+        icon_obj  = ws_info.breakpoint_icon_list[icon_name] ;
     }
 
     return "<img alt='stop icon' height=22 " +

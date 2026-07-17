@@ -166,10 +166,10 @@ export function current_state_html()
     onClick('state-check-current', () =>
     {
         var txt_chklst1 = get_clipboard_copy();
-        var obj_exp1 = simcore_simstate_checklist2state(txt_chklst1);
+        var obj_exp1    = simcore_simstate_checklist2state(txt_chklst1);
         var txt_chklst2 = $('#end_state1').val();
-        var obj_exp2 = simcore_simstate_checklist2state(txt_chklst2);
-        var ref_tag = $('#curr_clk_maddr').html();
+        var obj_exp2    = simcore_simstate_checklist2state(txt_chklst2);
+        var ref_tag     = $('#curr_clk_maddr').html();
         $('#s_ref').html(ref_tag);
         wepsim_dialog_check_state(obj_exp1, obj_exp2);
         $('#check_results_scroll1').collapse('show');
@@ -298,10 +298,10 @@ export function wepsim_state_history_list()
     var it ;
     var tt ;
     var vr = '' ;
-    var o = '' ;
+    var o  = '' ;
     for (var i = ws_info.state_history.length - 1; i >= 0; i--)
     {
-        t = new Date(ws_info.state_history[i].time) ;
+        t  = new Date(ws_info.state_history[i].time) ;
         it = t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + '-' +
             t.getHours() + '-' + t.getMinutes() + '-' + t.getSeconds() + '-' + t.getMilliseconds() ;
 
@@ -364,9 +364,9 @@ export function wepsim_state_history_list()
         onClick('state-check-history', (el) =>
         {
             var txt_chklst1 = get_clipboard_copy();
-            var obj_exp1 = simcore_simstate_checklist2state(txt_chklst1);
+            var obj_exp1    = simcore_simstate_checklist2state(txt_chklst1);
             var txt_chklst2 = $('#ta_state_' + el.dataset.stateId).val();
-            var obj_exp2 = simcore_simstate_checklist2state(txt_chklst2);
+            var obj_exp2    = simcore_simstate_checklist2state(txt_chklst2);
             wepsim_dialog_check_state(obj_exp1, obj_exp2);
             $('#s_ref').html(el.dataset.titleShort);
             $('#check_results_scroll1').collapse('show');
@@ -389,7 +389,7 @@ export function wepsim_dialog_current_state()
     $('#curr_clk_maddr').html(ret.title_short) ;
 
     // current state
-    var state_obj = simcore_simstate_current2state() ;
+    var state_obj     = simcore_simstate_current2state() ;
     var txt_checklist = simcore_simstate_state2checklist(state_obj, '') ;
     $('#end_state1').tokenfield('setTokens', txt_checklist) ;
 

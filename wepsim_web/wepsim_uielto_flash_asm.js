@@ -190,7 +190,7 @@ export async function gateway_do_request (flash_url, flash_args, div_info)
 
     try
     {
-        var res = await fetch(flash_url, fetch_args) ;
+        var res  = await fetch(flash_url, fetch_args) ;
         var jres = await res.json() ;
     }
     catch (e)
@@ -215,7 +215,7 @@ export function gateway_request_status(status_url, info_div)
             return ;
         }
 
-        info_div.value += event.data + '\n' ;
+        info_div.value    += event.data + '\n' ;
         info_div.scrollTop = info_div.scrollHeight;
     };
 }
@@ -230,8 +230,8 @@ export function gateway_do_flash(div_url_name, div_dev_name, div_target_name, di
 
     // prepare assembly code...
     var SIMWARE = get_simware() ;
-    var fasm = inputasm.getValue() ;
-    var ret = wsasm_src2src(SIMWARE, fasm, { instruction_comma: true }) ;
+    var fasm    = inputasm.getValue() ;
+    var ret     = wsasm_src2src(SIMWARE, fasm, { instruction_comma: true }) ;
     if (ret.error != null)
     {
         return ret;
@@ -241,14 +241,14 @@ export function gateway_do_flash(div_url_name, div_dev_name, div_target_name, di
 
     // do remote flash...
     idiv.value = 'Flashing...\n' ;
-    fasm = inputasm.getValue() ;
-    var farg = {
+    fasm       = inputasm.getValue() ;
+    var farg   = {
         target_board: ddet.value,
         target_port:  ddev.value,
         assembly:     fasm,
     } ;
-    var furl = udiv.value ;
-    ret = gateway_do_request(furl + '/flash', farg, idiv);
+    var furl   = udiv.value ;
+    ret        = gateway_do_request(furl + '/flash', farg, idiv);
 
     // working with the async result...
     ret.then((result) =>
@@ -275,8 +275,8 @@ export function gateway_do_stop(div_url_name, div_info_name)
 
     // do remote flash...
     idiv.value = 'Cancel...\n' ;
-    var furl = udiv.value ;
-    var ret = gateway_do_request(furl + '/stop', {}, idiv);
+    var furl   = udiv.value ;
+    var ret    = gateway_do_request(furl + '/stop', {}, idiv);
 
     // working with the async result...
     ret.then((result) =>

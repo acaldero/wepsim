@@ -55,8 +55,8 @@ export function isDecimal (n)
     if (!isNaN(parseFloat(n)) && isFinite(n))
     {
         ret.isDecimal = true ;
-        ret.format = 'dec' ;
-        ret.number = parseInt(n) ;
+        ret.format    = 'dec' ;
+        ret.number    = parseInt(n) ;
         return ret ;
     }
 
@@ -73,10 +73,10 @@ export function isOctal (n)
 
     if (n[0] == '0')
     {
-        var octal = n.substring(1).replace(/\b0+/g, '') ;
-        ret.number = parseInt(octal, 8) ;
+        var octal     = n.substring(1).replace(/\b0+/g, '') ;
+        ret.number    = parseInt(octal, 8) ;
         ret.isDecimal = (ret.number.toString(8) === octal) ;
-        ret.format = 'octal' ;
+        ret.format    = 'octal' ;
         return ret ;
     }
 
@@ -99,9 +99,9 @@ export function isHex (n)
             hex = '0' ;
         }
 
-        ret.number = parseInt(hex, 16) ;
+        ret.number    = parseInt(hex, 16) ;
         ret.isDecimal = (ret.number.toString(16) === hex) ;
-        ret.format = 'hex' ;
+        ret.format    = 'hex' ;
         return ret ;
     }
 
@@ -130,9 +130,9 @@ export function isChar (n)
         ((possible_value[0] == '"') && (possible_value[2] == '"'))
     )
     {
-        ret.number = possible_value.charCodeAt(1);
+        ret.number    = possible_value.charCodeAt(1);
         ret.isDecimal = true ;
-        ret.format = 'ascii' ;
+        ret.format    = 'ascii' ;
         return ret ;
     }
 
@@ -155,9 +155,9 @@ export function isFloat (n)
     }
 
     // convert
-    ret.number = parseFloat(n) ;
+    ret.number  = parseFloat(n) ;
     ret.isFloat = (isNaN(ret.number) == false) ;
-    ret.format = 'ieee754' ;
+    ret.format  = 'ieee754' ;
     return ret ;
 }
 

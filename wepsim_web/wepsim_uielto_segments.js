@@ -121,7 +121,7 @@ export function uielto_segments2html(segments)
 
         if (segments[skey].name != '.stack')
             o1 += sx + "<tr><td valign='middle' align='center' height='25px'>...</td></tr>" ;
-        else sp = sx ;
+        else sp  = sx ;
     }
     o1 += sp +
         ' </table>' +

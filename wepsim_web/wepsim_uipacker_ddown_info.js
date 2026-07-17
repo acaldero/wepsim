@@ -114,12 +114,12 @@ export class ws_ddown_info extends ws_uielto
     {
         var ni = {} ;
 
-        ni.mp = this.mk_nav_item('tab14', '#mp', 'Memory', 'active', '') ;
-        ni.con = this.mk_nav_item('tab12', '#con', 'Console', '', '') ;
-        ni.all = this.mk_nav_item('tab11', '#all', 'Registers', '', '') ;
-        ni.mc = this.mk_nav_item('tab16', '#mc', 'Control Memory', '', '') ;
-        ni.io = this.mk_nav_item('tab15', '#io', 'Timer stats', '', '') ;
-        ni.cpu = this.mk_nav_item('tab17', '#cpu', 'CPU stats', '', '') ;
+        ni.mp    = this.mk_nav_item('tab14', '#mp', 'Memory', 'active', '') ;
+        ni.con   = this.mk_nav_item('tab12', '#con', 'Console', '', '') ;
+        ni.all   = this.mk_nav_item('tab11', '#all', 'Registers', '', '') ;
+        ni.mc    = this.mk_nav_item('tab16', '#mc', 'Control Memory', '', '') ;
+        ni.io    = this.mk_nav_item('tab15', '#io', 'Timer stats', '', '') ;
+        ni.cpu   = this.mk_nav_item('tab17', '#cpu', 'CPU stats', '', '') ;
         ni.mpcfg = this.mk_nav_item('tab18', '#mpcfg', 'Memory configuration', '', '') ;
         ni.iocfg = this.mk_nav_item('tab19', '#iocfg', 'Timer configuration', '', '') ;
         //  ni.ed_hw = this.mk_nav_item('tab22', '#ed_hw', 'Hardware',             '', '') ;
@@ -127,7 +127,7 @@ export class ws_ddown_info extends ws_uielto
         ni.ioldm = this.mk_nav_item('tab27', '#ioldm', 'Led Matrix', '', '') ;
         ni.ed_mc = this.mk_nav_item('tab20', '#ed_mc', 'MicroCode', '', '') ;
         ni.ed_mp = this.mk_nav_item('tab21', '#ed_mp', 'Assembly', '', 'wsx_microcode') ;
-        ni.cm = this.mk_nav_item('tab28', '#cm', 'Cache', '', '') ;
+        ni.cm    = this.mk_nav_item('tab28', '#cm', 'Cache', '', '') ;
         ni.cmcfg = this.mk_nav_item('tab29', '#cmcfg', 'Cache configuration', '', '') ;
         ni.sound = this.mk_nav_item('tab30', '#sound', 'Sound', '', '') ;
 
@@ -145,12 +145,12 @@ export class ws_ddown_info extends ws_uielto
     {
         var np = {} ;
 
-        np.all = this.mk_nav_tabpane_item('all', 'active', '<ws-registers id="regs1"></ws-registers>') ;
-        np.mp = this.mk_nav_tabpane_item('mp', '', '<ws-mainmemory></ws-mainmemory>') ;
-        np.mc = this.mk_nav_tabpane_item('mc', '', '<ws-dbg-mc></ws-dbg-mc>') ;
-        np.con = this.mk_nav_tabpane_item('con', '', '<ws-console></ws-console>') ;
-        np.io = this.mk_nav_tabpane_item('io', '', '<ws-io-info id="ioinfo1"></ws-io-info>') ;
-        np.cpu = this.mk_nav_tabpane_item('cpu', '', '<ws-cpu id="cpu1"></ws-cpu>') ;
+        np.all   = this.mk_nav_tabpane_item('all', 'active', '<ws-registers id="regs1"></ws-registers>') ;
+        np.mp    = this.mk_nav_tabpane_item('mp', '', '<ws-mainmemory></ws-mainmemory>') ;
+        np.mc    = this.mk_nav_tabpane_item('mc', '', '<ws-dbg-mc></ws-dbg-mc>') ;
+        np.con   = this.mk_nav_tabpane_item('con', '', '<ws-console></ws-console>') ;
+        np.io    = this.mk_nav_tabpane_item('io', '', '<ws-io-info id="ioinfo1"></ws-io-info>') ;
+        np.cpu   = this.mk_nav_tabpane_item('cpu', '', '<ws-cpu id="cpu1"></ws-cpu>') ;
         np.mpcfg = this.mk_nav_tabpane_item('mpcfg', '', '<ws-mem-config id="memcfg1"></ws-mem-config>') ;
         np.iocfg = this.mk_nav_tabpane_item('iocfg', '', '<ws-io-config id="iocfg1"></ws-io-config>') ;
         np.iol3d = this.mk_nav_tabpane_item('iol3d', '', '<ws-l3d  id="l3d1"></ws-l3d>') ;
@@ -159,7 +159,7 @@ export class ws_ddown_info extends ws_uielto
 
         np.ed_mc = this.mk_nav_tabpane_item('ed_mc', '', '<ws-edit-mc layout="compilebar,placeholder"></ws_edit_mc>') ;
         np.ed_mp = this.mk_nav_tabpane_item('ed_mp', '', '<ws-edit-as layout="compilebar,placeholder"></ws_edit_as>') ;
-        np.cm = this.mk_nav_tabpane_item('cm', '', '<ws-cachememory></ws-cachememory>') ;
+        np.cm    = this.mk_nav_tabpane_item('cm', '', '<ws-cachememory></ws-cachememory>') ;
         np.cmcfg = this.mk_nav_tabpane_item('cmcfg', '', '<ws-cache-config id="cmcfg1"></ws-cache-config>') ;
         np.sound = this.mk_nav_tabpane_item('sound', '', '<ws-sound></ws-sound>') ;
 

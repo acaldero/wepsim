@@ -137,7 +137,7 @@ export function frm_nextToken (context)
     if (':' == context.text[tmp_context])
     {
         token_type = 'TAG' ;
-        context.t = tmp_context + 1 ;
+        context.t  = tmp_context + 1 ;
     }
 
     // insert token
@@ -152,7 +152,7 @@ export function frm_nextToken (context)
         else
         { // (tok == "25") -> "25" ("25:20")
             token_type = 'NUMBER' ;
-            context.t = context.t - 1;
+            context.t  = context.t - 1;
         }
     }
 
@@ -210,7 +210,7 @@ export function frm_langError (context, msgError)
         line2 = context.newlines[context.line - 2] + 1 ;
     }
 
-    var lowI = line1 ;
+    var lowI  = line1 ;
     var highI = line2 ;
 
     for (; (typeof context.text[highI + 1] != 'undefined') && (context.text[highI + 1] != '\n'); highI++) ;
@@ -251,8 +251,8 @@ export function frm_getLabelContext (context)
 
 export function frm_setLabelContext (context, labelContext)
 {
-    context.t = labelContext.t ;
-    context.line = labelContext.line ;
+    context.t        = labelContext.t ;
+    context.line     = labelContext.line ;
     context.newlines = labelContext.newlines ;
 }
 

@@ -103,8 +103,8 @@ export function wepsim_execute_microinstruction ()
 
 export function wepsim_execute_set_breakpoint (hexaddr, is_set)
 {
-    var SIMWARE = get_simware() ;
-    var curr_mp = simhw_internalState('MP') ;
+    var SIMWARE   = get_simware() ;
+    var curr_mp   = simhw_internalState('MP') ;
     var curr_addr = parseInt(hexaddr, 16) ;
 
     if (typeof curr_mp[curr_addr] !== 'undefined')
@@ -122,20 +122,20 @@ export function wepsim_execute_set_breakpoint (hexaddr, is_set)
 
 export function wepsim_execute_toggle_breakpoint (hexaddr)
 {
-    var SIMWARE = get_simware() ;
-    var curr_mp = simhw_internalState('MP') ;
+    var SIMWARE   = get_simware() ;
+    var curr_mp   = simhw_internalState('MP') ;
     var curr_addr = parseInt(hexaddr, 16) ;
-    var is_set = false ;
+    var is_set    = false ;
 
     if (typeof curr_mp[curr_addr] !== 'undefined')
     {
-        is_set = curr_mp[curr_addr].breakpoint ;
+        is_set                        = curr_mp[curr_addr].breakpoint ;
         curr_mp[curr_addr].breakpoint = ! is_set ;
     }
 
     if (typeof SIMWARE.mp[hexaddr] !== 'undefined')
     {
-        is_set = SIMWARE.mp[hexaddr].breakpoint ;
+        is_set                         = SIMWARE.mp[hexaddr].breakpoint ;
         SIMWARE.mp[hexaddr].breakpoint = ! is_set ;
     }
 
@@ -144,13 +144,13 @@ export function wepsim_execute_toggle_breakpoint (hexaddr)
 
 export function wepsim_execute_toggle_microbreakpoint (hexaddr)
 {
-    var curr_mc = simhw_internalState('MC') ;
+    var curr_mc   = simhw_internalState('MC') ;
     var curr_addr = parseInt(hexaddr, 16) ;
-    var is_set = false ;
+    var is_set    = false ;
 
     if (typeof curr_mc[curr_addr] !== 'undefined')
     {
-        is_set = curr_mc[curr_addr].breakpoint ;
+        is_set                        = curr_mc[curr_addr].breakpoint ;
         curr_mc[curr_addr].breakpoint = ! is_set ;
     }
 
@@ -162,7 +162,7 @@ export var DBG_limit_instruction = 0 ;
 
 export function wepsim_execute_stop ()
 {
-    DBG_stop = true;
+    DBG_stop              = true;
     DBG_limit_instruction = 0 ;
     webui_button_set_stop('exebar1') ;
 
@@ -184,7 +184,7 @@ export function wepsim_execute_play (wepsim_execute_stop)
         return false ;
     }
 
-    DBG_stop = false ;
+    DBG_stop              = false ;
     DBG_limit_instruction = 0 ;
     webui_button_set_start('exebar1') ;
 
@@ -222,7 +222,7 @@ export function wepsim_check_stopbybreakpoint (dash_memaddr)
 
 export function wepsim_show_stopbyevent (msg1, msg2)
 {
-    var buttons = {} ;
+    var buttons    = {} ;
     buttons.states = {
         label:     "<span data-langkey='States'>States</span>",
         className: 'btn btn-secondary col float-left shadow-none mr-auto',
@@ -233,7 +233,7 @@ export function wepsim_show_stopbyevent (msg1, msg2)
             return true;
         },
     };
-    var ret = simcore_check_if_can_continue() ;
+    var ret        = simcore_check_if_can_continue() ;
     if (ret.ok)
     {
         buttons.continue = {
@@ -256,12 +256,12 @@ export function wepsim_show_stopbyevent (msg1, msg2)
         id:    'current_state2',
         title: function()
         {
-            var maddr_name = simhw_sim_ctrlStates_get().mpc.state ;
-            var reg_maddr = get_value(simhw_sim_state(maddr_name)) ;
-            var curr_maddr = '0x' + reg_maddr.toString(16) ;
-            var pc_name = simhw_sim_ctrlStates_get().pc.state ;
-            var reg_pc = get_value(simhw_sim_state(pc_name)) ;
-            var curr_addr = '0x' + reg_pc.toString(16) ;
+            var maddr_name   = simhw_sim_ctrlStates_get().mpc.state ;
+            var reg_maddr    = get_value(simhw_sim_state(maddr_name)) ;
+            var curr_maddr   = '0x' + reg_maddr.toString(16) ;
+            var pc_name      = simhw_sim_ctrlStates_get().pc.state ;
+            var reg_pc       = get_value(simhw_sim_state(pc_name)) ;
+            var curr_addr    = '0x' + reg_pc.toString(16) ;
             var dialog_title = msg1 + ' @ pc=' + curr_addr + '+mpc=' + curr_maddr ;
             return '<span id="dlg_title2">' + dialog_title + '</span>' ;
         },
@@ -551,19 +551,19 @@ export function wepsim_execute_chunk (options, chunk)
     var ret ;
     var ret2 ;
 
-    var curr_mp = simhw_internalState('MP') ;
-    var curr_firm = simhw_internalState('FIRMWARE') ;
-    var pc_name = simhw_sim_ctrlStates_get().pc.state ;
-    var ref_pc = simhw_sim_state(pc_name) ;
-    var reg_pc = get_value(ref_pc) ;
+    var curr_mp    = simhw_internalState('MP') ;
+    var curr_firm  = simhw_internalState('FIRMWARE') ;
+    var pc_name    = simhw_sim_ctrlStates_get().pc.state ;
+    var ref_pc     = simhw_sim_state(pc_name) ;
+    var reg_pc     = get_value(ref_pc) ;
     var maddr_name = simhw_sim_ctrlStates_get().mpc.state ;
-    var ref_maddr = simhw_sim_state(maddr_name) ;
-    var reg_maddr = get_value(ref_maddr) ;
+    var ref_maddr  = simhw_sim_state(maddr_name) ;
+    var reg_maddr  = get_value(ref_maddr) ;
     var ref_mdash ;
     var fetch_maddr ;
 
     var i_clks = 0 ;
-    var i = 0 ;
+    var i      = 0 ;
 
     // try to find fetch address, that is zero by default...
     fetch_maddr = 0 ;
@@ -591,10 +591,10 @@ export function wepsim_execute_chunk (options, chunk)
         }
 
         reg_maddr = get_value(ref_maddr) ;
-        reg_pc = get_value(ref_pc) ;
+        reg_pc    = get_value(ref_pc) ;
 
         ref_mdash = simhw_internalState_get('MC', reg_maddr) ;
-        ret = wepsim_check_memdashboard(ref_mdash, reg_maddr) ;
+        ret       = wepsim_check_memdashboard(ref_mdash, reg_maddr) ;
         if (false === ret)
         {
             return pack_ret2(false, '', 'ERROR: microaddress not within defined control memory.') ;
@@ -609,7 +609,7 @@ export function wepsim_execute_chunk (options, chunk)
             ((fetch_maddr != reg_maddr) && (true == ref_mdash.is_native)))
         {
             ref_mdash = simhw_internalState_get('MP', reg_pc) ;
-            ret = wepsim_check_memdashboard(ref_mdash, reg_pc) ;
+            ret       = wepsim_check_memdashboard(ref_mdash, reg_pc) ;
             if (false === ret)
             {
                 return pack_ret2(false, 'Info', 'INFO: The program has finished because the PC register points outside .ktext/.text code segments') ;
@@ -641,7 +641,7 @@ export function wepsim_execute_chunk_atlevel (chunk, wepsim_execute_stop)
             verbosity:    0,
             cycles_limit: get_cfg('DBG_limitick'),
         } ;
-        ret = wepsim_execute_chunk(options, chunk) ;
+        ret     = wepsim_execute_chunk(options, chunk) ;
         if ((ret.ok == false) && (ret.msg.trim() != ''))
         {
             wepsim_show_stopbyevent(ret.msg_level, ret.msg) ;
@@ -651,13 +651,13 @@ export function wepsim_execute_chunk_atlevel (chunk, wepsim_execute_stop)
         return ret.ok ;
     }
 
-    var curr_firm = simhw_internalState('FIRMWARE') ;
-    var pc_name = simhw_sim_ctrlStates_get().pc.state ;
-    var ref_pc = simhw_sim_state(pc_name) ;
+    var curr_firm  = simhw_internalState('FIRMWARE') ;
+    var pc_name    = simhw_sim_ctrlStates_get().pc.state ;
+    var ref_pc     = simhw_sim_state(pc_name) ;
     var maddr_name = simhw_sim_ctrlStates_get().mpc.state ;
-    var ref_maddr = simhw_sim_state(maddr_name) ;
+    var ref_maddr  = simhw_sim_state(maddr_name) ;
     var ref_mdash ;
-    options = {
+    options        = {
         verbosity:    0,
         cycles_limit: get_cfg('DBG_limitick'),
     } ;
@@ -674,7 +674,7 @@ export function wepsim_execute_chunk_atlevel (chunk, wepsim_execute_stop)
             return false ;
         }
 
-        reg_pc = get_value(ref_pc) ;
+        reg_pc    = get_value(ref_pc) ;
         ref_mdash = simhw_internalState_get('MP', reg_pc) ;
 
         ret = wepsim_check_stopbybreakpoint(ref_mdash) ;
@@ -722,7 +722,7 @@ export function wepsim_execute_chainplay (wepsim_execute_stop)
         verbosity:    0,
         cycles_limit: get_cfg('DBG_limitick'),
     } ;
-    var ret = wepsim_execute_chunk(options, turbo) ;
+    var ret     = wepsim_execute_chunk(options, turbo) ;
     if (ret.ok == false)
     {
         if (ret.msg.trim() != '')
@@ -743,7 +743,7 @@ export function wepsim_execute_chainplay (wepsim_execute_stop)
     }
 
     DBG_limit_instruction += turbo ;
-    var dbg_limit_ins = get_cfg('DBG_limitins') ;
+    var dbg_limit_ins      = get_cfg('DBG_limitins') ;
     if ((DBG_limit_instruction > dbg_limit_ins) && (dbg_limit_ins > 0))
     {
         wepsim_show_stopbyevent('Limit',

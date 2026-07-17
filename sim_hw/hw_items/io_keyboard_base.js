@@ -113,7 +113,7 @@ export function io_keyboard_base_register (sim_p)
         operation:   function (s_expr)
         {
             var bus_ab = get_value(sim_p.states[s_expr[1]]) ;
-            var clk = get_value(sim_p.states[s_expr[5]]) ;
+            var clk    = get_value(sim_p.states[s_expr[5]]) ;
 
             if ((bus_ab != KBDR_ID) && (bus_ab != KBSR_ID))
             {
@@ -162,7 +162,7 @@ export function io_keyboard_base_register (sim_p)
             var verbal = '' ;
 
             var bus_ab = get_value(sim_p.states[s_expr[1]]) ;
-            var clk = get_value(sim_p.states[s_expr[5]]) ;
+            var clk    = get_value(sim_p.states[s_expr[5]]) ;
 
             if (bus_ab == KBDR_ID)
                 verbal = 'Read the screen data: ' + sim_p.states[s_expr[2]] + '. ' ;

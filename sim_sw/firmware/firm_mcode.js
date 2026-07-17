@@ -62,7 +62,7 @@ export function firm_mcode_write (elto, labels_firm)
                 o += '\n' + labels_firm[addr] + ':\t';
             else o += '\n' + '\t' + '\t';
 
-            o += '(';
+            o            += '(';
             var anySignal = 0 ;
             for (k in elto.microcode[j])
             {
@@ -132,7 +132,7 @@ export function firm_mcode_signals_read (context)
         {
             // match mandatory LABEL
             var newLabelName = frm_getToken(context) ;
-            newLabelName = newLabelName.substring(0, newLabelName.length - 1) ; // remove the ending ':'
+            newLabelName     = newLabelName.substring(0, newLabelName.length - 1) ; // remove the ending ':'
 
             if ('TAG' != frm_getTokenType(context))
             {
@@ -189,10 +189,10 @@ export function firm_mcode_signals_read (context)
 
                 frm_nextToken(context) ;
                 // match mandatory VALUE
-                var labelsNotFoundAux = {};
-                labelsNotFoundAux.nombre = frm_getToken(context) ;
-                labelsNotFoundAux.cycle = microprograma.length;
-                labelsNotFoundAux.index = context.i;
+                var labelsNotFoundAux         = {};
+                labelsNotFoundAux.nombre      = frm_getToken(context) ;
+                labelsNotFoundAux.cycle       = microprograma.length;
+                labelsNotFoundAux.index       = context.i;
                 labelsNotFoundAux.instruction = context.instrucciones.length;
 
                 var etiquetaFounded = 0;
@@ -201,7 +201,7 @@ export function firm_mcode_signals_read (context)
                     if (frm_isToken(context, context.etiquetas[k]))
                     {
                         microInstruccionAux[nombre_tok] = k.toString();
-                        etiquetaFounded = 1;
+                        etiquetaFounded                 = 1;
                     }
                 }
 

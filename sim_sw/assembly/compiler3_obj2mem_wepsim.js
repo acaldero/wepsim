@@ -58,15 +58,15 @@ export function wsasm_writememory_if_word (mp, gen, track_source, track_comments
     main_memory_set(mp, gen.addr, melto) ;
 
     // set 'gen' to 'default' values for next word...
-    gen.byteWord = 0 ;
-    gen.addr = '0x' + (parseInt(gen.addr) + WORD_BYTES).toString(16) ;
-    gen.machine_code = '' ;
-    gen.source = '' ;
-    gen.source_bin = '' ;
-    gen.track_source = track_source ;
-    gen.comments = track_comments ;
+    gen.byteWord       = 0 ;
+    gen.addr           = '0x' + (parseInt(gen.addr) + WORD_BYTES).toString(16) ;
+    gen.machine_code   = '' ;
+    gen.source         = '' ;
+    gen.source_bin     = '' ;
+    gen.track_source   = track_source ;
+    gen.comments       = track_comments ;
     gen.firm_reference = null ;
-    gen.is_assembly = false ;
+    gen.is_assembly    = false ;
 }
 
 export function wsasm_writememory_and_accumulate (mp, gen, valuebin)
@@ -74,7 +74,7 @@ export function wsasm_writememory_and_accumulate (mp, gen, valuebin)
     wsasm_writememory_if_word(mp, gen, [], []) ;
 
     gen.machine_code = valuebin + gen.machine_code ; //  3,2,1,0
-    gen.byteWord += 1 ;
+    gen.byteWord    += 1 ;
 }
 
 export function wsasm_zeropadding_and_writememory (mp, gen)
@@ -100,7 +100,7 @@ export function wsasm_writememory_and_accumulate_part (mp, gen, valuebin, track_
     wsasm_writememory_if_word(mp, gen, track_source, track_comments) ;
 
     gen.machine_code = valuebin + gen.machine_code ; //  3,2,1,0
-    gen.byteWord += 1 ;
+    gen.byteWord    += 1 ;
 
     if (track_source_j != null)
     {
@@ -153,20 +153,20 @@ export function wsasm_obj2mem (ret)
     var valuebin ;
     var candidate ;
 
-    var seg_name_old = '' ;
-    var seg_name = '' ;
+    var seg_name_old    = '' ;
+    var seg_name        = '' ;
     var last_assig_word = {} ;
     var word_1 ;
     var word_2 ;
 
-    var gen = {} ;
-    gen.byteWord = 0 ;
-    gen.addr = -1 ;
-    gen.machine_code = '' ;
-    gen.source = '' ;
-    gen.source_bin = '' ;
-    gen.track_source = [] ;
-    gen.comments = [] ;
+    var gen            = {} ;
+    gen.byteWord       = 0 ;
+    gen.addr           = -1 ;
+    gen.machine_code   = '' ;
+    gen.source         = '' ;
+    gen.source_bin     = '' ;
+    gen.track_source   = [] ;
+    gen.comments       = [] ;
     gen.firm_reference = null ;
 
     ret.mp = {} ;
@@ -186,7 +186,7 @@ export function wsasm_obj2mem (ret)
         // ...update initial word address for this segment if needed...
         if (typeof last_assig_word[seg_name] == 'undefined')
         {
-            gen.addr = '0x' + ret.obj[i].elto_ptr.toString(16) ;
+            gen.addr                  = '0x' + ret.obj[i].elto_ptr.toString(16) ;
             last_assig_word[seg_name] = gen.addr ;
         }
 
@@ -224,22 +224,22 @@ export function wsasm_obj2mem (ret)
         }
 
         // (3) instructions and data...
-        gen.source = ret.obj[i].source ;
+        gen.source     = ret.obj[i].source ;
         gen.source_bin = ret.obj[i].source_bin ;
-        gen.comments = ret.obj[i].comments ;
+        gen.comments   = ret.obj[i].comments ;
 
         if ('instruction' == ret.obj[i].datatype)
         {
             gen.track_source.push(...ret.obj[i].track_source) ;
 
             valuebin = ret.obj[i].binary ;
-            n_bytes = ret.obj[i].binary.length / BYTE_LENGTH ;
+            n_bytes  = ret.obj[i].binary.length / BYTE_LENGTH ;
             for (let j = 0; j < n_bytes; j++)
             {
-                candidate = ret.obj[i].firm_reference_index ;
-                candidate = ret.obj[i].firm_reference[candidate] ;
+                candidate          = ret.obj[i].firm_reference_index ;
+                candidate          = ret.obj[i].firm_reference[candidate] ;
                 gen.firm_reference = candidate ;
-                gen.is_assembly = true ;
+                gen.is_assembly    = true ;
 
                 // fill for little-endian by default...
                 wsasm_writememory_and_accumulate_part_endian(ret.mp, gen, ret.obj[i], valuebin, n_bytes, j) ;
@@ -249,7 +249,7 @@ export function wsasm_obj2mem (ret)
         {
             gen.track_source.push(...ret.obj[i].track_source) ;
 
-            n_bytes = wsasm_get_datatype_size(ret.obj[i].datatype) ;
+            n_bytes  = wsasm_get_datatype_size(ret.obj[i].datatype) ;
             valuebin = ret.obj[i].value.padStart(n_bytes * BYTE_LENGTH, '0') ;
 
             // next: fill byte by byte
@@ -284,7 +284,7 @@ export function wsasm_obj2mem (ret)
         else if ('binary' == ret.obj[i].datatype)
         {
             valuebin = ret.obj[i].binary ;
-            n_bytes = ret.obj[i].binary.length / BYTE_LENGTH ;
+            n_bytes  = ret.obj[i].binary.length / BYTE_LENGTH ;
 
             // next: fill byte by byte
             for (let j = 0; j < n_bytes; j++)
@@ -308,7 +308,7 @@ export function wsasm_obj2mem (ret)
 
         if (typeof last_assig_word[seg_name] != 'undefined')
         {
-            ret.seg[seg_name].end = parseInt(last_assig_word[seg_name]) ;
+            ret.seg[seg_name].end    = parseInt(last_assig_word[seg_name]) ;
             ret.seg[seg_name].loaded = true ;
         }
     }

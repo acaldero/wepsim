@@ -119,7 +119,7 @@ export function update_cpu_bus_fire (tri_mask, tri_index)
     if (n > 0)
     {
         var tri_state_names = simhw_internalState('tri_state_names') ;
-        var tri_name = tri_state_names[e] ;
+        var tri_name        = tri_state_names[e] ;
         update_draw(simhw_sim_signal(tri_name), 1) ;
     }
     else
@@ -170,9 +170,9 @@ export function update_system_bus_fire (number_active_tri)
 
 export function update_signal_firmware (key)
 {
-    var SIMWARE = get_simware() ;
+    var SIMWARE    = get_simware() ;
     var maddr_name = simhw_sim_ctrlStates_get().mpc.state ;
-    var reg_maddr = get_value(simhw_sim_state(maddr_name)) ;
+    var reg_maddr  = get_value(simhw_sim_state(maddr_name)) ;
 
     var assoc_i = -1;
     for (var i = 0; i < SIMWARE.firmware.length; i++)
@@ -189,16 +189,16 @@ export function update_signal_firmware (key)
         ws_alert("A new 'unknown' instruction is inserted,\n" +
             'please edit it (co, nwords, etc.) in the firmware textarea.') ;
 
-        var new_ins = new Object() ;
-        new_ins['name'] = 'unknown' ;
-        new_ins['signature'] = 'unknown' ;
+        var new_ins                = new Object() ;
+        new_ins['name']            = 'unknown' ;
+        new_ins['signature']       = 'unknown' ;
         new_ins['signatureGlobal'] = 'unknown' ;
-        new_ins['co'] = 0 ;
-        new_ins['nwords'] = 0 ;
-        new_ins['mc-start'] = 0 ;
-        new_ins['fields'] = new Array() ;
-        new_ins['microcode'] = new Array() ;
-        new_ins['microcomments'] = new Array() ;
+        new_ins['co']              = 0 ;
+        new_ins['nwords']          = 0 ;
+        new_ins['mc-start']        = 0 ;
+        new_ins['fields']          = new Array() ;
+        new_ins['microcode']       = new Array() ;
+        new_ins['microcomments']   = new Array() ;
 
         SIMWARE.firmware.push(new_ins) ;
         assoc_i = SIMWARE.firmware.length - 1 ;
@@ -207,7 +207,7 @@ export function update_signal_firmware (key)
     var pos = reg_maddr - parseInt(SIMWARE.firmware[assoc_i]['mc-start']) ;
     if (typeof SIMWARE.firmware[assoc_i]['microcode'][pos] == 'undefined')
     {
-        SIMWARE.firmware[assoc_i]['microcode'][pos] = new Object() ;
+        SIMWARE.firmware[assoc_i]['microcode'][pos]     = new Object() ;
         SIMWARE.firmware[assoc_i]['microcomments'][pos] = '' ;
     }
     SIMWARE.firmware[assoc_i]['microcode'][pos][key] = simhw_sim_signal(key).value ;
@@ -248,14 +248,14 @@ export function propage_signal_update (key)
         }
 
         mcelto.value[key] = signal_obj.value ;
-        mcelto.comments = [] ;
+        mcelto.comments   = [] ;
         control_memory_set(mc_obj, curr_maddr, mcelto) ;
 
         // update ROM[..]
         update_signal_firmware(key) ;
 
         // update save-as...
-        var SIMWARE = get_simware() ;
+        var SIMWARE                                    = get_simware() ;
         document.getElementById('inputFirmware').value = saveFirmware(SIMWARE) ;
     }
 
@@ -266,7 +266,7 @@ export function propage_signal_update (key)
 export function oceoc2rom_addr (oc_code, eoc_code, eoc)
 {
     var xr_info = simhw_sim_ctrlStates_get() ;
-    var ocsize = xr_info.ir.default_eltos.oc.length ; // ocsize is 6 bits in MIPS, 7 bits in RV, etc.
+    var ocsize  = xr_info.ir.default_eltos.oc.length ; // ocsize is 6 bits in MIPS, 7 bits in RV, etc.
 
     // rom_addr <- f(oc_code, eoc_code)
     var rom_addr = oc_code << ocsize ;
@@ -293,7 +293,7 @@ export function update_memories (preSIMWARE)
     for (i = 0; i < SIMWARE.firmware.length; i++)
     {
         var last = SIMWARE.firmware[i].microcode.length ; // mc = microcode
-        var mci = SIMWARE.firmware[i]['mc-start'] ;
+        var mci  = SIMWARE.firmware[i]['mc-start'] ;
         for (var j = 0; j < last; j++)
         {
             mcelto = {
@@ -320,7 +320,7 @@ export function update_memories (preSIMWARE)
 
         var ma = SIMWARE.firmware[i]['mc-start'] ;
 
-        var oc = parseInt(SIMWARE.firmware[i].oc, 2) ;
+        var oc  = parseInt(SIMWARE.firmware[i].oc, 2) ;
         var eoc = 0 ;
         if (typeof SIMWARE.firmware[i].eoc != 'undefined')
         {
@@ -338,7 +338,7 @@ export function update_memories (preSIMWARE)
     var melto ;
     for (var key in SIMWARE.mp)
     {
-        melto = Object.assign({}, SIMWARE.mp[key]) ;
+        melto       = Object.assign({}, SIMWARE.mp[key]) ;
         melto.value = parseInt(SIMWARE.mp[key].value.replace(/ /g, ''), 2) ;
 
         main_memory_set(mp_obj, parseInt(key), melto) ;
@@ -353,7 +353,7 @@ export function update_memories (preSIMWARE)
 
     // 6.- load the CM with default values...
     var curr_cfg = simhw_internalState('CM_cfg') ;
-    var curr_cm = cache_memory_init_cm(curr_cfg) ;
+    var curr_cm  = cache_memory_init_cm(curr_cfg) ;
     simhw_internalState_reset('CM_cfg', curr_cfg) ;
     simhw_internalState_reset('CM', curr_cm) ;
 

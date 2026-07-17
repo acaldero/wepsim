@@ -43,12 +43,12 @@ import { inputasm, inputfirm } from '../wepsim_web/wepsim_web_simulator.js';
 export function wepsim_checkpoint_get (tagName)
 {
     // get mode and history
-    var ws_mode = get_cfg('ws_mode') ;
+    var ws_mode     = get_cfg('ws_mode') ;
     var history_obj = wepsim_state_history_get() ;
 
     // get current state
-    var state_current = wepsim_state_get_clk() ;
-    var state_obj = simcore_simstate_current2state() ;
+    var state_current     = wepsim_state_get_clk() ;
+    var state_obj         = simcore_simstate_current2state() ;
     state_current.content = simcore_simstate_state2checklist(state_obj, '') ;
 
     // get cache configuration
@@ -348,8 +348,8 @@ export function wepsim_checkpoint_NB2Obj (nbObj)
             continue ;
         }
 
-        key = nbObj.cells[i].metadata.name ;
-        type = nbObj.cells[i].metadata.type ;
+        key   = nbObj.cells[i].metadata.name ;
+        type  = nbObj.cells[i].metadata.type ;
         value = nbObj.cells[i].source ;
 
         if (['string', 'code'].includes(type) == false)
@@ -367,7 +367,7 @@ export function wepsim_checkpoint_save (id_filename, id_tagname, checkpointObj)
 {
     // get & check params
     var obj_fileName = document.getElementById(id_filename) ;
-    var obj_tagName = document.getElementById(id_tagname) ;
+    var obj_tagName  = document.getElementById(id_tagname) ;
 
     if ((obj_fileName === null) || (obj_tagName === null))
     {
@@ -375,7 +375,7 @@ export function wepsim_checkpoint_save (id_filename, id_tagname, checkpointObj)
     }
 
     // save checkpoint
-    var checkpointNB = wepsim_checkpoint_Obj2NB(checkpointObj) ;
+    var checkpointNB  = wepsim_checkpoint_Obj2NB(checkpointObj) ;
     var checkpointStr = JSON.stringify(checkpointNB, null, 2) ;
     wepsim_save_to_file(checkpointStr, obj_fileName.value) ;
 
@@ -439,7 +439,7 @@ export function wepsim_checkpoint_loadURI (obj_uri)
         wepsim_url_json(obj_uri.href,
                         function(data)
                         {
-                            var obj_refName = { name: filename } ;
+                            var obj_refName        = { name: filename } ;
                             var current_checkpoint = wepsim_checkpoint_NB2Obj(data) ;
                             wepsim_checkpoint_loadFromObj(current_checkpoint, obj_refName) ;
                         }) ;
@@ -471,7 +471,7 @@ export function wepsim_checkpoint_share (id_filename, id_tagname, checkpointObj)
 {
     // get & check params
     var obj_fileName = document.getElementById(id_filename) ;
-    var obj_tagName = document.getElementById(id_tagname) ;
+    var obj_tagName  = document.getElementById(id_tagname) ;
 
     if ((obj_fileName === null) || (obj_tagName === null))
     {
@@ -479,13 +479,13 @@ export function wepsim_checkpoint_share (id_filename, id_tagname, checkpointObj)
     }
 
     // get checkpoint
-    var checkpointNB = wepsim_checkpoint_Obj2NB(checkpointObj) ;
+    var checkpointNB  = wepsim_checkpoint_Obj2NB(checkpointObj) ;
     var checkpointStr = JSON.stringify(checkpointNB, null, 2) ;
 
     // share checkpoint
     var share_title = 'WepSIM checkpoint backup' ;
-    var share_text = checkpointStr ;
-    var share_url = '' ; // get_cfg('base_url') + '?mode=' + get_cfg('ws_mode') ;
+    var share_text  = checkpointStr ;
+    var share_url   = '' ; // get_cfg('base_url') + '?mode=' + get_cfg('ws_mode') ;
 
     if (obj_tagName.value.toString().trim() !== '')
         share_title += ' (' + obj_tagName.value + ')...' ;
@@ -508,7 +508,7 @@ export function wepsim_checkpoint_backup_load ()
     try
     {
         var json_wsbackup = localStorage.getItem('wepsim_backup') ;
-        obj_wsbackup = JSON.parse(json_wsbackup) ;
+        obj_wsbackup      = JSON.parse(json_wsbackup) ;
     }
     catch (e)
     {
@@ -548,7 +548,7 @@ export function wepsim_checkpoint_listCache (id_listdiv)
     }
 
     // build backup list
-    o = '<div class="btn-group btn-group-toggle list-group m-1" data-bs-toggle="buttons">' ;
+    o            = '<div class="btn-group btn-group-toggle list-group m-1" data-bs-toggle="buttons">' ;
     obj_wsbackup = obj_wsbackup.reverse() ;
     for (var i = 0; i < obj_wsbackup.length; i++)
     {
@@ -583,7 +583,7 @@ export function wepsim_checkpoint_loadFromCache (id_backupname)
 
     // try to load backup id
     var obj_wsbackup = wepsim_checkpoint_backup_load() ;
-    obj_wsbackup = obj_wsbackup.reverse() ;
+    obj_wsbackup     = obj_wsbackup.reverse() ;
 
     var current_checkpoint = obj_wsbackup[id_backupcache] ;
     if (typeof current_checkpoint === 'undefined')
@@ -596,7 +596,7 @@ export function wepsim_checkpoint_loadFromCache (id_backupname)
     wepsim_checkpoint_loadFromObj(current_checkpoint, obj_fileToLoad) ;
 
     ret.error = false ;
-    ret.msg = 'Processing load request...' ;
+    ret.msg   = 'Processing load request...' ;
     return ret ;
 }
 
@@ -606,7 +606,7 @@ export function wepsim_checkpoint_addCurrentToCache ()
     var obj_wsbackup = wepsim_checkpoint_backup_load() ;
 
     // add new backup
-    var current_date = Date().toString() ;
+    var current_date       = Date().toString() ;
     var current_checkpoint = wepsim_checkpoint_get(current_date) ;
     if ((current_checkpoint.firmware.trim() !== '') &&
         (current_checkpoint.assembly.trim() !== ''))

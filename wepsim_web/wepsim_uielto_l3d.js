@@ -63,7 +63,7 @@ export class ws_l3d extends ws_uielto
 
     render_populate ()
     {
-        var o1 = '' ;
+        var o1       = '' ;
         var div_hash = '#config_L3D_' + this.name_str ;
         var i ;
         var offset ;
@@ -77,7 +77,7 @@ export class ws_l3d extends ws_uielto
 
         // default content
         var l3d_states = simhw_internalState('l3d_state') ;
-        var l3d_dim = simhw_internalState('l3d_dim') ;
+        var l3d_dim    = simhw_internalState('l3d_dim') ;
         if ((typeof l3d_states == 'undefined') || (typeof l3d_dim == 'undefined'))
         {
             $(div_hash).html(o1) ;

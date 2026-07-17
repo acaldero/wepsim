@@ -55,7 +55,7 @@ export class ws_cpu extends ws_uielto
 
     render_populate ()
     {
-        var o1 = '' ;
+        var o1       = '' ;
         var div_hash = '#cpu_ALL_' + this.name_str ;
 
         // if no active hardware -> empty

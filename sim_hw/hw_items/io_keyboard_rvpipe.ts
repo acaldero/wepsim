@@ -30,7 +30,7 @@ const IO_KBD_KBSR_ID = 0x0104;
 
 export function io_keyboard_rvpipe_register(sim_p: Simulator): Simulator
 {
-    const DEBUG = false;
+    const DEBUG             = false;
     sim_p.components['KBD'] = {
         name:      'KBD',
         version:   '1',
@@ -90,7 +90,7 @@ export function io_keyboard_rvpipe_register(sim_p: Simulator): Simulator
         {
             if (DEBUG) console.log(JSON.stringify(s_expr), sim_p.behaviors[s_expr[0] ?? 'NOP']?.verbal(s_expr));
             const bus_ab = get_value(sim_p.states[s_expr[1]]);
-            const clk = get_value(sim_p.states[s_expr[5]]);
+            const clk    = get_value(sim_p.states[s_expr[5]]);
 
             if (DEBUG) console.log('[KBD_IOR] bus_ab=' + bus_ab + ' kbdr=' + get_value(sim_p.states[s_expr[3]]) + ' kbsr=' + get_value(sim_p.states[s_expr[4]]));
 

@@ -54,7 +54,7 @@ export class ws_save_file extends HTMLElement
         this.update_internal_attributes() ;
 
         var o1 = '' ;
-        o1 += "<div class='card border-secondary h-100'>" +
+        o1    += "<div class='card border-secondary h-100'>" +
             "<div class='card-header border-secondary text-white bg-secondary p-1'>" +
             " <h5 class='m-0'>" +
             " <span class='text-white bg-secondary' data-langkey='Output file'>Output file</span>" +
@@ -78,11 +78,11 @@ export class ws_save_file extends HTMLElement
             var host = el.closest('ws-save-file');
             if (host)
             {
-                var fid = host.getAttribute('fid');
+                var fid   = host.getAttribute('fid');
                 var tagId = host.getAttribute('data-tag-id') || 'tagToSave1';
                 wepsim_notify_success('<strong>INFO</strong>',
                                       'Processing save request...');
-                var obj_tagName = document.getElementById(tagId);
+                var obj_tagName   = document.getElementById(tagId);
                 var checkpointObj = wepsim_checkpoint_get(obj_tagName.value);
                 wepsim_checkpoint_save(fid, tagId, checkpointObj);
                 return;

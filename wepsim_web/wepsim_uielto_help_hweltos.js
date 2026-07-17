@@ -34,10 +34,10 @@ export class ws_help_hweltos extends ws_uielto
         // parent
         super();
 
-        this.info_icons = {} ;
-        this.info_icons['Inputs'] = '<i class="fas fa-sign-in-alt"></i>' ;
-        this.info_icons['Outputs'] = '<i class="fas fa-sign-out-alt"></i>' ;
-        this.info_icons['Signals'] = '<i class="fas fa-wave-square"></i>' ;
+        this.info_icons                = {} ;
+        this.info_icons['Inputs']      = '<i class="fas fa-sign-in-alt"></i>' ;
+        this.info_icons['Outputs']     = '<i class="fas fa-sign-out-alt"></i>' ;
+        this.info_icons['Signals']     = '<i class="fas fa-wave-square"></i>' ;
         this.info_icons['I/O mapping'] = '<i class="fas fa-map"></i>' ;
     }
 
@@ -54,9 +54,9 @@ export class ws_help_hweltos extends ws_uielto
 
     render_skel ()
     {
-        var o1 = '' ;
+        var o1        = '' ;
         var id_search = this.name_str + '_hwe_input1' ;
-        var id_list = this.name_str + '_hwe_list1' ;
+        var id_list   = this.name_str + '_hwe_list1' ;
 
         // build HTML
         o1 += '<div class="container">' +
@@ -101,7 +101,7 @@ export class ws_help_hweltos extends ws_uielto
     render_populate ()
     {
         var id_search = this.name_str + '_hwe_input1' ;
-        var id_list = this.name_str + '_hwe_list1' ;
+        var id_list   = this.name_str + '_hwe_list1' ;
 
         // if no active hardware -> empty
         var ahw = simhw_active() ;
@@ -118,7 +118,7 @@ export class ws_help_hweltos extends ws_uielto
         }
 
         // html holder
-        var o1 = '' ;
+        var o1   = '' ;
         var elto_path ;
         var grid = 'col-md-12 col-lg-6 col-xxl-4' ;
         if (this.layout == 'offcanvas')
@@ -130,7 +130,7 @@ export class ws_help_hweltos extends ws_uielto
         {
             for (var j = 0; j < ahw.elements_hash.by_belong[b].length; j++)
             {
-                var elto = ahw.elements_hash.by_belong[b][j] ;
+                var elto  = ahw.elements_hash.by_belong[b][j] ;
                 elto_path = ahw.sim_short_name + ':' + elto.key ;
 
                 o1 += '<div class="' + grid + ' d-flex my-2 table-responsive">' +

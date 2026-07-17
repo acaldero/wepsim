@@ -175,14 +175,14 @@ export function firm_instruction_co_read (context, instruccionAux, xr_info, all_
 
         if (typeof context.oc_eoc[instruccionAux.oc] == 'undefined')
         {
-            context.oc_eoc[instruccionAux.oc] = {} ;
+            context.oc_eoc[instruccionAux.oc]           = {} ;
             context.oc_eoc[instruccionAux.oc].signature = instruccionAux.signature ;
-            context.oc_eoc[instruccionAux.oc].eoc = null ;
+            context.oc_eoc[instruccionAux.oc].eoc       = null ;
         }
     }
 
     // overlapping mask (initialized with 'co' field)
-    var stop = 31 - parseInt(xr_info.ir.default_eltos.oc.end) ; // 5 -> 26
+    var stop  = 31 - parseInt(xr_info.ir.default_eltos.oc.end) ; // 5 -> 26
     var start = 31 - parseInt(xr_info.ir.default_eltos.oc.begin) ; // 0 -> 31
     for (var i = stop; i <= start; i++)
     {
@@ -197,13 +197,13 @@ export function firm_instruction_co_read (context, instruccionAux, xr_info, all_
     }
 
     // <new>
-    var tmp_fields = {} ;
-    tmp_fields.value = instruccionAux.oc ;
-    tmp_fields.type = 'oc' ;
-    tmp_fields.startbit = 31 - parseInt(xr_info.ir.default_eltos.oc.begin) ; // 0 -> 31
-    tmp_fields.stopbit = 31 - parseInt(xr_info.ir.default_eltos.oc.end) ; // 5 -> 26
+    var tmp_fields        = {} ;
+    tmp_fields.value      = instruccionAux.oc ;
+    tmp_fields.type       = 'oc' ;
+    tmp_fields.startbit   = 31 - parseInt(xr_info.ir.default_eltos.oc.begin) ; // 0 -> 31
+    tmp_fields.stopbit    = 31 - parseInt(xr_info.ir.default_eltos.oc.end) ; // 5 -> 26
     tmp_fields.bits_start = [tmp_fields.startbit] ;
-    tmp_fields.bits_stop = [tmp_fields.stopbit] ;
+    tmp_fields.bits_stop  = [tmp_fields.stopbit] ;
     instruccionAux.fields_all.push(tmp_fields) ;
     // </new>
 
@@ -264,14 +264,14 @@ export function firm_instruction_cop_read (context, instruccionAux, all_ones_co)
     }
 
     // <new>
-    var xr_info = simhw_sim_ctrlStates_get() ;
-    var tmp_fields = {} ;
-    tmp_fields.value = instruccionAux.eoc ;
-    tmp_fields.type = 'eoc' ;
-    tmp_fields.startbit = 31 - parseInt(xr_info.ir.default_eltos.eoc[0].begin) ;
-    tmp_fields.stopbit = 31 - parseInt(xr_info.ir.default_eltos.eoc[0].end) ;
+    var xr_info           = simhw_sim_ctrlStates_get() ;
+    var tmp_fields        = {} ;
+    tmp_fields.value      = instruccionAux.eoc ;
+    tmp_fields.type       = 'eoc' ;
+    tmp_fields.startbit   = 31 - parseInt(xr_info.ir.default_eltos.eoc[0].begin) ;
+    tmp_fields.stopbit    = 31 - parseInt(xr_info.ir.default_eltos.eoc[0].end) ;
     tmp_fields.bits_start = [tmp_fields.startbit] ;
-    tmp_fields.bits_stop = [tmp_fields.stopbit] ;
+    tmp_fields.bits_stop  = [tmp_fields.stopbit] ;
     instruccionAux.fields_all.push(tmp_fields) ;
     // </new>
 
@@ -330,7 +330,7 @@ export function firm_instruction_field_read (context, instruccionAux, camposInse
 
     frm_nextToken(context);
     // match mandatory START_BIT
-    instruccionAux.fields[camposInsertados].startbit = frm_getToken(context) ;
+    instruccionAux.fields[camposInsertados].startbit   = frm_getToken(context) ;
     instruccionAux.fields[camposInsertados].bits_start = [parseInt(frm_getToken(context))] ;
 
     frm_nextToken(context);
@@ -343,7 +343,7 @@ export function firm_instruction_field_read (context, instruccionAux, camposInse
 
     frm_nextToken(context);
     // match mandatory STOP_BIT
-    instruccionAux.fields[camposInsertados].stopbit = frm_getToken(context) ;
+    instruccionAux.fields[camposInsertados].stopbit   = frm_getToken(context) ;
     instruccionAux.fields[camposInsertados].bits_stop = [parseInt(frm_getToken(context))] ;
 
     frm_nextToken(context);
@@ -376,24 +376,24 @@ export function firm_instruction_field_read (context, instruccionAux, camposInse
     }
 
     // <new>
-    var xr_info = simhw_sim_ctrlStates_get() ;
-    var tmp_fields = {} ;
+    var xr_info     = simhw_sim_ctrlStates_get() ;
+    var tmp_fields  = {} ;
     tmp_fields.name = instruccionAux.fields[camposInsertados].name ;
     tmp_fields.type = instruccionAux.fields[camposInsertados].type ;
     if ('rel' == instruccionAux.fields[camposInsertados].address_type)
     {
-        tmp_fields.type = 'address' ;
+        tmp_fields.type         = 'address' ;
         tmp_fields.address_type = 'rel' ;
     }
     if ('abs' == instruccionAux.fields[camposInsertados].address_type)
     {
-        tmp_fields.type = 'address' ;
+        tmp_fields.type         = 'address' ;
         tmp_fields.address_type = 'abs' ;
     }
-    tmp_fields.startbit = instruccionAux.fields[camposInsertados].startbit ;
-    tmp_fields.stopbit = instruccionAux.fields[camposInsertados].stopbit ;
+    tmp_fields.startbit   = instruccionAux.fields[camposInsertados].startbit ;
+    tmp_fields.stopbit    = instruccionAux.fields[camposInsertados].stopbit ;
     tmp_fields.bits_start = [tmp_fields.startbit] ;
-    tmp_fields.bits_stop = [tmp_fields.stopbit] ;
+    tmp_fields.bits_stop  = [tmp_fields.stopbit] ;
     instruccionAux.fields_all.push(tmp_fields) ;
     // </new>
 
@@ -411,7 +411,7 @@ export function firm_instruction_compute_opcode_pattern (context, instruccionAux
 
     // opcode_pattern (e.g.: "------10101-----1100")
     instruccionAux.opcode_pattern = '-'.repeat(nbits) ;
-    var a1 = instruccionAux.opcode_pattern.split('') ;
+    var a1                        = instruccionAux.opcode_pattern.split('') ;
 
     for (var r = 0; r < instruccionAux.fields_all.length; r++)
     {
@@ -419,15 +419,15 @@ export function firm_instruction_compute_opcode_pattern (context, instruccionAux
         if (['oc', 'eoc'].includes(campo.type))
         {
             d_start = parseInt(campo.bits_start[0]) ;
-            d_stop = parseInt(campo.bits_stop[0]) ;
-            c = Math.abs(d_start - d_stop) ;
-            v = campo.value.padStart(c, '0') ;
+            d_stop  = parseInt(campo.bits_stop[0]) ;
+            c       = Math.abs(d_start - d_stop) ;
+            v       = campo.value.padStart(c, '0') ;
 
             j = 0 ;
             for (var i = d_start; i >= d_stop; i--)
             {
                 a1[nbits - i - 1] = v[j] ;
-                j = j + 1 ;
+                j                 = j + 1 ;
             }
         }
     }
@@ -463,12 +463,12 @@ export function firm_instruction_read_flexible_fields (context, instruccionAux, 
     //             }
     // }
 
-    var campos = instruccionAux.fields ;
-    var firma = instruccionAux.signature ;
+    var campos       = instruccionAux.fields ;
+    var firma        = instruccionAux.signature ;
     var firmaUsuario = instruccionAux.signatureUser ;
     var firmaGlobal ;
 
-    var co_inserted = 0;
+    var co_inserted      = 0;
     var camposInsertados = 0;
     frm_nextToken(context);
     while (! frm_isToken(context, '{'))
@@ -544,23 +544,23 @@ export function firm_instruction_read_flexible_fields (context, instruccionAux, 
                 return ret ;
             }
 
-            firma = firma.replace(',' + campos[camposInsertados].name, ',' + campos[camposInsertados].type);
-            firma = firma.replace('(' + campos[camposInsertados].name, '(' + campos[camposInsertados].type);
-            firma = firma.replace(')' + campos[camposInsertados].name, ')' + campos[camposInsertados].type);
+            firma        = firma.replace(',' + campos[camposInsertados].name, ',' + campos[camposInsertados].type);
+            firma        = firma.replace('(' + campos[camposInsertados].name, '(' + campos[camposInsertados].type);
+            firma        = firma.replace(')' + campos[camposInsertados].name, ')' + campos[camposInsertados].type);
             firmaUsuario = firmaUsuario.replace(campos[camposInsertados].name, campos[camposInsertados].type);
 
-            instruccionAux.signature = firma;
-            instruccionAux.signatureUser = firmaUsuario;
-            firmaGlobal = firma.replace('address', 'num');
-            firmaGlobal = firmaGlobal.replace('imm', 'num');
-            firmaGlobal = firmaGlobal.replace('inm', 'num'); // TODO: remove in the future
+            instruccionAux.signature       = firma;
+            instruccionAux.signatureUser   = firmaUsuario;
+            firmaGlobal                    = firma.replace('address', 'num');
+            firmaGlobal                    = firmaGlobal.replace('imm', 'num');
+            firmaGlobal                    = firmaGlobal.replace('inm', 'num'); // TODO: remove in the future
             instruccionAux.signatureGlobal = firmaGlobal;
 
             camposInsertados++;
         }
     }
 
-    instruccionAux.fields = campos;
+    instruccionAux.fields       = campos;
     instruccionAux.signatureRaw = firmaUsuario;
 
     // semantic check: ranges in fields

@@ -56,9 +56,9 @@ export function control_memory_set (memory, elto, melto)
         if (melto.comments instanceof Array)
             comments_str = melto.comments.join('\n') ;
 
-        melto.state = melto.state || (comments_str.trim().split('state:').length > 1) ;
+        melto.state      = melto.state || (comments_str.trim().split('state:').length > 1) ;
         melto.breakpoint = melto.breakpoint || (comments_str.trim().split('break:').length > 1) ;
-        melto.notify = comments_str.trim().split('notify:') ;
+        melto.notify     = comments_str.trim().split('notify:') ;
         for (var k = 0; k < melto.notify.length; k++)
         {
             melto.notify[k] = melto.notify[k].split('\n')[0] ;
@@ -76,10 +76,10 @@ export function control_memory_set (memory, elto, melto)
 
         if (null != melto.comments)
         {
-            valobj.comments = melto.comments ;
-            valobj.state = melto.state ;
+            valobj.comments   = melto.comments ;
+            valobj.state      = melto.state ;
             valobj.breakpoint = melto.breakpoint ;
-            valobj.notify = melto.notify ;
+            valobj.notify     = melto.notify ;
         }
 
         return valobj ;
@@ -114,7 +114,7 @@ export function control_memory_lineToString (memory, key)
     }
 
     // if signals -> "S=V, ..."
-    var value = '' ;
+    var value  = '' ;
     var mc_val = get_value(mcelto) ;
     for (var ks in mc_val)
     {
@@ -133,13 +133,13 @@ export function control_memory_lineToString (memory, key)
 export function get_verbal_from_current_mpc ()
 {
     var active_signals = '' ;
-    var active_verbal = '' ;
+    var active_verbal  = '' ;
 
     var maddr_name = simhw_sim_ctrlStates_get().mpc.state ;
     var curr_maddr = get_value(simhw_sim_state(maddr_name)) ;
 
     var mcelto = simhw_internalState_get('MC', curr_maddr) ;
-    var mins = get_value(mcelto) ;
+    var mins   = get_value(mcelto) ;
     for (var key in mins)
     {
         if ('MADDR' === key)
@@ -149,7 +149,7 @@ export function get_verbal_from_current_mpc ()
         }
 
         active_signals = active_signals + key + ' ';
-        active_verbal = active_verbal + compute_signal_verbals(key, mins[key]) ;
+        active_verbal  = active_verbal + compute_signal_verbals(key, mins[key]) ;
     }
 
     // set default for empty

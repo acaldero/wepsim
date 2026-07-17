@@ -15,9 +15,9 @@ for (const name of Object.keys(bootstrapMod))
     const Plugin = bootstrapMod[name];
     if (typeof Plugin === 'function' && Plugin.NAME && Plugin.jQueryInterface)
     {
-        $.fn[Plugin.NAME] = Plugin.jQueryInterface;
+        $.fn[Plugin.NAME]             = Plugin.jQueryInterface;
         $.fn[Plugin.NAME].Constructor = Plugin;
-        $.fn[Plugin.NAME].noConflict = () =>
+        $.fn[Plugin.NAME].noConflict  = () =>
         {
             $.fn[Plugin.NAME] = Plugin.jQueryInterface;
             return Plugin.jQueryInterface;

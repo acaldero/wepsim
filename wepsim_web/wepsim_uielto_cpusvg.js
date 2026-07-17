@@ -133,25 +133,25 @@ export var cfg_size_inactive = 1.0 ;
 export function wepsim_svg_update_drawing()
 {
     // 1) from configuration
-    cfg_color_data_active = get_cfg('color_data_active') ;
-    cfg_color_name_active = get_cfg('color_name_active') ;
+    cfg_color_data_active   = get_cfg('color_data_active') ;
+    cfg_color_name_active   = get_cfg('color_name_active') ;
     cfg_color_data_inactive = get_cfg('color_data_inactive') ;
     cfg_color_name_inactive = get_cfg('color_name_inactive') ;
-    cfg_size_active = get_cfg('size_active') ;
-    cfg_size_inactive = get_cfg('size_inactive') ;
+    cfg_size_active         = get_cfg('size_active') ;
+    cfg_size_inactive       = get_cfg('size_inactive') ;
 
     // 2) modify because dark-mode
     is_dark_mode = is_darkmode() ;
 
     if (false == is_dark_mode)
     {
-        cfg_color_background = 'white' ;
+        cfg_color_background    = 'white' ;
         cfg_color_data_inactive = '#000000' ;
         cfg_color_name_inactive = '#000000' ;
     }
     else
     {
-        cfg_color_background = 'black' ;
+        cfg_color_background    = 'black' ;
         cfg_color_data_inactive = '#FFFFFF' ;
         cfg_color_name_inactive = '#FFFFFF' ;
     }
@@ -379,13 +379,13 @@ export function wepsim_svg_apply_darkmode(svg_id)
         def_color = elements[i].getAttribute('wepsim:color') ;
         if (def_color != null)
         {
-            elements[i].style.fill = def_color ;
+            elements[i].style.fill   = def_color ;
             elements[i].style.stroke = def_color ;
 
             continue ;
         }
 
-        elements[i].style.fill = cfg_color_data_inactive ;
+        elements[i].style.fill   = cfg_color_data_inactive ;
         elements[i].style.stroke = cfg_color_data_inactive ;
     }
 
@@ -478,7 +478,7 @@ export function wepsim_svg_reload(id_arr, img_arr)
         // set dark-mode after load
         o.style.setProperty('visibility', 'hidden') ;
         o.style.setProperty('display', 'block') ;
-        o.img_data = img_arr[i].trim() ;
+        o.img_data  = img_arr[i].trim() ;
         o.img_first = true ;
         o.addEventListener('load', eventhandler_load_svg_set_darkmode, false) ;
 

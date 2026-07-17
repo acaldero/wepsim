@@ -142,7 +142,7 @@ export function asm_nextToken (context)
     if (':' == context.text[tmp_context])
     {
         token_type = 'TAG' ;
-        context.t = tmp_context + 1 ;
+        context.t  = tmp_context + 1 ;
     }
 
     // insert token
@@ -157,7 +157,7 @@ export function asm_nextToken (context)
         else
         { // (tok == "25") -> "25" ("25:20")
             token_type = 'NUMBER' ;
-            context.t = context.t - 1;
+            context.t  = context.t - 1;
         }
     }
 
@@ -255,8 +255,8 @@ export function asm_getLabelContext (context)
 
 export function asm_setLabelContext (context, labelContext)
 {
-    context.t = labelContext.t ;
-    context.line = labelContext.line ;
+    context.t        = labelContext.t ;
+    context.line     = labelContext.line ;
     context.newlines = labelContext.newlines ;
 }
 

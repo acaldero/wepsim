@@ -13,9 +13,9 @@ try
     wepsim_register_core();
     simcore_init(true);
     upgrade_cfg();
-    var ws_mode = get_cfg('ws_mode') ;
+    var ws_mode      = get_cfg('ws_mode') ;
     const processors = simhw_get_processor_names();
-    ws_mode = processors.some((v)=>v == ws_mode) ? ws_mode : processors[0];
+    ws_mode          = processors.some((v)=>v == ws_mode) ? ws_mode : processors[0];
     await simcore_init_hw(ws_mode);
     wepsim_web_register_components();
 }

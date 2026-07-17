@@ -42,7 +42,7 @@ import { WORD_LENGTH } from '../sim_sw/assembly/datatypes.js';
 
 export function decimal2binary (number, size)
 {
-    var num_base2 = number.toString(2) ;
+    var num_base2        = number.toString(2) ;
     var num_base2_length = num_base2.length ;
 
     if (num_base2_length > WORD_LENGTH)
@@ -50,14 +50,14 @@ export function decimal2binary (number, size)
         return [num_base2, size - num_base2_length, num_base2_length] ;
     }
 
-    num_base2 = (number >>> 0).toString(2) ;
+    num_base2        = (number >>> 0).toString(2) ;
     num_base2_length = num_base2.length ;
     if (number >= 0)
     {
         return [num_base2, size - num_base2_length, num_base2_length] ;
     }
 
-    num_base2 = '1' + num_base2.replace(/^[1]+/g, '') ;
+    num_base2        = '1' + num_base2.replace(/^[1]+/g, '') ;
     num_base2_length = num_base2.length ;
     if (num_base2_length > size)
     {
@@ -70,9 +70,9 @@ export function decimal2binary (number, size)
 
 export function float2binary (f, size)
 {
-    var buf = new ArrayBuffer(8) ;
+    var buf   = new ArrayBuffer(8) ;
     var float = new Float32Array(buf) ;
-    var uint = new Uint32Array(buf) ;
+    var uint  = new Uint32Array(buf) ;
 
     float[0] = f ;
     return decimal2binary(uint[0], size) ;
@@ -80,9 +80,9 @@ export function float2binary (f, size)
 
 export function float2decimal (f)
 {
-    var buf = new ArrayBuffer(8) ;
+    var buf   = new ArrayBuffer(8) ;
     var float = new Float32Array(buf) ;
-    var uint = new Uint32Array(buf) ;
+    var uint  = new Uint32Array(buf) ;
 
     float[0] = f ;
     return uint[0] ;
@@ -95,7 +95,7 @@ export function float2hex (f)
 
 export function hex2float (hexvalue)
 {
-    var sign = (hexvalue & 0x80000000) ? -1 : 1;
+    var sign     = (hexvalue & 0x80000000) ? -1 : 1;
     var exponent = ((hexvalue >> 23) & 0xff) - 127;
     var mantissa = 1 + ((hexvalue & 0x7fffff) / 0x800000);
 
@@ -114,14 +114,14 @@ export function hex2float (hexvalue)
 
 export function uint_to_float32 (value)
 {
-    var buf = new ArrayBuffer(4) ;
+    var buf                   = new ArrayBuffer(4) ;
     (new Uint32Array(buf))[0] = value ;
     return (new Float32Array(buf))[0] ;
 }
 
 export function float32_to_uint (value)
 {
-    var buf = new ArrayBuffer(4) ;
+    var buf                    = new ArrayBuffer(4) ;
     (new Float32Array(buf))[0] = value ;
     return (new Uint32Array(buf))[0];
 }
@@ -144,9 +144,9 @@ export function float32_to_uint (value)
 export function float_class (a)
 {
     var s = a & 0x80000000;
-    s = s >> 31 ;
+    s     = s >> 31 ;
     var e = a & 0x7F800000;
-    e = e >> 23 ;
+    e     = e >> 23 ;
     var m = a & 0x007FFFFF;
 
     let rd ;
@@ -177,9 +177,9 @@ export function float_class (a)
 export function float_class_power2 (a)
 {
     var s = a & 0x80000000;
-    s = s >> 31 ;
+    s     = s >> 31 ;
     var e = a & 0x7F800000;
-    e = e >> 23 ;
+    e     = e >> 23 ;
     var m = a & 0x007FFFFF;
 
     let rd ;
@@ -332,13 +332,13 @@ export function show_memories_values ()
 {
     // main memory
     var pc_name = simhw_sim_ctrlStates_get().pc.state ;
-    var reg_pc = get_value(simhw_sim_state(pc_name)) ;
+    var reg_pc  = get_value(simhw_sim_state(pc_name)) ;
 
     show_main_memory(simhw_internalState('MP'), reg_pc, true, true) ;
 
     // control memory
     var maddr_name = simhw_sim_ctrlStates_get().mpc.state ;
-    var reg_maddr = get_value(simhw_sim_state(maddr_name)) ;
+    var reg_maddr  = get_value(simhw_sim_state(maddr_name)) ;
 
     show_control_memory(simhw_internalState('MC'), reg_maddr, true) ;
 

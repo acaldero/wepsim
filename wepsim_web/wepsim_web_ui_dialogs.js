@@ -643,7 +643,7 @@ export var wsweb_dialogs = {
         {
             var wsi = get_cfg('ws_idiom') ;
 
-            var o1 = '&lt;Empty preset configurations&gt;' ;
+            var o1     = '&lt;Empty preset configurations&gt;' ;
             var e_cfgs = cfgset_getSet() ;
             if (typeof e_cfgs !== 'undefined')
             {

@@ -65,7 +65,7 @@ export function wepsim_register_preload_tasks()
             'action': function(hash)
             {
                 var url_examples_set = get_cfg('example_url') ;
-                var ret = wepsim_example_loadSet(url_examples_set) ;
+                var ret              = wepsim_example_loadSet(url_examples_set) ;
                 wepsim_example_reset() ;
                 wepsim_example_load(hash.examples_set) ;
 
@@ -107,7 +107,7 @@ export function wepsim_register_preload_tasks()
                     return '' ;
                 }
 
-                var example_uri = example_obj.hardware + ':' +
+                var example_uri           = example_obj.hardware + ':' +
                     example_obj.microcode + ':' +
                     example_obj.assembly ;
                 var load_example_assembly = ('' == hash.asm) ? true : false ;
@@ -141,7 +141,7 @@ export function wepsim_register_preload_tasks()
                 }
                 catch (e)
                 {
-                    mc_code = '' ;
+                    mc_code    = '' ;
                     result_txt = ' could not be loaded' ;
                 }
 
@@ -180,7 +180,7 @@ export function wepsim_register_preload_tasks()
                 }
                 catch (e)
                 {
-                    asm_code = '' ;
+                    asm_code   = '' ;
                     result_txt = ' could not be loaded' ;
                 }
 
@@ -260,13 +260,13 @@ export function wepsim_register_preload_tasks()
                 catch (e)
                 {
                     cm_cfg_json = '[]' ;
-                    result_txt = ' could not be loaded' ;
+                    result_txt  = ' could not be loaded' ;
                 }
 
                 if ('[]' != cm_cfg_json)
                 {
                     let cm_cfg = JSON.parse(cm_cfg_json) ;
-                    let cm = cache_memory_init_cm(cm_cfg) ;
+                    let cm     = cache_memory_init_cm(cm_cfg) ;
                     simhw_internalState_reset('CM_cfg', cm_cfg) ;
                     simhw_internalState_reset('CM', cm) ;
                     wepsim_show_cache_memory_config() ;

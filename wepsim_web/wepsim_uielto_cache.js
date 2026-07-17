@@ -48,7 +48,7 @@ export class ws_cachememory extends ws_uielto
 
     render_skel ()
     {
-        var div_id = 'memory_CACHE' ;
+        var div_id    = 'memory_CACHE' ;
         var style_dim = 'height:58vh; width:inherit; ' ;
         var style_ovf = 'overflow:auto; -webkit-overflow-scrolling:touch; ' ;
 
@@ -152,13 +152,13 @@ export function wepsim_show_cache_stats(level, memory)
 export function wepsim_show_cache_cfg(level, memory)
 {
     // cache configuration...
-    var t_sz = get_var(memory.cfg.tag_size) ;
-    var s_sz = get_var(memory.cfg.set_size) ;
-    var o_sz = get_var(memory.cfg.off_size) ;
-    var v_sz = get_var(memory.cfg.via_size) ;
+    var t_sz        = get_var(memory.cfg.tag_size) ;
+    var s_sz        = get_var(memory.cfg.set_size) ;
+    var o_sz        = get_var(memory.cfg.off_size) ;
+    var v_sz        = get_var(memory.cfg.via_size) ;
     var replace_pol = get_var(memory.cfg.replace_pol) ;
-    var su_pol = get_var(memory.cfg.su_pol) ;
-    var cm_level = get_var(memory.cfg.level) ;
+    var su_pol      = get_var(memory.cfg.su_pol) ;
+    var cm_level    = get_var(memory.cfg.level) ;
 
     // cache type and field sizes...
     var cm_type ;
@@ -167,17 +167,17 @@ export function wepsim_show_cache_cfg(level, memory)
     if (0 == s_sz)
     {
         cm_type = 'fully associative' ;
-        p1 += '<thead><tr><td><b>Tag</b>: ' + t_sz + ' bits</td><td><b>Offset</b>: ' + o_sz + ' bits</td></tr></thead>' ;
+        p1     += '<thead><tr><td><b>Tag</b>: ' + t_sz + ' bits</td><td><b>Offset</b>: ' + o_sz + ' bits</td></tr></thead>' ;
     }
     else if (v_sz == s_sz)
     {
         cm_type = 'direct-mapped' ;
-        p1 += '<thead><tr><td><b>Tag</b>: ' + t_sz + ' bits</td><td><b>Index</b>: ' + s_sz + ' bits</td><td><b>Offset</b>: ' + o_sz + ' bits</td></tr></thead>' ;
+        p1     += '<thead><tr><td><b>Tag</b>: ' + t_sz + ' bits</td><td><b>Index</b>: ' + s_sz + ' bits</td><td><b>Offset</b>: ' + o_sz + ' bits</td></tr></thead>' ;
     }
     else
     {
         cm_type = 'set-associative' ;
-        p1 += '<thead><tr><td><b>Tag</b>: ' + t_sz + ' bits</td><td><b>Set</b>: ' + s_sz + ' bits</td><td><b>Offset</b>: ' + o_sz + ' bits</td></tr></thead>' ;
+        p1     += '<thead><tr><td><b>Tag</b>: ' + t_sz + ' bits</td><td><b>Set</b>: ' + s_sz + ' bits</td><td><b>Offset</b>: ' + o_sz + ' bits</td></tr></thead>' ;
     }
     p1 += '</table>\n' ;
 
@@ -416,7 +416,7 @@ export function wepsim_show_cache_vueinit(level, memory)
                     function(value)
                     {
                         var hit_ratio = 0.0;
-                        var n_hits = get_var(memory.stats.n_hits) ;
+                        var n_hits    = get_var(memory.stats.n_hits) ;
                         if (value != 0)
                         {
                             hit_ratio = (n_hits / value) ;
@@ -428,7 +428,7 @@ export function wepsim_show_cache_vueinit(level, memory)
                     function(value)
                     {
                         var miss_ratio = 0.0;
-                        var n_misses = get_var(memory.stats.n_misses) ;
+                        var n_misses   = get_var(memory.stats.n_misses) ;
                         if (value != 0)
                         {
                             miss_ratio = (n_misses / value) ;

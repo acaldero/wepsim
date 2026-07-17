@@ -24,7 +24,7 @@ import { simhw_sim_component, simhw_sim_components } from '../sim_hw/sim_hw_inde
 
 export function simcore_simstate_checklist2state (checklist)
 {
-    var o = {} ;
+    var o   = {} ;
     var ret = false ;
 
     // white-spaces...
@@ -85,7 +85,7 @@ export function simcore_simstate_expandfilter (filter)
     var j ;
 
     // to prepare filter
-    var filter_ext = [] ;
+    var filter_ext  = [] ;
     var filter_base = filter.toUpperCase().split(/[,;:]+/).filter((v) => v != '') ;
     for (var i = 0; i < filter_base.length; i++)
     {
@@ -102,7 +102,7 @@ export function simcore_simstate_expandfilter (filter)
         if (elto[0].startsWith('0X'))
         {
             first_value = parseInt(elto[0], 16) ;
-            last_value = parseInt(elto[1], 16) ;
+            last_value  = parseInt(elto[1], 16) ;
             for (j = first_value; j <= last_value; j++)
             {
                 filter_ext.push('0X' + j.toString(16)) ;
@@ -113,10 +113,10 @@ export function simcore_simstate_expandfilter (filter)
         // R10-R20
         if (elto[0].startsWith('R'))
         {
-            elto[0] = elto[0].replace('R', '0') ;
-            elto[1] = elto[1].replace('R', '0') ;
+            elto[0]     = elto[0].replace('R', '0') ;
+            elto[1]     = elto[1].replace('R', '0') ;
             first_value = parseInt(elto[0], 10) ;
-            last_value = parseInt(elto[1], 10) ;
+            last_value  = parseInt(elto[1], 10) ;
             for (j = first_value; j <= last_value; j++)
             {
                 filter_ext.push('R' + j.toString(16)) ;
@@ -139,7 +139,7 @@ export function simcore_simstate_state2checklist (s_obj, filter)
     {
         for (var eltos in s_obj[component])
         {
-            var elto = s_obj[component][eltos] ;
+            var elto    = s_obj[component][eltos] ;
             var elto_id = elto.id.toString().toUpperCase() ;
 
             // console.log(" >> " + JSON.stringify(filter_ext) + " << " + JSON.stringify(elto)) ;
@@ -157,9 +157,9 @@ export function simcore_simstate_state2checklist (s_obj, filter)
 
 export function simcore_simstate_check_results (expected_result, obtained_result, newones_too)
 {
-    var d = {} ;
-    d.result = [] ;
-    d.errors = 0 ;
+    var d             = {} ;
+    d.result          = [] ;
+    d.errors          = 0 ;
     d.neltos_expected = 0 ;
     d.neltos_obtained = 0 ;
 
@@ -183,12 +183,12 @@ export function simcore_simstate_check_results (expected_result, obtained_result
                     obtained_value = obtained_result[compo][elto].value ;
                 }
 
-                diff = {} ;
-                diff.expected = expected_result[compo][elto].value ;
-                diff.obtained = obtained_value ;
+                diff           = {} ;
+                diff.expected  = expected_result[compo][elto].value ;
+                diff.obtained  = obtained_value ;
                 diff.elto_type = compo.toLowerCase() ;
-                diff.elto_id = expected_result[compo][elto].id ;
-                diff.elto_op = expected_result[compo][elto].op ;
+                diff.elto_id   = expected_result[compo][elto].id ;
+                diff.elto_op   = expected_result[compo][elto].op ;
 
                 diff.fulfill = false ;
                 if ('=' === expected_result[compo][elto].op)
@@ -226,13 +226,13 @@ export function simcore_simstate_check_results (expected_result, obtained_result
                     continue ;
                 }
 
-                diff = {} ;
-                diff.expected = obtained_result[compo][elto].default_value ;
-                diff.obtained = obtained_result[compo][elto].value ;
-                diff.fulfill = (diff.expected === diff.obtained) ;
+                diff           = {} ;
+                diff.expected  = obtained_result[compo][elto].default_value ;
+                diff.obtained  = obtained_result[compo][elto].value ;
+                diff.fulfill   = (diff.expected === diff.obtained) ;
                 diff.elto_type = compo.toLowerCase() ;
-                diff.elto_id = obtained_result[compo][elto].id ;
-                diff.elto_op = '=' ;
+                diff.elto_id   = obtained_result[compo][elto].id ;
+                diff.elto_op   = '=' ;
                 d.result.push(diff) ;
 
                 if (diff.fulfill === false)
@@ -252,7 +252,7 @@ export function simcore_simstate_diff_results (expected_result, obtained_result)
 export function simcore_simstate_diff_states (before_state_obj, after_state_obj)
 {
     var before_arr = simcore_simstate_state2checklist(before_state_obj, '').split(';') ;
-    var after_arr = simcore_simstate_state2checklist(after_state_obj, '').split(';') ;
+    var after_arr  = simcore_simstate_state2checklist(after_state_obj, '').split(';') ;
     return after_arr.filter(function(elto)
     {
         return !before_arr.includes(elto);

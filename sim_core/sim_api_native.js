@@ -48,7 +48,7 @@ export function simcore_native_get_value (component, elto)
     var index = 0 ;
 
     var sim_components = simhw_sim_components() ;
-    var compo_index = component ;
+    var compo_index    = component ;
 
     if ('DEVICE' === component)
     {
@@ -68,7 +68,7 @@ export function simcore_native_set_value (component, elto, value)
     var index = 0 ;
 
     var sim_components = simhw_sim_components() ;
-    var compo_index = component ;
+    var compo_index    = component ;
 
     if ('BR' === component)
         compo_index = 'CPU' ;
@@ -104,8 +104,8 @@ export function simcore_native_get_field_from_ir (fields, index)
         return false ;
     }
 
-    var value = get_value(simhw_sim_state('REG_IR')) ;
-    var left_shift = (31 - parseInt(fields[index].startbit)) ;
+    var value       = get_value(simhw_sim_state('REG_IR')) ;
+    var left_shift  = (31 - parseInt(fields[index].startbit)) ;
     var right_shift = parseInt(fields[index].stopbit) ;
 
     value = value << left_shift ;

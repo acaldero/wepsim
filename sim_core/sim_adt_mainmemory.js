@@ -57,9 +57,9 @@ export function main_memory_set (memory, elto, melto)
     {
         comments_str = melto.comments.join('\n') ;
 
-        melto.state = melto.state || (comments_str.trim().split('state:').length > 1) ;
+        melto.state      = melto.state || (comments_str.trim().split('state:').length > 1) ;
         melto.breakpoint = melto.breakpoint || (comments_str.trim().split('break:').length > 1) ;
-        melto.notify = comments_str.trim().split('notify:') ;
+        melto.notify     = comments_str.trim().split('notify:') ;
         for (var k = 0; k < melto.notify.length; k++)
         {
             melto.notify[k] = melto.notify[k].split('\n')[0] ;
@@ -81,10 +81,10 @@ export function main_memory_set (memory, elto, melto)
         }
         if (null != melto.comments)
         {
-            valobj.comments = melto.comments ;
-            valobj.state = melto.state ;
+            valobj.comments   = melto.comments ;
+            valobj.state      = melto.state ;
             valobj.breakpoint = melto.breakpoint ;
-            valobj.notify = melto.notify ;
+            valobj.notify     = melto.notify ;
         }
 
         return valobj ;
@@ -127,7 +127,7 @@ export function main_memory_source_escape_html (src)
 
 export function main_memory_getsrc (memory, elto)
 {
-    var src = '' ;
+    var src    = '' ;
     var valobj = memory[elto] ;
 
     // check field value
@@ -168,7 +168,7 @@ export function main_memory_getsrc (memory, elto)
 
 export function main_memory_getsrcbin (memory, elto)
 {
-    var src = '' ;
+    var src    = '' ;
     var valobj = memory[elto] ;
 
     // check field value
@@ -376,7 +376,7 @@ export function main_memory_updatevalues (value, dbvalue, filter_size, filter_el
 
 export function main_memory_get_program_counter ()
 {
-    var r_ref = simhw_sim_ctrlStates_get().pc ;
+    var r_ref   = simhw_sim_ctrlStates_get().pc ;
     var r_value = null ;
 
     if (typeof r_ref !== 'undefined')
@@ -400,7 +400,7 @@ export function main_memory_get_baseaddr ()
         return null ;
     }
 
-    var r_value = 0 ;
+    var r_value      = 0 ;
     var r_ref2 ;
     var all_baseaddr = {} ;
     for (var elto in r_ref)
@@ -443,9 +443,9 @@ export function get_deco_from_pc (pc)
 export function get_verbal_from_current_pc ()
 {
     var pc_name = simhw_sim_ctrlStates_get().pc.state ;
-    var reg_pc = get_value(simhw_sim_state(pc_name)) ;
+    var reg_pc  = get_value(simhw_sim_state(pc_name)) ;
 
-    var pc = parseInt(reg_pc) - 4 ;
+    var pc     = parseInt(reg_pc) - 4 ;
     var decins = get_deco_from_pc(pc) ;
 
     if ('' == decins.trim())

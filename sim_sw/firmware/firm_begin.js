@@ -29,9 +29,9 @@ export function firm_begin_read (context)
     //            (A0, B=0, C=0)
     // }*
 
-    var instruccionAux = {};
-    instruccionAux.name = frm_getToken(context) ;
-    instruccionAux['mc-start'] = context.contadorMC ;
+    var instruccionAux          = {};
+    instruccionAux.name         = frm_getToken(context) ;
+    instruccionAux['mc-start']  = context.contadorMC ;
     instruccionAux['is_native'] = false;
 
     // skip 'begin'
@@ -68,13 +68,13 @@ export function firm_begin_read (context)
         return ret ;
     }
 
-    instruccionAux.signature = 'begin' ;
+    instruccionAux.signature       = 'begin' ;
     instruccionAux.signatureGlobal = 'begin' ;
-    instruccionAux.signatureUser = 'begin' ;
-    instruccionAux.signatureRaw = 'begin' ;
-    instruccionAux.NATIVE = ret.NATIVE ;
-    instruccionAux.microcode = ret.microprograma ;
-    instruccionAux.microcomments = ret.microcomments ;
+    instruccionAux.signatureUser   = 'begin' ;
+    instruccionAux.signatureRaw    = 'begin' ;
+    instruccionAux.NATIVE          = ret.NATIVE ;
+    instruccionAux.microcode       = ret.microprograma ;
+    instruccionAux.microcomments   = ret.microcomments ;
     context.instrucciones.push(instruccionAux);
 
     context.contadorMC = context.contadorMC + 9; // padding between instrucctions

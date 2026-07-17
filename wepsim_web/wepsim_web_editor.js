@@ -126,8 +126,8 @@ export function sim_cm_get_asmcfg()
                 CodeMirror.showHint(cm, function(cm, options)
                 {
                     var simware = get_simware();
-                    var cur = cm.getCursor();
-                    var result = [];
+                    var cur     = cm.getCursor();
+                    var result  = [];
                     for (var i = 0; i < simware.firmware.length; i++)
                     {
                         if (simware.firmware[i].name != 'begin')
@@ -177,15 +177,15 @@ export function sim_init_editor(editor_id, editor_cfg)
     editor_obj.refresh();
 
     // event onChange -> update is_* attributes
-    editor_obj.is_modified = true ;
-    editor_obj.is_compiled = false ;
+    editor_obj.is_modified  = true ;
+    editor_obj.is_compiled  = false ;
     editor_obj.is_refreshed = false ;
 
     editor_obj.on('change',
                   function (cmi, change)
                   {
-                      cmi.is_modified = true ;
-                      cmi.is_compiled = false ;
+                      cmi.is_modified  = true ;
+                      cmi.is_compiled  = false ;
                       cmi.is_refreshed = false ;
                   }) ;
 
@@ -208,7 +208,7 @@ export function goError(editor, pos)
         editor.removeLineClass(marked, 'background', 'CodeMirror-selected');
     }, 3000) ;
 
-    var t = editor.charCoords({ line: pos, ch: 0 }, 'local').top ;
+    var t            = editor.charCoords({ line: pos, ch: 0 }, 'local').top ;
     var middleHeight = editor.getScrollerElement().offsetHeight / 2 ;
     editor.scrollTo(null, t - middleHeight - 5) ;
 }
@@ -217,11 +217,11 @@ export function showError(Msg, editor)
 {
     var errorMsg = Msg.replace(/\t/g, ' ').replace(/ {3}/g, ' ');
 
-    var pos = errorMsg.match(/Problem around line \d+/);
+    var pos     = errorMsg.match(/Problem around line \d+/);
     var lineMsg = '' ;
     if (null !== pos)
     {
-        pos = parseInt(pos[0].match(/\d+/)[0]);
+        pos      = parseInt(pos[0].match(/\d+/)[0]);
         lineMsg += '<button type="button" class="btn btn-danger" ' +
             '        data-bind="click" data-action="go-error"' +
             '        data-editor="' + editor + '" data-pos="' + pos + '">' +
@@ -255,8 +255,8 @@ export function wepsim_get_binary_code()
     // compile if needed
     if (false == inputasm.is_compiled)
     {
-        var textToCompile = inputasm.getValue() ;
-        var ok = wepsim_compile_assembly(textToCompile) ;
+        var textToCompile    = inputasm.getValue() ;
+        var ok               = wepsim_compile_assembly(textToCompile) ;
         inputasm.is_compiled = ok ;
     }
 
@@ -288,10 +288,10 @@ export function wepsim_get_binary_microcode()
     // microcompile if needed
     if (false == inputfirm.is_compiled)
     {
-        var textToMCompile = inputfirm.getValue() ;
-        var ok = wepsim_compile_firmware(textToMCompile) ;
+        var textToMCompile    = inputfirm.getValue() ;
+        var ok                = wepsim_compile_firmware(textToMCompile) ;
         inputfirm.is_compiled = ok ;
-        inputasm.is_compiled = false ;
+        inputasm.is_compiled  = false ;
     }
 
     // update content

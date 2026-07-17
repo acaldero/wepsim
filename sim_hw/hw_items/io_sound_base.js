@@ -119,7 +119,7 @@ export function io_sound_base_register (sim_p)
     sim_p.internal_states.io_hash[SDR1_ID] = 'SDR1' ;
     sim_p.internal_states.io_hash[SDR2_ID] = 'SDR2' ;
     sim_p.internal_states.io_hash[SDR3_ID] = 'SDR3' ;
-    sim_p.internal_states.io_hash[SSR_ID] = 'SSR' ;
+    sim_p.internal_states.io_hash[SSR_ID]  = 'SSR' ;
 
     /*
      *  Internal States
@@ -131,7 +131,7 @@ export function io_sound_base_register (sim_p)
          *  States
          */
 
-    sim_p.states.SSR = { name:          'SSR', verbal:        'Sound State Register',
+    sim_p.states.SSR  = { name:          'SSR', verbal:        'Sound State Register',
         visible:       false, nbits:         '32', value:         0, default_value: 0,
         draw_data:     [] };
     sim_p.states.SDR1 = { name:          'SDR1', verbal:        'Sound Data Register 1',
@@ -201,21 +201,21 @@ export function io_sound_base_register (sim_p)
             if (bus_ab == SDR1_ID)
             {
                 var dsr = get_value(sim_p.states[s_expr[4]]) ;
-                verbal = 'Try to read into the sound the SSR value ' + dsr + '. ' ;
+                verbal  = 'Try to read into the sound the SSR value ' + dsr + '. ' ;
             }
             if (bus_ab == SDR1_ID)
             {
                 var ddr = get_value(sim_p.states[s_expr[5]]) ;
-                verbal = 'Try to read from the sound the SDR1 value ' + ddr + '. ' ;
+                verbal  = 'Try to read from the sound the SDR1 value ' + ddr + '. ' ;
             }
             if (bus_ab == SDR2_ID)
             {
-                ddr = get_value(sim_p.states[s_expr[6]]) ;
+                ddr    = get_value(sim_p.states[s_expr[6]]) ;
                 verbal = 'Try to read from the sound the SDR2 value ' + ddr + '. ' ;
             }
             if (bus_ab == SDR3_ID)
             {
-                ddr = get_value(sim_p.states[s_expr[7]]) ;
+                ddr    = get_value(sim_p.states[s_expr[7]]) ;
                 verbal = 'Try to read from the sound the SDR3 value ' + ddr + '. ' ;
             }
 
@@ -234,7 +234,7 @@ export function io_sound_base_register (sim_p)
             }
 
             var bus_db = get_value(sim_p.states[s_expr[2]]) ;
-            var clk = get_value(sim_p.states[s_expr[3]]) ;
+            var clk    = get_value(sim_p.states[s_expr[3]]) ;
             var ret_ok = 1 ;
 
             if (bus_ab == SDR1_ID)
@@ -249,14 +249,14 @@ export function io_sound_base_register (sim_p)
                     {
                         // note
                         var sdr2 = get_value(sim_p.states[s_expr[6]]) ;
-                        var n1 = simcore_sound_ascii2note(sdr2, 4) ;
+                        var n1   = simcore_sound_ascii2note(sdr2, 4) ;
 
                         // time
                         var sdr3 = get_value(sim_p.states[s_expr[7]]) ;
-                        var t1 = sdr3 & 0x000000FF ;
-                        t1 = t1 + 'n' ;
+                        var t1   = sdr3 & 0x000000FF ;
+                        t1       = t1 + 'n' ;
 
-                        var n1t1 = n1 + ',' + t1 + ';' ;
+                        var n1t1                             = n1 + ',' + t1 + ';' ;
                         sim_p.internal_states.sound_content += n1t1 ;
 
                         // visible UI
@@ -293,7 +293,7 @@ export function io_sound_base_register (sim_p)
 
             var bus_ab = get_value(sim_p.states[s_expr[1]]) ;
             var bus_db = get_value(sim_p.states[s_expr[2]]) ;
-            var clk = get_value(sim_p.states[s_expr[3]]) ;
+            var clk    = get_value(sim_p.states[s_expr[3]]) ;
 
             if (bus_ab == SDR1_ID)
             {

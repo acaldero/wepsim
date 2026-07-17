@@ -61,7 +61,7 @@ export class ws_executionbar extends ws_uielto
         for (var i = 0; i < this.components_arr.length; i++)
         {
             var name = this.components_arr[i] ;
-            o1 += this.render_btns(name) ;
+            o1      += this.render_btns(name) ;
         }
 
         this.innerHTML = o1 ;
@@ -204,7 +204,7 @@ function get_icons_str (name)
 
 export function webui_button_set_stop(name)
 {
-    var wsi = get_cfg('ws_idiom') ;
+    var wsi     = get_cfg('ws_idiom') ;
     var run_tag = i18n_get('gui', wsi, 'Run') ;
 
     var o = '<b>' + run_tag + '</b>' ;
@@ -217,7 +217,7 @@ export function webui_button_set_stop(name)
 
 export function webui_button_set_start(name)
 {
-    var wsi = get_cfg('ws_idiom') ;
+    var wsi      = get_cfg('ws_idiom') ;
     var stop_tag = i18n_get('gui', wsi, 'Stop') ;
 
     var o = '<b>' + stop_tag + '</b>' ;

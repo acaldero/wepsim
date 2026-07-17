@@ -84,7 +84,7 @@ export function cache_memory_update_stats (memory, address, parts, r_w, m_h, clo
     }
 
     // block stats
-    val = memory.sets[parts.set].tags[parts.tag].n_access ;
+    val                                             = memory.sets[parts.set].tags[parts.tag].n_access ;
     memory.sets[parts.set].tags[parts.tag].n_access = val + 1 ;
 
     if (r_w == 'write')
@@ -108,18 +108,18 @@ export function cache_memory_update_stats (memory, address, parts, r_w, m_h, clo
 
 export function cache_memory_select_victim (memory, set)
 {
-    var keys = Object.keys(memory.sets[set].tags) ;
+    var keys       = Object.keys(memory.sets[set].tags) ;
     var tag_victim = 0 ;
 
     if (get_var(memory.cfg.replace_pol) == 'lfu')
     {
-        tag_victim = keys[0] ;
+        tag_victim      = keys[0] ;
         var tag_naccess = memory.sets[set].tags[tag_victim].n_access ;
         for (var i = 1; i < keys.length; i++)
         {
             if (tag_naccess > memory.sets[set].tags[keys[i]].n_access)
             {
-                tag_victim = keys[i] ;
+                tag_victim  = keys[i] ;
                 tag_naccess = memory.sets[set].tags[tag_victim].n_access ;
             }
         }
@@ -127,14 +127,14 @@ export function cache_memory_select_victim (memory, set)
 
     else if (get_var(memory.cfg.replace_pol) == 'fifo')
     {
-        tag_victim = keys[0] ;
+        tag_victim    = keys[0] ;
         var tag_stamp = memory.sets[set].tags[tag_victim].timestamp ;
         for (i = 1; i < keys.length; i++)
         {
             if (tag_stamp > memory.sets[set].tags[keys[i]].timestamp)
             {
                 tag_victim = keys[i] ;
-                tag_stamp = memory.sets[set].tags[tag_victim].timestamp ;
+                tag_stamp  = memory.sets[set].tags[tag_victim].timestamp ;
             }
         }
     }
@@ -318,9 +318,9 @@ export function cache_memory_split (memory, address)
         offset: 0,
     } ;
 
-    address = (address >>> 0) ;
-    parts.tag = (address & get_var(memory.cfg.mask_tag)) >>> (32 - get_var(memory.cfg.tag_size)) ;
-    parts.set = (address & get_var(memory.cfg.mask_set)) >>> (get_var(memory.cfg.off_size)) ;
+    address      = (address >>> 0) ;
+    parts.tag    = (address & get_var(memory.cfg.mask_tag)) >>> (32 - get_var(memory.cfg.tag_size)) ;
+    parts.set    = (address & get_var(memory.cfg.mask_set)) >>> (get_var(memory.cfg.off_size)) ;
     parts.offset = (address & get_var(memory.cfg.mask_off)) ;
 
     return parts ;

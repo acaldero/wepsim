@@ -61,7 +61,7 @@ export class ws_share_link extends HTMLElement
 
         // save html
         var o1 = '' ;
-        o1 += "<div class='card border-secondary h-100'>" +
+        o1    += "<div class='card border-secondary h-100'>" +
             "<div class='card-header border-secondary text-white bg-secondary p-1'>" +
             " <h5 class='m-0'>" +
             " <span class='text-white bg-secondary' data-langkey='Link'>Link</span>" +

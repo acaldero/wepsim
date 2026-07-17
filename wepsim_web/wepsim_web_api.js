@@ -811,8 +811,8 @@ export function wsweb_assembly_compile()
         return false ;
     }
 
-    var textToCompile = inputasm.getValue() ;
-    var ok = wepsim_compile_assembly(textToCompile) ;
+    var textToCompile    = inputasm.getValue() ;
+    var ok               = wepsim_compile_assembly(textToCompile) ;
     inputasm.is_compiled = ok ;
 
     // add if recording
@@ -825,13 +825,13 @@ export function wsweb_assembly_compile()
 
 export function wsweb_firmware_compile()
 {
-    var textToMCompile = inputfirm.getValue();
-    var ok = wepsim_compile_firmware(textToMCompile);
+    var textToMCompile    = inputfirm.getValue();
+    var ok                = wepsim_compile_firmware(textToMCompile);
     inputfirm.is_compiled = ok ;
 
     // if microcode changed -> recompile assembly
     inputasm.is_compiled = false ;
-    var o = '<div class=\'card m-3 border\'><div class=\'card-body m-1\'>' +
+    var o                = '<div class=\'card m-3 border\'><div class=\'card-body m-1\'>' +
         'Please remember that after updates on the microcode, the assembly code has be re-compiled too.' +
         '</div></div>' ;
     $('#asm_debugger').html(o);
@@ -853,7 +853,7 @@ export function wsweb_save_controlmemory_to_file(firm_version)
     var q = i18n_get('dialogs', wsi, 'Sure Control Memory...') + '\n\n' ;
     if (confirm(q))
     {
-        var SIMWARE = get_simware() ;
+        var SIMWARE         = get_simware() ;
         var simware_as_text = saveFirmware(SIMWARE, firm_version);
         if (simware_as_text.trim() == '')
         {
@@ -863,7 +863,7 @@ export function wsweb_save_controlmemory_to_file(firm_version)
         else inputfirm.setValue(simware_as_text);
 
         var fileNameToSaveAs = document.getElementById('inputFileNameToSaveAs').value;
-        var textToWrite = inputfirm.getValue();
+        var textToWrite      = inputfirm.getValue();
         wepsim_save_to_file(textToWrite, fileNameToSaveAs);
     }
 
@@ -1269,14 +1269,14 @@ export function wsweb_notifyuser_add()
     simcore_ga('recordbar', 'recordbar.action', 'recordbar.action.add_notification') ;
 
     // build the message box
-    var wsi = get_cfg('ws_idiom') ;
+    var wsi  = get_cfg('ws_idiom') ;
     var bbbt = {} ;
 
     bbbt.cancel = {
         label:     i18n_get('gui', wsi, 'Close'),
         className: 'btn-danger col float-start me-auto',
     };
-    bbbt.end = {
+    bbbt.end    = {
         label:     i18n_get('gui', wsi, 'Save'),
         className: 'btn-success col float-end',
         callback:  function()
@@ -1284,8 +1284,8 @@ export function wsweb_notifyuser_add()
             /* eslint-disable no-control-regex */
 
             // get values
-            var nf_title = $('#frm_title1').val() ;
-            var nf_message = $('#frm_message1').val() ;
+            var nf_title    = $('#frm_title1').val() ;
+            var nf_message  = $('#frm_message1').val() ;
             var nf_duration = $('#frm_duration1').val() ;
 
             // post-process

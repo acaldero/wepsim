@@ -90,7 +90,7 @@ export class ws_notifications extends ws_uielto
         {
             simcore_notifications_reset();
             var notifications = simcore_notifications_get();
-            var ntf_html = table_notifications_html(notifications);
+            var ntf_html      = table_notifications_html(notifications);
             $('#scroller-notifications3').html(ntf_html);
             wepsim_uicfg_apply();
             wsweb_scroll_record('#scroller-notifications3');
@@ -100,7 +100,7 @@ export class ws_notifications extends ws_uielto
 
     render_populate ()
     {
-        var notifications = simcore_notifications_get() ;
+        var notifications      = simcore_notifications_get() ;
         var notifications_html = table_notifications_html(notifications) ;
         $('#scroller-notifications3').html(notifications_html) ;
     }

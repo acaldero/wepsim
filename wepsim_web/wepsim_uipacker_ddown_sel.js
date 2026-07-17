@@ -88,7 +88,7 @@ export class ws_ddown_sel extends ws_uielto
 
             for (var i = 0; i < this.devices[k].length; i++)
             {
-                o1 += '<span class="col">' ;
+                o1        += '<span class="col">' ;
                 var device = this.devices[k][i] ;
 
                 if (i != 0)
@@ -151,7 +151,7 @@ export class ws_ddown_sel extends ws_uielto
             'Simulation':   ['ed_mc', 'ed_mp'],
             //  'Simulation':   [ 'ed_hw', 'ed_mc', 'ed_mp' ]
         } ;
-        this.di = {
+        this.di      = {
             'CPU':          '<h6 class="text-secondary mb-1">CPU</h6>',
             'Main Memory':  '<h6 class="text-secondary mb-1">Main Memory</h6>',
             'Cache Memory': '<h6 class="text-secondary mb-1 wsx_cache">Cache Memory</h6>',

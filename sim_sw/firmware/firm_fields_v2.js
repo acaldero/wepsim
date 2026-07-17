@@ -91,9 +91,9 @@ export function firm_instruction_check_oc (context, instruccionAux, _xr_info, _a
 
         if (typeof context.oc_eoc[instruccionAux.oc] == 'undefined')
         {
-            context.oc_eoc[instruccionAux.oc] = {} ;
+            context.oc_eoc[instruccionAux.oc]           = {} ;
             context.oc_eoc[instruccionAux.oc].signature = instruccionAux.signature ;
-            context.oc_eoc[instruccionAux.oc].eoc = null ;
+            context.oc_eoc[instruccionAux.oc].eoc       = null ;
         }
     }
 
@@ -107,7 +107,7 @@ export function firm_instruction_check_oc (context, instruccionAux, _xr_info, _a
             if (instruccionAux.fields_all[i].type != 'oc') continue ;
 
             nbits_field = Math.abs(parseInt(instruccionAux.fields_all[i].bits_stop[j]) - parseInt(instruccionAux.fields_all[i].bits_start[j])) + 1 ;
-            oc_ins_len = oc_ins_len + nbits_field ;
+            oc_ins_len  = oc_ins_len + nbits_field ;
         }
     }
 
@@ -191,7 +191,7 @@ export function firm_instruction_get_opcode_pattern (context, instruccionAux)
     var a1 ;
 
     // opcode_pattern (e.g.: "------10101-----1100")
-    nbits = instruccionAux.nwords * WORD_LENGTH ;
+    nbits                         = instruccionAux.nwords * WORD_LENGTH ;
     instruccionAux.opcode_pattern = '-'.repeat(nbits) ;
 
     a1 = instruccionAux.opcode_pattern.split('') ;
@@ -225,7 +225,7 @@ export function firm_instruction_get_opcode_pattern (context, instruccionAux)
                 for (var i = b[s].start; i >= b[s].stop; i--)
                 {
                     a1[nbits - i - 1] = v[j] ; // instruccionAux.opcode_pattern[i] = v[j] ;
-                    j = j + 1 ;
+                    j                 = j + 1 ;
                 }
             }
             else
@@ -233,7 +233,7 @@ export function firm_instruction_get_opcode_pattern (context, instruccionAux)
                 for (i = b[s].start; i <= b[s].stop; i++)
                 {
                     a1[nbits - i - 1] = v[j] ; // instruccionAux.opcode_pattern[i] = v[j] ;
-                    j = j + 1 ;
+                    j                 = j + 1 ;
                 }
             }
         }
@@ -327,8 +327,8 @@ export function firm_instruction_keystring_read (context, _instruccionAux)
 
 export function firm_instruction_field_read_v2 (context, instruccionAux)
 {
-    var tmp_fields = {} ;
-    var field_list = ['oc', 'eoc', 'reg', 'imm', 'inm', 'address-rel', 'address-abs'] ;
+    var tmp_fields         = {} ;
+    var field_list         = ['oc', 'eoc', 'reg', 'imm', 'inm', 'address-rel', 'address-abs'] ;
     var complex_field_list = ['eoc', 'address-rel', 'address-abs', 'imm'] ;
 
     // ...
@@ -345,12 +345,12 @@ export function firm_instruction_field_read_v2 (context, instruccionAux)
 
     if ('address-rel' == tmp_fields.type)
     {
-        tmp_fields.type = 'address' ;
+        tmp_fields.type         = 'address' ;
         tmp_fields.address_type = 'rel' ;
     }
     if ('address-abs' == tmp_fields.type)
     {
-        tmp_fields.type = 'address' ;
+        tmp_fields.type         = 'address' ;
         tmp_fields.address_type = 'abs' ;
     }
 
@@ -370,7 +370,7 @@ export function firm_instruction_field_read_v2 (context, instruccionAux)
 
         frm_nextToken(context);
         // match mandatory START_BIT
-        tmp_fields.startbit = frm_getToken(context) ;
+        tmp_fields.startbit   = frm_getToken(context) ;
         tmp_fields.bits_start = [tmp_fields.startbit] ;
 
         // check startbit range
@@ -392,7 +392,7 @@ export function firm_instruction_field_read_v2 (context, instruccionAux)
 
         frm_nextToken(context);
         // match mandatory STOP_BIT
-        tmp_fields.stopbit = frm_getToken(context) ;
+        tmp_fields.stopbit   = frm_getToken(context) ;
         tmp_fields.bits_stop = [tmp_fields.stopbit] ;
 
         // check stopbit range
@@ -431,7 +431,7 @@ export function firm_instruction_field_read_v2 (context, instruccionAux)
         frm_nextToken(context);
         // match mandatory START_BIT
         start = frm_getToken(context);
-        stop = start;
+        stop  = start;
 
         // check startbit range
         if (start > 32 * parseInt(instruccionAux.nwords) - 1)
@@ -460,10 +460,10 @@ export function firm_instruction_field_read_v2 (context, instruccionAux)
             frm_nextToken(context);
             if (frm_isToken(context, ')'))
             {
-                tmp_fields.startbit = start;
-                tmp_fields.stopbit = stop;
+                tmp_fields.startbit   = start;
+                tmp_fields.stopbit    = stop;
                 tmp_fields.bits_start = [tmp_fields.startbit] ;
-                tmp_fields.bits_stop = [tmp_fields.stopbit] ;
+                tmp_fields.bits_stop  = [tmp_fields.stopbit] ;
             }
         }
 
@@ -473,9 +473,9 @@ export function firm_instruction_field_read_v2 (context, instruccionAux)
         if (frm_isToken(context, '|'))
         {
             // all bit ranges
-            var bits = [[start, stop]] ;
+            var bits       = [[start, stop]] ;
             var bits_start = [start] ;
-            var bits_stop = [stop] ;
+            var bits_stop  = [stop] ;
 
             // auxiliary to add ranges
             var bits_aux = [] ;
@@ -540,9 +540,9 @@ export function firm_instruction_field_read_v2 (context, instruccionAux)
                 total_bits += bits[i][0] - bits[i][1] + 1;
             }
 
-            tmp_fields.bits = bits ;
+            tmp_fields.bits       = bits ;
             tmp_fields.bits_start = bits_start ;
-            tmp_fields.bits_stop = bits_stop ;
+            tmp_fields.bits_stop  = bits_stop ;
         }
     }
 
@@ -577,7 +577,7 @@ export function firm_instruction_field_read_v2 (context, instruccionAux)
             if (instruccionAux.fields[i].name == tmp_name)
             {
                 instruccionAux.fields[i] = tmp_fields ;
-                index_name = i ;
+                index_name               = i ;
             }
         }
         if (index_name == -1)
@@ -633,12 +633,12 @@ export function firm_instruction_read_fields_v2 (context, instruccionAux, xr_inf
     //             }
     // }
 
-    var campos = instruccionAux.fields ;
-    var firma = instruccionAux.signature ;
+    var campos       = instruccionAux.fields ;
+    var firma        = instruccionAux.signature ;
     var firmaUsuario = instruccionAux.signatureUser ;
     var firmaGlobal ;
 
-    var oc_inserted = 0;
+    var oc_inserted      = 0;
     var camposInsertados = 0;
     frm_nextToken(context);
     while (! frm_isToken(context, '{'))
@@ -725,23 +725,23 @@ export function firm_instruction_read_fields_v2 (context, instruccionAux, xr_inf
                 return ret ;
             }
 
-            firma = firma.replace(',' + ret.name, ',' + ret.type);
-            firma = firma.replace('(' + ret.name, '(' + ret.type);
-            firma = firma.replace(')' + ret.name, ')' + ret.type);
+            firma        = firma.replace(',' + ret.name, ',' + ret.type);
+            firma        = firma.replace('(' + ret.name, '(' + ret.type);
+            firma        = firma.replace(')' + ret.name, ')' + ret.type);
             firmaUsuario = firmaUsuario.replace(ret.name, ret.type);
 
-            instruccionAux.signature = firma;
-            instruccionAux.signatureUser = firmaUsuario;
-            firmaGlobal = firma.replace('address', 'num');
-            firmaGlobal = firmaGlobal.replace('imm', 'num');
-            firmaGlobal = firmaGlobal.replace('inm', 'num'); // TODO: temporal fix
+            instruccionAux.signature       = firma;
+            instruccionAux.signatureUser   = firmaUsuario;
+            firmaGlobal                    = firma.replace('address', 'num');
+            firmaGlobal                    = firmaGlobal.replace('imm', 'num');
+            firmaGlobal                    = firmaGlobal.replace('inm', 'num'); // TODO: temporal fix
             instruccionAux.signatureGlobal = firmaGlobal;
 
             camposInsertados++;
         }
     }
 
-    instruccionAux.fields = campos;
+    instruccionAux.fields       = campos;
     instruccionAux.signatureRaw = firmaUsuario;
 
     // semantic check: oc must exist

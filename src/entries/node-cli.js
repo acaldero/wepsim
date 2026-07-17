@@ -3,7 +3,7 @@
 // polyfill localStorage for Node.js
 if (typeof localStorage === 'undefined' || localStorage === null)
 {
-    var store = {};
+    var store               = {};
     globalThis.localStorage = {
         getItem: function (key)
         {

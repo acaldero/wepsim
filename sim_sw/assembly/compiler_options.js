@@ -26,11 +26,11 @@ export function wsasm_mk_default_options ()
 
     // Initialize default options...
     options.field_multipart_order = 'backwards' ; // "backwards" | "forwards" ;
-    options.mandatory_comma = false ; // false  | true
-    options.instruction_comma = true ; // true   | false
-    options.relative_offset_mult = 4 ; // 1: byte, 4: word (mips-32), 2: half(risc-v)
-    options.pc_relative_offset = 0 ; //  0: next instruction (mips-32), -4: current instruction (risc-v)
-    options.endian = 'little' ; // "little" | "big"
+    options.mandatory_comma       = false ; // false  | true
+    options.instruction_comma     = true ; // true   | false
+    options.relative_offset_mult  = 4 ; // 1: byte, 4: word (mips-32), 2: half(risc-v)
+    options.pc_relative_offset    = 0 ; //  0: next instruction (mips-32), -4: current instruction (risc-v)
+    options.endian                = 'little' ; // "little" | "big"
 
     return options ;
 }
