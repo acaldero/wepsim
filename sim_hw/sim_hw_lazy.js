@@ -18,17 +18,39 @@
  *
  */
 
+import { board_base_register } from './hw_items/board_base.js';
+
 /*
  *  Lazy processor registry.
  *  Each processor is dynamically imported only when first selected.
  */
 
 var processorRegistry = {
-    'ep':     () => import('./hw_ep.js').then((m) => m.sim_hw_register_EP()),
-    'ep2':    () => import('./hw_ep2.js').then((m) => m.sim_hw_register_EP2()),
-    'poc':    () => import('./hw_poc.js').then((m) => m.sim_hw_register_POC()),
-    'rv':     () => import('./hw_rv.js').then((m) => m.sim_hw_register_RV()),
-    'rvpipe': () => import('./hw_rvpipe.js').then((m) => m.sim_hw_register_RVPIPE()),
+    'ep': () => import('./hw_ep.js').then((m) =>
+    {
+        board_base_register(m.sim_hw_get_def());
+        m.sim_hw_register_EP();
+    }),
+    'ep2': () => import('./hw_ep2.js').then((m) =>
+    {
+        board_base_register(m.sim_hw_get_def());
+        m.sim_hw_register_EP2();
+    }),
+    'poc': () => import('./hw_poc.js').then((m) =>
+    {
+        board_base_register(m.sim_hw_get_def());
+        m.sim_hw_register_POC();
+    }),
+    'rv': () => import('./hw_rv.js').then((m) =>
+    {
+        board_base_register(m.sim_hw_get_def());
+        m.sim_hw_register_RV();
+    }),
+    'rvpipe': () => import('./hw_rvpipe.js').then((m) =>
+    {
+        board_base_register(m.sim_hw_get_def());
+        m.sim_hw_register_RVPIPE();
+    }),
 };
 
 var loaded = new Set();

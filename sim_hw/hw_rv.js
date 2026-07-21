@@ -18,7 +18,6 @@
  *
  */
 
-import { board_base_register } from './hw_items/board_base.js';
 import { cpu_rv_register } from './hw_items/cpu_rv.js';
 import { mem_rv_register } from './hw_items/mem_rv.js';
 import { io_screen_base_register } from './hw_items/io_screen_base.js';
@@ -51,9 +50,13 @@ export var rv_def = {
     events:          {},
 } ;
 
+export function sim_hw_get_def()
+{
+    return rv_def;
+}
+
 export function sim_hw_register_RV()
 {
-    board_base_register (rv_def) ;
     cpu_rv_register (rv_def) ;
     mem_rv_register (rv_def) ;
     io_screen_base_register (rv_def) ;

@@ -23,7 +23,6 @@
  */
 
 import { simhw_add } from './sim_hw_index.js';
-import { board_base_register } from './hw_items/board_base.js';
 import { cpu_rvpipe_register } from './hw_items/cpu_rvpipe.js';
 import { mem_rvpipe_register } from './hw_items/mem_rvpipe.js';
 import { io_screen_rvpipe_register } from './hw_items/io_screen_rvpipe.js';
@@ -48,9 +47,13 @@ export const rvpipe_def: Simulator = {
     events:          {},
 };
 
+export function sim_hw_get_def()
+{
+    return rvpipe_def;
+}
+
 export function sim_hw_register_RVPIPE()
 {
-    board_base_register(rvpipe_def);
     cpu_rvpipe_register(rvpipe_def);
     mem_rvpipe_register(rvpipe_def);
     io_screen_rvpipe_register(rvpipe_def);

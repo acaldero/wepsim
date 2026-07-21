@@ -18,7 +18,6 @@
  *
  */
 
-import { board_base_register } from './hw_items/board_base.js';
 import { cpu_ep2_register } from './hw_items/cpu_ep2.js';
 import { mem_ep2_register } from './hw_items/mem_ep2.js';
 import { io_screen_base_register } from './hw_items/io_screen_base.js';
@@ -51,9 +50,13 @@ export var ep2_def = {
     events:          {},
 } ;
 
+export function sim_hw_get_def()
+{
+    return ep2_def;
+}
+
 export function sim_hw_register_EP2()
 {
-    board_base_register (ep2_def) ;
     cpu_ep2_register (ep2_def) ;
     mem_ep2_register (ep2_def) ;
     io_screen_base_register (ep2_def) ;

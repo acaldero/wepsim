@@ -18,7 +18,6 @@
  *
  */
 
-import { board_base_register } from './hw_items/board_base.js';
 import { cpu_poc_register } from './hw_items/cpu_poc.js';
 import { cu_poc_register } from './hw_items/cu_poc.js';
 import { mem_poc_register } from './hw_items/mem_poc.js';
@@ -52,9 +51,13 @@ export var poc_def = {
     events:          {},
 } ;
 
+export function sim_hw_get_def()
+{
+    return poc_def;
+}
+
 export function sim_hw_register_POC()
 {
-    board_base_register (poc_def) ;
     cpu_poc_register (poc_def) ;
     cu_poc_register (poc_def) ;
     mem_poc_register (poc_def) ;
