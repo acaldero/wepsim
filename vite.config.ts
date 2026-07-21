@@ -109,6 +109,9 @@ export const vite_config_ts:UserConfig = {
             'jquery-knob': path.resolve(__dirname, 'node_modules/jquery-knob/js/jquery.knob.js'),
         },
     },
+    define: {
+        global: 'globalThis', // For bootstrap-tokenfield
+    },
     plugins: [
         checker({
             typescript: true,
@@ -139,18 +142,19 @@ export const vite_config_ts:UserConfig = {
         // visualizer({ open: true, filename: 'ws_dist/stats.html' }),
     ],
     build: {
-        outDir:          'ws_dist',
-        emptyOutDir:     true,
-        minify:          true,
-        cssCodeSplit:    false,
-        rolldownOptions: {
+        outDir:                'ws_dist',
+        emptyOutDir:           true,
+        minify:                true,
+        cssCodeSplit:          false,
+        chunkSizeWarningLimit: 1000,
+        rolldownOptions:       {
             onwarn(warning, warn)
             {
                 if (warning.code === 'EVAL') return;
                 warn(warning);
             },
             input: {
-                main: 'index.html', // Nombre estándar 'main' en lugar de 'index'
+                main: 'index.html',
             },
             checks: {
                 pluginTimings: false,
@@ -160,36 +164,72 @@ export const vite_config_ts:UserConfig = {
                 chunkFileNames: (function (chunkInfo: PreRenderedChunk): string
                 {
                     let name = chunkInfo.name;
-                    if (chunkInfo.moduleIds.some((mod)=>mod.includes('/node_modules/tone/'))) name = 'vendor-tone';
+                    for (const mod of chunkInfo.moduleIds)
+                    {
+                        if (mod.includes('/node_modules/tone/'))
+                        {
+                            name = 'vendor-tone'; break;
+                        }
+                        if (mod.includes('/codemirror-vim/'))
+                        {
+                            name = 'vendor-codemirror-vim'; break;
+                        }
+                        if (mod.includes('/codemirror-emacs/'))
+                        {
+                            name = 'vendor-codemirror-emacs'; break;
+                        }
+                    }
                     return 'chunks/' + name + '.js';
                 } as any),
                 assetFileNames: '[name][extname]',
                 codeSplitting:  {
                     includeDependenciesRecursively: false,
-                    groups:                         [{
-                        name(id)
+                    groups:                         [
                         {
-                            if (id.includes('node_modules'))
-                            {
-                                if (id.includes('/tone/') ||
-                                    id.includes('/standardized-audio-context/') ||
-                                    id.includes('/automation-events/')) return null;
-                                if (id.includes('/codemirror/')) return 'vendor-codemirror';
-                                if (id.includes('/jquery') ||
-                                    id.includes('/bootstrap-tokenfield/') ||
-                                    id.includes('/dropify/')) return 'vendor-jquery';
-                                if (id.includes('/bootstrap/')) return 'vendor-bootstrap';
-                                if (id.includes('/vue/') || id.includes('/vuex/')) return 'vendor-vue';
-                                return 'vendor';
-                            }
-                            const dirs = ['wepsim_core', 'wepsim_web', 'sim_core', 'sim_sw'];
-                            for (const dir of dirs)
-                            {
-                                if (id.includes(dir)) return dir;
-                            }
-                            return null;
+                            name:                           'vendor-codemirror',
+                            test:                           /\/@codemirror\//,
+                            includeDependenciesRecursively: true,
+                            priority:                       30,
                         },
-                    }],
+                        {
+                            name:                           'vendor-jquery',
+                            test:                           /\/jquery[\/\-]|jquery-global/,
+                            includeDependenciesRecursively: true,
+                            priority:                       20,
+                        },
+                        {
+                            name:                           'vendor-bootstrap',
+                            test:                           /\/bootstrap\//,
+                            includeDependenciesRecursively: true,
+                            priority:                       20,
+                        },
+                        {
+                            name:                           'vendor-vue',
+                            test:                           /\/vue\/|\/vuex\//,
+                            includeDependenciesRecursively: true,
+                            priority:                       20,
+                        },
+                        {
+                            name:     'wepsim_core',
+                            test:     /wepsim_core/,
+                            priority: 1,
+                        },
+                        {
+                            name:     'wepsim_web',
+                            test:     /wepsim_web/,
+                            priority: 1,
+                        },
+                        {
+                            name:     'sim_core',
+                            test:     /sim_core/,
+                            priority: 1,
+                        },
+                        {
+                            name:     'sim_sw',
+                            test:     /sim_sw/,
+                            priority: 1,
+                        },
+                    ],
                 },
             },
         },
