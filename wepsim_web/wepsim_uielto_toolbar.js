@@ -518,7 +518,7 @@ export function webui_toolbar_updateAction(opt)
     // set button label...
     var ed = $('#selact_' + opt).html() ;
     $('.select6').html(ed) ;
-    $('#select6a').attr('data-value', opt) ;
+    $('.select6').attr('data-value', opt) ;
 }
 
 export function webui_toolbar_updateExampleSet()

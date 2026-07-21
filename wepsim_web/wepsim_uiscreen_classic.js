@@ -79,11 +79,13 @@ export class ws_uiscreen_classic extends ws_uielto
     render_populate ()
     {
         var o1 = '<div id="carousel-8" class="carousel carousel-fade" ' +
-            '     data-bs-interval="0" data-bs-touch="false" data-bs-animation="false">' +
-            '  <div class="carousel-inner">' +
-            '      <div class="carousel-item active p-1" id="ws_simulator">' +
+            '     data-bs-interval="0" data-bs-touch="false" data-bs-keyboard="false" data-bs-animation="false"' +
+            '     style="display:flex;flex-direction:column;height:100%">' +
+            '  <div class="carousel-inner" style="flex:1;min-height:0">' +
+            '      <div class="carousel-item active p-1" id="ws_simulator"' +
+            '           style="display:flex; flex-direction:column; height:100%; overflow-x:hidden; overflow-y:scroll;">' +
             '' +
-            '         <h6 class="pt-3"><span data-langkey="Simulator">Simulator</span></h6>' +
+            '         <h6 class="pt-3 d-none"><span data-langkey="Simulator">Simulator</span></h6>' +
             '         <div class="row collapse show multi-collapse-1 p-1 m-0">' +
             this.render_populate_classic_toolbars() +
             '         </div>' +
@@ -104,10 +106,12 @@ export class ws_uiscreen_classic extends ws_uielto
             '         </div>' +
             '' +
             '      </div>' +
-            '      <div class="carousel-item p-1" id="ws_mcode">' +
+            '      <div class="carousel-item p-1" id="ws_mcode"' +
+            '           style="display:flex; flex-direction:column; height:100%; overflow:hidden">' +
             this.screen_mc() +
             '      </div>' +
-            '      <div class="carousel-item p-1" id="ws_acode">' +
+            '      <div class="carousel-item p-1" id="ws_acode"' +
+            '           style="display:flex; flex-direction:column; height:100%; overflow:hidden">' +
             this.screen_asm() +
             '      </div>' +
             '  </div>' +
@@ -190,7 +194,7 @@ export class ws_uiscreen_classic extends ws_uielto
     {
         var o1 = '' ;
 
-        o1 += '    <h6 class="pt-3"><span data-langkey=\'Assembly\'>Assembly</span></h6>' +
+        o1 += '    <h6 class="pt-3 d-none"><span data-langkey=\'Assembly\'>Assembly</span></h6>' +
             '    <div class="row collapse show multi-collapse-1 p-1 m-0">' +
             '' +
             '    <div class="container col-12" role="none">' +
@@ -247,7 +251,7 @@ export class ws_uiscreen_classic extends ws_uielto
             '         tabindex="-1" aria-labelledby="offcvs1Label">' +
             '    </div>' +
             '' +
-            '    <ws-edit-as layout="both"></ws-edit-as>' ;
+            '    <ws-edit-as layout="both" style="display:flex;flex:1;min-height:0;flex-direction:column"></ws-edit-as>' ;
 
         // return HTML
         return o1 ;
@@ -257,7 +261,7 @@ export class ws_uiscreen_classic extends ws_uielto
     {
         var o1 = '' ;
 
-        o1 += '    <h6 class="pt-3"><span data-langkey="Microcode">Microcode</span></h6>' +
+        o1 += '    <h6 class="pt-3 d-none"><span data-langkey="Microcode">Microcode</span></h6>' +
             '    <div class="row collapse show multi-collapse-1 p-1 m-0">' +
             '' +
             '    <div class="container col-12" role="none">' +
@@ -331,7 +335,7 @@ export class ws_uiscreen_classic extends ws_uielto
             '         tabindex="-1" id="offcvs2" aria-labelledby="offcvs2Label">' +
             '    </div>' +
             '' +
-            '    <ws-edit-mc layout="both"></ws-edit-mc>' ;
+            '    <ws-edit-mc layout="both" style="display:flex;flex:1;min-height:0;flex-direction:column"></ws-edit-mc>' ;
 
         // return HTML
         return o1 ;
