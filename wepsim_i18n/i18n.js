@@ -217,7 +217,7 @@ export function i18n_get_TagFor (component, key)
         ws_idiom = 'en' ;
     }
 
-    var translation ;
+    var translation = key + ' ' ;
     if (typeof i18n.eltos[component][ws_idiom][key] !== 'undefined')
     {
         translation = i18n.eltos[component][ws_idiom][key] ;
