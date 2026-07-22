@@ -78,7 +78,7 @@
 	    var mesg_text  = $('<p>').html(ntf_message).text() ;
 
 	    // add to notifications
-	    simcore_notifications_add(ntf_title, ntf_message, ntf_type, ntf_delay) ;
+	    simcore_notifications_add(title_text, mesg_text, ntf_type, ntf_delay) ;
 
 	    // show up notifications
             wepsim_notify_show_notify(ntf_title, ntf_message, ntf_type, ntf_delay) ;
