@@ -55,7 +55,17 @@
               <span id="wsl_msg1" class="visually-hidden">Loading...</span>
             </div>
             <br/><br/>
-            <span id="wsl_msg2" class="text-primary fw-bold p-3"><span data-langkey='Loading WepSIM...'>Loading WepSIM...</span></span>
+            <div class="d-inline-block">
+                <div class="text-primary fw-bold mb-1"><span data-langkey='Loading WepSIM...'>Loading WepSIM...</span></div>
+                <div class="progress" style="width:200%;max-width:90vw;height:1rem;margin-left:-50%;">
+                    <div id="wsl_progressbar"
+                         class="progress-bar bg-success"
+                         role="progressbar"
+                         style="width:0%;transition:none"
+                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    </div>
+                </div>
+            </div>
         </td>
         </tr>
         </table>

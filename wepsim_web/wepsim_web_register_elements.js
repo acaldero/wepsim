@@ -59,61 +59,72 @@ import { ws_uiscreen_classic } from './wepsim_uiscreen_classic.js';
 import { ws_uiscreen_compact } from './wepsim_uiscreen_compact.js';
 import { ws_web_main } from './wepsim_uiscreen_main.js';
 
-export function wepsim_web_register_components()
+var WSL_COMPONENTS = [
+    ['ws-about', ws_about],
+    ['ws-bin-asm', ws_bin_asm],
+    ['ws-bin-mc', ws_bin_mc],
+    ['ws-cachememory', ws_cachememory],
+    ['ws-cache-config', ws_cache_config],
+    ['ws-compilationbar', ws_compilationbar],
+    ['ws-config', ws_config],
+    ['ws-console', ws_console],
+    ['ws-cpu', ws_cpu],
+    ['ws-cpucu_got', ws_cpucu_got],
+    ['ws-cpusvg', ws_cpusvg],
+    ['ws-ctoasm', ws_ctoasm],
+    ['ws-dbg-mc', ws_dbg_mc],
+    ['ws-dbg-mp', ws_dbg_mp],
+    ['ws-ddown-info', ws_ddown_info],
+    ['ws-ddown-sel', ws_ddown_sel],
+    ['ws-edit-as', ws_edit_as],
+    ['ws-edit-mc', ws_edit_mc],
+    ['ws-executionbar', ws_executionbar],
+    ['ws-examples', ws_examples],
+    ['ws-flash-asm', ws_flash_asm],
+    ['ws-flash-fpga', ws_flash_fpga],
+    ['ws-help', ws_help],
+    ['ws-help-hweltos', ws_help_hweltos],
+    ['ws-help-swset', ws_help_swset],
+    ['ws-hw', ws_hw],
+    ['ws-io-config', ws_io_config],
+    ['ws-io-info', ws_io_info],
+    ['ws-l3d', ws_l3d],
+    ['ws-ledm', ws_ledm],
+    ['ws-list-cfg', ws_list_cfg],
+    ['ws-list-example', ws_list_example],
+    ['ws-list-processor', ws_list_processor],
+    ['ws-load-file', ws_load_file],
+    ['ws-load-link', ws_load_link],
+    ['ws-mainmemory', ws_mainmemory],
+    ['ws-mem-config', ws_mem_config],
+    ['ws-notifications', ws_notifications],
+    ['ws-recordbar', ws_recordbar],
+    ['ws-registers', ws_registers],
+    ['ws-save-file', ws_save_file],
+    ['ws-save-files', ws_save_files],
+    ['ws-save-files-option', ws_save_files_option],
+    ['ws-segments', ws_segments],
+    ['ws-share-link', ws_share_link],
+    ['ws-simmicasm', ws_simmicasm],
+    ['ws-slider-cpucu', ws_slider_cpucu],
+    ['ws-slider-details', ws_slider_details],
+    ['ws-sound', ws_sound],
+    ['ws-states', ws_states],
+    ['ws-toolbar', ws_toolbar],
+    ['ws-topbar', ws_topbar],
+    ['ws-screen-classic', ws_uiscreen_classic],
+    ['ws-screen-compact', ws_uiscreen_compact],
+    ['ws-web-main', ws_web_main],
+];
+
+export const WSL_COMPONENTS_LENGTH = WSL_COMPONENTS.length;
+
+export async function wepsim_web_register_components(on_each)
 {
-    register_uielto('ws-about', ws_about);
-    register_uielto('ws-bin-asm', ws_bin_asm);
-    register_uielto('ws-bin-mc', ws_bin_mc);
-    register_uielto('ws-cachememory', ws_cachememory);
-    register_uielto('ws-cache-config', ws_cache_config);
-    register_uielto('ws-compilationbar', ws_compilationbar);
-    register_uielto('ws-config', ws_config);
-    register_uielto('ws-console', ws_console);
-    register_uielto('ws-cpu', ws_cpu);
-    register_uielto('ws-cpucu_got', ws_cpucu_got);
-    register_uielto('ws-cpusvg', ws_cpusvg);
-    register_uielto('ws-ctoasm', ws_ctoasm);
-    register_uielto('ws-dbg-mc', ws_dbg_mc);
-    register_uielto('ws-dbg-mp', ws_dbg_mp);
-    register_uielto('ws-ddown-info', ws_ddown_info);
-    register_uielto('ws-ddown-sel', ws_ddown_sel);
-    register_uielto('ws-edit-as', ws_edit_as);
-    register_uielto('ws-edit-mc', ws_edit_mc);
-    register_uielto('ws-executionbar', ws_executionbar);
-    register_uielto('ws-examples', ws_examples);
-    register_uielto('ws-flash-asm', ws_flash_asm);
-    register_uielto('ws-flash-fpga', ws_flash_fpga);
-    register_uielto('ws-help', ws_help);
-    register_uielto('ws-help-hweltos', ws_help_hweltos);
-    register_uielto('ws-help-swset', ws_help_swset);
-    register_uielto('ws-hw', ws_hw);
-    register_uielto('ws-io-config', ws_io_config);
-    register_uielto('ws-io-info', ws_io_info);
-    register_uielto('ws-l3d', ws_l3d);
-    register_uielto('ws-ledm', ws_ledm);
-    register_uielto('ws-list-cfg', ws_list_cfg);
-    register_uielto('ws-list-example', ws_list_example);
-    register_uielto('ws-list-processor', ws_list_processor);
-    register_uielto('ws-load-file', ws_load_file);
-    register_uielto('ws-load-link', ws_load_link);
-    register_uielto('ws-mainmemory', ws_mainmemory);
-    register_uielto('ws-mem-config', ws_mem_config);
-    register_uielto('ws-notifications', ws_notifications);
-    register_uielto('ws-recordbar', ws_recordbar);
-    register_uielto('ws-registers', ws_registers);
-    register_uielto('ws-save-file', ws_save_file);
-    register_uielto('ws-save-files', ws_save_files);
-    register_uielto('ws-save-files-option', ws_save_files_option);
-    register_uielto('ws-segments', ws_segments);
-    register_uielto('ws-share-link', ws_share_link);
-    register_uielto('ws-simmicasm', ws_simmicasm);
-    register_uielto('ws-slider-cpucu', ws_slider_cpucu);
-    register_uielto('ws-slider-details', ws_slider_details);
-    register_uielto('ws-sound', ws_sound);
-    register_uielto('ws-states', ws_states);
-    register_uielto('ws-toolbar', ws_toolbar);
-    register_uielto('ws-topbar', ws_topbar);
-    register_uielto('ws-screen-classic', ws_uiscreen_classic);
-    register_uielto('ws-screen-compact', ws_uiscreen_compact);
-    register_uielto('ws-web-main', ws_web_main);
+    for (let i = 0; i < WSL_COMPONENTS.length; i++)
+    {
+        const pair = WSL_COMPONENTS[i];
+        register_uielto(pair[0], pair[1]);
+        if (on_each) await on_each(i, WSL_COMPONENTS.length);
+    }
 }

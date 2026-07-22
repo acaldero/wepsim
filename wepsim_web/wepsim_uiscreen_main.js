@@ -101,11 +101,6 @@ export class ws_web_main extends ws_uielto
             return ;
         }
 
-        // basic initialization of wepsim first time...
-        simcore_init(true) ;
-        simcore_welcome() ;
-        upgrade_cfg() ;
-
         // ...and full initialization after jquery-ready
         $(document).ready(async function()
         {
