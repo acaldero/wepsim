@@ -489,6 +489,11 @@ export function wepsim_svg_reload(id_arr, img_arr)
             set_ab_size('#eltos_cpu_a', '#eltos_cpu_b', 14) ;
         }
 
+        // skip reload if the same URL is already loaded
+        var curUrl = (o.getAttribute('data') || '').split('?')[0];
+        if (curUrl === img_arr[i].trim())
+            continue;
+
         // show loading placeholder
         var loadingEl = document.getElementById(id_arr[i] + '_loading');
         if (loadingEl) loadingEl.classList.remove('d-none');

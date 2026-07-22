@@ -87,11 +87,11 @@ export function wepsim_notify_do_notify (ntf_title, ntf_message, ntf_type, ntf_d
         mesg_text  = $('<p>').html(ntf_message).text() ;
     }
 
-    // add to notifications
+    // add to notifications (plain text)
     simcore_notifications_add(title_text, mesg_text, ntf_type, ntf_delay) ;
 
-    // show up notifications
-    wepsim_notify_show_notify(title_text, mesg_text, ntf_type, ntf_delay) ;
+    // show up notifications (with HTML)
+    wepsim_notify_show_notify(ntf_title, ntf_message, ntf_type, ntf_delay) ;
 }
 
 export function wepsim_notify_success (ntf_title, ntf_message)

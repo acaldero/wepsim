@@ -320,7 +320,8 @@ export function simcoreui_hw_btn_signals_dependencies_toggle()
 
     onClick('hw-dependencies-toggle', () =>
     {
-        $('#depgraph1c').collapse('toggle') ; show_visgraph(jit_fire_dep, jit_fire_order) ;
+        $('#depgraph1c').collapse('toggle') ;
+        show_visgraph(jit_fire_dep, jit_fire_order) ;
     }) ;
     return o ;
 }
@@ -650,7 +651,7 @@ export function simcoreui_hw_components_popup(ahw, elto)
         '<span data-langkey=\'abilities\'>abilities</span>: ' + ahw.components[elto].abilities.join(' + ') +
         '<button type=\'button\' id=\'close\' data-role=\'none\' ' +
         '        class=\'btn btn-sm btn-danger w-100 p-0 mt-2\' ' +
-        '        data-bind="click" data-action="hw-popover-close">' +
+        '        data-bind=\'click\' data-action=\'hw-popover-close\'>' +
         '<span data-langkey=\'Close\'>Close</span></button>' ;
     onClick('hw-popover-close', () => wepsim_popovers_hide('.popover_hw')) ;
     return e ;
@@ -661,7 +662,7 @@ export function simcoreui_hw_elements_popup(elto_path, elto)
     var e = simhwelto_describe_component(elto_path, elto, 'html') +
         '<button type=\'button\' id=\'close\' data-role=\'none\' ' +
         '        class=\'btn btn-sm btn-danger w-100 p-0 mt-2\' ' +
-        '        data-bind="click" data-action="hw-popover-close">' +
+        '        data-bind=\'click\' data-action=\'hw-popover-close\'>' +
         '<span data-langkey=\'Close\'>Close</span></button>' ;
     onClick('hw-popover-close', () => wepsim_popovers_hide('.popover_hw')) ;
 

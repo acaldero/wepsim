@@ -112,6 +112,7 @@ export function show_cpuview_view()
     if (show_as_graph)
     {
         $('#cpu_view_graph1').tab('show') ;
+        cpucu_show_graph() ;
         return ;
     }
 
