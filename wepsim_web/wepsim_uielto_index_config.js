@@ -24,7 +24,7 @@ import { ws_info } from '../sim_core/sim_adt_core.js';
 import { get_cfg, update_cfg, reset_cfg } from '../sim_core/sim_cfg.js';
 import { wepsim_popovers_init } from './wepsim_web_ui_popover.js';
 import { wepsim_config_button_toggle, wepsim_config_button_toggle2 } from './wepsim_web_ui_config.js';
-import { wepsim_show_rf_names } from './wepsim_uielto_registers.js';
+import { wepsim_refresh_registers, wepsim_show_rf_names } from './wepsim_uielto_registers.js';
 import { wepsim_toggle_history_ui, wepsim_restore_darkmode, wepsim_confirm_exit, inputfirm, inputasm } from './wepsim_web_simulator.js';
 import { sim_cfg_editor_theme, sim_cfg_editor_mode } from './wepsim_web_editor.js';
 import { show_memories_values } from '../sim_core/sim_core_ui.js';
@@ -168,7 +168,7 @@ var _cfg_toggle_handler = (el) =>
         }
         else if (el.dataset.key === 'RF_display_format')
         {
-            show_memories_values();
+            wepsim_refresh_registers();
         }
     };
 };
