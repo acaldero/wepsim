@@ -136,7 +136,7 @@ export function simcore_init_ui (hash_detail2init)
     ret.ok  = true ;
 
     // display the information holders
-    var detail_id ;
+    var detail_id      = 0 ;
     var sim_components = simhw_sim_components() ;
     for (var elto in sim_components)
     {
@@ -186,9 +186,9 @@ export function simcore_action_ui (component_name, detail_id, action_name)
 
 export function simcore_init_eventlistener (context, hash_detail2action, hash_signal2action)
 {
-    var context_obj ;
-    var r = [] ;
-    var o ;
+    var context_obj = null ;
+    var r           = [] ;
+    var o           = null ;
 
     // 1.- check parameters...
     context_obj = document.getElementById(context).contentDocument ;
@@ -650,7 +650,7 @@ export function simcore_execute_program (options)
     if ((typeof curr_segments['.ktext'] != 'undefined') && (typeof curr_segments['.ktext'].end != 'undefined'))
         kcode_end = parseInt(curr_segments['.ktext'].end) ;
 
-    var ret1 ;
+    var ret1    = null ;
     var SIMWARE = get_simware() ;
 
     if (typeof options.verbalize !== 'undefined')
@@ -732,7 +732,7 @@ export function simcore_compile_firmware (textToMCompile)
     }
 
     // try to load...
-    var preSM ;
+    var preSM = null ;
     try
     {
         preSM       = loadFirmware(textToMCompile) ;

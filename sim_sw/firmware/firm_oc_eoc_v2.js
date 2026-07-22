@@ -25,8 +25,8 @@ import { firm_instruction_get_opcode_pattern } from './firm_fields_v2.js';
 
 export function find_first_oceoc_v2 (context, curr_instruction, first_oc, last_oc)
 {
-    var k ;
-    var m ;
+    var k       = 0 ;
+    var m       = 0 ;
     var xr_info = simhw_sim_ctrlStates_get() ;
     var eoc_len = xr_info.ir.default_eltos.eoc[0].length ;
 
@@ -113,13 +113,13 @@ export function find_first_oceoc_v2 (context, curr_instruction, first_oc, last_o
 export function resolve_pending_oceoc_v2 (context)
 {
     var ret = {} ;
-    var i ;
+    var i   = 0 ;
 
-    var all_oc_ones_str ;
-    var last_oc ;
-    var first_oc = 0 ;
+    var all_oc_ones_str = '' ;
+    var last_oc         = 0 ;
+    var first_oc        = 0 ;
 
-    var curr_instruction ;
+    var curr_instruction = null ;
     for (i = 0; i < context.instrucciones.length; i++)
     {
         curr_instruction = context.instrucciones[i] ;

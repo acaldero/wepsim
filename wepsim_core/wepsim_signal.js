@@ -57,15 +57,15 @@ export function wepsim_update_signal_dialog_title(key)
 export function wepsim_update_signal_dialog_body(key, signal_obj)
 {
     // update signal
-    var checkvalue = (signal_obj.value >>> 0) ;
-    var str_bolded ;
-    var str_checked ;
-    var input_help = '' ;
-    var behav_raw ;
-    var behav_str ;
-    var notif      = '' ;
-    var n10 ;
-    var n2 ;
+    var checkvalue  = (signal_obj.value >>> 0) ;
+    var str_bolded  = '' ;
+    var str_checked = '' ;
+    var input_help  = '' ;
+    var behav_raw   = '' ;
+    var behav_str   = '' ;
+    var notif       = '' ;
+    var n10         = 0;
+    var n2          = 0;
 
     var nvalues = 1 << signal_obj.nbits ; // Math.pow(2, signal_obj.nbits) ;
     if (signal_obj.behavior.length == nvalues)

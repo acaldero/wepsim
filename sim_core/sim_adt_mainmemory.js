@@ -52,7 +52,7 @@ export function main_memory_set (memory, elto, melto)
     if (typeof melto.source_bin === 'undefined') melto.source_bin = '' ;
 
     // modify computed attributes by comments "operators"
-    var comments_str ;
+    var comments_str = '' ;
     if (null != melto.comments)
     {
         comments_str = melto.comments.join('\n') ;
@@ -401,7 +401,7 @@ export function main_memory_get_baseaddr ()
     }
 
     var r_value      = 0 ;
-    var r_ref2 ;
+    var r_ref2       = null ;
     var all_baseaddr = {} ;
     for (var elto in r_ref)
     {

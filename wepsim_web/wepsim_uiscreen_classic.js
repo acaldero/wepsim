@@ -422,7 +422,7 @@ export function wepsim_offcanvas_toggleHV(offcanvas_id)
 
 export function wepsim_offcanvas_helponhw(offcanvas_id, content_name)
 {
-    var c ;
+    var c = '' ;
 
     if ('signals_summary' == content_name)
     {

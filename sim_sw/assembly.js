@@ -27,8 +27,8 @@ import { wsasm_obj2mem } from './assembly/compiler3_obj2mem_wepsim.js';
 
 export function wsasm_src2mem (datosCU, asm_source, options)
 {
-    var context ;
-    var ret = {
+    var context = null ;
+    var ret     = {
         error: i18n_get_TagFor('compiler', 'UNKNOWN 2'),
     } ;
 
@@ -75,8 +75,8 @@ export function wsasm_src2mem (datosCU, asm_source, options)
 
 export function wsasm_src2src (datosCU, text, options)
 {
-    var context ;
-    var ret = {
+    var context = null ;
+    var ret     = {
         error: i18n_get_TagFor('compiler', 'UNKNOWN 2'),
     } ;
 
@@ -123,8 +123,8 @@ export function wsasm_src2src (datosCU, text, options)
 
 export function wsasm_src2binsrc (datosCU, text, options)
 {
-    var context ;
-    var ret = {
+    var context = null ;
+    var ret     = {
         error: i18n_get_TagFor('compiler', 'UNKNOWN 2'),
     } ;
 

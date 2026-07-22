@@ -241,7 +241,7 @@ export function hex2bin (hexvalue)
 
 export function value2string (format, value)
 {
-    var fmt_value ;
+    var fmt_value = '' ;
 
     // formating value
     var fmt = format.split('_') ;

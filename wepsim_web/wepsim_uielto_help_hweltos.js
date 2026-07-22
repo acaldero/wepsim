@@ -118,9 +118,9 @@ export class ws_help_hweltos extends ws_uielto
         }
 
         // html holder
-        var o1   = '' ;
-        var elto_path ;
-        var grid = 'col-md-12 col-lg-6 col-xxl-4' ;
+        var o1        = '' ;
+        var elto_path = '' ;
+        var grid      = 'col-md-12 col-lg-6 col-xxl-4' ;
         if (this.layout == 'offcanvas')
         {
             grid = 'col-xs-12 w-100' ;

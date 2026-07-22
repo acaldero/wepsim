@@ -94,7 +94,7 @@ export class ws_bin_asm extends ws_uielto
 export function labels_asmhtml_aux(slebal, c)
 {
     var clabel = '' ;
-    var wadd ;
+    var wadd   = '' ;
 
     for (var j = 3; j >= 0; j--)
     {
@@ -170,8 +170,8 @@ export function mp2html(mp, labels, seg)
         "<th class='border border-0' align='right'>&nbsp;&nbsp;segment</th>" +
         '</tr>' ;
 
-    var color ;
-    var sname ;
+    var color = 'white' ;
+    var sname = '' ;
     for (var skey in seg)
     {
         // tip: ".binary" is a segment section but not a memory segment,
@@ -190,8 +190,8 @@ export function mp2html(mp, labels, seg)
 
         var rows = 0 ;
         var x    = '' ;
-        var p ;
-        var v ;
+        var p    = '' ;
+        var v    = 0 ;
 
         for (var i = c_begin; i <= c_end; i++)
         {

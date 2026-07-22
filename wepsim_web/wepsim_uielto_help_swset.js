@@ -100,11 +100,11 @@ export class ws_help_swset extends ws_uielto
         }
 
         // tables by first letter...
-        var t    = {} ;
-        var ins_name ;
-        var ins_help ;
-        var first_l ;
-        var grid = 'col-md-12 col-lg-6 col-xxl-4' ;
+        var t        = {} ;
+        var ins_name = '' ;
+        var ins_help = '' ;
+        var first_l  = '' ;
+        var grid     = 'col-md-12 col-lg-6 col-xxl-4' ;
         if (this.layout == 'offcanvas')
         {
             grid = 'col-xs-12 w-100' ;

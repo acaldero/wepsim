@@ -185,7 +185,7 @@ export class ws_save_files extends HTMLElement
         var eltos = this.querySelectorAll('ws-save-files-option') ;
 
         var o1_list    = '' ;
-        var opt_label ;
+        var opt_label  = '' ;
         var elto_src   = [] ;
         var elto_label = [] ;
         for (var i = 0; i < eltos.length; i++)

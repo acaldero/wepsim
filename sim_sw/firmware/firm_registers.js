@@ -38,7 +38,7 @@ export function firm_registers_write (context)
     }
 
     // return registers as string...
-    var m ;
+    var m = '' ;
     for (var k = 0; k < context_registers_keys.length; k++)
     {
         m = context_registers_keys[k] ;
@@ -108,7 +108,7 @@ export function firm_registers_read (context)
     //    2=(sp,   x2) (stack_pointer)
     // }
 
-    var rf_item ;
+    var rf_item = null ;
     var rf_name = 'default' ;
 
     // skip 'registers'

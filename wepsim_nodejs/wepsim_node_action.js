@@ -296,8 +296,8 @@ export function wepsim_nodejs_regiter_action()
 
     hash_action['SHOW-MICROCODE-FIELDS'] = async function(data, options)
     {
-        var elto_obj ;
-        var elto_fields ;
+        var elto_obj = null ;
+        var elto_fields = null ;
         var ret = await wepsim_nodejs_get_instructionset(data, options) ;
 
         // empty firmware
@@ -362,7 +362,7 @@ export function wepsim_nodejs_regiter_action()
 
     hash_action.HELP = async function(data, options)
     {
-        var ret ;
+        var ret = wepsim_nodejs_runApp(data, options) ;
 
         await wepsim_nodejs_init(data) ;
 

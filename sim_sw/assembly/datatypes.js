@@ -206,8 +206,8 @@ export function dt_get_decimal_value (possible_value)
 
 export function dt_get_imm_value (value)
 {
-    var ret1 ;
-    var ret = {
+    var ret1 = { } ;
+    var ret  = {
         'number':    0,
         'isDecimal': false,
         'isFloat':   false,

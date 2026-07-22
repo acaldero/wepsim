@@ -338,7 +338,7 @@ export function wepsim_show_cm_level_cfg(div_hash, memory_cfg, index)
 export function wepsim_show_cache_memory_cfg(div_hash, memory_cfg)
 {
     var o = '' ;
-    var i ;
+    var i = 0 ;
 
     // header
     o += "<div class='container text-center mb-2 mb-3'>" +

@@ -294,9 +294,9 @@ export function wepsim_state_history_list()
 
     wepsim_popovers_hide('[data-bs-toggle=popover4]') ;
 
-    var t ;
-    var it ;
-    var tt ;
+    var t  = 0 ;
+    var it = '' ;
+    var tt = '' ;
     var vr = '' ;
     var o  = '' ;
     for (var i = ws_info.state_history.length - 1; i >= 0; i--)
@@ -397,9 +397,9 @@ export function wepsim_dialog_current_state()
                           'Current state loaded !') ;
 
     // ga
-    var neltos = 0 ;
-    var nceltos ;
-    var ga_str = '' ;
+    var neltos  = 0 ;
+    var nceltos = 0 ;
+    var ga_str  = '' ;
     for (var component in state_obj)
     {
         nceltos = 0 ;
@@ -445,7 +445,7 @@ export function wepsim_dialog_check_state(obj_chklst_expected, obj_chklst_curren
     var obj_result = simcore_simstate_diff_results(obj_chklst_expected, obj_chklst_current) ;
 
     // dialog
-    var msg ;
+    var msg = '' ;
     if (0 == obj_result.errors)
         msg = "&emsp;<br><span style='background-color:#7CFC00'>" +
             "<span data-langkey='Meets the specified requirements'>Meets the specified requirements</span>" +

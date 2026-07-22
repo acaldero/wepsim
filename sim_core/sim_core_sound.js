@@ -135,7 +135,7 @@ export async function simcore_sound_playNote (note_str, time_str)
 export function simcore_sound_ascii2note (word, bytesInWord)
 {
     var n = '' ;
-    var b ;
+    var b = 0 ;
 
     for (var i = 0; i < bytesInWord; i++)
     {
@@ -153,7 +153,7 @@ export function simcore_sound_ascii2note (word, bytesInWord)
 export function simcore_sound_word2note (word, bytesInWord)
 {
     var n = '' ;
-    var b ;
+    var b = 0 ;
 
     for (var i = 0; i < bytesInWord; i++)
     {
@@ -171,7 +171,7 @@ export function simcore_sound_word2note (word, bytesInWord)
 export function simcore_sound_note2word (note, bytesInWord)
 {
     var w = 0 ;
-    var b ;
+    var b = 0 ;
 
     for (var i = 0; i < bytesInWord; i++)
     {

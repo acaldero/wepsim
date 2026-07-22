@@ -106,7 +106,7 @@ export class ws_toolbar extends ws_uielto
         {
             return ;
         }
-        var opt ;
+        var opt = null ;
         if (this.components.indexOf('btndd_mode') != -1)
         {
             opt = get_cfg('ws_mode') ;
@@ -523,8 +523,8 @@ export function webui_toolbar_updateAction(opt)
 
 export function webui_toolbar_updateExampleSet()
 {
-    var item ;
-    var o = '' ;
+    var item = null ;
+    var o    = '' ;
 
     for (var i = 0; i < ws_info.example_set.length; i++)
     {

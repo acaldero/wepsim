@@ -213,7 +213,7 @@ export function quick_config_rf_register_names()
     var sim_eltos = simhw_sim_states() ;
     var SIMWARE   = get_simware() ;
     var o2        = '' ;
-    var rf_item ;
+    var rf_item   = null ;
 
     // get: [ 'r10', 'la' ]
     var logical_defined = [] ;
@@ -249,7 +249,7 @@ export function quick_config_rf_register_names()
 
 export function quick_config_rf_register_orientation()
 {
-    var o1 ;
+    var o1 = '' ;
 
     o1 = quickcfg_html_onoff('20',
                              'Register show in horizontal',
@@ -324,7 +324,7 @@ export function wepsim_refresh_registers()
 
 export function wepsim_refresh_rf_names_mkname(disp_name, SIMWARE, rf_index, index, logical_index)
 {
-    var br_value ;
+    var br_value = '' ;
 
     if (typeof SIMWARE.registers[rf_index] == 'undefined')
     {
@@ -419,16 +419,16 @@ export function init_update_last_id(old_id, elto_id)
 export function wepsim_init_rf()
 {
     // Registers
-    var o1_rf = '' ;
-    var o1_rn ;
-    var r_index ;
+    var o1_rf   = '' ;
+    var o1_rn   = '' ;
+    var r_index = '' ;
 
     // TODO: (hw)   BR*[rf]*[index]
     // TODO: (here) outter-loop in all rf at BR[*rf*][index]
     var rf_index = 'default' ;
     var rf_item  = simhw_sim_states().BR ;
 
-    var separator_class ;
+    var separator_class = '' ;
     if (get_cfg('RF_vertical_pack'))
         separator_class = 'row mp_tooltip collapse show' ;
     else separator_class = 'row mp_tooltip collapse' ;
@@ -526,8 +526,8 @@ export function wepsim_init_rf()
 export function render_state_button(ename, vir_real, separator_class, btn_id_prefix, val_id_prefix, toggle_name)
 {
     var dbs_toggle = '';
-    var divclass ;
-    var spanbetw ;
+    var divclass   = '';
+    var spanbetw   = '';
 
     if ('real' == vir_real)
     {
@@ -619,7 +619,7 @@ export function wepsim_init_states()
     var filter        = simhw_internalState('filter_states');
     var filter_groups = simhw_internalState('filter_states_groups');
 
-    var separator_class ;
+    var separator_class = '';
     if (get_cfg('RF_vertical_pack'))
         separator_class = 'row mp_tooltip collapse show';
     else separator_class = 'row mp_tooltip collapse';
@@ -636,8 +636,8 @@ export function wepsim_init_states()
 
     var f_computed_value = function (value, elto_id)
     {
-        var rf_format ;
-        var rf_value ;
+        var rf_format = '';
+        var rf_value  = '';
         if (Number.isInteger(value))
         {
             rf_format = get_cfg('RF_display_format');

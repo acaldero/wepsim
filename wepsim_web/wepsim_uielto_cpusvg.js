@@ -191,9 +191,9 @@ export function wepsim_svg_update_draw(obj, value)
         return ;
     }
 
-    var i ;
-    var j ;
-    var k ;
+    var i = 0 ;
+    var j = 0 ;
+    var k = 0 ;
 
     var draw_it = get_cfg('is_byvalue'); // 'is_byvalue' belongs to the sim_cfg.js
 
@@ -382,8 +382,8 @@ export function wepsim_svg_apply_darkmode(svg_id)
     svg2.setAttribute('style', 'background-color:' + cfg_color_background);
 
     // 2) path
-    var def_color ;
-    var elements = svg.querySelectorAll('path') ;
+    var def_color = null ;
+    var elements  = svg.querySelectorAll('path') ;
     for (var i = 0; i < elements.length; i++)
     {
         def_color = elements[i].getAttribute('wepsim:color') ;
@@ -409,7 +409,7 @@ export function wepsim_svg_apply_darkmode(svg_id)
 
 export function wepsim_svg_refresh(id_arr)
 {
-    var o ;
+    var o = null ;
 
     // set darkmode
     wepsim_svg_update_drawing() ;
@@ -453,8 +453,8 @@ export function eventhandler_load_svg_set_darkmode(obj)
 
 export function wepsim_svg_reload(id_arr, img_arr)
 {
-    var o ;
-    var d ;
+    var o = null ;
+    var d = '' ;
 
     // update default drawing
     wepsim_svg_update_drawing() ;

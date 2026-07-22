@@ -55,7 +55,7 @@ export class ws_io_config extends ws_uielto
 
     render_populate ()
     {
-        var i ;
+        var i        = 0 ;
         var o1       = '' ;
         var div_hash = '#config_IO_' + this.name_str ;
 

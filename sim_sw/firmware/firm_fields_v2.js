@@ -98,8 +98,8 @@ export function firm_instruction_check_oc (context, instruccionAux, _xr_info, _a
     }
 
     // semantic check: 'oc' length
-    var oc_ins_len = 0 ;
-    var nbits_field ;
+    var oc_ins_len  = 0 ;
+    var nbits_field = 0 ;
     for (var i = 0; i < instruccionAux.fields_all.length; i++)
     {
         for (var j = 0; j < instruccionAux.fields_all[i].bits_stop.length; j++)
@@ -157,7 +157,7 @@ export function firm_instruction_check_eoc (context, instruccionAux, _xr_info, _
 
     // semantic check: 'eoc' length
     var eoc_ins_len = 0 ;
-    var nbits_field ;
+    var nbits_field = 0 ;
     for (var i = 0; i < instruccionAux.fields_all.length; i++)
     {
         for (var j = 0; j < instruccionAux.fields_all[i].bits_stop.length; j++)
@@ -184,11 +184,11 @@ export function firm_instruction_check_eoc (context, instruccionAux, _xr_info, _
 
 export function firm_instruction_get_opcode_pattern (context, instruccionAux)
 {
-    var b ;
-    var c ;
-    var d ;
-    var nbits ;
-    var a1 ;
+    var b     = [] ;
+    var c     = 0 ;
+    var d     = {} ;
+    var nbits = 0 ;
+    var a1    = [] ;
 
     // opcode_pattern (e.g.: "------10101-----1100")
     nbits                         = instruccionAux.nwords * WORD_LENGTH ;
@@ -617,7 +617,7 @@ export function firm_instruction_field_read_v2 (context, instruccionAux)
 
 export function firm_instruction_read_fields_v2 (context, instruccionAux, xr_info, all_ones_oc)
 {
-    var ret ;
+    var ret = {};
 
     // li reg val offset {
     //            *[nwords=1,]
@@ -636,7 +636,7 @@ export function firm_instruction_read_fields_v2 (context, instruccionAux, xr_inf
     var campos       = instruccionAux.fields ;
     var firma        = instruccionAux.signature ;
     var firmaUsuario = instruccionAux.signatureUser ;
-    var firmaGlobal ;
+    var firmaGlobal  = instruccionAux.signatureGlobal ;
 
     var oc_inserted      = 0;
     var camposInsertados = 0;

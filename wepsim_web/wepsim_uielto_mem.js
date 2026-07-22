@@ -138,7 +138,7 @@ export function hard_refresh_main_memory(memory, index, redraw)
     // memory
     var base_addrs = main_memory_get_baseaddr() ;
     var memory_cpy = Object.assign({}, memory) ;
-    var melto ;
+    var melto      = null ;
     for (var elto in base_addrs)
     {
         // skip pointers to zero
@@ -173,14 +173,14 @@ export function hard_refresh_main_memory(memory, index, redraw)
     var o1 = '' ;
     var o2 = '' ;
 
-    var s1 ;
-    var s2 ;
+    var s1          = '' ;
+    var s2          = '' ;
     var seglabels_i = 0 ;
 
     var value   = [] ;
-    var i_key ;
+    var i_key   = 0 ;
     var i_index = parseInt(index) ;
-    var n_key ;
+    var n_key   = 0 ;
 
     var keys = main_memory_getkeys(memory_cpy) ;
     var k    = 0 ;
@@ -263,9 +263,9 @@ export function light_refresh_main_memory(memory, index, redraw)
 
     if (redraw)
     {
-        var ri ;
-        var svalue ;
-        var addrplusn ;
+        var ri        = 0 ;
+        var svalue    = '' ;
+        var addrplusn = index + 4 * n ;
         for (var n = 0; n < cfg_nwords; n++)
         {
             addrplusn = index + 4 * n ;
@@ -320,22 +320,22 @@ export function main_memory_showsegrow(seg_id, seg_name)
 
 export function main_memory_showrow(cfg, memory, addr, revlabels, is_current)
 {
-    var i ;
-    var ri ;
-    var addrplusn ;
-    var wcolor = '' ;
+    var i         = 0 ;
+    var ri        = 0 ;
+    var addrplusn = 0 ;
+    var wcolor    = '' ;
 
     // valkeys
     var valkeys = [] ;
     var idi     = [] ;
-    var addri ;
+    var addri   = 0 ;
 
     // html
-    var o ;
-    var value2 ;
-    var labeli ;
-    var valuei ;
-    var src_html ;
+    var o        = '' ;
+    var value2   = '' ;
+    var labeli   = '' ;
+    var valuei   = '' ;
+    var src_html = '' ;
     var row_html = '' ;
 
     for (var n = 0; n < cfg.nwords; n++)
@@ -463,7 +463,7 @@ export function update_badges(cfg_nwords)
     var tobe_updated     = {} ;
     var tobe_updated_any = false ;
     var elto             = null ;
-    var eaddr ;
+    var eaddr            = 0 ;
 
     var base_addrs = main_memory_get_baseaddr() ;
     for (elto in base_addrs)
@@ -487,7 +487,7 @@ export function update_badges(cfg_nwords)
     }
 
     // clear all old badges and update current active badges
-    var old_html ;
+    var old_html = '' ;
     $('.mp_row_badge').html('') ;
     for (elto in base_addrs)
     {

@@ -45,8 +45,8 @@ export function mem_ep2_register (sim_p)
             if (typeof vec.MEMORY == 'undefined')
                 vec.MEMORY = {} ;
 
-            var key ;
-            var value ;
+            var key   = 0 ;
+            var value = 0 ;
             for (var index in sim_p.internal_states.MP)
             {
                 value = main_memory_getvalue(sim_p.internal_states.MP,
@@ -291,7 +291,7 @@ export function mem_ep2_register (sim_p)
         },
         verbal: function (s_expr)
         {
-            var verbal ;
+            var verbal = '' ;
 
             var address = sim_p.states [s_expr[1]].value;
             var dbvalue = sim_p.states [s_expr[2]].value;
@@ -428,7 +428,7 @@ export function mem_ep2_register (sim_p)
         },
         verbal: function (s_expr)
         {
-            var verbal ;
+            var verbal = '' ;
 
             var address = get_value(sim_p.states [s_expr[1]]) ;
             var dbvalue = get_value(sim_p.states [s_expr[2]]) ;

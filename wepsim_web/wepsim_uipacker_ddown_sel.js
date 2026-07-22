@@ -78,7 +78,7 @@ export class ws_ddown_sel extends ws_uielto
     render_populate ()
     {
         // render ddown elements
-        var u1 ;
+        var u1 = '' ;
         var o1 = '<span class="row w-100">' ;
         for (var k = 0; k < 2; k++)
         {

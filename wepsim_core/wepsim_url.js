@@ -180,7 +180,7 @@ export function fetchURL (f_url)
 
 export function wepsim_save_to_file (textToWrite, fileNameToSaveAs)
 {
-    var ret ;
+    var ret = false ;
 
     if (is_electron())
     {

@@ -88,8 +88,8 @@ export function saveFirmware (SIMWARE, firm_version)
 
 export function loadFirmware (text)
 {
-    var ret ;
-    var i ;
+    var ret = {} ;
+    var i   = 0 ;
     var key ;
 
     var xr_info     = simhw_sim_ctrlStates_get() ;
@@ -400,7 +400,7 @@ export function decode_instruction (curr_firm, ep_ir, binstruction)
     }
 
     // (.witheoc == true) -> eoc/cop-code
-    var maskval ;
+    var maskval = 0 ;
     var masklen = 0 ;
     for (var eoc in hash_entry)
     {

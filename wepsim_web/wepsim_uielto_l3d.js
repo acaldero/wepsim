@@ -65,8 +65,8 @@ export class ws_l3d extends ws_uielto
     {
         var o1       = '' ;
         var div_hash = '#config_L3D_' + this.name_str ;
-        var i ;
-        var offset ;
+        var i        = 0 ;
+        var offset   = 0 ;
 
         // if no active hardware -> empty
         if (simhw_active() === null)

@@ -214,9 +214,9 @@ export function default_asmdbg_content_vertical()
 
 export function assembly2html(mp, labels, seg)
 {
-    var l = '' ;
-    var an ;
-    var as ;
+    var l  = '' ;
+    var an = 0 ;
+    var as = '' ;
 
     // prepare hashtable for address to labels...
     var a2l = {} ;
@@ -243,14 +243,14 @@ export function assembly2html(mp, labels, seg)
     }
 
     // prepare output...
-    var a ;
-    var p ;
-    var s3_val ;
+    var a          = '' ;
+    var p          = '' ;
+    var s3_val     = '' ;
     var old_s3_val = '' ;
-    var o_tde ;
-    var o_tdf ;
+    var o_tde      = '' ;
+    var o_tdf      = '' ;
     var n_ellipsis = 0 ;
-    var s_label ;
+    var s_label    = '' ;
 
     var o = '<center>' +
         "<table data-role='table' class='table table-sm table-striped table-hover'>" +
@@ -551,7 +551,7 @@ export function instruction2tooltip(mp, l)
     var nwords         = parseInt(mp[l].firm_reference.nwords) ;
 
     // prepare data: ins_bin
-    var next ;
+    var next    = 0 ;
     var ins_bin = parseInt(get_value(mp[l])).toString(2).padStart(32, '0') ; // mp[l].binary ... ;
     for (var iw = 1; iw < nwords; iw++)
     {
@@ -659,7 +659,7 @@ export function fullshow_asmdbg_pc()
     }
 
     // set default for old asmdbg_pc
-    var p ;
+    var p = null ;
     if (typeof curr_mp[old_addr] !== 'undefined')
     {
         o1 = $('#asmdbg' + old_addr_hex + ' td') ;

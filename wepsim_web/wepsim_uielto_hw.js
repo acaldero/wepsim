@@ -233,9 +233,9 @@ export function simcoreui_hw_summary_init(ahw, framed)
 
 export function simcoreui_hw_signals_init(ahw, framed)
 {
-    var elto_c ;
-    var e ;
-    var c ;
+    var elto_c = '' ;
+    var e      = '' ;
+    var c      = '' ;
 
     // list of signals
     c = '<span class="row justify-content-between">' ;
@@ -371,9 +371,9 @@ export function simcoreui_hw_signals_popup(ahw_signals, elto)
 
 export function simcoreui_hw_signals_update(ahw, framed)
 {
-    var elto_v ;
-    var elto_dv ;
-    var e ;
+    var elto_v  = '' ;
+    var elto_dv = '' ;
+    var e       = '' ;
 
     // list of signals
     for (var elto in ahw.signals)
@@ -411,9 +411,9 @@ export function simcoreui_hw_signals_update(ahw, framed)
 
 export function simcoreui_hw_states_init(ahw, framed)
 {
-    var elto_c ;
-    var e ;
-    var c ;
+    var elto_c = '' ;
+    var e      = '' ;
+    var c      = '' ;
 
     // list of states
     c = '<span class="row justify-content-between">' ;
@@ -562,11 +562,11 @@ export function simcoreui_hw_states_popup(ahw_states, elto)
 
 export function simcoreui_hw_states_update(ahw)
 {
-    var e ;
-    var elto_v ;
-    var elto_dv ;
-    var id_tt ;
-    var id_strong ;
+    var e         = '' ;
+    var elto_v    = '' ;
+    var elto_dv   = '' ;
+    var id_tt     = '' ;
+    var id_strong = '' ;
 
     // list of states
     for (var elto in ahw.states)
@@ -671,12 +671,12 @@ export function simcoreui_hw_elements_popup(elto_path, elto)
 
 export function simcoreui_hw_elements_init(ahw, framed)
 {
-    var i ;
-    var o = '' ;
-    var p ;
-    var elto_c ;
-    var state_ref ;
-    var state_ref_orig ;
+    var i              = 0 ;
+    var o              = '' ;
+    var p              = '' ;
+    var elto_c         = '' ;
+    var state_ref      = '' ;
+    var state_ref_orig = '' ;
 
     // header
     o += '<div class="table-responsive">' +
@@ -811,7 +811,7 @@ export function simcoreui_hw_elements_init(ahw, framed)
 
 export function simcoreui_hw_init_elements_card(content)
 {
-    var o ;
+    var o = '' ;
 
     o = '  <div class="card m-2">' +
         '    <div class="card-header bg-tertiary border border-tertiary p-2">' +

@@ -23,9 +23,9 @@ import { i18n, i18n_get_TagFor } from '../../wepsim_i18n/i18n.js';
 
 export function firm_pseudoinstructions_write (context)
 {
-    var o = '' ;
-    var elto ;
-    var ie_inst ;
+    var o       = '' ;
+    var elto    = null ;
+    var ie_inst = '' ;
 
     // no pseudo -> return empty section
     if (typeof context.pseudoInstructions == 'undefined')
@@ -89,7 +89,7 @@ export function firm_pseudoinstructions_write (context)
 
 export function firm_pseudoinstructions_read (context)
 {
-    var tok ;
+    var tok = '' ;
 
     // speedup instruction name search using a hash table
     var hash_inst_name = {} ;

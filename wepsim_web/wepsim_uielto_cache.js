@@ -161,8 +161,8 @@ export function wepsim_show_cache_cfg(level, memory)
     var cm_level    = get_var(memory.cfg.level) ;
 
     // cache type and field sizes...
-    var cm_type ;
-    var p1 = "<table class='table table-bordered table-hover table-sm w-auto mt-1 mb-2'>" ;
+    var cm_type = '' ;
+    var p1      = "<table class='table table-bordered table-hover table-sm w-auto mt-1 mb-2'>" ;
 
     if (0 == s_sz)
     {
@@ -196,13 +196,13 @@ export function wepsim_show_cache_cfg(level, memory)
 
 export function wepsim_show_cache_content(level, memory)
 {
-    var o1 = '' ;
-    var elto_set_bin ;
-    var elto_tag_bin ;
+    var o1           = '' ;
+    var elto_set_bin = '' ;
+    var elto_tag_bin = '' ;
 
     // sets/tags
-    var ks ;
-    var kt ;
+    var ks = null ;
+    var kt = null ;
 
     ks = Object.keys(memory.sets) ;
     for (const elto_set of ks)
@@ -266,7 +266,7 @@ export function wepsim_show_cache_memory_i(level)
 
 export function wepsim_show_cache_memory_skel(cache_memory)
 {
-    var o1 ;
+    var o1 = '' ;
 
     if ((typeof cache_memory == 'undefined') || (Object.keys(cache_memory).length == 0))
     {

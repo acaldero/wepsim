@@ -160,8 +160,8 @@ export async function wepsim_checkpoint_loadFromObj (checkpointObj, obj_fileToLo
     }
 
     // 5.- restore cache-cfg and cache
-    var cm_cfg = [] ;
-    var cm_cfg_i ;
+    var cm_cfg   = [] ;
+    var cm_cfg_i = {} ;
     for (i = 0; i < checkpointObj.cache.length; i++)
     {
         cm_cfg_i = cache_memory_init_eltofromcfg(checkpointObj.cache[i].cfg) ;
@@ -253,8 +253,8 @@ export function wepsim_checkpoint_NB_concat_ws_cells (cells)
 
 export function wepsim_checkpoint_Obj2NB (elements)
 {
-    var val ;
-    var typ ;
+    var val = '' ;
+    var typ = '' ;
 
     // fill cells
     var cells = [] ;
@@ -338,9 +338,9 @@ export function wepsim_checkpoint_NB2Obj (nbObj)
     }
 
     // convert NB -> Obj
-    var key ;
-    var type ;
-    var value ;
+    var key   = '' ;
+    var type  = '' ;
+    var value = '' ;
     for (var i = 0; i < nbObj.cells.length; i++)
     {
         if (nbObj.cells[i].cell_type !== 'code')
@@ -504,7 +504,7 @@ export function wepsim_checkpoint_share (id_filename, id_tagname, checkpointObj)
 export function wepsim_checkpoint_backup_load ()
 {
     // load current backup list
-    var obj_wsbackup ;
+    var obj_wsbackup = [] ;
     try
     {
         var json_wsbackup = localStorage.getItem('wepsim_backup') ;

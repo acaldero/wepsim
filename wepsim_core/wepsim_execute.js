@@ -492,7 +492,7 @@ export function wepsim_check_donotifyoptions (options)
 
 export function wepsim_check_memdashboard (ref_mdash, notif_origin)
 {
-    var ret ;
+    var ret = true ;
 
     if (typeof ref_mdash === 'undefined')
     {
@@ -548,19 +548,19 @@ export function pack_ret2 (p_ok, p_level, p_msg)
 
 export function wepsim_execute_chunk (options, chunk)
 {
-    var ret ;
-    var ret2 ;
+    var ret  = false ;
+    var ret2 = {} ;
 
-    var curr_mp    = simhw_internalState('MP') ;
-    var curr_firm  = simhw_internalState('FIRMWARE') ;
-    var pc_name    = simhw_sim_ctrlStates_get().pc.state ;
-    var ref_pc     = simhw_sim_state(pc_name) ;
-    var reg_pc     = get_value(ref_pc) ;
-    var maddr_name = simhw_sim_ctrlStates_get().mpc.state ;
-    var ref_maddr  = simhw_sim_state(maddr_name) ;
-    var reg_maddr  = get_value(ref_maddr) ;
-    var ref_mdash ;
-    var fetch_maddr ;
+    var curr_mp     = simhw_internalState('MP') ;
+    var curr_firm   = simhw_internalState('FIRMWARE') ;
+    var pc_name     = simhw_sim_ctrlStates_get().pc.state ;
+    var ref_pc      = simhw_sim_state(pc_name) ;
+    var reg_pc      = get_value(ref_pc) ;
+    var maddr_name  = simhw_sim_ctrlStates_get().mpc.state ;
+    var ref_maddr   = simhw_sim_state(maddr_name) ;
+    var reg_maddr   = get_value(ref_maddr) ;
+    var ref_mdash   = null ;
+    var fetch_maddr = 0 ;
 
     var i_clks = 0 ;
     var i      = 0 ;
@@ -631,8 +631,8 @@ export function wepsim_execute_chunk (options, chunk)
 
 export function wepsim_execute_chunk_atlevel (chunk, wepsim_execute_stop)
 {
-    var options ;
-    var ret ;
+    var options = {} ;
+    var ret     = false ;
 
     var playlevel = get_cfg('DBG_level') ;
     if (playlevel !== 'instruction')
@@ -656,13 +656,13 @@ export function wepsim_execute_chunk_atlevel (chunk, wepsim_execute_stop)
     var ref_pc     = simhw_sim_state(pc_name) ;
     var maddr_name = simhw_sim_ctrlStates_get().mpc.state ;
     var ref_maddr  = simhw_sim_state(maddr_name) ;
-    var ref_mdash ;
+    var ref_mdash  = 0 ;
     options        = {
         verbosity:    0,
         cycles_limit: get_cfg('DBG_limitick'),
     } ;
 
-    var reg_pc ;
+    var reg_pc = 0 ;
 
     for (var i = 0; i < chunk; i++)
     {

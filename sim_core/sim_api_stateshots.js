@@ -79,10 +79,10 @@ export function simcore_simstate_current2state ()
 
 export function simcore_simstate_expandfilter (filter)
 {
-    var first_value ;
-    var last_value ;
-    var elto ;
-    var j ;
+    var first_value = 0 ;
+    var last_value  = 0 ;
+    var elto        = null ;
+    var j           = 0 ;
 
     // to prepare filter
     var filter_ext  = [] ;
@@ -164,9 +164,9 @@ export function simcore_simstate_check_results (expected_result, obtained_result
     d.neltos_obtained = 0 ;
 
     var elto = null ;
-    var diff ;
+    var diff = {} ;
 
-    var obtained_value ;
+    var obtained_value = 0 ;
     for (var compo in simhw_sim_components())
     {
         // if there are different values -> diff
@@ -277,8 +277,8 @@ export function simcore_simstate_checkreport2txt (checklist)
 
 export function simcore_simstate_checkreport2html (checklist, only_errors)
 {
-    var o = '' ;
-    var color ;
+    var o     = '' ;
+    var color = 'green' ;
 
     if (typeof only_errors === 'undefined')
         only_errors = false ;

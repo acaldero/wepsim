@@ -49,7 +49,7 @@ export function control_memory_set (memory, elto, melto)
     if (typeof melto.is_native === 'undefined') melto.is_native = false ;
 
     // modify computed attributes by comments "operators"
-    var comments_str ;
+    var comments_str = '' ;
     if (null != melto.comments)
     {
         comments_str = melto.comments ;

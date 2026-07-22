@@ -39,9 +39,9 @@ export var fire_array_isfiring = [] ; // to avoid loops: M1->...->M1
 export function firedep_to_fireorder (jit_fire_dep)
 {
     var all_signals = simhw_sim_signals() ;
-    var signal_obj ;
-    var allfireto ;
-    var ndep ;
+    var signal_obj  = null ;
+    var allfireto   = false;
+    var ndep        = 0 ;
     var sid         = 0 ;
 
     // build dependency graph
@@ -155,7 +155,7 @@ export function signal_fire (signal_name)
 
 export function signal_fireL ()
 {
-    var signal_obj ;
+    var signal_obj = null ;
 
     for (const signal_name of jit_fire_order_L)
     {

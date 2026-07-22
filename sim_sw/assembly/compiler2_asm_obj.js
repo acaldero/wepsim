@@ -88,10 +88,10 @@ export function wsasm_make_signature_user (elto, use_as_around)
 
 export function wsasm_get_sel_valbin (value, start_bit, stop_bit)
 {
-    var sel_start ;
-    var sel_stop ;
-    var valbin ;
-    var a ;
+    var sel_start = 0 ;
+    var sel_stop  = 0 ;
+    var valbin    = 0 ;
+    var a         = null ;
 
     if (start_bit > stop_bit) // 31>12
     {
@@ -123,10 +123,10 @@ export function wsasm_eltoError (context, elto, msg, msgOrigin)
 
 export function wsasm_get_similar_candidates (context, elto)
 {
-    var msg   = "'" + elto.source + "'" ;
-    var s_usr = elto.value.signature_user ;
-    var candidate ;
-    var tab   = "<span class='m-3'></span>" ;
+    var msg       = "'" + elto.source + "'" ;
+    var s_usr     = elto.value.signature_user ;
+    var candidate = null ;
+    var tab       = "<span class='m-3'></span>" ;
 
     // if pseudo-instruction then associate it to the related instruction...
     if (typeof elto.associated_pseudo !== 'undefined')
@@ -141,7 +141,7 @@ export function wsasm_get_similar_candidates (context, elto)
 
     // (2) Same/Similar elements...
     msg               += i18n_get_TagFor('compiler', 'NOT MATCH FORMAT') + ':<br>' ;
-    var msg_base;
+    var msg_base       = '' ;
     var msg_same       = '' ;
     var msg_similar    = '' ;
     var pseudo_max_len = 35 ;
@@ -229,10 +229,10 @@ export function wsasm_order2index_startstop (start_bit, stop_bit)
     //                      ^         ^
     //                 start_bit  stop_bit
 
-    var lower_bit ;
-    var w_index ;
-    var n_bits   = 0 ;
-    var w_n_bits = WORD_LENGTH ;
+    var lower_bit = 0 ;
+    var w_index   = 0 ;
+    var n_bits    = 0 ;
+    var w_n_bits  = WORD_LENGTH ;
     for (let m = 0; m < start_bit.length; m++)
     {
         lower_bit    = Math.min(start_bit[m], stop_bit[m]) ;
@@ -247,7 +247,7 @@ export function wsasm_order2index_startstop (start_bit, stop_bit)
 
 export function wsasm_find_reg_in_all_rf (context, reg_name)
 {
-    var rf_item ;
+    var rf_item = null ;
 
     for (let key in context.registers)
     {
@@ -288,12 +288,12 @@ export function wsasm_find_reg_in_all_rf (context, reg_name)
 
 export function wsasm_src2obj_data (context, ret)
 {
-    var possible_tag ;
-    var possible_value ;
-    var tag ;
-    var acc_cmt ;
-    var ret1 ;
-    var elto ;
+    var possible_tag   = '' ;
+    var possible_value = '' ;
+    var tag            = '' ;
+    var acc_cmt        = '' ;
+    var ret1           = null ;
+    var elto           = null ;
     var a ;
     var free_space ;
 
@@ -754,14 +754,14 @@ export function wsasm_encode_field (arr_encoded, value, start_bit, stop_bit)
 
 export function wsasm_encode_instruction (context, ret, elto, candidate)
 {
-    var start_bit ;
-    var stop_bit ;
-    var n_bits ;
-    var value ;
-    var val_encoded ;
-    var arr_encoded ;
-    var ret1 ;
-    var bit_size ;
+    var start_bit   = 0 ;
+    var stop_bit    = 0 ;
+    var n_bits      = 0 ;
+    var value       = 0 ;
+    var val_encoded = '' ;
+    var arr_encoded = '' ;
+    var ret1        = null ;
+    var bit_size    = 0 ;
     var a ;
 
     // prepare val_encoded...
@@ -891,10 +891,10 @@ export function wsasm_src2obj_text_getDistance (elto_firm_reference_i, elto_valu
     }
 
     // if candidate is smaller than expected then return is NOT candidate
-    var distance = 0 ;
-    var distance_j ;
-    var offset_j ;
-    offset_j     = candidate_size_as_intarr.length - signature_size_as_intarr.length ;
+    var distance   = 0 ;
+    var distance_j = 0 ;
+    var offset_j   = 0 ;
+    offset_j       = candidate_size_as_intarr.length - signature_size_as_intarr.length ;
     for (let j = 0; j < candidate_size_as_intarr.length; j++)
     {
         distance_j = candidate_size_as_intarr[j + offset_j] - signature_size_as_intarr[j] ;
@@ -912,7 +912,7 @@ export function wsasm_src2obj_text_getDistance (elto_firm_reference_i, elto_valu
 export function wsasm_find_instr_candidates (context, ret, elto)
 {
     var candidates = 0 ;
-    var distance ;
+    var distance   = 0 ;
 
     // for each candidate, check if can be used...
     elto.firm_reference_distance = -1 ;
@@ -950,8 +950,8 @@ export function wsasm_find_instr_candidates (context, ret, elto)
 
 export function wsasm_src2obj_text_instr_op_match (context, ret, elto, atom, parentheses)
 {
-    var opx = '' ;
-    var rf_item ;
+    var opx     = '' ;
+    var rf_item = null ;
 
     // if atom is register -> $0, x0, ...
     rf_item = wsasm_find_reg_in_all_rf(context, atom) ;
@@ -978,7 +978,7 @@ export function wsasm_src2obj_text_instr_op_match (context, ret, elto, atom, par
     var ret1 = dt_get_imm_value(atom) ;
     if ((ret1.isDecimal) || (ret1.isFloat))
     {
-        var a ;
+        var a = null ;
         if (ret1.isDecimal)
             a = decimal2binary(ret1.number, elto.byte_size * BYTE_LENGTH) ;
         else a = float2binary(ret1.number, elto.byte_size * BYTE_LENGTH) ;
@@ -1023,7 +1023,7 @@ export function wsasm_src2obj_text_instr_op_match (context, ret, elto, atom, par
 
 export function wsasm_src2obj_text_ops_getAtom (context, pseudo_context)
 {
-    var opx ;
+    var opx = '' ;
 
     if (pseudo_context != null)
     {
@@ -1059,11 +1059,11 @@ export function wsasm_src2obj_text_ops_getAtom (context, pseudo_context)
 
 export function wsasm_src2obj_text_elto_field_sel (context, ret, elto, pseudo_context)
 {
-    var opx ;
-    var sel ;
-    var ret2 = { error: null, atom: '' } ;
+    var opx    = '' ;
+    var sel    = { } ;
+    var ret2   = { error: null, atom: '' } ;
     var a ;
-    var valbin ;
+    var valbin = '0' ;
 
     // initial sel value (selector by default)
     sel = { start: 0, stop: 0, label: '' } ;
@@ -1153,10 +1153,10 @@ export function wsasm_src2obj_text_elto_field_sel (context, ret, elto, pseudo_co
 
 export function wsasm_src2obj_text_elto_field_abs (context, ret, elto, pseudo_context, sel)
 {
-    var opx ;
-    var ret2 = { error: null, atom: '' } ;
+    var opx    = '' ;
+    var ret2   = { error: null, atom: '' } ;
     var a ;
-    var valbin ;
+    var valbin = '0' ;
 
     // %lo*(* label )
     opx = wsasm_src2obj_text_ops_getAtom(context, pseudo_context) ;
@@ -1205,10 +1205,10 @@ export function wsasm_src2obj_text_elto_field_abs (context, ret, elto, pseudo_co
 
 export function wsasm_src2obj_text_elto_field_pcrel (context, ret, elto, pseudo_context, sel)
 {
-    var opx ;
-    var ret2 = { error: null, atom: '' } ;
+    var opx    = '' ;
+    var ret2   = { error: null, atom: '' } ;
     var a ;
-    var valbin ;
+    var valbin = '0' ;
 
     // %pcrel_lo*(* label )
     opx = wsasm_src2obj_text_ops_getAtom(context, pseudo_context) ;
@@ -1257,12 +1257,12 @@ export function wsasm_src2obj_text_elto_field_pcrel (context, ret, elto, pseudo_
 
 export function wsasm_src2obj_text_elto_fields (context, ret, elto, pseudo_context)
 {
-    var ret1 ;
-    var ret2 ;
-    var sel ;
-    var opx ;
-    var atom ;
-    var par ;
+    var ret1 = null ;
+    var ret2 = null ;
+    var sel  = {} ;
+    var opx  = '' ;
+    var atom = '' ;
+    var par  = false ;
 
     // Example of instruction:
     //   "add x1 x2 x3"
@@ -1422,13 +1422,13 @@ export function wsasm_find_candidate_and_encode (context, ret, elto)
 
 export function wsasm_src2obj_text (context, ret)
 {
-    var possible_tag ;
-    var possible_inst ;
-    var tag ;
-    var acc_cmt ;
-    var elto ;
-    var candidate ;
-    var oc_size ;
+    var possible_tag  = '' ;
+    var possible_inst = '' ;
+    var tag           = '' ;
+    var acc_cmt       = '' ;
+    var elto          = null ;
+    var candidate     = null ;
+    var oc_size       = 1 ;
 
     //
     //  *.text*   |  *.text*
@@ -1618,14 +1618,14 @@ export function wsasm_src2obj_text (context, ret)
 
 export function wsasm_src2obj_binary (context, ret)
 {
-    var possible_tag ;
-    var possible_value ;
-    var possible_addr ;
-    var tag ;
-    var acc_cmt ;
-    var elto ;
-    var candidate = null ;
-    var oc_size ;
+    var possible_tag   = '' ;
+    var possible_value = '' ;
+    var possible_addr  = '' ;
+    var tag            = '' ;
+    var acc_cmt        = '' ;
+    var elto           = null ;
+    var candidate      = null ;
+    var oc_size        = 1 ;
 
     //
     //  *.binary* |  *.binary*
@@ -1783,7 +1783,7 @@ export function wsasm_src2obj_binary (context, ret)
 
 export function wsasm_src2obj_helper (context, ret)
 {
-    var segname ;
+    var segname = '' ;
 
     ret.data_found = false ;
     ret.text_found = false ;
@@ -1854,12 +1854,12 @@ export function wsasm_src2obj_helper (context, ret)
 export function wsasm_try_resolve_pseudo (context, ret, pseudo_elto, pseudo_elto_candidate)
 {
     var pseudo_context = { parts: null, index: 0 } ;
-    var elto ;
-    var possible_inst ;
-    var pseudo_values ;
-    var pseudo_value_k ;
+    var elto           = null ;
+    var possible_inst  = '' ;
+    var pseudo_values  = '' ;
+    var pseudo_value_k = '' ;
 
-    var ret1 ;
+    var ret1          = null ;
     var ret2          = {} ;
     ret2.error        = null ;
     ret2.eltos        = [] ;
@@ -1947,10 +1947,10 @@ export function wsasm_try_resolve_pseudo (context, ret, pseudo_elto, pseudo_elto
 
 export function wsasm_resolve_pseudo (context, ret)
 {
-    var ret2 = { error: null } ;
-    var ret3 ;
-    var pseudo_elto ;
-    var pseudo_elto_candidate ;
+    var ret2                  = { error: null } ;
+    var ret3                  = { error: null } ;
+    var pseudo_elto           = null ;
+    var pseudo_elto_candidate = null ;
     var obj_backup ;
 
     for (let i = 0; i < ret.obj.length; i++)
@@ -2035,12 +2035,12 @@ export function wsasm_resolve_pseudo (context, ret)
 
 export function wsasm_compute_labels (context, ret, start_at_obj_i)
 {
-    var seg_name ;
-    var seg_ptr ;
-    var elto_ptr ;
-    var padding ;
+    var seg_name      = '' ;
+    var seg_ptr       = 0 ;
+    var elto_ptr      = 0 ;
+    var padding       = 0 ;
     var elto_align    = 0 ; // by default, align to byte
-    var tag ;
+    var tag           = '' ;
     var last_assigned = {} ;
 
     for (let i = start_at_obj_i; i < ret.obj.length; i++)
@@ -2125,8 +2125,8 @@ export function wsasm_compute_labels (context, ret, start_at_obj_i)
 
 export function wsasm_get_label_value (context, ret, elto, label)
 {
-    var value ;
-    var valbin ;
+    var value  = '' ;
+    var valbin = '' ;
 
     // if label -> return associated value as integer
     value = ret.labels_asm[label] ;
@@ -2198,8 +2198,8 @@ export function wsasm_get_label_value (context, ret, elto, label)
 
 export function wsasm_resolve_labels_elto (context, ret, elto)
 {
-    var value ;
-    var arr_encoded ;
+    var value       = 0 ;
+    var arr_encoded = null ;
 
     // ...review the pending labels (forth and back)
     for (let j = 0; j < elto.pending.length; j++)
@@ -2301,7 +2301,7 @@ export function wsasm_resolve_labels_elto (context, ret, elto)
 
 export function wsasm_resolve_labels (context, ret, start_at_obj_i)
 {
-    var elto ;
+    var elto = null ;
 
     // for all object elements...
     for (let i = start_at_obj_i; i < ret.obj.length; i++)
@@ -2486,7 +2486,7 @@ export function wsasm_obj2src (context, ret, options)
 
 export function wsasm_obj2bin (context, ret)
 {
-    var o ;
+    var o    = '' ;
     var elto = null ;
 
     // check params

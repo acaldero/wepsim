@@ -89,7 +89,7 @@ export function wepsim_tooltips_hide(tooltips_id)
 
 export function wepsim_tooltips_closeAll()
 {
-    var e2 ;
+    var e2 = null ;
 
     var l1 = document.querySelectorAll('[data-bs-toggle="tooltip"]') ;
     for (var i1 = 0; i1 < l1.length; i1++)

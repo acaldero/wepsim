@@ -114,8 +114,8 @@ export function table_notifications_html(notifications)
 {
     // setup content...
     var u = '' ;
-    var t ;
-    var m ;
+    var t = null ;
+    var m = '' ;
     for (var i = notifications.length - 1; i != -1; i--)
     {
         t = new Date(notifications[i].date) ;

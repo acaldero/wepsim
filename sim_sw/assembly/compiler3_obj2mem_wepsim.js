@@ -110,7 +110,7 @@ export function wsasm_writememory_and_accumulate_part (mp, gen, valuebin, track_
 
 export function wsasm_writememory_and_accumulate_part_endian (ret_mp, gen, obj_i, valuebin, n_bytes, j_byte)
 {
-    var b_index ;
+    var b_index = 0 ;
 
     switch (obj_i.endian)
     {
@@ -148,16 +148,16 @@ export function wsasm_writememory_and_accumulate_part_endian (ret_mp, gen, obj_i
 
 export function wsasm_obj2mem (ret)
 {
-    var addr = '' ;
-    var n_bytes ;
-    var valuebin ;
-    var candidate ;
+    var addr      = '' ;
+    var n_bytes   = 0 ;
+    var valuebin  = '' ;
+    var candidate = null ;
 
     var seg_name_old    = '' ;
     var seg_name        = '' ;
     var last_assig_word = {} ;
-    var word_1 ;
-    var word_2 ;
+    var word_1          = 0 ;
+    var word_2          = 0 ;
 
     var gen            = {} ;
     gen.byteWord       = 0 ;

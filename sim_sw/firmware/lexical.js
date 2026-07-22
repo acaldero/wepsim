@@ -27,10 +27,10 @@ import { simcore_ga } from '../../sim_core/sim_core_ga.js';
 
 export function frm_nextToken (context)
 {
-    var tok ;
-    var first ;
-    var last ;
-    var token_type ;
+    var tok        = '' ;
+    var first      = '' ;
+    var last       = '' ;
+    var token_type = '' ;
 
     // skip whitespaces
     while (('# \t\n\r'.indexOf(context.text[context.t]) != -1) && (context.t < context.text.length))
@@ -275,7 +275,7 @@ export function frm_resetComments (context)
 export function frm_nextNative (context)
 {
     var first = context.t ;
-    var last ;
+    var last  = context.t ;
 
     // to detect blocks inside blocks -> { if () {} }
     var braces = 1 ;

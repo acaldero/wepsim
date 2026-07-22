@@ -497,8 +497,8 @@ export var hash_detail2init = {
 
 export function wepsim_activehw(mode)
 {
-    var ahw ;
-    var o = null ;
+    var ahw = null ;
+    var o   = null ;
 
     // activate the associated hardware
     simhw_setActive(mode) ;

@@ -42,7 +42,7 @@ export function wepsim_help_set (type, ref)
 
 export function request_html_url (r_url)
 {
-    var robj ;
+    var robj = null ;
 
     if (false === is_mobile())
     {

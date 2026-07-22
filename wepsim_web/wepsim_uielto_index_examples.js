@@ -87,22 +87,22 @@ export function table_examples_html(examples)
     // examples
     var base_url = get_cfg('base_url') ;
 
-    var fmt_toggle = '' ;
-    var w100_toggle ;
-    var toggle_cls ;
-    var t_hwmcasm ;
-    var t_index ;
-    var e_title ;
-    var e_type ;
-    var e_level ;
-    var e_hw ;
-    var e_mc ;
-    var e_asm ;
-    var e_description ;
-    var e_id ;
+    var fmt_toggle    = '' ;
+    var w100_toggle   = '' ;
+    var toggle_cls    = '' ;
+    var t_hwmcasm     = '' ;
+    var t_index       = '' ;
+    var e_title       = '' ;
+    var e_type        = '' ;
+    var e_level       = '' ;
+    var e_hw          = '' ;
+    var e_mc          = '' ;
+    var e_asm         = '' ;
+    var e_description = '' ;
+    var e_id          = '' ;
 
     // first pass: build data
-    var u ;
+    var u                     = '' ;
     var examples_groupby_type = {} ;
     for (var m = 0; m < examples.length; m++)
     {
@@ -231,7 +231,7 @@ export function table_examples_html(examples)
 
     // second pass: build html
     var o = '' ;
-    var l ;
+    var l = '' ;
     for (m in examples_groupby_type)
     {
         u = '<div class="row py-1">' ;
@@ -265,8 +265,8 @@ export function table_examples_html(examples)
 
 export function table_examplesets_html(div_list, example_sets)
 {
-    var item ;
-    var o = '' ;
+    var item = null ;
+    var o    = '' ;
 
     o += '<ul class="list-group list-group-numbered">' ;
     for (var i = 0; i < example_sets.length; i++)

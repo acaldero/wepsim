@@ -74,7 +74,7 @@ export class ws_config extends ws_uielto
         $('#' + cfgdiv_id).html(o1) ;
 
         // initialize UI elements
-        var m ;
+        var m = 0 ;
         try
         {
             for (m = 0; m < ws_info.config_ui.length; m++)
@@ -179,16 +179,16 @@ var _cfg_toggle_handler = (el) =>
 
 export function table_config_html(config)
 {
-    var e_type ;
-    var e_u_class ;
-    var e_class_1 ;
-    var e_class_2 ;
-    var e_code_cfg ;
-    var e_description ;
-    var e_id = '' ;
+    var e_type        = '' ;
+    var e_u_class     = '' ;
+    var e_class_1     = '' ;
+    var e_class_2     = '' ;
+    var e_code_cfg    = '' ;
+    var e_description = '' ;
+    var e_id          = '' ;
 
     // first pass: build data
-    var row ;
+    var row                 = '' ;
     var config_groupby_type = {} ;
     for (var n = 0; n < config.length; n++)
     {
@@ -225,11 +225,11 @@ export function table_config_html(config)
     }
 
     // second pass: build html
-    var o = '<div class="container grid-striped border border-tertiary"><div class="row">' ;
-    var u ;
-    var l ;
-    var l1 ;
-    var l2 ;
+    var o  = '<div class="container grid-striped border border-tertiary"><div class="row">' ;
+    var u  = '' ;
+    var l  = '' ;
+    var l1 = [] ;
+    var l2 = {} ;
     for (var m in config_groupby_type)
     {
         u  = '' ;

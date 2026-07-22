@@ -55,7 +55,7 @@ export class ws_io_info extends ws_uielto
 
     render_populate ()
     {
-        var i ;
+        var i        = 0 ;
         var o1       = '' ;
         var div_hash = '#stats_IO_' + this.name_str ;
 

@@ -277,7 +277,7 @@ export function io_ldm_base_register (sim_p)
                     set_value(sim_p.states[s_expr[3]], 1) ;
 
                     // update internal colors
-                    var c ;
+                    var c  = '' ;
                     neltos = sim_p.internal_states.ledm_colors.length ;
                     for (p = 0; p < neltos; p++)
                     {
@@ -413,7 +413,7 @@ export function io_ldm_base_register (sim_p)
             // internal state -> frame in REST
             var ledmstates = sim_p.internal_states.ledm_state ;
             var o          = '' ;
-            var p ;
+            var p          = 0 ;
             for (var j = 0; j < sim_p.internal_states.ledm_dim; j++)
             {
                 for (var k = 0; k < sim_p.internal_states.ledm_dim; k++)

@@ -114,8 +114,8 @@ export function restore_cfg ()
     }
 
     // try to restore primary configuration values from local_storage
-    var default_value ;
-    var saved_value = null ;
+    var default_value = null ;
+    var saved_value   = null ;
 
     for (var item in WSCFG)
     {
@@ -241,7 +241,7 @@ export function is_cordova ()
 
 export function is_darkmode ()
 {
-    var is_dark ;
+    var is_dark = false ;
 
     var cfgValue = get_cfg('ws_skin_dark_mode') ;
     switch (cfgValue)

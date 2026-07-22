@@ -28,7 +28,7 @@ export function firm_instruction_write (context, elto, labels_firm)
 {
     var o = '' ;
     var j = 0 ;
-    var k ;
+    var k = 0 ;
 
     // no firmware -> return empty section
     if (typeof elto == 'undefined')
@@ -97,7 +97,7 @@ export function firm_instruction_write (context, elto, labels_firm)
 
 export function firm_instruction_read (context, xr_info, all_ones_oc)
 {
-    var ret ;
+    var ret = {};
 
     // *li reg val {*
     //             co=000000,
@@ -132,9 +132,9 @@ export function firm_instruction_read (context, xr_info, all_ones_oc)
                              i18n_get_TagFor('compiler', 'NOT VALID FOR') + re_name) ;
     }
 
-    var firma ;
-    var firmaGlobal = '';
-    var firmaUsuario ;
+    var firma        = '';
+    var firmaGlobal  = '';
+    var firmaUsuario = '';
 
     firma        = frm_getToken(context) + ',';
     firmaUsuario = frm_getToken(context) + ' ';

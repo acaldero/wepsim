@@ -32,10 +32,10 @@ export function wsasm_isEndOfFile (context)
 
 export function asm_nextToken (context)
 {
-    var tok ;
-    var first ;
-    var last ;
-    var token_type ;
+    var tok        = '' ;
+    var first      = '' ;
+    var last       = '' ;
+    var token_type = '' ;
 
     // skip whitespaces
     while (('# \t\n\r\u2003'.indexOf(context.text[context.t]) != -1) && (context.t < context.text.length))

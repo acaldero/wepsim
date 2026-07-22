@@ -3,9 +3,9 @@ import path from 'path';
 import eslint from 'vite-plugin-eslint';
 import checker from 'vite-plugin-checker';
 
-const rootDir = process.cwd();
-const webStubPath = path.resolve(rootDir, 'wepsim_nodejs/web_stub.js');
-const jqStubPath = path.resolve(rootDir, 'wepsim_nodejs/jquery_stub.js');
+const rootDir       = process.cwd();
+const webStubPath   = path.resolve(rootDir, 'wepsim_nodejs/web_stub.js');
+const jqStubPath    = path.resolve(rootDir, 'wepsim_nodejs/jquery_stub.js');
 const introStubPath = path.resolve(rootDir, 'wepsim_nodejs/intro_stub.js');
 
 export default defineConfig({

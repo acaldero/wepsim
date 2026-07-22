@@ -121,8 +121,8 @@ export function wepsim_register_preload_tasks()
             'name':   'mc',
             'action': function(hash)
             {
-                var result_txt ;
-                var mc_code = '' ;
+                var result_txt = '' ;
+                var mc_code    = '' ;
 
                 try
                 {
@@ -160,8 +160,8 @@ export function wepsim_register_preload_tasks()
             'name':   'asm',
             'action': function(hash)
             {
-                var result_txt ;
-                var asm_code = '' ;
+                var result_txt = '' ;
+                var asm_code   = '' ;
 
                 try
                 {
@@ -237,7 +237,7 @@ export function wepsim_register_preload_tasks()
             'name':   'cache',
             'action': function(hash)
             {
-                var result_txt ;
+                var result_txt  = '' ;
                 var cm_cfg_json = '[]' ;
 
                 try

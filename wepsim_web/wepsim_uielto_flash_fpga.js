@@ -48,7 +48,7 @@ export class ws_flash_fpga extends ws_uielto
     // render
     render_skel ()
     {
-        var o1 ;
+        var o1 = '' ;
 
         // html holder
         o1 = "<div id='scroller-flashfpga' class='container-fluid p-0' " +

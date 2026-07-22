@@ -313,9 +313,9 @@ export function wsasm_prepare_context_pseudoinstructions (context, CU_data)
 
 export function wsasm_prepare_registers (context, CU_data)
 {
-    var cu_data_rf_i ;
-    var context_rf_i ;
-    var assoc_name ;
+    var cu_data_rf_i = null ;
+    var context_rf_i = null ;
+    var assoc_name   = '' ;
 
     for (let key in CU_data.registers)
     {

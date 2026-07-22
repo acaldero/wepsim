@@ -66,7 +66,7 @@ export class ws_ledm extends ws_uielto
         var o1       = '' ;
         var div_hash = '#config_LEDM_' + this.name_str ;
         var offset   = 0 ;
-        var i ;
+        var i        = 0 ;
 
         // if no active hardware -> empty
         if (simhw_active() === null)
@@ -168,7 +168,7 @@ export function webui_ledm_set()
 
 export function webui_ledm_value2color(value)
 {
-    var len ;
+    var len   = 1 ;
     var color = '0x000000' ;
 
     var colors = simhw_internalState('ledm_colors') ;

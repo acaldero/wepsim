@@ -292,7 +292,7 @@ export function io_l3d_base_register (sim_p)
             // internal state -> frame in REST
             var l3dstates = sim_p.internal_states.l3d_state ;
             var o         = '' ;
-            var p ;
+            var p         = 0 ;
             var n         = sim_p.internal_states.l3d_dim ;
             for (var i = 0; i < n; i++)
             {

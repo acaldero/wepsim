@@ -50,9 +50,9 @@ export async function wepsim_preload_fromHash (hash)
 
 export function wepsim_preload_get2hash (window_location, f_preload_fromHash)
 {
-    var hash    = {} ;
-    var hash_field ;
-    var uri_obj = null ;
+    var hash       = {} ;
+    var hash_field = '' ;
+    var uri_obj    = null ;
 
     // 1.- check params
     if (typeof window_location === 'undefined')

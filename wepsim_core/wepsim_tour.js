@@ -100,7 +100,7 @@ export function wepsim_newbie_tour_setLang (tour_name, lang)
         return ;
     }
 
-    var step ;
+    var step = '' ;
     for (var i = 0; i < newbie_tour1.length; i++)
     {
         step = newbie_tour1[i].step ;

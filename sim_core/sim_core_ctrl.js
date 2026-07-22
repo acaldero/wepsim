@@ -100,7 +100,7 @@ export function update_cpu_bus_fire (tri_mask, tri_index)
 {
     // 1.- number of active tri-state
     var n = 0 ;
-    var a ;
+    var a = 0 ;
     var e = -1 ;
     if (tri_mask) // 000...00 -> skip loop
     {
@@ -280,7 +280,7 @@ export function oceoc2rom_addr (oc_code, eoc_code, eoc)
 
 export function update_memories (preSIMWARE)
 {
-    var i ;
+    var i = 0;
 
     // 1.- load the SIMWARE
     set_simware(preSIMWARE) ;
@@ -289,7 +289,7 @@ export function update_memories (preSIMWARE)
     // 2.- load the MC from ROM['firmware']
     simhw_internalState_reset('MC', {}) ;
     var mc_obj = simhw_internalState('MC') ;
-    var mcelto ;
+    var mcelto = null ;
     for (i = 0; i < SIMWARE.firmware.length; i++)
     {
         var last = SIMWARE.firmware[i].microcode.length ; // mc = microcode
@@ -335,7 +335,7 @@ export function update_memories (preSIMWARE)
     // 4.- load the MP from SIMWARE['mp']
     simhw_internalState_reset('MP', {}) ;
     var mp_obj = simhw_internalState('MP') ;
-    var melto ;
+    var melto  = null ;
     for (var key in SIMWARE.mp)
     {
         melto       = Object.assign({}, SIMWARE.mp[key]) ;

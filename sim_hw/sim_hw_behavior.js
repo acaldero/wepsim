@@ -109,8 +109,8 @@ export function compile_behaviors ()
     var jit_bes  = '';
     jit_fire_dep = {};
 
-    var sig_obj ;
-    var expr_obj ;
+    var sig_obj  = null ;
+    var expr_obj = null ;
 
     for (var sig in simhw_sim_signals())
     {
@@ -276,8 +276,8 @@ export function compute_verbal (input_behavior)
 
 export function compute_signal_verbals (signal_name, signal_value)
 {
-    var verbal = '' ;
-    var sig_ref ;
+    var verbal  = '' ;
+    var sig_ref = null ;
 
     // check params...
     sig_ref = simhw_sim_signal(signal_name) ;

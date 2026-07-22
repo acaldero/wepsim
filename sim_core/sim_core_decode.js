@@ -82,7 +82,7 @@ export var html_sequences = {
 
 export function treatHTMLSequences (text_with_html)
 {
-    var re ;
+    var re  = null ;
     var key = null ;
 
     for (key in html_sequences)

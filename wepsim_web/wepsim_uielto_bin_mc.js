@@ -86,9 +86,9 @@ export class ws_bin_mc extends ws_uielto
 
 export function firmware2html(fir, showBinary)
 {
-    var i ;
-    var s ;
-    var n ;
+    var i = 0 ;
+    var s = '' ;
+    var n = '' ;
 
     var filter = simhw_internalState('filter_signals') ;
 
@@ -113,11 +113,11 @@ export function firmware2html(fir, showBinary)
     var o = '<center>';
     o    += "<table class='border border-0'>";
 
-    var l = 0;
-    var line ;
-    var fragment ;
-    var ico ;
-    var madd ;
+    var l        = 0;
+    var line     = '';
+    var fragment = '';
+    var ico      = '';
+    var madd     = '';
     for (i = 0; i < fir.length; i++)
     {
         var mstart = fir[i]['mc-start'];

@@ -80,8 +80,8 @@ export function share_information (info_shared, share_title, share_text, share_u
 
 export function share_as_uri (share_eltos)
 {
-    var url_to_share ;
-    var txt_enc ;
+    var url_to_share = '' ;
+    var txt_enc      = '' ;
 
     // build the associate URI
     try

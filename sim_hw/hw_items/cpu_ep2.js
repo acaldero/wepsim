@@ -56,7 +56,7 @@ export function cpu_ep2_register (sim_p)
             // var internal_reg = ["PC", "MAR", "MBR", "IR", "RT1", "RT2", "RT3", "SR"] ;
             var internal_reg = ['PC', 'SR'] ;
 
-            var value ;
+            var value = 0 ;
             for (var i = 0; i < sim_p.states.BR.length; i++)
             {
                 value = parseInt(get_value(sim_p.states.BR[i])) >>> 0;
@@ -108,7 +108,7 @@ export function cpu_ep2_register (sim_p)
         },
         get_state: function (reg)
         {
-            var value ;
+            var value = 0 ;
             var r_reg = reg.toUpperCase().trim() ;
             if (typeof sim_p.states['REG_' + r_reg] != 'undefined')
             {
@@ -1043,7 +1043,7 @@ export function cpu_ep2_register (sim_p)
         },
         verbal: function (s_expr)
         {
-            var newval ;
+            var newval       = get_value(sim_elto_org) ;
             var r            = s_expr[2].split('/') ;
             var sim_elto_org = get_reference(r[0]) ;
             var sim_elto_dst = get_reference(r[1]) ;
@@ -2270,7 +2270,7 @@ export function cpu_ep2_register (sim_p)
             var n3 = n2.substr(31 - (base + offset - 1), offset) ;
 
             // name
-            var from_elto ;
+            var from_elto = '' ;
             if (1 == r.length)
                 from_elto = show_verbal(s_expr[3]) ;
             else from_elto = show_verbal(s_expr[2]) + '[' + r[1] + '] ' ;
@@ -2472,7 +2472,7 @@ export function cpu_ep2_register (sim_p)
                 return ;
 
             // if (size == 0) && (offset != 0) -> get immediate
-            var v0 ;
+            var v0  = 0 ;
             var v1  = '0'.repeat(32) ;
             var v2  = v1.split('') ;
             var irs = ir.toString(2).padStart(32, '0') ;
@@ -2623,8 +2623,8 @@ export function cpu_ep2_register (sim_p)
     sim_p.behaviors['CLOCK'] = { nparameters: 1,
         operation:   function(s_expr)
         {
-            var new_maddr ;
-            var mcelto ;
+            var new_maddr = null ;
+            var mcelto    = null ;
 
             // measure time (1/2)
             var t0 = performance.now() ;

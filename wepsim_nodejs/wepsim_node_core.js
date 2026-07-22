@@ -112,9 +112,9 @@ var hash_detail_ui = {
 
 export function wepsim_nodejs_load_jsonfile (url_json)
 {
-    var fs ;
-    var jstr ;
-    var jobj ;
+    var fs = null ;
+    var jstr = "" ;
+    var jobj = [] ;
 
     try
     {
@@ -137,8 +137,8 @@ export function wepsim_nodejs_load_jsonfile (url_json)
 
 export function wepsim_nodejs_load_examples ()
 {
-    var jindex ;
-    var jobj ;
+    var jindex = [] ;
+    var jobj = [] ;
 
     // try to load the index
     var url_example_list = get_cfg('example_url') ;
@@ -157,11 +157,11 @@ export function wepsim_nodejs_load_examples ()
 // wepsim_nodejs_examples2tests export function will output the 'devel/test_pack/test_wepsim_pack<X>.json' content for examples
 export function wepsim_nodejs_examples2tests (example_pack_name, examples)
 {
-    var d ;
-    var m ;
-    var a ;
-    var h ;
-    var e ;
+    var d = '' ;
+    var m = '' ;
+    var a = '' ;
+    var h = '' ;
+    var e = '' ;
 
     var o = '[\n' ;
     for (var x = 0; x < examples.length; x++)
@@ -238,7 +238,7 @@ var mbreaks = {} ;
 export function wepsim_nodejs_breakpoints_addrm (break_list, addr)
 {
     var hexaddr = '0x' + addr.toString(16) ;
-    var ret ;
+    var ret = false ;
 
     if (break_list == 'breaks')
     {
@@ -445,9 +445,9 @@ export function wepsim_nodejs_runInteractiveCmd (answers, data, options)
 {
     var SIMWARE = get_simware() ;
     var pc_name = simhw_sim_ctrlStates_get().pc.state ;
-    var reg_pc ;
+    var reg_pc = 0 ;
 
-    var addr ;
+    var addr = 0 ;
     var hexaddr = 0 ;
     var on_exit = false ;
 
@@ -1039,7 +1039,7 @@ export function wepsim_nodejs_help_instructionset (data, options)
 
 export function wepsim_nodejs_help_components (data, options)
 {
-    var input_help ;
+    var input_help = '' ;
 
     var ahw = simhw_active() ;
     if (ahw === null)
@@ -1064,7 +1064,7 @@ export function wepsim_nodejs_help_component (data, options)
 
     // get descriptions
     var input_help = '' ;
-    var search_str ;
+    var search_str = '' ;
     var search_substr = options.purify.toUpperCase() ;
 
     for (let tag in ahw.elements)

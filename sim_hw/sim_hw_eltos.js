@@ -47,7 +47,7 @@ export function simhwelto_prepare_hash (ahw)
 export function simhwelto_show_components (ahw)
 {
     var o = '' ;
-    var e ;
+    var e = '' ;
 
     // header row...
     o += i18n_get_TagFor('hw', 'Component').padEnd(10, ' ') + ';' +

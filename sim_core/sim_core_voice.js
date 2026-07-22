@@ -41,7 +41,7 @@ export function simcore_voice_canSpeak ()
 
 export function simcore_voice_speak (msg)
 {
-    var ssu;
+    var ssu = null ;
 
     if (simcore_voice_canSpeak())
     {

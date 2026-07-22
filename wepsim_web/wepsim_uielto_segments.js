@@ -104,7 +104,7 @@ export function uielto_segments2html(segments)
         ' <td>' +
         " <table style='border-style: solid; border-width:0px; width:100%; height:100%'>" ;
 
-    var sx ;
+    var sx = '' ;
     var sp = '' ;
     for (skey in segments)
     {

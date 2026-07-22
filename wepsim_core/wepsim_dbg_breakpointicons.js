@@ -54,7 +54,7 @@ export function wepsim_register_breakpoint_icons()
 
 export function sim_core_breakpointicon_get (icon_name)
 {
-    var icon_obj ;
+    var icon_obj = null ;
 
     icon_obj = ws_info.breakpoint_icon_list[icon_name] ;
     if (typeof icon_obj === 'undefined')

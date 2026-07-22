@@ -77,8 +77,8 @@ export class ws_help extends ws_uielto
         var ahw       = simhw_active() ;
         var seg_hardw = ahw.sim_short_name ;
 
-        var helpurl ;
-        var o1 = '<br><h2>Loading...</h2>' ;
+        var helpurl = '' ;
+        var o1      = '<br><h2>Loading...</h2>' ;
         switch (help_type)
         {
             case 'relative':
@@ -160,19 +160,19 @@ export function table_helps_html(helps)
 {
     var o = '' ;
 
-    var fmt_toggle = '' ;
-    var w100_toggle ;
-    var toggle_cls ;
-    var fmt_header ;
-    var e_title ;
-    var e_itype    = '' ;
-    var e_utype    = '' ;
-    var e_uclass ;
-    var e_reference ;
-    var e_description ;
-    var e_id       = '' ;
-    var t_index ;
-    var m ;
+    var fmt_toggle    = '' ;
+    var w100_toggle   = '' ;
+    var toggle_cls    = '' ;
+    var fmt_header    = '' ;
+    var e_title       = '' ;
+    var e_itype       = '' ;
+    var e_utype       = '' ;
+    var e_uclass      = '' ;
+    var e_reference   = '' ;
+    var e_description = '' ;
+    var e_id          = '' ;
+    var t_index       = '' ;
+    var m             = 0;
 
     var utypes = [] ;
     for (m = 0; m < helps.length; m++)
