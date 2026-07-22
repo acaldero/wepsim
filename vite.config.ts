@@ -139,13 +139,12 @@ export const vite_config_ts:UserConfig = {
         ]),
         wepsimPostBuildPlugin(),
         // Visualizer of chunks
-        // visualizer({ open: true, filename: 'ws_dist/stats.html' }),
+        // visualizer({ open: true, filename: 'ws_dist/stats.html', gzipSize: true }),
     ],
     build: {
         outDir:                'ws_dist',
         emptyOutDir:           true,
         minify:                true,
-        cssCodeSplit:          false,
         chunkSizeWarningLimit: 1000,
         rolldownOptions:       {
             onwarn(warning, warn)

@@ -4,7 +4,6 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
 /* Other libs */
-@import 'vis-network/styles/vis-network.min.css';
 @import 'bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css';
 @import 'intro.js/minified/introjs.min.css';
 @import 'dropify/dist/css/dropify.min.css';

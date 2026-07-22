@@ -269,7 +269,8 @@ export var jit_dep_network = null ;
 
 export async function show_visgraph(jit_fire_dep, jit_fire_order)
 {
-    var { DataSet, Network } = await import('vis-network/standalone');
+    var { DataSet, Network, injectVisCSS } = await import('../src/lib/vis-network-lazy.js');
+    injectVisCSS();
 
     var sig       = {} ;
     var tmp_hash  = {} ;
