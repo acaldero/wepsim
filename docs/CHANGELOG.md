@@ -6,7 +6,7 @@
   * New rvpipe processor: RISC-V with 5-stage pipeline
   * Migrate to Vite + ESM modules
   * Add ESLint auto-format on build and reformat codebase
-  * Lazy dynamic import for all hw processors, i18n languages, and sound module
+  * Lazy dynamic import for all hw processors, i18n languages, sound module, and vis module
   * Remove unnecessary legacy external and ws_dist directories
 
 ## 2.4.0 -> 2.4.1:

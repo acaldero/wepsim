@@ -29,8 +29,6 @@ import { wsweb_dlg_open } from './wepsim_dialog.js';
 import { update_signal_loadhelp } from './wepsim_help.js';
 import { onClick } from '../wepsim_web/wepsim_web_actions.js';
 
-/* global vis */
-
 export function wepsim_update_signal_dialog_title(key)
 {
     var b_btns = key + ': ' +
@@ -269,8 +267,10 @@ export function wepsim_update_signal_with_value(key, value)
 
 export var jit_dep_network = null ;
 
-export function show_visgraph(jit_fire_dep, jit_fire_order)
+export async function show_visgraph(jit_fire_dep, jit_fire_order)
 {
+    var { DataSet, Network } = await import('vis-network/standalone');
+
     var sig       = {} ;
     var tmp_hash  = {} ;
     var tmp_nodes = [] ;
@@ -288,7 +288,7 @@ export function show_visgraph(jit_fire_dep, jit_fire_order)
     {
         tmp_nodes[tmp_hash[jit_fire_order[i]]].color = '#7BE141' ;
     }
-    var jit_dep_nodes = new vis.DataSet(tmp_nodes) ;
+    var jit_dep_nodes = new DataSet(tmp_nodes) ;
 
     var tmp_edges = [] ;
     for (sig in simhw_sim_signals())
@@ -300,7 +300,7 @@ export function show_visgraph(jit_fire_dep, jit_fire_order)
                 arrows: 'to' }) ;
         }
     }
-    var jit_dep_edges = new vis.DataSet(tmp_edges) ;
+    var jit_dep_edges = new DataSet(tmp_edges) ;
 
     var jit_dep_container = document.getElementById('depgraph1c') ;
     var jit_dep_data      = { nodes: jit_dep_nodes,
@@ -309,6 +309,6 @@ export function show_visgraph(jit_fire_dep, jit_fire_order)
         height:      '255px',
         nodes:       { borderWidth: 2, shadow: true },
         edges:       { width: 2, shadow: true } } ;
-    jit_dep_network       = new vis.Network(jit_dep_container, jit_dep_data, jit_dep_options) ;
+    jit_dep_network       = new Network(jit_dep_container, jit_dep_data, jit_dep_options) ;
 }
 

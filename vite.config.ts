@@ -178,6 +178,10 @@ export const vite_config_ts:UserConfig = {
                         {
                             name = 'vendor-codemirror-emacs'; break;
                         }
+                        if (mod.includes('/vis-network/'))
+                        {
+                            name = 'vendor-vis-network'; break;
+                        }
                     }
                     return 'chunks/' + name + '.js';
                 } as any),
