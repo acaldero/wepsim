@@ -3,24 +3,6 @@
 /* Bootstrap */
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
-/* CodeMirror base */
-@import 'codemirror/lib/codemirror.css';
-@import 'codemirror/addon/fold/foldgutter.css';
-@import 'codemirror/addon/hint/show-hint.css';
-@import 'codemirror/addon/dialog/dialog.css';
-
-/* CodeMirror themes (all user-selectable from settings) */
-@import 'codemirror/theme/blackboard.css';
-@import 'codemirror/theme/eclipse.css';
-@import 'codemirror/theme/cobalt.css';
-@import 'codemirror/theme/idea.css';
-@import 'codemirror/theme/the-matrix.css';
-@import 'codemirror/theme/neat.css';
-@import 'codemirror/theme/abbott.css';
-@import 'codemirror/theme/mdn-like.css';
-@import 'codemirror/theme/duotone-light.css';
-@import 'codemirror/theme/erlang-dark.css';
-
 /* Other libs */
 @import 'vis-network/styles/vis-network.min.css';
 @import 'bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css';

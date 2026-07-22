@@ -75,13 +75,13 @@ export class ws_web_main extends ws_uielto
         if ('classic' == ly)
         {
             o1 += '<ws-topbar style="flex-shrink:0"></ws-topbar>' +
-                                '<ws-screen-classic style="flex:1;min-height:0;overflow:auto"></ws-screen-classic>' +
+                '<ws-screen-classic style="flex:1;min-height:0;overflow:auto"></ws-screen-classic>' +
                 '<ws-recordbar style="flex-shrink:0"></ws-recordbar>' ;
         }
         if ('compact' == ly)
         {
             o1 += '<ws-topbar style="flex-shrink:0"></ws-topbar>' +
-                                '<ws-screen-compact style="flex:1;min-height:0;overflow:auto"></ws-screen-compact>' +
+                '<ws-screen-compact style="flex:1;min-height:0;overflow:auto"></ws-screen-compact>' +
                 '<ws-recordbar style="flex-shrink:0"></ws-recordbar>' ;
         }
 
@@ -106,7 +106,7 @@ export class ws_web_main extends ws_uielto
         {
             // try
             // {
-            wepsim_init_ui() ;
+            await wepsim_init_ui() ;
             wepsim_example_reset() ;
             await wepsim_init_default() ;
             // }

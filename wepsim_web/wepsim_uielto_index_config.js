@@ -110,7 +110,7 @@ export class ws_config extends ws_uielto
         onClick('config_toggle_on', _cfg_toggle_handler) ;
         onClick('config_2opt_off', _cfg_toggle_handler) ;
         onClick('config_2opt_on', _cfg_toggle_handler) ;
-        onChange('cfg-select', (el) =>
+        onChange('cfg-select', async (el) =>
         {
             update_cfg(el.dataset.key, el.value);
             if (el.dataset.key === 'ws_skin_ui')
@@ -125,8 +125,8 @@ export class ws_config extends ws_uielto
             }
             else if (el.dataset.key === 'editor_mode')
             {
-                sim_cfg_editor_mode(inputfirm);
-                sim_cfg_editor_mode(inputasm);
+                await sim_cfg_editor_mode(inputfirm);
+                await sim_cfg_editor_mode(inputasm);
             }
             else if (el.dataset.key === 'DBG_limitins')
             {

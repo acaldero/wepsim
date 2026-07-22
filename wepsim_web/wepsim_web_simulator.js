@@ -46,6 +46,7 @@ import { wepsim_config_button_pretoggle_val2, wepsim_config_select_toggle } from
 import { wepsim_get_screen_content, wepsim_set_screen_content, wepsim_get_keyboard_content, wepsim_set_keyboard_content } from './wepsim_uielto_console.js';
 import { wepsim_get_sound_content, wepsim_set_sound_content } from './wepsim_uielto_sound.js';
 import { webui_executionbar_toggle_play } from './wepsim_uielto_executionbar.js';
+import { onClick } from './wepsim_web_actions.js';
 
 export let inputfirm, inputasm, inputfirm_cfg, inputasm_cfg;
 
@@ -212,9 +213,9 @@ export function wepsim_appy_darkmode(is_darkmode)
     var edt_theme = get_cfg('editor_theme') ;
     if (('default' == edt_theme) && (is_darkmode))
     {
-        edt_theme = 'blackboard' ;
+        edt_theme = 'one-dark' ;
     }
-    if (('blackboard' == edt_theme) && (false == is_darkmode))
+    if (('one-dark' == edt_theme) && (false == is_darkmode))
     {
         edt_theme = 'default' ;
     }
@@ -625,7 +626,7 @@ export function wepsim_init_quickfixes()
     }
 }
 
-export function wepsim_init_ui()
+export async function wepsim_init_ui()
 {
     // fixed padString...
     wepsim_init_quickfixes() ;
@@ -675,10 +676,10 @@ export function wepsim_init_ui()
 
     // initialize editors
     inputfirm_cfg = sim_cm_get_firmcfg() ;
-    inputfirm     = sim_init_editor('inputFirmware', inputfirm_cfg) ;
+    inputfirm     = await sim_init_editor('inputFirmware', inputfirm_cfg) ;
 
     inputasm_cfg = sim_cm_get_asmcfg() ;
-    inputasm     = sim_init_editor('inputAssembly', inputasm_cfg) ;
+    inputasm     = await sim_init_editor('inputAssembly', inputasm_cfg) ;
 
     // init: voice
     wepsim_voice_init() ;
@@ -702,9 +703,9 @@ export async function wepsim_init_default_preloadFromHash(url_hash)
             '<span class="btn btn-sm btn-info py-0" data-bs-dismiss="alert">X</span> mark. <br>' +
             'In order to execute an example please press the ' +
             '<span class="btn btn-sm btn-info py-0" ' +
-            '      data-bind="click" data-action="webui_executionbar_toggle_play">Run</span> ' +
+            '      data-bind="click" data-action="click-run">Run</span> ' +
             'button.<br>' ;
-
+        onClick('click-run', () => webui_executionbar_toggle_play());
         if (url_hash.notify.toLowerCase() !== 'false')
         {
             wepsim_notify_close() ;
