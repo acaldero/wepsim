@@ -254,8 +254,8 @@ export var wsweb_dialogs = {
                 "     style='overflow:auto; -webkit-overflow-scrolling:touch;'> " +
                 "<div class='row m-0'>" +
                 "<div class='col-12 p-2'>" +
-                '<ws-flash_asm>' +
-                '</ws-flash_asm>' +
+                '<ws-flash-asm>' +
+                '</ws-flash-asm>' +
                 '</div>' +
                 '</div>' +
                 '</div>' ;
@@ -297,8 +297,8 @@ export var wsweb_dialogs = {
                 "     style='overflow:auto; -webkit-overflow-scrolling:touch;'> " +
                 "<div class='row m-0'>" +
                 "<div class='col-12 p-2'>" +
-                '<ws-flash_fpga>' +
-                '</ws-flash_fpga>' +
+                '<ws-flash-fpga>' +
+                '</ws-flash-fpga>' +
                 '</div>' +
                 '</div>' +
                 '</div>' ;
