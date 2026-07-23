@@ -103,6 +103,7 @@ function wepsimPostBuildPlugin()
 }
 
 export const vite_config_ts:UserConfig = {
+    base:    '/wepsim/',
     resolve: {
         alias: {
             'vue':         'vue/dist/vue.esm.js',
