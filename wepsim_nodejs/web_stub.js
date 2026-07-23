@@ -60,6 +60,68 @@ export function wsweb_dialog_open()
 {}
 export function wsweb_recordbar_show()
 {}
+export function wsweb_execution_instruction()
+{}
+export function wsweb_execution_microinstruction()
+{}
+export function wsweb_execution_reset()
+{}
+export function dbg_set_breakpoint()
+{}
+export function asmdbg_set_breakpoint()
+{}
+export function wsweb_dialogbox_close_all()
+{}
+export function wsweb_set_details_select()
+{}
+export function wsweb_select_refresh()
+{}
+export function wsweb_set_cpucu_size()
+{}
+export function wsweb_set_c1c2_size()
+{}
+export function wsweb_save_controlmemory_to_file()
+{}
+export function wsweb_quickmenu_show()
+{}
+export function wsweb_quickmenu_close()
+{}
+export function wsweb_quickmenu_toggle()
+{}
+export function wsweb_quickslider_show()
+{}
+export function wsweb_quickslider_close()
+{}
+export function wsweb_quickslider_toggle()
+{}
+export function wsweb_quickcpuview_show()
+{}
+export function wsweb_quickcpuview_close()
+{}
+export function wsweb_quickcpuview_toggle()
+{}
+export function wsweb_cpuview_as_graph()
+{}
+export function wsweb_cpuview_as_text()
+{}
+export function wsweb_quickrf_show()
+{}
+export function wsweb_quickrf_close()
+{}
+export function wsweb_quickrf_toggle()
+{}
+export function wsweb_recordbar_toggle()
+{}
+export function wsweb_recordbar_close()
+{}
+export function wsweb_notifyuser_show()
+{}
+export function wsweb_notifyuser_hide()
+{}
+export function wsweb_scroll_to()
+{}
+export function wsweb_select_action()
+{}
 export function wepsim_config_dialog_dropdown()
 {}
 export function wsweb_dialogbox_close_updatesignal()
