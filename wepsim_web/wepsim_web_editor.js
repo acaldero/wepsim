@@ -29,6 +29,8 @@ import { autocompletion, startCompletion } from '@codemirror/autocomplete';
 import { linter, setDiagnosticsEffect } from '@codemirror/lint';
 import { tags } from '@lezer/highlight';
 
+import { showMinimap } from '@replit/codemirror-minimap';
+
 import { oneDark } from '@codemirror/theme-one-dark';
 
 import { get_cfg } from '../sim_core/sim_cfg.js';
@@ -112,6 +114,7 @@ function createEditorWrapper(textareaId, extensions)
             '.cm-scroller': { overflow: 'auto' },
             '.cm-content':  { 'white-space': 'pre-wrap', 'word-break': 'normal', 'font-weight': 'bold' },
         }),
+        showMinimap.compute(['doc'], () => ({ create: (v) => ({ dom: document.createElement('div') }) })),
     ].concat(extensions);
 
     var view = new EditorView({

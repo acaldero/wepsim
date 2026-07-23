@@ -27,6 +27,7 @@
     "@fortawesome/fontawesome-free": "^7.3.0",
     "@popperjs/core": "^2.11.8",
     "@replit/codemirror-emacs": "^6.1.0",
+    "@replit/codemirror-minimap": "^0.5.2",
     "@replit/codemirror-vim": "^6.3.0",
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@stylistic/eslint-plugin": "^5.10.0",
