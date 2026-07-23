@@ -116,7 +116,7 @@ export class ws_config extends ws_uielto
             if (el.dataset.key === 'ws_skin_ui')
             {
                 window.removeEventListener('beforeunload', wepsim_confirm_exit);
-                window.location = 'wepsim-' + el.value + '.html';
+                window.location.reload();
             }
             else if (el.dataset.key === 'editor_theme')
             {

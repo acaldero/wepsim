@@ -20,7 +20,7 @@
 import $ from 'jquery';
 import { ws_uielto, register_uielto } from './wepsim_uielto.js';
 import { simcore_init, simcore_welcome } from '../sim_core/sim_api_core.js';
-import { upgrade_cfg } from '../sim_core/sim_cfg.js';
+import { is_cfg_empty, get_cfg, upgrade_cfg } from '../sim_core/sim_cfg.js';
 import { wepsim_example_reset } from '../wepsim_core/wepsim_example.js';
 import { wepsim_general_exception_handler, wepsim_init_default, wepsim_init_ui } from './wepsim_web_simulator.js';
 
@@ -62,9 +62,13 @@ export class ws_web_main extends ws_uielto
 
     render_populate (event_name)
     {
-        // get layout value
+        // get layout value: prefer config, fallback to HTML attribute
         var ly = 'classic' ;
-        if (this.layout != null)
+        if (!is_cfg_empty())
+        {
+            ly = get_cfg('ws_skin_ui') ;
+        }
+        else if (this.layout != null)
         {
             ly = this.layout.trim() ;
         }

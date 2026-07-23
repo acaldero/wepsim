@@ -61,7 +61,7 @@ export class ws_uiscreen_compact extends ws_uielto
             ' <div class="carousel-inner">' +
             ' <div class="carousel-item active p-1" id="ws_simulator">' +
             '' +
-            '  <h6 class="pt-3"><span data-langkey="Simulator">Simulator</span></h6>' +
+            '  <h6 class="pt-3 d-none"><span data-langkey="Simulator">Simulator</span></h6>' +
             '  <div class="p-0 m-0 collapse show multi-collapse-1">' +
             '  <div class="d-flex flex-wrap justify-content-center py-1 px-1" ' +
             '       style="margin:1px">' +
