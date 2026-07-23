@@ -19,6 +19,7 @@
  */
 
 import $ from 'jquery';
+import QRCode from 'qrcode';
 import { share_as_uri, share_information } from '../wepsim_core/wepsim_share.js';
 import { wait_if_uievents } from '../sim_core/sim_core_ctrl.js';
 import { wepsim_notify_success } from '../wepsim_core/wepsim_notify.js';
@@ -71,15 +72,12 @@ export class ws_share_link extends HTMLElement
             "         data-bind='click' data-action='copy'><span data-langkey='Copy'>Copy</span></button>" +
             ' </h5>' +
             '</div>' +
-            "<div class='card-body'>" +
+            "<div class='card-body p-2'>" +
             'You can use the following link:<br>' +
-            '<textarea id="qrcode2" class="form-control" ' +
-            '          row="5" style="height:70%" ' +
-            '          data-bind="click" data-action="textarea-copy" ' +
-            '>Loading...</textarea>' +
-            '<br>' +
-        // '<div id="qrcode1" class="mx-auto"></div>' +
-        // '<br>' +
+            '<input id="qrcode2" class="form-control" type="text" readonly ' +
+            '       data-bind="click" data-action="textarea-copy" ' +
+            '       value="Loading..." />' +
+            '<canvas id="qrcode1" class="mx-auto d-block" style="width:90%;aspect-ratio:1"></canvas>' +
             '</div>' +
             '</div>' ;
 
@@ -92,16 +90,26 @@ export class ws_share_link extends HTMLElement
             try
             {
                 var share_text = share_as_uri(this_jshare) ;
-                $('#qrcode2').html(share_text) ;
+                $('#qrcode2').val(share_text) ;
 
-                // $("#qrcode1").html('You can use the following QR-code:<br>') ;
-                // var qrcode = new QRCode("qrcode1") ;
-                // qrcode.makeCode(share_text) ;
+                var canvas = document.getElementById('qrcode1') ;
+                QRCode.toCanvas(canvas, share_text, function(error)
+                {
+                    if (error)
+                    {
+                        canvas.style.display = 'none' ;
+                    }
+                    else
+                    {
+                        canvas.style.width  = '90%';
+                        canvas.style.height = '';
+                    }
+                }) ;
             }
             catch (e)
             {
-                // $("#qrcode1").html(e) ;
-                $('#qrcode1').html('') ;
+                var el = document.getElementById('qrcode1') ;
+                if (el) el.style.display = 'none' ;
             }
         }, 200) ;
     }
