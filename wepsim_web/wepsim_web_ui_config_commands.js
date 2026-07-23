@@ -35,7 +35,6 @@ import { simhw_sim_signals } from '../sim_hw/sim_hw_index.js';
 import { i18n_get, i18n_get_TagFor } from '../wepsim_i18n/i18n.js';
 import { quickcfg_html_header, quickcfg_html_onoff } from './wepsim_web_ui_quickcfg.js';
 import { sim_core_breakpointicon_get } from '../wepsim_core/wepsim_dbg_breakpointicons.js';
-import { simcore_record_append_new } from '../sim_core/sim_core_record.js';
 import { wepsim_execute_toggle_breakpoint } from '../wepsim_core/wepsim_execute.js';
 import { wepsim_config_button_pretoggle, wepsim_config_button_toggle, wepsim_show_breakpoint_icon_list, wepsim_show_breakpoint_icon_template, wepsim_config_button_html_onoff, wepsim_config_button_html_2options, wepsim_config_button_html_color, wepsim_config_color_initial, wepsim_config_button_pretoggle_val2, wepsim_config_button_toggle2 } from './wepsim_web_ui_config.js';
 import { wepsim_quickcfg_init } from './wepsim_web_ui_quickcfg.js';

@@ -19,6 +19,98 @@
  */
 
 import $ from 'jquery';
+import { update_cfg } from './sim_cfg.js';
+import { wepsim_notify_close } from '../wepsim_core/wepsim_notify.js';
+import { wepsim_update_signal_with_value, wepsim_update_signal_dialog } from '../wepsim_core/wepsim_signal.js';
+import { load_from_example_assembly, load_from_example_firmware } from '../wepsim_core/wepsim_example.js';
+import { wepsim_help_set } from '../wepsim_core/wepsim_help.js';
+import { asmdbg_set_breakpoint } from '../wepsim_web/wepsim_uielto_dbg_asm.js';
+import { dbg_set_breakpoint } from '../wepsim_web/wepsim_uielto_dbg_mc.js';
+import {
+    wsweb_change_workspace_simulator, wsweb_change_workspace_microcode,
+    wsweb_change_workspace_assembly, wsweb_change_show_processor,
+    wsweb_change_show_asmdbg, wsweb_execution_reset,
+    wsweb_execution_microinstruction, wsweb_execution_instruction,
+    wsweb_execution_run, wsweb_dialogbox_close_all,
+    wsweb_dialog_open, wsweb_dialog_close,
+    wsweb_dialogbox_close_updatesignal, wsweb_set_details_select,
+    wsweb_set_details, wsweb_select_refresh, wsweb_select_main,
+    wsweb_set_cpucu_size, wsweb_set_c1c2_size,
+    wsweb_assembly_compile, wsweb_firmware_compile,
+    wsweb_save_controlmemory_to_file,
+    wsweb_quickmenu_show, wsweb_quickmenu_close, wsweb_quickmenu_toggle,
+    wsweb_quickslider_show, wsweb_quickslider_close, wsweb_quickslider_toggle,
+    wsweb_quickcpuview_show, wsweb_quickcpuview_close, wsweb_quickcpuview_toggle,
+    wsweb_cpuview_as_graph, wsweb_cpuview_as_text,
+    wsweb_quickrf_show, wsweb_quickrf_close, wsweb_quickrf_toggle,
+    wsweb_recordbar_show, wsweb_recordbar_toggle, wsweb_recordbar_close,
+    wsweb_notifyuser_show, wsweb_notifyuser_hide, wsweb_scroll_to,
+    wsweb_select_action,
+} from '../wepsim_web/wepsim_web_api.js';
+
+/*
+* Record function registry.
+*
+* All functions that can be called during record playback must be
+* registered in this map.  When adding a new recorded action, add
+* the callback function here.
+*/
+var record_fns = {
+    'simcore_record_glowing':             simcore_record_glowing,
+    'update_cfg':                         update_cfg,
+    'wepsim_notify_close':                wepsim_notify_close,
+    'wepsim_update_signal_with_value':    wepsim_update_signal_with_value,
+    'wepsim_update_signal_dialog':        wepsim_update_signal_dialog,
+    'load_from_example_assembly':         load_from_example_assembly,
+    'load_from_example_firmware':         load_from_example_firmware,
+    'wepsim_help_set':                    wepsim_help_set,
+    'asmdbg_set_breakpoint':              asmdbg_set_breakpoint,
+    'dbg_set_breakpoint':                 dbg_set_breakpoint,
+    'wsweb_change_workspace_simulator':   wsweb_change_workspace_simulator,
+    'wsweb_change_workspace_microcode':   wsweb_change_workspace_microcode,
+    'wsweb_change_workspace_assembly':    wsweb_change_workspace_assembly,
+    'wsweb_change_show_processor':        wsweb_change_show_processor,
+    'wsweb_change_show_asmdbg':           wsweb_change_show_asmdbg,
+    'wsweb_execution_reset':              wsweb_execution_reset,
+    'wsweb_execution_microinstruction':   wsweb_execution_microinstruction,
+    'wsweb_execution_instruction':        wsweb_execution_instruction,
+    'wsweb_execution_run':                wsweb_execution_run,
+    'wsweb_dialogbox_close_all':          wsweb_dialogbox_close_all,
+    'wsweb_dialog_open':                  wsweb_dialog_open,
+    'wsweb_dialog_close':                 wsweb_dialog_close,
+    'wsweb_dialogbox_close_updatesignal': wsweb_dialogbox_close_updatesignal,
+    'wsweb_set_details_select':           wsweb_set_details_select,
+    'wsweb_set_details':                  wsweb_set_details,
+    'wsweb_select_refresh':               wsweb_select_refresh,
+    'wsweb_select_main':                  wsweb_select_main,
+    'wsweb_set_cpucu_size':               wsweb_set_cpucu_size,
+    'wsweb_set_c1c2_size':                wsweb_set_c1c2_size,
+    'wsweb_assembly_compile':             wsweb_assembly_compile,
+    'wsweb_firmware_compile':             wsweb_firmware_compile,
+    'wsweb_save_controlmemory_to_file':   wsweb_save_controlmemory_to_file,
+    'wsweb_quickmenu_show':               wsweb_quickmenu_show,
+    'wsweb_quickmenu_close':              wsweb_quickmenu_close,
+    'wsweb_quickmenu_toggle':             wsweb_quickmenu_toggle,
+    'wsweb_quickslider_show':             wsweb_quickslider_show,
+    'wsweb_quickslider_close':            wsweb_quickslider_close,
+    'wsweb_quickslider_toggle':           wsweb_quickslider_toggle,
+    'wsweb_quickcpuview_show':            wsweb_quickcpuview_show,
+    'wsweb_quickcpuview_close':           wsweb_quickcpuview_close,
+    'wsweb_quickcpuview_toggle':          wsweb_quickcpuview_toggle,
+    'wsweb_cpuview_as_graph':             wsweb_cpuview_as_graph,
+    'wsweb_cpuview_as_text':              wsweb_cpuview_as_text,
+    'wsweb_quickrf_show':                 wsweb_quickrf_show,
+    'wsweb_quickrf_close':                wsweb_quickrf_close,
+    'wsweb_quickrf_toggle':               wsweb_quickrf_toggle,
+    'wsweb_recordbar_show':               wsweb_recordbar_show,
+    'wsweb_recordbar_toggle':             wsweb_recordbar_toggle,
+    'wsweb_recordbar_close':              wsweb_recordbar_close,
+    'wsweb_notifyuser_show':              wsweb_notifyuser_show,
+    'wsweb_notifyuser_hide':              wsweb_notifyuser_hide,
+    'wsweb_scroll_to':                    wsweb_scroll_to,
+    'wsweb_select_action':                wsweb_select_action,
+};
+
 /*
      * Record: private
      */
@@ -90,7 +182,7 @@ export function simcore_record_playAt (index_current, index_last)
     }
 
     // 2.- execute current step, show message, and set last played
-    eval(ws_records[index_current].element) ;
+    new Function(...Object.keys(record_fns), ws_records[index_current].element)(...Object.values(record_fns)) ;
 
     var index_next = index_current + 1 ;
     simcore_record_showMsg(index_next, ws_records[index_current].description) ;
