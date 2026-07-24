@@ -43,12 +43,30 @@
     <link href="images/splash/ipad_splash.png"       media="(device-width: 768px)  and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image"/>
     <link href="images/splash/ipadpro1_splash.png"   media="(device-width: 834px)  and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image"/>
     <link href="images/splash/ipadpro2_splash.png"   media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image"/>
+    <script>
+        function wsl_apply_loader_theme() {
+            try {
+                var darkMode = localStorage.getItem('wepsim_ws_skin_dark_mode');
+                var isDark = false;
+                switch (darkMode) {
+                    case 'on': isDark = true; break;
+                    case 'off': isDark = false; break;
+                    default: isDark = window.matchMedia('(prefers-color-scheme: dark)').matches; break;
+                }
+                if (isDark) document.documentElement.setAttribute('data-bs-theme', 'dark');
+            }
+            catch (e) {
+                console.error(e);
+            }
+        }
+        wsl_apply_loader_theme();
+    </script>
 </head>
 
 <body style="min-height:100vh;">
 
     <span id="ws_loader" class="collapse show">
-        <table style="width:100%; height:100%; position:fixed; background-color: white; z-index:4096;">
+        <table class="bg-body" style="width:100%; height:100%; position:fixed; z-index:4096;">
         <tr>
         <td align="center">
             <div id="wsl_spinner1" class="spinner-border spinner-border-xl text-success" role="status">
