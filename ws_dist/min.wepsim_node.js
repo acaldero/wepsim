@@ -1528,12 +1528,3 @@ var WSCFG={};function get_cfg(field){return WSCFG[field].value}function set_cfg(
         return obj_checkpoint ;
     }
 
-
-    /**
-     * Export API
-     */
-
-    module.exports.wepsim_nodejs_doActionError  = wepsim_nodejs_doActionError ;
-    module.exports.wepsim_nodejs_doAction       = wepsim_nodejs_doAction ;
-    module.exports.wepsim_nodejs_loadCheckpoint = wepsim_nodejs_loadCheckpoint ;
-
