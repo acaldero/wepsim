@@ -14,10 +14,12 @@
    import clear from 'clear' ;
 
    // wepsim
-   import vm from "node:vm" ;
-   const  source_url = new URL("./min.wepsim_node.js", import.meta.url) ;
-   const  source_js  = fs.readFileSync(source_url, "utf8") ;
-   vm.runInThisContext(source_js) ;
+   const source_url = new URL("./min.wepsim_node.js", import.meta.url) ;
+   const ws = await import(source_url) ;
+   //import vm from "node:vm" ;
+   //const  source_url = new URL("./min.wepsim_node.js", import.meta.url) ;
+   //const  source_js  = fs.readFileSync(source_url, "utf8") ;
+   //vm.runInThisContext(source_js) ;
 
    // yargs
    import yargs from 'yargs';

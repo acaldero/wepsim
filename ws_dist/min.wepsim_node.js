@@ -1522,9 +1522,16 @@ var WSCFG={};function get_cfg(field){return WSCFG[field].value}function set_cfg(
 
     function wepsim_nodejs_loadCheckpoint ( data_checkpoint )
     {
-	    var obj_checkpoint  = JSON.parse(data_checkpoint) ;
-            obj_checkpoint  = wepsim_checkpoint_NB2Obj(obj_checkpoint) ;
+	var obj_checkpoint = JSON.parse(data_checkpoint) ;
+            obj_checkpoint = wepsim_checkpoint_NB2Obj(obj_checkpoint) ;
 
         return obj_checkpoint ;
     }
+
+
+    module.exports = {
+        wepsim_nodejs_doActionError,
+        wepsim_nodejs_doAction,
+        wepsim_nodejs_loadCheckpoint
+    } ;
 

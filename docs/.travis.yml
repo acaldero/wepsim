@@ -13,14 +13,14 @@ node_js:
 
 before_install:
   - rm -fr node_modules
-  - npm install
+  - bun install
   - jshint --version
   - terser --version
   - sudo apt-get -y install jq
   - jq --version
 
 script:
-  - npm run test-source1
-  - npm run test-wepsim-node1
-  - npm run test-wepsim-node2
+  - bun run test-source1
+  - bun run test-wepsim-node1
+  - bun run test-wepsim-node2
 

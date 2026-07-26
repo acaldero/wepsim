@@ -41,6 +41,8 @@ while getopts 'vdh' opt; do
     d)
       echo "  Please install dependencies first by using:"
       echo ""
+      echo "   curl -fsSL https://bun.com/install | bash"
+      echo ""
       echo "   sudo apt install jq"
       echo "   sudo npm install -g typescript@6"
       echo ""
@@ -67,9 +69,9 @@ done
 shift "$(($OPTIND -1))"
 
 
-# install npm dependencies
-echo "  Step for npm dependencies to install/update:"
-npm install
+# install bun/npm dependencies
+echo "  Step for bun/npm dependencies to install/update:"
+bun install
 echo "  Done."
 echo ""
 
@@ -466,7 +468,7 @@ cp   wepsim_web/wepsim_web_pwa.js         ws_dist/min.wepsim_web_pwa.js
 echo "  * ws_dist/*.sh"
 cp   docs/manifest.webapp         ws_dist/
 cp wepsim_nodejs/wepsim.sh        ws_dist/
-cp wepsim_nodejs/wepsim.mjs       ws_dist/
+cp wepsim_nodejs/wepsim.js        ws_dist/
 chmod a+x ws_dist/*.sh
 
 #  json: update processors

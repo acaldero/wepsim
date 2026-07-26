@@ -110,8 +110,8 @@ wget  --backups=0  -q  -O /tmp/codemirror.zip       https://github.com/codemirro
 unzip  -d /tmp/    -qao   /tmp/codemirror.zip
 pushd .
 cd /tmp/codemirror5-5.65.21/
-npm install
-npm run build
+bun install
+bun run build
 popd
 sleep 1
 

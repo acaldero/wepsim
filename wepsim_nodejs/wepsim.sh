@@ -1,10 +1,11 @@
 #!/bin/bash
 
-pushd .
+pushd . >& /dev/null
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
 cd $DIR
-node "./wepsim.mjs" "$@"
+#node "./wepsim.mjs" "$@"
+bun run "./wepsim.js" "$@"
 
-popd
+popd >& /dev/null
 

@@ -453,3 +453,10 @@
         return obj_checkpoint ;
     }
 
+
+    module.exports = {
+        wepsim_nodejs_doActionError,
+        wepsim_nodejs_doAction,
+        wepsim_nodejs_loadCheckpoint
+    } ;
+
