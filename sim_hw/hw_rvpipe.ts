@@ -28,6 +28,9 @@ import { mem_rvpipe_register } from './hw_items/mem_rvpipe.js';
 import { io_screen_rvpipe_register } from './hw_items/io_screen_rvpipe.js';
 import { io_keyboard_rvpipe_register } from './hw_items/io_keyboard_rvpipe.js';
 import { io_clk_rvpipe_register } from './hw_items/io_clk_rvpipe.js';
+import { io_l3d_rvpipe_register } from './hw_items/io_l3d_rvpipe.js';
+import { io_ldm_rvpipe_register } from './hw_items/io_ldm_rvpipe.js';
+import { io_sound_rvpipe_register } from './hw_items/io_sound_rvpipe.js';
 
 export const rvpipe_def: Simulator = {
     sim_name:            'RISC-V Processor with Pipeline',
@@ -59,9 +62,9 @@ export function sim_hw_register_RVPIPE()
     io_screen_rvpipe_register(rvpipe_def);
     io_keyboard_rvpipe_register(rvpipe_def);
     io_clk_rvpipe_register(rvpipe_def);
-    // io_l3d_base_register(rvpipe_def);
-    // io_ldm_base_register(rvpipe_def);
-    // io_sound_base_register(rvpipe_def);
+    io_l3d_rvpipe_register(rvpipe_def);
+    io_ldm_rvpipe_register(rvpipe_def);
+    io_sound_rvpipe_register(rvpipe_def);
 
     simhw_add(rvpipe_def);
 }

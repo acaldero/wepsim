@@ -438,6 +438,32 @@ sh rs2 offset(rs1) {
       }
 }
 
+#  SBU rs2,offset(rs1)         Store Byte Unsigned                u8[rs1 + offset] ← rs2
+sbu rs2 offset(rs1) {
+      oc(6:0)=0100011,
+      eoc(14:12)=100,
+      reg(19:15)=rs1,
+      reg(24:20)=rs2,
+      address-abs(11:7|31:25)=offset,
+      help='MEM[rs1 + offset] = rs2',
+      {
+          (SE_IMM=1, OFFSET=0, SIZE=1100, M4=11, AluOp=1010, DMW, WBE=00)
+      }
+}
+
+#  SHU rs2,offset(rs1)         Store Half Unsigned                u16[rs1 + offset] ← rs2
+shu rs2 offset(rs1) {
+      oc(6:0)=0100011,
+      eoc(14:12)=101,
+      reg(19:15)=rs1,
+      reg(24:20)=rs2,
+      address-abs(11:7|31:25)=offset,
+      help='MEM[rs1+offset+1 .. rs1+offset] = rs2',
+      {
+          (SE_IMM=1, OFFSET=0, SIZE=1100, M4=11, AluOp=1010, DMW, WBE=01)
+      }
+}
+
 #  BEQ rs1,rs2,offset         Branch Equal                         if rs1 = rs2 then pc ← pc + sext(offset)
 beq rs1 rs2 offset {
     type=branch,

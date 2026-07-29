@@ -206,7 +206,7 @@
     "microcode": "rvpipe",
     "assembly": "s1e1",
     "description": "<span data-langkey='example_01_01'>Simple example with fetch, arithmetic instructions, and basic .text segment.</span>",
-    "testing": false
+    "testing": true
   },
   {
     "id": "RVR1E2",
@@ -217,7 +217,7 @@
     "microcode": "rvpipe",
     "assembly": "s1e2",
     "description": "<span data-langkey='example_01_02'>Simple example with fetch, memory access, and basic .text/.data segment.</span>",
-    "testing": false
+    "testing": true
   },
   {
     "id": "RVR1E3",
@@ -228,7 +228,7 @@
     "microcode": "rvpipe",
     "assembly": "s1e3",
     "description": "<span data-langkey='example_01_03'>Simple example with fetch, branch, and basic .text segment.</span>",
-    "testing": false
+    "testing": true
   },
   {
     "id": "RVR1E5",
@@ -239,7 +239,7 @@
     "microcode": "rvpipe",
     "assembly": "s1e5",
     "description": "<span data-langkey='example_01_05'>If-Then and If-Then-Else.</span>",
-    "testing": false
+    "testing": true
   },
   {
     "id": "RVR1E4",
@@ -250,7 +250,18 @@
     "microcode": "rvpipe",
     "assembly": "s1e4",
     "description": "<span data-langkey='example_01_04'>Simple example with fetch, branch, and basic .text/.data segment.</span>",
-    "testing": false
+    "testing": true
+  },
+  {
+    "id": "RVR2E3",
+    "title": "Masks & shift",
+    "type": "<span data-langkey='Intermediate'>Intermediate</span>",
+    "modes": "rvpipe",
+    "hardware": "rvpipe",
+    "microcode": "rvpipe",
+    "assembly": "s2e3",
+    "description": "<span data-langkey='example_02_03'>More extended example with masks, shift, and basic .text/.data segment.</span>",
+    "testing": true
   },
   {
     "id": "RVR2E4",
@@ -261,7 +272,29 @@
     "microcode": "rvpipe",
     "assembly": "s2e4",
     "description": "<span data-langkey='example_02_04'>Extended example with subrutine and matrix.</span>",
-    "testing": false
+    "testing": true
+  },
+  {
+    "id": "RVR5E3",
+    "title": "Array of strings",
+    "type": "<span data-langkey='Intermediate'>Intermediate</span>",
+    "modes": "rvpipe",
+    "hardware": "rvpipe",
+    "microcode": "rvpipe",
+    "assembly": "s5e3",
+    "description": "<span data-langkey='example_06_04'>Array of strings.</span>",
+    "testing": true
+  },
+  {
+    "id": "RVR2E5",
+    "title": "Simple stack conv.",
+    "type": "<span data-langkey='Intermediate'>Intermediate</span>",
+    "modes": "rvpipe",
+    "hardware": "rvpipe",
+    "microcode": "rvpipe",
+    "assembly": "s2e5",
+    "description": "<span data-langkey='example_03_04'>Example with simple stack convention.</span>",
+    "testing": true
   },
   {
     "id": "RVR2E2",
@@ -272,7 +305,18 @@
     "microcode": "rvpipe",
     "assembly": "s2e2",
     "description": "<span data-langkey='example_01_03'>Simple example with fetch, branch, and basic .text segment.</span>",
-    "testing": false
+    "testing": true
+  },
+  {
+    "id": "RVR2E6",
+    "title": "Fibonacci",
+    "type": "<span data-langkey='Intermediate'>Intermediate</span>",
+    "modes": "rvpipe",
+    "hardware": "rvpipe",
+    "microcode": "rvpipe",
+    "assembly": "s2e6",
+    "description": "<span data-langkey='example_03_05'>Fibonacci.</span>",
+    "testing": true
   },
   {
     "id": "RVR3E1",
@@ -283,7 +327,7 @@
     "microcode": "rvpipe",
     "assembly": "s3e1",
     "description": "<span data-langkey='example_03_02'>Example with interruptions support: fetch, RETI, and .ktext/.kdata.</span>",
-    "testing": false
+    "testing": true
   },
   {
     "id": "RVR3E2",
@@ -294,7 +338,7 @@
     "microcode": "rvpipe",
     "assembly": "s3e2",
     "description": "<span data-langkey='example_03_03'>Example with system call support.</span>",
-    "testing": false
+    "testing": true
   },
   {
     "id": "RVR3E3",
@@ -305,7 +349,7 @@
     "microcode": "rvpipe",
     "assembly": "s3e3",
     "description": "<span data-langkey='example_03_01'>Example with floating point exception.</span>",
-    "testing": false
+    "testing": true
   },
   {
     "id": "RVR4E1",
@@ -316,7 +360,7 @@
     "microcode": "rvpipe",
     "assembly": "s4e1",
     "description": "<span data-langkey='example_04_01'>Advanced example with interruption, system call, and exception.</span>",
-    "testing": false
+    "testing": true
   },
   {
     "id": "RVR4E2",
@@ -327,6 +371,61 @@
     "microcode": "rvpipe",
     "assembly": "s4e2",
     "description": "<span data-langkey='example_04_02'>Example of syscall for printing/reading integer and string.</span>",
+    "testing": true
+  },
+  {
+    "id": "RVR2E1",
+    "title": "I/O",
+    "type": "<span data-langkey='Advanced'>Advanced</span> I/O",
+    "modes": "rvpipe",
+    "hardware": "rvpipe",
+    "microcode": "rvpipe",
+    "assembly": "s2e1",
+    "description": "<span data-langkey='example_02_01'>Example with programmed I/O access, and basic .text/.data segment.</span>",
     "testing": false
+  },
+  {
+    "id": "RVR5E2",
+    "title": "3D-Led",
+    "type": "<span data-langkey='Advanced'>Advanced</span> I/O",
+    "modes": "rvpipe",
+    "hardware": "rvpipe",
+    "microcode": "rvpipe",
+    "assembly": "s5e1",
+    "description": "<span data-langkey='example_06_03'>Example for 3D-Led.</span>",
+    "testing": true
+  },
+  {
+    "id": "RVR5E4",
+    "title": "Led Matrix (movement)",
+    "type": "<span data-langkey='Advanced'>Advanced</span> I/O",
+    "modes": "rvpipe",
+    "hardware": "rvpipe",
+    "microcode": "rvpipe",
+    "assembly": "s5e2",
+    "description": "<span data-langkey='example_06_05'>Example for Led Matrix.</span>",
+    "testing": true
+  },
+  {
+    "id": "RVR5E5",
+    "title": "Led Matrix (colors)",
+    "type": "<span data-langkey='Advanced'>Advanced</span> I/O",
+    "modes": "rvpipe",
+    "hardware": "rvpipe",
+    "microcode": "rvpipe",
+    "assembly": "s5e4",
+    "description": "<span data-langkey='example_06_05'>Example for Led Matrix.</span>",
+    "testing": true
+  },
+  {
+    "id": "RVR5E7",
+    "title": "Audio (sound)",
+    "type": "<span data-langkey='Advanced'>Advanced</span> I/O",
+    "modes": "rvpipe",
+    "hardware": "rvpipe",
+    "microcode": "rvpipe",
+    "assembly": "s6e8",
+    "description": "<span data-langkey='example_01_01'>Simple example with for I/O.</span>",
+    "testing": true
   }
 ]

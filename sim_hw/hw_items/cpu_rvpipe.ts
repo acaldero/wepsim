@@ -300,6 +300,19 @@ export function cpu_rvpipe_register(sim_p: Simulator): Simulator
         DSR = 'DSR',
         KBDR = 'KBDR',
         KBSR = 'KBSR',
+        L3DSR = 'L3DSR',
+        L3DCR = 'L3DCR',
+        L3DDR = 'L3DDR',
+        LEDMSR = 'LEDMSR',
+        LEDMCR = 'LEDMCR',
+        LEDMDR = 'LEDMDR',
+        SSR = 'SSR',
+        SDR1 = 'SDR1',
+        SDR2 = 'SDR2',
+        SDR3 = 'SDR3',
+        IOSR = 'IOSR',
+        IOCR = 'IOCR',
+        IODR = 'IODR',
         REG_IR_DECO = 'REG_IR_DECO',
         REG_MICROADDR = 'REG_MICROADDR',
         MUXA_MICROADDR = 'MUXA_MICROADDR',
@@ -476,6 +489,14 @@ export function cpu_rvpipe_register(sim_p: Simulator): Simulator
         SCR_IOR = 'SCR_IOR',
         SCR_IOW = 'SCR_IOW',
         KBD_IOR = 'KBD_IOR',
+        L3D_IOR = 'L3D_IOR',
+        L3D_IOW = 'L3D_IOW',
+        LEDM_IOR = 'LEDM_IOR',
+        LEDM_IOW = 'LEDM_IOW',
+        SND_IOR = 'SND_IOR',
+        SND_IOW = 'SND_IOW',
+        IO_IOR = 'IO_IOR',
+        IO_IOW = 'IO_IOW',
         MEM_READ = 'MEM_READ',
         MEM_WRITE = 'MEM_WRITE',
         STALL_UNIT = 'STALL_UNIT',
@@ -2374,20 +2395,31 @@ export function cpu_rvpipe_register(sim_p: Simulator): Simulator
     /* IOR: I/O Read - call device read behaviors */
     sim_p.signals[SIGNALS.IOR] = {
         name:          'IOR', visible:       true, type:          'L', value:         0, default_value: 0, nbits:         '1',
-        behavior:      [create_op(BEHAVIORS.NOP), create_op(BEHAVIORS.SCR_IOR, STATES.BUS_AB, STATES.BUS_DB, STATES.DDR, STATES.DSR, STATES.CLK) + create_op(BEHAVIORS.KBD_IOR, STATES.BUS_AB, STATES.BUS_DB, STATES.KBDR, STATES.KBSR, STATES.CLK) + 'IO_IOR BUS_AB BUS_DB IOSR IOCR IODR CLK;'],
-        depends_on:    [SIGNALS.AUX_LOAD_MEM, SIGNALS.M5],
-        fire_name:     [],
-        draw_data:     [[], []],
-        draw_name:     [[], []],
+        behavior:      [create_op(BEHAVIORS.NOP),
+            create_op(BEHAVIORS.SCR_IOR, STATES.BUS_AB, STATES.BUS_DB, STATES.DDR, STATES.DSR, STATES.CLK) +
+            create_op(BEHAVIORS.KBD_IOR, STATES.BUS_AB, STATES.BUS_DB, STATES.KBDR, STATES.KBSR, STATES.CLK) +
+            create_op(BEHAVIORS.L3D_IOR, STATES.BUS_AB, STATES.BUS_DB, STATES.L3DSR, STATES.L3DCR, STATES.L3DDR, STATES.CLK) +
+            create_op(BEHAVIORS.LEDM_IOR, STATES.BUS_AB, STATES.BUS_DB, STATES.LEDMSR, STATES.LEDMCR, STATES.LEDMDR, STATES.CLK) +
+            create_op(BEHAVIORS.SND_IOR, STATES.BUS_AB, STATES.BUS_DB, STATES.CLK, STATES.SSR, STATES.SDR1, STATES.SDR2, STATES.SDR3) +
+            create_op(BEHAVIORS.IO_IOR, STATES.BUS_AB, STATES.BUS_DB, STATES.IOSR, STATES.IOCR, STATES.IODR, STATES.CLK)],
+        depends_on: [SIGNALS.AUX_LOAD_MEM, SIGNALS.M5],
+        fire_name:  [],
+        draw_data:  [[], []],
+        draw_name:  [[], []],
     };
     /* IOW: I/O Write - call device write behaviors */
     sim_p.signals[SIGNALS.IOW] = {
         name:          'IOW', visible:       true, type:          'L', value:         0, default_value: 0, nbits:         '1',
-        behavior:      [create_op(BEHAVIORS.NOP), create_op(BEHAVIORS.SCR_IOW, STATES.BUS_AB, STATES.BUS_DB, STATES.DDR, STATES.DSR, STATES.CLK) + 'IO_IOW BUS_AB BUS_DB IOSR IOCR IODR CLK;'],
-        depends_on:    [SIGNALS.AUX_LOAD_MEM, SIGNALS.M5],
-        fire_name:     [],
-        draw_data:     [[], []],
-        draw_name:     [[], []],
+        behavior:      [create_op(BEHAVIORS.NOP),
+             create_op(BEHAVIORS.SCR_IOW, STATES.BUS_AB, STATES.BUS_DB, STATES.DDR, STATES.DSR, STATES.CLK) +
+             create_op(BEHAVIORS.L3D_IOW, STATES.BUS_AB, STATES.BUS_DB, STATES.L3DSR, STATES.L3DCR, STATES.L3DDR, STATES.CLK) +
+             create_op(BEHAVIORS.LEDM_IOW, STATES.BUS_AB, STATES.BUS_DB, STATES.LEDMSR, STATES.LEDMCR, STATES.LEDMDR, STATES.CLK) +
+             create_op(BEHAVIORS.SND_IOW, STATES.BUS_AB, STATES.BUS_DB, STATES.CLK, STATES.SSR, STATES.SDR1, STATES.SDR2, STATES.SDR3) +
+             create_op(BEHAVIORS.IO_IOW, STATES.BUS_AB, STATES.BUS_DB, STATES.IOSR, STATES.IOCR, STATES.IODR, STATES.CLK)],
+        depends_on: [SIGNALS.AUX_LOAD_MEM, SIGNALS.M5],
+        fire_name:  [],
+        draw_data:  [[], []],
+        draw_name:  [[], []],
     };
     /* IOCHK: async device progress signal (timer, etc.) - not used currently */
     sim_p.signals[SIGNALS.IOCHK]      = {
