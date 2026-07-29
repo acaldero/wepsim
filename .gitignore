@@ -1,3 +1,5 @@
 node_modules/
-package-lock.json
-ts_out/
+ws_dist
+electron_dist
+repo/examples_set/*/default.json
+repo/examples_set/*/default_instructive.json

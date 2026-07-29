@@ -18,86 +18,95 @@
  *
  */
 
+import { get_var } from './sim_core_values.js';
+import $ from 'jquery';
+import Vuex from 'vuex';
 
-        /*
+/*
          *  API REST: public API
          */
 
-        var simcore_rest = {} ;
+export var simcore_rest = {} ;
 
+// reset
+export function simcore_rest_reset ()
+{
+    simcore_rest = {} ;
+}
 
-        // reset
-        function simcore_rest_reset ( )
+// add
+export function simcore_rest_add (name, description)
+{
+    simcore_rest[name] = {
+        endpoint:     description.endpoint,
+        user:         description.user,
+        pass:         description.pass,
+        last_request: null,
+    } ;
+}
+
+// list
+export function simcore_rest_list ()
+{
+    return simcore_rest ;
+}
+
+// get
+export function simcore_rest_get (name)
+{
+    return simcore_rest[name] ;
+}
+
+// invoke
+export function simcore_rest_call (name, method, uri, data)
+{
+    // check API rest
+    var rest_info = simcore_rest[name] ;
+    if (typeof rest_info === 'undefined')
+    {
+        return false ;
+    }
+
+    // check endpoint
+    var api_endpoint = rest_info.endpoint ;
+    if (api_endpoint instanceof Vuex.Store ||
+        (api_endpoint && typeof api_endpoint === 'object' && 'value' in api_endpoint))
+    {
+        api_endpoint = get_var(api_endpoint) ;
+    }
+
+    if (api_endpoint.trim() === '')
+    {
+        return false ;
+    }
+
+    // build request
+    var basic_auth = 'Basic ' + btoa(rest_info.user + ':' + rest_info.pass) ;
+    var enc_data   = JSON.stringify(data) ;
+
+    var request = {
+        url:         api_endpoint + uri,
+        type:        method,
+        contentType: 'application/json',
+        accepts:     'application/json',
+        cache:       false,
+        dataType:    'json',
+        data:        enc_data,
+        beforeSend:  function (xhr)
         {
-            simcore_rest = {} ;
-        }
-
-        // add
-        function simcore_rest_add ( name, description )
-        {
-	    simcore_rest[name] = {
-		                    endpoint:     description.endpoint,
-		                    user:         description.user,
-		                    pass:         description.pass,
-		                    last_request: null
-	                         } ;
-        }
-
-        // list
-        function simcore_rest_list ( )
-        {
-            return simcore_rest ;
-        }
-
-        // get
-        function simcore_rest_get ( name )
-        {
-            return simcore_rest[name] ;
-        }
-
-        // invoke
-        function simcore_rest_call ( name, method, uri, data )
-        {
-	    // check API rest
-            var rest_info = simcore_rest[name] ;
-	    if (typeof rest_info === "undefined") {
-		return false ;
-	    }
-
-	    // check endpoint
-	    var api_endpoint = rest_info.endpoint ;
-            if (api_endpoint instanceof Vuex.Store) {
-	        api_endpoint = get_var(api_endpoint) ;
+            if (rest_info.user.trim() !== '')
+            {
+                xhr.setRequestHeader('Authorization', basic_auth) ;
             }
+        },
+        error: function(jqXHR)
+        {
+            console.log('ajax error ' + jqXHR.status);
+        },
+    };
 
-	    if (api_endpoint.trim() === "") {
-		return false ;
-	    }
-
-	    // build request
-            var basic_auth = "Basic " + btoa(rest_info.user + ":" + rest_info.pass) ;
-            var enc_data   = JSON.stringify(data) ;
-
-            var request = {
-                url:         api_endpoint + uri,
-                type:        method,
-                contentType: "application/json",
-                accepts:     "application/json",
-                cache:       false,
-                dataType:    'json',
-                data:        enc_data,
-                beforeSend:  function (xhr) {
-		    if (rest_info.user.trim() !== "") {
-                        xhr.setRequestHeader("Authorization", basic_auth) ;
-		    }
-                },
-                error: function(jqXHR) {
-                    console.log("ajax error " + jqXHR.status);
-                }
-            };
-
-	    // do request
-            rest_info.last_request = $.ajax(request) ;
-	    return true ;
-        }
+    // do request
+    rest_info.last_request = $.ajax(request) ;
+    return true ;
+}
 

@@ -18,36 +18,39 @@
  *
  */
 
+export function i18n_de_register_help(i18n)
+{
 
     i18n.eltos.help.de = {
 
-		'Welcome tutorial':		'Willkommens-Tutorial',
-		'help_01_01':			'Öffnen Sie das Willkommens-Tutorial',
-		'Simple usage tutorial':	'Einfaches Tutorial',
-		'help_01_02':			'Öffnen Sie das einfache Lernprogramm für die Mikroprogrammierung und Montageprogrammierung',
-		'Execute example':		'Execute example',
-		'help_01_03':			'Play the execute example tutorial',
-		'Simulator: firmware':		'Simulator: firmware',
-		'help_02_01':			'So arbeiten Sie mit der Firmware, die in den Steuerungsspeicher geladen werden soll',
-		'Microcode format':		'Microcode format',
-		'help_02_02':			'Syntax des verwendeten Mikrocodes',
-		'Simulator: assembly':		'Simulator: Zusammenbau',
-		'help_02_03':			'So arbeiten Sie mit der Baugruppe, die die oben genannte Firmware verwendet',
-		'Assembly format':		'Montageformat',
-		'help_02_04':			'Syntax der Assembly-Elemente',
-		'Simulator: execution':		'Simulator: Ausführung',
-		'help_02_05':			'Wie der Simulator die Baugruppe und Firmware ausführen kann',
-		'Simulated architecture':	'Simulierte Architektur',
-		'help_03_01':			'Beschreibung der simulierten Prozessorarchitektur',
-		'Simulated signals':		'Simulierte Signale',
-		'help_03_02':			'Zusammenfassung der Hauptsignale des simulierten Elementarprozessors',
-		'Hardware summary':		'Hardware-Zusammenfassung',
-		'help_03_03':			'Referenzkarte für die Hardware des simulierten Elementarprozessors',
-		'License, platforms, etc.':	'Lizenz, Plattformen usw.',
-		'help_04_01':			'WepSIM-Lizenz, unterstützte Plattformen, verwendete Technologien',
-		'Authors':			'Das WepSIM-Team',
-		'help_04_02':			'Das WepSIM-Team',
-		'_last_':			'_last_'
+        'Welcome tutorial':         'Willkommens-Tutorial',
+        'help_01_01':               'Öffnen Sie das Willkommens-Tutorial',
+        'Simple usage tutorial':    'Einfaches Tutorial',
+        'help_01_02':               'Öffnen Sie das einfache Lernprogramm für die Mikroprogrammierung und Montageprogrammierung',
+        'Execute example':          'Execute example',
+        'help_01_03':               'Play the execute example tutorial',
+        'Simulator: firmware':      'Simulator: firmware',
+        'help_02_01':               'So arbeiten Sie mit der Firmware, die in den Steuerungsspeicher geladen werden soll',
+        'Microcode format':         'Microcode format',
+        'help_02_02':               'Syntax des verwendeten Mikrocodes',
+        'Simulator: assembly':      'Simulator: Zusammenbau',
+        'help_02_03':               'So arbeiten Sie mit der Baugruppe, die die oben genannte Firmware verwendet',
+        'Assembly format':          'Montageformat',
+        'help_02_04':               'Syntax der Assembly-Elemente',
+        'Simulator: execution':     'Simulator: Ausführung',
+        'help_02_05':               'Wie der Simulator die Baugruppe und Firmware ausführen kann',
+        'Simulated architecture':   'Simulierte Architektur',
+        'help_03_01':               'Beschreibung der simulierten Prozessorarchitektur',
+        'Simulated signals':        'Simulierte Signale',
+        'help_03_02':               'Zusammenfassung der Hauptsignale des simulierten Elementarprozessors',
+        'Hardware summary':         'Hardware-Zusammenfassung',
+        'help_03_03':               'Referenzkarte für die Hardware des simulierten Elementarprozessors',
+        'License, platforms, etc.': 'Lizenz, Plattformen usw.',
+        'help_04_01':               'WepSIM-Lizenz, unterstützte Plattformen, verwendete Technologien',
+        'Authors':                  'Das WepSIM-Team',
+        'help_04_02':               'Das WepSIM-Team',
+        '_last_':                   '_last_',
 
     };
+}
 

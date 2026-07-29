@@ -18,155 +18,173 @@
  *
  */
 
+/*
+ *  Sound (Tune.js)
+ */
 
-        /*
-	 *  Sound (Tune.js)
-	 */
+export function simcore_sound_init ()
+{
+    if (typeof window !== 'undefined')
+    {
+        window.TONE_SILENCE_LOGGING = true;
+        // window.Tone = Tone;
+    }
+}
 
-        function simcore_sound_init ( )
+export async function simcore_sound_canPlay ()
+{
+    try
+    {
+        const { getContext } = await import('tone') ;
+        if (typeof getContext() == 'undefined')
         {
-	    if (typeof window !== "undefined") {
-                window.TONE_SILENCE_LOGGING = true;
-	    }
+            return false ;
+        }
+    }
+    catch (e)
+    {
+        return false ;
+    }
+
+    return true ;
+}
+
+export async function simcore_sound_start ()
+{
+    if (await simcore_sound_canPlay() == false)
+    {
+        return false ;
+    }
+
+    try
+    {
+        const { getContext, getTransport } = await import('tone') ;
+        await getTransport().start() ;
+        if (getContext().state !== 'running')
+        {
+            getContext().resume() ;
+        }
+    }
+    catch (e)
+    {
+        // console.log('ERROR: at line: ' + e.lineNumber + ' and column: ' + e.columnNumber) ;
+        return false ;
+    }
+
+    return true ;
+}
+
+export async function simcore_sound_stop ()
+{
+    if (await simcore_sound_canPlay() == false)
+    {
+        return false ;
+    }
+
+    try
+    {
+        const { getTransport } = await import('tone') ;
+        await getTransport().stop() ;
+    }
+    catch (e)
+    {
+        // console.log('ERROR: at line: ' + e.lineNumber + ' and column: ' + e.columnNumber) ;
+        return false ;
+    }
+
+    return true ;
+}
+
+export async function simcore_sound_playNote (note_str, time_str)
+{
+    if (await simcore_sound_canPlay() == false)
+    {
+        return false ;
+    }
+
+    const { getContext, start, Synth } = await import('tone') ;
+    await start() ;
+    if (getContext().state !== 'running')
+    {
+        getContext().resume() ;
+    }
+
+    try
+    {
+        if ('' == note_str)
+        {
+            note_str = null ;
         }
 
-        function simcore_sound_canPlay ( )
-        {
-    	    if (typeof Tone == "undefined") {
-                return false ;
-            }
-    	    if (typeof Tone.context == "undefined") {
-                return false ;
-            }
+        var synth1 = new Synth().toDestination() ;
+        synth1.triggerAttackRelease(note_str, time_str) ;
+    }
+    catch (e)
+    {
+        // console.log('ERROR: at line: ' + e.lineNumber + ' and column: ' + e.columnNumber) ;
+        return false ;
+    }
 
-            return true ;
+    return true ;
+}
+
+//
+// word <-> note
+//
+
+export function simcore_sound_ascii2note (word, bytesInWord)
+{
+    var n = '' ;
+    var b = 0 ;
+
+    for (var i = 0; i < bytesInWord; i++)
+    {
+        b    = word & 0xFF ;
+        word = word >> 8 ;
+        if (b != 0)
+        {
+            n = n + String.fromCharCode(b) ;
+        }
+    }
+
+    return n.trim() ;
+}
+
+export function simcore_sound_word2note (word, bytesInWord)
+{
+    var n = '' ;
+    var b = 0 ;
+
+    for (var i = 0; i < bytesInWord; i++)
+    {
+        b    = word & 0xFF ;
+        word = word >> 8 ;
+        if (b != 0)
+        {
+            n = String.fromCharCode(b) + n ;
+        }
+    }
+
+    return n.trim() ;
+}
+
+export function simcore_sound_note2word (note, bytesInWord)
+{
+    var w = 0 ;
+    var b = 0 ;
+
+    for (var i = 0; i < bytesInWord; i++)
+    {
+        b = 0x0 ;
+        if (i < note.length)
+        {
+            b = note[i].charCodeAt(0) ;
         }
 
-        async function simcore_sound_start ( )
-        {
-    	    if (simcore_sound_canPlay() == false) {
-                return false ;
-	    }
+        w = w << 8 ;
+        w = w | b ;
+    }
 
-	    try
-	    {
-                await Tone.Transport.start() ;
-	        if (Tone.context.state !== 'running') {
-	            Tone.context.resume() ;
-	        }
-	    }
-	    catch (e)
-	    {
-                // console.log('ERROR: at line: ' + e.lineNumber + ' and column: ' + e.columnNumber) ;
-                return false ;
-	    }
-
-            return true ;
-        }
-
-        async function simcore_sound_stop ( )
-        {
-    	    if (simcore_sound_canPlay() == false) {
-                return false ;
-	    }
-
-	    try
-	    {
-                await Tone.Transport.stop() ;
-	    }
-	    catch (e)
-	    {
-                // console.log('ERROR: at line: ' + e.lineNumber + ' and column: ' + e.columnNumber) ;
-                return false ;
-	    }
-
-            return true ;
-        }
-
-        async function simcore_sound_playNote ( note_str, time_str )
-        {
-    	    if (simcore_sound_canPlay() == false) {
-                return false ;
-	    }
-
-            await Tone.start() ;
-	    if (Tone.context.state !== 'running') {
-	        Tone.context.resume() ;
-	    }
-
-	    try
-	    {
-	        if ("" == note_str) {
-	            note_str = null ;
-	        }
-
-	        synth1 = new Tone.Synth().toDestination() ;
-	        synth1.triggerAttackRelease(note_str, time_str) ;
-	    }
-	    catch (e)
-	    {
-                // console.log('ERROR: at line: ' + e.lineNumber + ' and column: ' + e.columnNumber) ;
-                return false ;
-	    }
-
-            return true ;
-        }
-
-
-        //
-        // word <-> note
-        //
-
-        function simcore_sound_ascii2note ( word, bytesInWord )
-        {
-            var n = '' ;
-            var b = 0 ;
-
-            for (var i=0; i<bytesInWord; i++)
-            {
-                 b = word & 0xFF ;
-                 word = word >> 8 ;
-                 if (b != 0) {
-                     n = n + String.fromCharCode(b) ;
-                 }
-            }
-
-            return n.trim() ;
-        }
-
-        function simcore_sound_word2note ( word, bytesInWord )
-        {
-            var n = '' ;
-            var b = 0 ;
-
-            for (var i=0; i<bytesInWord; i++)
-            {
-                 b = word & 0xFF ;
-                 word = word >> 8 ;
-                 if (b != 0) {
-                     n = String.fromCharCode(b) + n ;
-                 }
-            }
-
-            return n.trim() ;
-        }
-
-        function simcore_sound_note2word ( note, bytesInWord )
-        {
-            var w = 0 ;
-            var b = 0 ;
-
-            for (var i=0; i<bytesInWord; i++)
-            {
-                 b = 0x0 ;
-                 if (i < note.length) {
-                     b = note[i].charCodeAt(0) ;
-                 }
-
-                 w = w << 8 ;
-                 w = w | b ;
-            }
-
-            return w ;
-        }
+    return w ;
+}
 

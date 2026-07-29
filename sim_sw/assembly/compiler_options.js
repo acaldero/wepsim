@@ -18,37 +18,36 @@
  *
  */
 
-
 /* jshint esversion: 9 */
 
-function wsasm_mk_default_options ( )
+export function wsasm_mk_default_options ()
 {
-           var options = {} ;
+    var options = {} ;
 
-           // Initialize default options...
-	   options.field_multipart_order = "backwards" ; // "backwards" | "forwards" ;
-	   options.mandatory_comma       = false       ; // false  | true
-           options.instruction_comma     = true        ; // true   | false
-           options.relative_offset_mult  = 4           ; // 1: byte, 4: word (mips-32), 2: half(risc-v)
-           options.pc_relative_offset  = 0           ; //  0: next instruction (mips-32), -4: current instruction (risc-v)
-           options.endian                = "little"    ; // "little" | "big"
+    // Initialize default options...
+    options.field_multipart_order = 'backwards' ; // "backwards" | "forwards" ;
+    options.mandatory_comma       = false ; // false  | true
+    options.instruction_comma     = true ; // true   | false
+    options.relative_offset_mult  = 4 ; // 1: byte, 4: word (mips-32), 2: half(risc-v)
+    options.pc_relative_offset    = 0 ; //  0: next instruction (mips-32), -4: current instruction (risc-v)
+    options.endian                = 'little' ; // "little" | "big"
 
-           return options ;
+    return options ;
 }
 
-function wsasm_expand_options ( base_options )
+export function wsasm_expand_options (base_options)
 {
-           var options = wsasm_mk_default_options() ;
+    var options = wsasm_mk_default_options() ;
 
-           // Replace default options if exits in base_options
-           for (var key in options)
-           {
-                if (typeof base_options[key] !== "undefined") {
-                    options[key] = base_options[key] ;
-                }
-           }
+    // Replace default options if exits in base_options
+    for (var key in options)
+    {
+        if (typeof base_options[key] !== 'undefined')
+        {
+            options[key] = base_options[key] ;
+        }
+    }
 
-           return options ;
+    return options ;
 }
-
 

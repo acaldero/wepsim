@@ -18,232 +18,245 @@
  *
  */
 
+import { simhw_sim_signal, simhw_sim_signals } from './sim_hw_index.js';
+import { update_draw, ws_alert } from '../sim_core/sim_core_ui.js';
+import { compute_signal_behavior } from './sim_hw_behavior.js';
+import { get_value, set_value } from '../sim_core/sim_core_values.js';
+import { native_fns } from '../sim_core/sim_api_native.js';
 
-        /*
+/*
          *  Model/signals (function simhw_signal_...(){})
          */
 
-        var jit_fire_dep  = null ;
+export var jit_fire_order = [] ;
+export var jit_fire_ndep = [] ;
 
-        var jit_fire_order   = null ;
-        var jit_fire_ndep = null ;
+export var jit_fire_order_E = [] ;
+export var jit_fire_order_L = [] ;
 
-        var jit_fire_order_E = null ;
-        var jit_fire_order_L = null ;
+export var fire_array_isfiring = [] ; // to avoid loops: M1->...->M1
 
-        var fire_array_isfiring = [] ; // to avoid loops: M1->...->M1
+export function firedep_to_fireorder (jit_fire_dep)
+{
+    var all_signals = simhw_sim_signals() ;
+    var signal_obj  = null ;
+    var allfireto   = false;
+    var ndep        = 0 ;
+    var sid         = 0 ;
 
+    // build dependency graph
+    jit_fire_order = [] ;
+    jit_fire_ndep  = [] ;
+    for (var sig in all_signals)
+    {
+        // add "id" field to each signal
+        signal_obj    = simhw_sim_signal(sig) ;
+        signal_obj.id = sid ;
+        sid           = sid + 1 ;
 
-        function firedep_to_fireorder ( jit_fire_dep )
+        // (1/2) no signal related to signal (sig) -> add to jit_fire_order
+        if (typeof jit_fire_dep[sig] == 'undefined')
         {
-	    var all_signals = simhw_sim_signals() ;
-	    var signal_obj = null ;
-            var allfireto  = false;
-            var ndep = 0 ;
-            var sid  = 0 ;
+            jit_fire_order.push(sig) ;
+            continue ;
+        }
 
-	    // build dependency graph
-            jit_fire_order = [] ;
-            jit_fire_ndep  = [] ;
-            for (var sig in all_signals)
+        // compute # fire from other signals (ndep) + all behaviors fire signal
+        ndep      = 0 ;
+        allfireto = false ; // all behaviors of (sigorg) fire signal (sig) <- false
+        for (var sigorg in jit_fire_dep[sig])
+        {
+            ndep++ ;
+            if (jit_fire_dep[sig][sigorg].fire == simhw_sim_signal(sigorg).behavior.length)
             {
-	         // add "id" field to each signal
-                 signal_obj = simhw_sim_signal(sig) ;
-		 signal_obj.id = sid ;
-	         sid = sid + 1 ;
-
-		 // (1/2) no signal related to signal (sig) -> add to jit_fire_order
-                 if (typeof jit_fire_dep[sig] == "undefined") {
-                     jit_fire_order.push(sig) ;
-                     continue ;
-                 }
-
-		 // compute # fire from other signals (ndep) + all behaviors fire signal
-		 ndep = 0 ;
-                 allfireto = false ; // all behaviors of (sigorg) fire signal (sig) <- false
-                 for (var sigorg in jit_fire_dep[sig])
-                 {
-	              ndep++ ;
-                      if (jit_fire_dep[sig][sigorg].fire == simhw_sim_signal(sigorg).behavior.length) {
-                          allfireto = true ;
-                      }
-                 }
-		 jit_fire_ndep[sig] = ndep;
-
-		 // (2/2) no signal that always fire signal 'sig' -> add to jit_fire_order
-                 if (allfireto == false) {
-                     jit_fire_order.push(sig) ;
-		 }
+                allfireto = true ;
             }
-
-	    // split Edge/Level signals
-            jit_fire_order_E = [] ;
-            jit_fire_order_L = [] ;
-            for (var i=0; i<jit_fire_order.length; i++)
-	    {
-                if (simhw_sim_signal(jit_fire_order[i]).type == "E") {
-                    jit_fire_order_E.push(jit_fire_order[i]) ;
-                }
-	   else if (simhw_sim_signal(jit_fire_order[i]).type == "L") {
-                    jit_fire_order_L.push(jit_fire_order[i]) ;
-                }
-            }
-
-	    // fire_array + add "id" field
-            fire_array_isfiring = Array(sid).fill(false) ;
         }
+        jit_fire_ndep[sig] = ndep;
 
-        // TIP: update_state now is signal_apply_behaviour
-        function signal_apply_behaviour ( signal_name )
+        // (2/2) no signal that always fire signal 'sig' -> add to jit_fire_order
+        if (allfireto == false)
         {
-	    // skip empty behavior
-	    var signal_obj = simhw_sim_signal(signal_name) ;
-            if (0 == signal_obj.behavior.length) {
-	        return ;
-	    }
-
-            var index_behavior = 0;
-            if (signal_obj.behavior.length != 1)
-            {
-                // == 1 -> several signal values share the same behavior -> behavior[0]
-	        // != 1 -> behaviour per index
-
-                index_behavior = signal_obj.value ;
-                if (signal_obj.behavior.length < index_behavior)
-		{
-                    ws_alert('ALERT: there are more signals values than behaviors defined!!!!\n' +
-                             'key: ' + signal_name + ' and signal value: ' + index_behavior) ;
-                    return ;
-                }
-	    }
-
-	    // apply behaviour on states...
-            compute_signal_behavior(signal_name, index_behavior) ;
+            jit_fire_order.push(sig) ;
         }
+    }
 
-        function signal_fire ( signal_name )
+    // split Edge/Level signals
+    jit_fire_order_E = [] ;
+    jit_fire_order_L = [] ;
+    for (var i = 0; i < jit_fire_order.length; i++)
+    {
+        if (simhw_sim_signal(jit_fire_order[i]).type == 'E')
         {
-	    var signal_obj = simhw_sim_signal(signal_name) ;
-
-	    // 1. if is_firing -> return (avoid loops)
-	    if (fire_array_isfiring[signal_obj.id]) {
-		return ;
-	    }
-
-	    // 2. is_firing = true
-	    fire_array_isfiring[signal_obj.id] = true ;
-
-	    // 3. processing signal...
-	    update_draw(signal_obj, signal_obj.value) ;
-	    if ("L" ==  signal_obj.type) {
-		signal_apply_behaviour(signal_name) ;
-	    }
-
-	    // 4. is_firing = false
-	    fire_array_isfiring[signal_obj.id] = false ;
+            jit_fire_order_E.push(jit_fire_order[i]) ;
         }
-
-	function signal_fireL ( )
-	{
-	    var signal_obj = null ;
-
-	    for (const signal_name of jit_fire_order_L)
-	    {
-		 signal_obj = simhw_sim_signal(signal_name) ;
-		 update_draw(signal_obj, signal_obj.value) ;
-		 signal_apply_behaviour(signal_name) ;
-	    }
-	}
-
-
-        /*
-	 * CLOCK (signal_apply_allE/L, reset_and_reload)
-	 */
-
-        // functions for each clock cycle
-        function signal_reset_and_apply ( sim_p_signals, mc_elto )
+        else if (simhw_sim_signal(jit_fire_order[i]).type == 'L')
         {
-	    // var signal_obj = null ;
-	    var all_signals    = Object.entries(sim_p_signals) ;
-	    var active_signals = Object.entries(get_value(mc_elto)) ;
+            jit_fire_order_L.push(jit_fire_order[i]) ;
+        }
+    }
 
-	    // set all signals to default value
-	    for (const [signal_name, signal_obj] of all_signals) {
-		 set_value(signal_obj, signal_obj.default_value);
-	    }
+    // fire_array + add "id" field
+    fire_array_isfiring = Array(sid).fill(false) ;
+}
 
-	    // set active signals to current values
-	    for (const [signal_name, value] of active_signals)
-	    {
-		 signal_obj = sim_p_signals[signal_name] ;
-		 if (typeof signal_obj != "undefined") {
-		     set_value(signal_obj, value) ;
-		 }
-	    }
-	}
+// TIP: update_state now is signal_apply_behaviour
+export function signal_apply_behaviour (signal_name)
+{
+    // skip empty behavior
+    var signal_obj = simhw_sim_signal(signal_name) ;
+    if (0 == signal_obj.behavior.length)
+    {
+        return ;
+    }
 
+    var index_behavior = 0;
+    if (signal_obj.behavior.length != 1)
+    {
+        // == 1 -> several signal values share the same behavior -> behavior[0]
+        // != 1 -> behaviour per index
 
-        function signal_apply_behaviour_allByEdge ( mc_elto )
+        index_behavior = signal_obj.value ;
+        if (signal_obj.behavior.length < index_behavior)
         {
-	    if ( (typeof mc_elto == "undefined") || (mc_elto.is_native) )
-	    {     // skip signal activation if undefined OR is_native
-		  return ;
-	    }
+            ws_alert('ALERT: there are more signals values than behaviors defined!!!!\n' +
+                'key: ' + signal_name + ' and signal value: ' + index_behavior) ;
+            return ;
+        }
+    }
 
-	    for (const signal_name of jit_fire_order_E) {
-		 signal_apply_behaviour(signal_name);
-	    }
-	}
+    // apply behaviour on states...
+    compute_signal_behavior(signal_name, index_behavior) ;
+}
 
-        function signal_apply_behaviour_allByLevel ( mc_elto )
+export function signal_fire (signal_name)
+{
+    var signal_obj = simhw_sim_signal(signal_name) ;
+
+    // 1. if is_firing -> return (avoid loops)
+    if (fire_array_isfiring[signal_obj.id])
+    {
+        return ;
+    }
+
+    // 2. is_firing = true
+    fire_array_isfiring[signal_obj.id] = true ;
+
+    // 3. processing signal...
+    update_draw(signal_obj, signal_obj.value) ;
+    if ('L' == signal_obj.type)
+    {
+        signal_apply_behaviour(signal_name) ;
+    }
+
+    // 4. is_firing = false
+    fire_array_isfiring[signal_obj.id] = false ;
+}
+
+export function signal_fireL ()
+{
+    var signal_obj = null ;
+
+    for (const signal_name of jit_fire_order_L)
+    {
+        signal_obj = simhw_sim_signal(signal_name) ;
+        update_draw(signal_obj, signal_obj.value) ;
+        signal_apply_behaviour(signal_name) ;
+    }
+}
+
+/*
+ * CLOCK (signal_apply_allE/L, reset_and_reload)
+ */
+
+// functions for each clock cycle
+export function signal_reset_and_apply (sim_p_signals, mc_elto)
+{
+    // var signal_obj = null ;
+    var all_signals    = Object.entries(sim_p_signals) ;
+    var active_signals = Object.entries(get_value(mc_elto)) ;
+
+    // set all signals to default value
+    for (const [signal_name, signal_obj] of all_signals)
+    {
+        set_value(signal_obj, signal_obj.default_value);
+    }
+
+    // set active signals to current values
+    for (const [signal_name, value] of active_signals)
+    {
+        let signal_obj = sim_p_signals[signal_name] ;
+        if (typeof signal_obj != 'undefined')
         {
-	    if (mc_elto.is_native)
-	    {
-                signal_fire("IOCHK") ; // compute_behavior("FIRE IOCHK") ;
+            set_value(signal_obj, value) ;
+        }
+    }
+}
 
-		     if (typeof mc_elto.NATIVE_JIT != "undefined")
-			 mc_elto.NATIVE_JIT() ;
-		else if (typeof mc_elto.NATIVE != "undefined")
-			 eval(mc_elto.NATIVE) ;
-	    }
-	    else
-	    {
-                signal_fireL() ;
-	    }
-	}
+export function signal_apply_behaviour_allByEdge (mc_elto)
+{
+    if ((typeof mc_elto == 'undefined') || (mc_elto.is_native))
+    { // skip signal activation if undefined OR is_native
+        return ;
+    }
 
-        function signal_update_draw_allByEdge ( mc_elto )
-        {
-	    if ( (typeof mc_elto == "undefined") || (mc_elto.is_native) )
-	    {     // skip signal activation if undefined OR is_native
-		  return ;
-	    }
+    for (const signal_name of jit_fire_order_E)
+    {
+        signal_apply_behaviour(signal_name);
+    }
+}
 
-	    for (const signal_name of jit_fire_order_E) {
-		 signal_obj = simhw_sim_signal(signal_name) ;
-		 update_draw(signal_obj, signal_obj.value) ;
-	    }
-	}
+export function signal_apply_behaviour_allByLevel (mc_elto)
+{
+    if (mc_elto.is_native)
+    {
+        signal_fire('IOCHK') ; // compute_behavior("FIRE IOCHK") ;
 
+        if (typeof mc_elto.NATIVE_JIT != 'undefined')
+            mc_elto.NATIVE_JIT() ;
+        else if (typeof mc_elto.NATIVE != 'undefined')
+            new Function(...Object.keys(native_fns), mc_elto.NATIVE)(...Object.values(native_fns)) ;
+    }
+    else
+    {
+        signal_fireL() ;
+    }
+}
 
-        // function update edge/level now
-        function fn_updateE_now ( signal_name )
-        {
-	    var signal_obj = simhw_sim_signal(signal_name) ;
+export function signal_update_draw_allByEdge (mc_elto)
+{
+    if ((typeof mc_elto == 'undefined') || (mc_elto.is_native))
+    { // skip signal activation if undefined OR is_native
+        return ;
+    }
 
-	    if ("E" == signal_obj.type) {
-		signal_apply_behaviour(signal_name) ;
-	    }
-	}
+    for (const signal_name of jit_fire_order_E)
+    {
+        let signal_obj = simhw_sim_signal(signal_name) ;
+        update_draw(signal_obj, signal_obj.value) ;
+    }
+}
 
-        function fn_updateL_now ( signal_name )
-        {
-	    var signal_obj = simhw_sim_signal(signal_name) ;
+// function update edge/level now
+export function fn_updateE_now (signal_name)
+{
+    var signal_obj = simhw_sim_signal(signal_name) ;
 
-	    update_draw(signal_obj, signal_obj.value) ;
+    if ('E' == signal_obj.type)
+    {
+        signal_apply_behaviour(signal_name) ;
+    }
+}
 
-	    if ("L" == signal_obj.type) {
-		signal_apply_behaviour(signal_name) ;
-	    }
-	}
+export function fn_updateL_now (signal_name)
+{
+    var signal_obj = simhw_sim_signal(signal_name) ;
+
+    update_draw(signal_obj, signal_obj.value) ;
+
+    if ('L' == signal_obj.type)
+    {
+        signal_apply_behaviour(signal_name) ;
+    }
+}
 

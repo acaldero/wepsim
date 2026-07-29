@@ -1,5 +1,5 @@
 /*
- *  Copyright 2015-2026 The WepSIM team (see docs/WEPSIM-TEAM.md)
+ *  Copyright 2015-2026 The WepSIM Team (see docs/WEPSIM-TEAM.md)
  *
  *  This file is part of WepSIM.
  *
@@ -17,241 +17,259 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import $ from 'jquery';
+import { ws_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
+import { get_cfg } from '../sim_core/sim_cfg.js';
+import { i18n_get } from '../wepsim_i18n/i18n.js';
+import { wepsim_execute_play, wepsim_execute_stop, wepsim_execute_toggle_play } from '../wepsim_core/wepsim_execute.js';
+import { wsweb_execution_instruction, wsweb_execution_microinstruction, wsweb_execution_previous_microinstruction, wsweb_execution_reset, wsweb_execution_run, wsweb_dialog_open } from './wepsim_web_api.js';
 
-
-        /*
+/*
          *  Execution toolbar
          */
+/* jshint esversion: 6 */
+export class ws_executionbar extends ws_uielto
+{
+    // constructor
+    constructor ()
+    {
+        // parent
+        super();
+    }
 
-        /* jshint esversion: 6 */
-        class ws_executionbar extends ws_uielto
+    // render
+    render (event_name)
+    {
+        // initialize render elements...
+        super.render() ;
+
+        // render current element
+        this.render_skel() ;
+        this.render_populate() ;
+    }
+
+    render_skel ()
+    {
+        this.innerHTML = '' ;
+    }
+
+    render_populate ()
+    {
+        // render toolbar elements
+        var o1 = '' ;
+        for (var i = 0; i < this.components_arr.length; i++)
         {
-              // constructor
-	      constructor ()
-	      {
-		    // parent
-		    super();
-	      }
-
-              // render
-	      render ( event_name )
-	      {
-                    // initialize render elements...
-	            super.render() ;
-
-                    // render current element
-		    this.render_skel() ;
-		    this.render_populate() ;
-	      }
-
-	      render_skel ( )
-	      {
-                    this.innerHTML = '' ;
-	      }
-
-	      render_populate ( )
-	      {
-                    // render toolbar elements
-                    var o1 = '' ;
-                    for (var i=0; i<this.components_arr.length; i++)
-                    {
-                         var name = this.components_arr[i] ;
-                         o1 += this.render_btns(name) ;
-                    }
-
-                    this.innerHTML = o1 ;
-	      }
-
-	      render_btns ( name )
-	      {
-                    var o = '' ;
-
-                    // load html
-                    switch (name)
-                    {
-                       case "btn_reset":
-			     o += '<button id="btn_reset_' + this.name_str + '" ' +
-				  '        class="btn bg-secondary-subtle col pb-1 px-1 me-1 border-secondary"' +
-		                  '        accesskey="t" ' +
-				  '        onclick="wsweb_execution_reset();' +
-				  '                 return false;">' ;
-                             o += (this.icons_str == 'no') ? ''     : '<em class="fa fa-power-off"></em>' ;
-                             o += (this.icons_str == 'up') ? '<br>' : '&nbsp;' ;
-			     o += '<span class="fw-bold" data-langkey="Reset">Reset</span>' +
-				  '</button>' ;
-                                  break ;
-
-                       case "btn_pm":
-			     o += '<button id="btn_prev_microinstruction_' + this.name_str + '"' +
-		                  '        class="btn bg-secondary-subtle col pb-1 px-1 me-1 border-secondary wsx_microcode wsx_history"' +
-		                  '        accesskey="p" ' +
-			          '        onclick="wsweb_execution_previous_microinstruction();' +
-                                  '                 return false;">' ;
-                              o += (this.icons_str == 'no') ? ""     : '<em class="fa fa-step-backward"></em>' ;
-                              o += (this.icons_str == 'up') ? '<br>' : '&nbsp;' ;
-                              o += '<span class="d-none d-sm-inline-flex fw-bold" data-langkey="previousMicroinstruction">&#181;Back</span><span class="d-sm-none fw-bold">&#181;Bk</span>' +
-                                   '</button>' ;
-                                    break ;
-
-                       case "btn_emins":
-			     o += '<button id="btn_next_microinstruction_' + this.name_str + '"' +
-		                  '        class="btn bg-secondary-subtle col pb-1 px-1 me-1 border-secondary wsx_microcode"' +
-		                  '        accesskey="m" ' +
-			          '        onclick="wsweb_execution_microinstruction();' +
-                                  '                 return false;">' ;
-                             o += (this.icons_str == 'no') ? ""     : '<em class="fa fa-step-forward"></em>' ;
-                             o += (this.icons_str == 'up') ? '<br>' : '&nbsp;' ;
-                             o += '<span class="d-none d-sm-inline-flex fw-bold" data-langkey="microInstruction">&#181;Instruction</span><span class="d-sm-none fw-bold">&#181;Instr.</span>' +
-                                  '</button>' ;
-                                  break ;
-
-                       case "btn_eins":
-			     o += '<button id="btn_next_instruction_' + this.name_str + '"' +
-		                  '        class="btn bg-secondary-subtle col pb-1 px-1 me-1 border-secondary"' +
-		                  '        accesskey="i" ' +
-			          '        onclick="wsweb_execution_instruction();' +
-                                  '                 return false;">' ;
-                             o += (this.icons_str == 'no') ? ""     : '<em class="fa fa-fast-forward"></em>' ;
-                             o += (this.icons_str == 'up') ? '<br>' : '&nbsp;' ;
-                             o += '<span class="d-none d-sm-inline-flex fw-bold" data-langkey="Instruction">Instruction</span><span class="d-sm-none fw-bold">Instr.</span>' +
-                                  '</button>' ;
-                                  break ;
-
-                       case "btn_run":
-			     o += '<button id="btn_run_stop_' + this.name_str + '"' +
-		                  '        class="btn bg-secondary-subtle col pb-1 px-1 me-1 border-secondary"' +
-		                  '        accesskey="r" ' +
-                                  '        onclick="wsweb_execution_run();' +
-                                  '                 return false;">' ;
-                             o += (this.icons_str == 'no') ? ""     : '<em class="fa fa-play"></em>' ;
-                             o += (this.icons_str == 'up') ? '<br>' : '&nbsp;' ;
-                             o += '<span class="fw-bold" data-langkey="Run">Run</span>' +
-                                  '</button>' ;
-                                  break ;
-
-                       case "btn_rnf":
-			     o += '<div class="btn-group col py-0 pe-1" role="group">' +
-                                  '<button id="btn_run_stop_' + this.name_str + '"' +
-		                  '        class="btn bg-secondary-subtle border-secondary w-75"' +
-		                  '        accesskey="r" ' +
-                                  '        onclick="wsweb_execution_run();' +
-                                  '                 return false;">' ;
-                             o += (this.icons_str == 'no') ? ""     : '<em class="fa fa-play"></em>' ;
-                             o += (this.icons_str == 'up') ? '<br>' : '&nbsp;' ;
-                             o += '<span class="fw-bold" data-langkey="Run">Run</span>' +
-                                  '</button>' +
-                                  '' +
-                                  '<button type="button" ' +
-                                  '        class="btn dropdown-toggle dropdown-toggle-split border-secondary bg-secondary-subtle w-25" ' +
-                                  '        data-bs-toggle="dropdown" aria-expanded="false">' +
-                                  '  <span class="visually-hidden">Toggle Dropdown</span>' +
-                                  '</button>' +
-                                  '<ul class="dropdown-menu border border-secondary">' +
-			          '' +
-                                  '    <li><a  class="dropdown-item" ' +
-                                  '            onclick="wsweb_execution_run(); return false;">' +
-                                  '<i class="fa-solid fa-person-running"></i>&nbsp;' +
-			          '<span data-langkey="Run">Run</span>' +
-                                   '</a></li>' +
-			          '' +
-                                  '    <li><hr class="dropdown-divider"></li>' +
-                                  '    <li><a  class="dropdown-item" ' +
-                                  '            onclick="wsweb_dialog_open(\'flash_fpga\');">' +
-                                  '<i class="fa-solid fa-bolt"></i>&nbsp;' +
-			          '<span data-langkey="Flash">Flash FPGA</span>' +
-			          '</a></li>' +
-			          '' +
-                                  '    <li class="wsx_esp32"><hr class="dropdown-divider"></li>' +
-                                  '    <li class="wsx_esp32"><a  class="dropdown-item" ' +
-                                  '            onclick="wsweb_dialog_open(\'flash_assembly\');">' +
-                                  '<i class="fa-solid fa-bolt"></i>&nbsp;' +
-			          '<span data-langkey="Flash">Flash ESP32</span>' +
-			          '</a></li>' +
-			          '' +
-                                  '</ul>' +
-                                  '</div>' ;
-                                  break ;
-                    }
-
-                    return o ;
-	      }
+            var name = this.components_arr[i] ;
+            o1      += this.render_btns(name) ;
         }
 
-        register_uielto('ws-executionbar', ws_executionbar) ;
+        this.innerHTML = o1 ;
+    }
 
+    render_btns (name)
+    {
+        var o = '' ;
 
-        /*
+        // load html
+        switch (name)
+        {
+            case 'btn_reset':
+                o += '<button id="btn_reset_' + this.name_str + '" ' +
+                    '        class="btn bg-secondary-subtle col pb-1 px-1 me-1 border-secondary"' +
+                    '        accesskey="t" ' +
+                    '        data-bind="click" data-action="exec-reset">' ;
+                o += (this.icons_str == 'no') ? '' : '<em class="fa fa-power-off"></em>' ;
+                o += (this.icons_str == 'up') ? '<br>' : '&nbsp;' ;
+                o += '<span class="fw-bold" data-langkey="Reset">Reset</span>' +
+                    '</button>' ;
+                onClick('exec-reset', () => wsweb_execution_reset()) ;
+                break ;
+
+            case 'btn_pm':
+                o += '<button id="btn_prev_microinstruction_' + this.name_str + '"' +
+                    '        class="btn bg-secondary-subtle col pb-1 px-1 me-1 border-secondary wsx_microcode wsx_history"' +
+                    '        accesskey="p" ' +
+                    '        data-bind="click" data-action="exec-prev-micro">' ;
+                o += (this.icons_str == 'no') ? '' : '<em class="fa fa-step-backward"></em>' ;
+                o += (this.icons_str == 'up') ? '<br>' : '&nbsp;' ;
+                o += '<span class="d-none d-sm-inline-flex fw-bold" data-langkey="previousMicroinstruction">&#181;Back</span><span class="d-sm-none fw-bold">&#181;Bk</span>' +
+                    '</button>' ;
+                onClick('exec-prev-micro', () => wsweb_execution_previous_microinstruction()) ;
+                break ;
+
+            case 'btn_emins':
+                o += '<button id="btn_next_microinstruction_' + this.name_str + '"' +
+                    '        class="btn bg-secondary-subtle col pb-1 px-1 me-1 border-secondary wsx_microcode"' +
+                    '        accesskey="m" ' +
+                    '        data-bind="click" data-action="exec-next-micro">' ;
+                o += (this.icons_str == 'no') ? '' : '<em class="fa fa-step-forward"></em>' ;
+                o += (this.icons_str == 'up') ? '<br>' : '&nbsp;' ;
+                o += '<span class="d-none d-sm-inline-flex fw-bold" data-langkey="microInstruction">&#181;Instruction</span><span class="d-sm-none fw-bold">&#181;Instr.</span>' +
+                    '</button>' ;
+                onClick('exec-next-micro', () => wsweb_execution_microinstruction()) ;
+                break ;
+
+            case 'btn_eins':
+                o += '<button id="btn_next_instruction_' + this.name_str + '"' +
+                    '        class="btn bg-secondary-subtle col pb-1 px-1 me-1 border-secondary"' +
+                    '        accesskey="i" ' +
+                    '        data-bind="click" data-action="exec-next-insn">' ;
+                o += (this.icons_str == 'no') ? '' : '<em class="fa fa-fast-forward"></em>' ;
+                o += (this.icons_str == 'up') ? '<br>' : '&nbsp;' ;
+                o += '<span class="d-none d-sm-inline-flex fw-bold" data-langkey="Instruction">Instruction</span><span class="d-sm-none fw-bold">Instr.</span>' +
+                    '</button>' ;
+                onClick('exec-next-insn', () => wsweb_execution_instruction()) ;
+                break ;
+
+            case 'btn_run':
+                o += '<button id="btn_run_stop_' + this.name_str + '"' +
+                    '        class="btn bg-secondary-subtle col pb-1 px-1 me-1 border-secondary"' +
+                    '        accesskey="r" ' +
+                    '        data-bind="click" data-action="exec-run">' ;
+                o += (this.icons_str == 'no') ? '' : '<em class="fa fa-play"></em>' ;
+                o += (this.icons_str == 'up') ? '<br>' : '&nbsp;' ;
+                o += '<span class="fw-bold" data-langkey="Run">Run</span>' +
+                    '</button>' ;
+                onClick('exec-run', () => wsweb_execution_run()) ;
+                break ;
+
+            case 'btn_rnf':
+                o += '<div class="btn-group col py-0 pe-1" role="group">' +
+                    '<button id="btn_run_stop_' + this.name_str + '"' +
+                    '        class="btn bg-secondary-subtle border-secondary w-75"' +
+                    '        accesskey="r" ' +
+                    '        data-bind="click" data-action="exec-run" style="">' ;
+                onClick('exec-run', () => wsweb_execution_run()) ;
+                o += (this.icons_str == 'no') ? '' : '<em class="fa fa-play"></em>' ;
+                o += (this.icons_str == 'up') ? '<br>' : '&nbsp;' ;
+                o += '<span class="fw-bold" data-langkey="Run">Run</span>' +
+                    '</button>' +
+                    '' +
+                    '<button type="button" ' +
+                    '        class="btn dropdown-toggle dropdown-toggle-split border-secondary bg-secondary-subtle w-25" ' +
+                    '        data-bs-toggle="dropdown" aria-expanded="false">' +
+                    '  <span class="visually-hidden">Toggle Dropdown</span>' +
+                    '</button>' +
+                    '<ul class="dropdown-menu border border-secondary">' +
+                    '' +
+                    '    <li><a  class="dropdown-item" ' +
+                    '            data-bind="click" data-action="exec-run">' +
+                    '<i class="fa-solid fa-person-running"></i>&nbsp;' +
+                    '<span data-langkey="Run">Run</span>' +
+                    '</a></li>' +
+                    '' +
+                    '    <li><hr class="dropdown-divider"></li>' +
+                    '    <li><a  class="dropdown-item" ' +
+                    '            data-bind="click" data-action="exec-flash-fpga">' +
+                    '<i class="fa-solid fa-bolt"></i>&nbsp;' +
+                    '<span data-langkey="Flash">Flash FPGA</span>' +
+                    '</a></li>' +
+                    '' +
+                    '    <li class="wsx_esp32"><hr class="dropdown-divider"></li>' +
+                    '    <li class="wsx_esp32"><a  class="dropdown-item" ' +
+                    '            data-bind="click" data-action="exec-flash-asm">' +
+                    '<i class="fa-solid fa-bolt"></i>&nbsp;' +
+                    '<span data-langkey="Flash">Flash ESP32</span>' +
+                    '</a></li>' +
+                    '' +
+                    '</ul>' +
+                    '</div>' ;
+                onClick('exec-flash-fpga', () => wsweb_dialog_open('flash_fpga')) ;
+                onClick('exec-flash-asm', () => wsweb_dialog_open('flash_assembly')) ;
+                break ;
+        }
+
+        return o ;
+    }
+}
+
+/*
          *  Play/Stop button
          */
 
-        var webui_start_button_color = 'rgb(51, 136, 204)' ;
-        var  webui_stop_button_color = '#CCCCCC' ;
+export var webui_start_button_color = 'rgb(51, 136, 204)' ;
+export var webui_stop_button_color = '#CCCCCC' ;
 
-        function webui_button_set_stop ( name )
-        {
-	    var wsi     = get_cfg('ws_idiom') ;
-            var run_tag = i18n_get('gui',wsi,'Run') ;
+function get_icons_str (name)
+{
+    var elto = document.querySelector('ws-executionbar[name="' + name + '"]');
+    if (elto && elto.icons_str !== undefined)
+        return elto.icons_str;
+    // fallback for non-ESM context (window.icons_str)
+    if (typeof window.icons_str !== 'undefined')
+        return window.icons_str;
+    return 'no';
+}
 
-	    var o = "<b>" + run_tag + "</b>" ;
-            if (this.icons_str !== 'no')
-	        o = "<i class='fa fa-play'></i><br>" + o ;
+export function webui_button_set_stop(name)
+{
+    var wsi     = get_cfg('ws_idiom') ;
+    var run_tag = i18n_get('gui', wsi, 'Run') ;
 
-	    $('#btn_run_stop_' + name).html(o) ;
-	    $('#btn_run_stop_' + name).css("backgroundColor", webui_stop_button_color) ;
-        }
+    var o = '<b>' + run_tag + '</b>' ;
+    if (get_icons_str(name) !== 'no')
+        o = "<i class='fa fa-play'></i><br>" + o ;
 
-        function webui_button_set_start ( name )
-        {
-	    var wsi      = get_cfg('ws_idiom') ;
-            var stop_tag = i18n_get('gui',wsi,'Stop') ;
+    $('#btn_run_stop_' + name).html(o) ;
+    $('#btn_run_stop_' + name).css('backgroundColor', webui_stop_button_color) ;
+}
 
-            var o = "<b>" + stop_tag + "</b>" ;
-            if (this.icons_str !== 'no')
-                o = "<i class='fa fa-stop'></i><br>" + o ;
+export function webui_button_set_start(name)
+{
+    var wsi      = get_cfg('ws_idiom') ;
+    var stop_tag = i18n_get('gui', wsi, 'Stop') ;
 
-	    $('#btn_run_stop_' + name).css("backgroundColor", webui_start_button_color) ;
-	    $('#btn_run_stop_' + name).html(o) ;
-        }
+    var o = '<b>' + stop_tag + '</b>' ;
+    if (get_icons_str(name) !== 'no')
+        o = "<i class='fa fa-stop'></i><br>" + o ;
 
+    $('#btn_run_stop_' + name).css('backgroundColor', webui_start_button_color) ;
+    $('#btn_run_stop_' + name).html(o) ;
+}
 
-        /*
+/*
          *  Start/Stop
          */
 
-        function webui_executionbar_start ( name )
-        {
-            var executionbar_stop = function() {
-                                       return webui_executionbar_stop(name) ;
-                                    } ;
+export function webui_executionbar_start(name)
+{
+    var executionbar_stop = function()
+    {
+        return webui_executionbar_stop(name) ;
+    } ;
 
-            var ret = wepsim_execute_play(executionbar_stop) ;
-            if (ret !== false) {
-                webui_button_set_start(name) ;
-            }
+    var ret = wepsim_execute_play(executionbar_stop) ;
+    if (ret !== false)
+    {
+        webui_button_set_start(name) ;
+    }
 
-            return ret ;
-        }
+    return ret ;
+}
 
-        function webui_executionbar_stop ( name )
-        {
-            var ret = wepsim_execute_stop() ;
-            if (ret !== false) {
-                webui_button_set_stop(name) ;
-            }
+export function webui_executionbar_stop(name)
+{
+    var ret = wepsim_execute_stop() ;
+    if (ret !== false)
+    {
+        webui_button_set_stop(name) ;
+    }
 
-            return ret ;
-        }
+    return ret ;
+}
 
-        function webui_executionbar_toggle_play ( name )
-        {
-            var executionbar_stop = function() {
-                                       return webui_executionbar_stop(name) ;
-                                    } ;
+export function webui_executionbar_toggle_play(name)
+{
+    var executionbar_stop = function()
+    {
+        return webui_executionbar_stop(name) ;
+    } ;
 
-            var ret = wepsim_execute_toggle_play(executionbar_stop) ;
+    var ret = wepsim_execute_toggle_play(executionbar_stop) ;
 
-            if (ret == true)
-                 webui_button_set_stop(name) ;
-            else webui_button_set_start(name) ;
-        }
+    if (ret == true)
+        webui_button_set_stop(name) ;
+    else webui_button_set_start(name) ;
+}
 

@@ -17,47 +17,45 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import { ws_uielto } from './wepsim_uielto.js';
+import { onInput } from './wepsim_web_actions.js';
+import { wsweb_set_c1c2_size } from './wepsim_web_api.js';
 
-
-        /*
+/*
          *  Slider: processor /details
          */
 
-        /* jshint esversion: 6 */
-        class ws_slider_details extends ws_uielto
-        {
-	      constructor ()
-	      {
-		    // parent
-		    super();
-	      }
+/* jshint esversion: 6 */
+export class ws_slider_details extends ws_uielto
+{
+    constructor ()
+    {
+        // parent
+        super();
+    }
 
-	      render ( event_name )
-	      {
-                    // initialize render elements...
-                    super.render() ;
+    render (event_name)
+    {
+        // initialize render elements...
+        super.render() ;
 
-		    // html holder
-		    var o1 = '<form id="slider2e" class="full-width-slider row-auto mt-0 p-0 pt-0 pb-2">' +
-			     '<label class="my-0 form-label" for="' + this.name_str + '" style="min-width:95%">' +
-                             '<span data-langkey="details">details</span>:' +
-                             '</label>' +
-			     '      <input aria-label="Show Main/Info" type="range" ' +
-                             '             name="' + this.name_str + '" ' +
-                             '               id="' + this.name_str + '"' +
-			     '             min="0" max="14" value="7" step="1"' +
-			     '             data-show-value="false"' +
-			     '             class="form-range slider col mx-0 px-0"' +
-			     '             oninput="wsweb_set_c1c2_size(this.value) ;' +
-			     '                      return true;">' +
-			     '</form>' ;
+        // html holder
+        var o1 = '<form id="slider2e" class="full-width-slider row-auto mt-0 p-0 pt-0 pb-2">' +
+            '<label class="my-0 form-label" for="' + this.name_str + '" style="min-width:95%">' +
+            '<span data-langkey="details">details</span>:' +
+            '</label>' +
+            '      <input aria-label="Show Main/Info" type="range" ' +
+            '             name="' + this.name_str + '" ' +
+            '               id="' + this.name_str + '"' +
+            '             min="0" max="14" value="7" step="1"' +
+            '             data-show-value="false"' +
+            '             class="form-range slider col mx-0 px-0"' +
+            '             data-bind="input" data-action="slider-details-change">' +
+            '</form>' ;
+        onInput('slider-details-change', (el) => wsweb_set_c1c2_size(el.value)) ;
 
-		    // load html
-		    this.innerHTML = o1 ;
-	      }
-        }
-
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-slider-details', ws_slider_details) ;
-        }
+        // load html
+        this.innerHTML = o1 ;
+    }
+}
 

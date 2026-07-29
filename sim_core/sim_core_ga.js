@@ -18,26 +18,28 @@
  *
  */
 
+import { get_cfg } from './sim_cfg.js';
 
-        /*
+/*
          *  Google Analytics
          */
 
-        function simcore_ga ( category, action, label )
-        {
-            if (get_cfg('use_ga') == false) {
-                return ;
-            }
+export function simcore_ga (category, action, label)
+{
+    if (get_cfg('use_ga') == false)
+    {
+        return ;
+    }
 
-            if (typeof gtag !== "undefined")
-            {
-                gtag('event',
-                     label,
-                     {
+    if (typeof window.gtag !== 'undefined')
+    {
+        window.gtag('event',
+                    label,
+                    {
                         'event_category': category,
                         'event_action':   action,
-                        'event_label':    label
-                     });
-            }
-        }
+                        'event_label':    label,
+                    });
+    }
+}
 

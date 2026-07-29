@@ -18,120 +18,132 @@
  *
  */
 
+import $ from 'jquery';
+import { get_cfg } from '../sim_core/sim_cfg.js';
+import { i18n, i18n_update_tags } from '../wepsim_i18n/i18n.js';
+import { wsweb_dialog_close } from '../wepsim_web/wepsim_web_api.js';
+import { wepsim_tooltips_closeAll } from '../wepsim_web/wepsim_web_ui_tooltip.js';
 
-    //
-    // dialogs
-    //
+import bootbox from 'bootbox';
 
-    function wsweb_dlg_open ( dialog_obj )
+//
+// dialogs
+//
+
+export function wsweb_dlg_open (dialog_obj)
+{
+    // check params
+    if (typeof dialog_obj !== 'object')
     {
-	    // check params
-	    if (typeof dialog_obj !== "object") {
-                return null ;
-            }
-
-	    // dialog
-	    var ext_dlg_obj = {
-		    title:          dialog_obj.title(),
-		    message:        dialog_obj.body(),
-		    value:          dialog_obj.value,
-		    scrollable:     true,
-		    size:           dialog_obj.size,
-		    centerVertical: true,
-		    backdrop:       true,
-		    onEscape:       true,
-		    keyboard:       true,
-		    animate:        false,
-		    onShow:         function() {
-				       // onshown
-				       dialog_obj.onshow() ;
-
-				       // ui lang
-				       var ws_idiom = get_cfg('ws_idiom') ;
-				       i18n_update_tags('dialogs', ws_idiom) ;
-				       i18n_update_tags('gui',     ws_idiom) ;
-
-				       // auto-close tooltips
-                                       setTimeout(wepsim_tooltips_closeAll, 500) ;
-				    },
-		    buttons:        dialog_obj.buttons
-	    } ;
-	    var d1 = bootbox.dialog(ext_dlg_obj) ;
-
-            // custom...
-	    d1.init(function(){
-		       d1.attr("id", dialog_obj.id) ;
-		    });
-
-            // intercept events...
-	    d1.one("hidden.bs.modal",
-		    function () {
-			wsweb_dialog_close(dialog_obj) ;
-		    });
-
-            // show
-	    d1.find('.modal-header').addClass("bg-body-secondary") ;
-	    d1.find('.modal-footer').addClass("bg-body-secondary") ;
-	    d1.find('.modal-title').addClass("mx-auto") ;
-	    d1.find('.bootbox-close-button').addClass("mx-1 btn-close border-0") ;
-
-	    d1.modal('handleUpdate') ;
-	    d1.modal('show');
-
-	    // return dialog
-	    return d1 ;
+        return null ;
     }
 
-    function wsweb_dlg_close ( dialog_obj )
+    // dialog
+    var ext_dlg_obj = {
+        title:          dialog_obj.title(),
+        message:        dialog_obj.body(),
+        value:          dialog_obj.value,
+        scrollable:     true,
+        size:           dialog_obj.size,
+        centerVertical: true,
+        backdrop:       true,
+        onEscape:       true,
+        keyboard:       true,
+        animate:        false,
+        onShow:         function()
+        {
+            // onshown
+            dialog_obj.onshow() ;
+
+            // ui lang
+            var ws_idiom = get_cfg('ws_idiom') ;
+            i18n_update_tags('dialogs', ws_idiom) ;
+            i18n_update_tags('gui', ws_idiom) ;
+
+            // auto-close tooltips
+            setTimeout(wepsim_tooltips_closeAll, 500) ;
+        },
+        buttons: dialog_obj.buttons,
+    } ;
+    var d1 = bootbox.dialog(ext_dlg_obj) ;
+
+    // custom...
+    d1.init(function()
     {
-	    // check params
-	    if (typeof dialog_obj !== "object") {
-                return null ;
-            }
+        d1.attr('id', dialog_obj.id) ;
+    });
 
-	    // elements
-	    var d1 = $('#' + dialog_obj.id) ;
-	    d1.modal('hide') ;
+    // intercept events...
+    d1.one('hidden.bs.modal',
+           function ()
+           {
+               wsweb_dialog_close(dialog_obj) ;
+           });
 
-	    // return dialog
-	    return d1 ;
+    // show
+    d1.find('.modal-header').addClass('bg-body-secondary') ;
+    d1.find('.modal-footer').addClass('bg-body-secondary') ;
+    d1.find('.modal-title').addClass('mx-auto') ;
+    d1.find('.bootbox-close-button').addClass('mx-1 btn-close border-0') ;
+
+    d1.modal('handleUpdate') ;
+    d1.modal('show');
+
+    // return dialog
+    return d1 ;
+}
+
+export function wsweb_dlg_close (dialog_obj)
+{
+    // check params
+    if (typeof dialog_obj !== 'object')
+    {
+        return null ;
     }
 
-    function wsweb_dlg_alert ( msg )
-    {
-             // alert object
-	     var a_obj = {
-		            title:          '<i class="fas fa-exclamation"></i> ' +
-                                            '<span data-langkey="Alert">Alert</span>',
-                            message:        '<div class="p-2">' + msg + '</div>',
-			    scrollable:     true,
-			    centerVertical: true,
-			    backdrop:       true,
-			    onEscape:       true,
-			    keyboard:       true,
-			    animate:        false,
-			    buttons:        {
-						cancel: {
-						   label:     '<i class="fa fa-times me-2"></i>' +
-                                                              '<span data-langkey="Close">Close</span>',
-                                                   className: 'btn btn-primary btn-sm ' +
-                                                              'col col-sm-3 float-right shadow-none'
-						}
-					    },
-                            size:           ''
-                         } ;
+    // elements
+    var d1 = $('#' + dialog_obj.id) ;
+    d1.modal('hide') ;
 
-            // alert
-	    var d1 = bootbox.dialog(a_obj) ;
+    // return dialog
+    return d1 ;
+}
 
-            // show
-	    d1.find('.modal-header').addClass("bg-body-secondary") ;
-	    d1.find('.modal-footer').addClass("bg-body-secondary") ;
-	    d1.find('.modal-title').addClass("ml-auto") ;
-	    d1.modal('handleUpdate') ;
-            d1.modal('show') ;
+export function wsweb_dlg_alert (msg)
+{
+    // alert object
+    var a_obj = {
+        title: '<i class="fas fa-exclamation"></i> ' +
+            '<span data-langkey="Alert">Alert</span>',
+        message:        '<div class="p-2">' + msg + '</div>',
+        scrollable:     true,
+        centerVertical: true,
+        backdrop:       true,
+        onEscape:       true,
+        keyboard:       true,
+        animate:        false,
+        buttons:        {
+            cancel: {
+                label: '<i class="fa fa-times me-2"></i>' +
+                    '<span data-langkey="Close">Close</span>',
+                className: 'btn btn-primary btn-sm ' +
+                    'col col-sm-3 float-right shadow-none',
+            },
+        },
+        size: '',
+    } ;
 
-	    // return alert
-	    return d1 ;
-    }
+    // alert
+    var d1 = bootbox.dialog(a_obj) ;
+
+    // show
+    d1.find('.modal-header').addClass('bg-body-secondary') ;
+    d1.find('.modal-footer').addClass('bg-body-secondary') ;
+    d1.find('.modal-title').addClass('ml-auto') ;
+    d1.modal('handleUpdate') ;
+    d1.modal('show') ;
+
+    // return alert
+    return d1 ;
+}
 

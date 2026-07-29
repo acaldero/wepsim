@@ -18,37 +18,40 @@
  *
  */
 
+export function i18n_sv_register_states(i18n)
+{
 
     i18n.eltos.states.sv = {
 
-		'States':				'stater',
-		'state':				'stat',
-		'Current':				'Nuvarande',
-		'Current State':			'Nuvarande tillstånd',
-		'History':				'Historia',
-		'None':					'Ingen',
-		'Empty history':			'Tom historia',
-		'Empty (only modified values are shown)':		'Tom (endast modifierade värden visas)',
-		'Differences':				'skillnader',
-		'differences with clipboard state':	'skillnader med urklippsstatus',
-		'Meets the specified requirements':	'Uppfyller de angivna kraven',
-		'history':				'historia',
-		'Add':					'Lägg till',
-		'\'Current State\' to History':		'"Aktuell stat" till historia',
-		'Check':				'Kontrollera',
-		'Copy':					'Kopia',
-		'to clipboard':				'till urklippet',
-		'Checkpoint':				'Kontrollstation',
-		'File name':				'Filnamn',
-		'Tag for checkpoint':			'Tagg för checkpunkt',
-		'File to be loaded':			'Fil som ska laddas',
-		'Save to File':				'Spara till fil',
-		'State(s) to checkpoint':		'Ange till checkpunkt',
-		'Record to checkpoint':			'Spela in till kontrollpunkten',
-		'Browser cache':			'Webbläsarens cache',
-		'Session to be restore':		'Session ska återställas',
+        'States':                                 'stater',
+        'state':                                  'stat',
+        'Current':                                'Nuvarande',
+        'Current State':                          'Nuvarande tillstånd',
+        'History':                                'Historia',
+        'None':                                   'Ingen',
+        'Empty history':                          'Tom historia',
+        'Empty (only modified values are shown)': 'Tom (endast modifierade värden visas)',
+        'Differences':                            'skillnader',
+        'differences with clipboard state':       'skillnader med urklippsstatus',
+        'Meets the specified requirements':       'Uppfyller de angivna kraven',
+        'history':                                'historia',
+        'Add':                                    'Lägg till',
+        '\'Current State\' to History':           '"Aktuell stat" till historia',
+        'Check':                                  'Kontrollera',
+        'Copy':                                   'Kopia',
+        'to clipboard':                           'till urklippet',
+        'Checkpoint':                             'Kontrollstation',
+        'File name':                              'Filnamn',
+        'Tag for checkpoint':                     'Tagg för checkpunkt',
+        'File to be loaded':                      'Fil som ska laddas',
+        'Save to File':                           'Spara till fil',
+        'State(s) to checkpoint':                 'Ange till checkpunkt',
+        'Record to checkpoint':                   'Spela in till kontrollpunkten',
+        'Browser cache':                          'Webbläsarens cache',
+        'Session to be restore':                  'Session ska återställas',
 
-		'_last_':				'_last_'
+        '_last_': '_last_',
 
     };
+}
 

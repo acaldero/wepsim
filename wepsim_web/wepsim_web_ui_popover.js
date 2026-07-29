@@ -18,66 +18,72 @@
  *
  */
 
+import $ from 'jquery';
+import * as bootstrap from 'bootstrap';
 
-    //
-    // General popover
-    //
+//
+// General popover
+//
 
-    function wepsim_popover_init ( popover_id, popover_cfg, fun_ownshown )
+export function wepsim_popover_init(popover_id, popover_cfg, fun_ownshown)
+{
+    // 1) get object
+    var obj1 = document.querySelector(popover_id) ;
+    if (null == obj1)
     {
-         // 1) get object
-         var obj1 = document.querySelector(popover_id) ;
-         if (null == obj1) {
-             return null ;
-         }
-
-         // 2) new popover(object) for object
-	 var po1 = new bootstrap.Popover(obj1, popover_cfg) ;
-
-         // 3) associate event to object
-         if (null != fun_ownshown) {
-             obj1.addEventListener('shown.bs.popover', fun_ownshown) ;
-         }
-
-         return po1 ;
+        return null ;
     }
 
-    function wepsim_popovers_init ( popover_set_id, popover_cfg, fun_ownshown )
+    // 2) new popover(object) for object
+    var po1 = new bootstrap.Popover(obj1, popover_cfg) ;
+
+    // 3) associate event to object
+    if (null != fun_ownshown)
     {
-         // 1) get object list
-         var list1 = document.querySelectorAll(popover_set_id) ;
-         if (null == list1) {
-             return null ;
-         }
-
-         // 2) new popover(object) for each object in the list
-         var plist1 = [...list1].map((elto) => new bootstrap.Popover(elto, popover_cfg)) ;
-
-         // 3) associate event to all objects
-         if (null != fun_ownshown) {
-             [...list1].map((elto) => elto.addEventListener('shown.bs.popover', fun_ownshown)) ;
-         }
-
-         return plist1 ;
+        obj1.addEventListener('shown.bs.popover', fun_ownshown) ;
     }
 
-    function wepsim_popover_show ( popover_id )
+    return po1 ;
+}
+
+export function wepsim_popovers_init(popover_set_id, popover_cfg, fun_ownshown)
+{
+    // 1) get object list
+    var list1 = document.querySelectorAll(popover_set_id) ;
+    if (null == list1)
     {
-         $('#' + popover_id).popover('show') ;
+        return null ;
     }
 
-    function wepsim_popover_hide ( popover_id )
+    // 2) new popover(object) for each object in the list
+    var plist1 = [...list1].map((elto) => new bootstrap.Popover(elto, popover_cfg)) ;
+
+    // 3) associate event to all objects
+    if (null != fun_ownshown)
     {
-         $('#' + popover_id).popover('hide') ;
+        [...list1].map((elto) => elto.addEventListener('shown.bs.popover', fun_ownshown)) ;
     }
 
-    function wepsim_popover_action ( popover_id, action )
-    {
-         $('#' + popover_id).popover(action) ;
-    }
+    return plist1 ;
+}
 
-    function wepsim_popovers_hide ( popovers_id )
-    {
-         $(popovers_id).popover('hide') ;
-    }
+export function wepsim_popover_show(popover_id)
+{
+    $('#' + popover_id).popover('show') ;
+}
+
+export function wepsim_popover_hide(popover_id)
+{
+    $('#' + popover_id).popover('hide') ;
+}
+
+export function wepsim_popover_action(popover_id, action)
+{
+    $('#' + popover_id).popover(action) ;
+}
+
+export function wepsim_popovers_hide(popovers_id)
+{
+    $(popovers_id).popover('hide') ;
+}
 

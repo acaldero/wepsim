@@ -18,40 +18,43 @@
  *
  */
 
+export function i18n_en_register_states(i18n)
+{
 
     i18n.eltos.states.en = {
 
-			"States":  			                "States",
-			'state':					'state',
-			"Current":  			                "Current",
-			"Current State":  			        "Current State",
-			"History":  			                "History",
-			"None":  			                "None",
-			"Empty history":  			        "Empty history",
-			"Empty (only modified values are shown)":       "Empty (only modified values are shown)",
-			"Differences":  			        "Differences",
-			"differences with clipboard state":  	        "differences with clipboard state",
-			"Meets the specified requirements": 	        "Meets the specified requirements",
+        'States':                                 'States',
+        'state':                                  'state',
+        'Current':                                'Current',
+        'Current State':                          'Current State',
+        'History':                                'History',
+        'None':                                   'None',
+        'Empty history':                          'Empty history',
+        'Empty (only modified values are shown)': 'Empty (only modified values are shown)',
+        'Differences':                            'Differences',
+        'differences with clipboard state':       'differences with clipboard state',
+        'Meets the specified requirements':       'Meets the specified requirements',
 
-                        "history": 		                	"history",
-                        "Add": 		                	        "Add",
-                        "'Current State' to History": 		        "'Current State' to History",
-                        "Check": 		                	"Check",
-                        "Copy": 		                	"Copy",
-                        "to clipboard": 		                "to clipboard",
+        'history':                    'history',
+        'Add':                        'Add',
+        "'Current State' to History": "'Current State' to History",
+        'Check':                      'Check',
+        'Copy':                       'Copy',
+        'to clipboard':               'to clipboard',
 
-                        "Checkpoint":                                   "Checkpoint",
-                        "File name":                                    "File name",
-                        "Tag for checkpoint":                           "Tag for checkpoint",
-                        "File to be loaded":                            "File to be loaded",
-	                "Save to File":                                 "Save to File",
-	                "State(s) to checkpoint":                       "State(s) to checkpoint",
-	                "Record to checkpoint":                         "Record to checkpoint",
+        'Checkpoint':             'Checkpoint',
+        'File name':              'File name',
+        'Tag for checkpoint':     'Tag for checkpoint',
+        'File to be loaded':      'File to be loaded',
+        'Save to File':           'Save to File',
+        'State(s) to checkpoint': 'State(s) to checkpoint',
+        'Record to checkpoint':   'Record to checkpoint',
 
-			"Browser cache":				"Browser cache",
-			"Session to be restore":			"Session to be restore",
+        'Browser cache':         'Browser cache',
+        'Session to be restore': 'Session to be restore',
 
-		        "_last_":					"_last_"
+        '_last_': '_last_',
 
-    } ;
+    };
+}
 

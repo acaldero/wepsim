@@ -18,39 +18,42 @@
  *
  */
 
+// Translated thanks to Google translate
 
-    // Translated thanks to Google translate
+export function i18n_fr_register_tour_intro(i18n)
+{
 
     i18n.eltos.tour_intro.fr = {
 
-                        "step1":  "WepSIM aide à mieux comprendre le fonctionnement d'un ordinateur:" +
-                                  "visuel, interactif, il intègre des signaux jusqu’aux interruptions, appels système, exceptions, etc. <br>" +
-                                  "<br>" +
-                                  "Nous pensons vraiment que WepSIM est un outil pédagogique révolutionnaire." +
-                                  "Cette brève visite présente les éléments clés de son interface.",
+        'step1': "WepSIM aide à mieux comprendre le fonctionnement d'un ordinateur:" +
+            'visuel, interactif, il intègre des signaux jusqu’aux interruptions, appels système, exceptions, etc. <br>' +
+            '<br>' +
+            'Nous pensons vraiment que WepSIM est un outil pédagogique révolutionnaire.' +
+            'Cette brève visite présente les éléments clés de son interface.',
 
-                          "step2": "Ce bouton en haut à droite est un menu d'accès rapide aux différents modes de travail. <br>" +
-                                   "<br>" +
-                                   "Les utilisateurs peuvent sélectionner:" +
-                                   "<ul>" +
-                                   "<li> Le matériel avec lequel travailler (processeur EP, etc.)</li>" +
-                                   "<li> Mode assemblage uniquement, avec entier MIPS<sub>32</sub> ou RISC-V<sub>32</sub> instructions</li>" +
-                                   "</ul>",
+        'step2': "Ce bouton en haut à droite est un menu d'accès rapide aux différents modes de travail. <br>" +
+            '<br>' +
+            'Les utilisateurs peuvent sélectionner:' +
+            '<ul>' +
+            '<li> Le matériel avec lequel travailler (processeur EP, etc.)</li>' +
+            '<li> Mode assemblage uniquement, avec entier MIPS<sub>32</sub> ou RISC-V<sub>32</sub> instructions</li>' +
+            '</ul>',
 
-                        "step3":  "En haut à droite, le bouton 'aide' ouvre la boîte de dialogue associée. <br>" +
-                                  "<br>" +
-                                  "La boîte de dialogue d'aide récapitule les tutoriels, les descriptions, les informations, etc.",
+        'step3': "En haut à droite, le bouton 'aide' ouvre la boîte de dialogue associée. <br>" +
+            '<br>' +
+            "La boîte de dialogue d'aide récapitule les tutoriels, les descriptions, les informations, etc.",
 
-                        "step4":  "Et à gauche, le bouton 'exemples' ouvre la boîte de dialogue des exemples. <br>" +
-                                  "<br>" +
-                                  "Il existe de nombreux exemples qui peuvent être utilisés pour apprendre progressivement.",
+        'step4': "Et à gauche, le bouton 'exemples' ouvre la boîte de dialogue des exemples. <br>" +
+            '<br>' +
+            'Il existe de nombreux exemples qui peuvent être utilisés pour apprendre progressivement.',
 
-                        "step5":  "En haut à gauche, le bouton 'configuration' ouvre la boîte de dialogue de configuration." +
-                                  "<br>" +
-                                  "Il permet aux utilisateurs d'adapter plusieurs aspects de l'exécution, de l'interface utilisateur, des préférences, etc.",
+        'step5': "En haut à gauche, le bouton 'configuration' ouvre la boîte de dialogue de configuration." +
+            '<br>' +
+            "Il permet aux utilisateurs d'adapter plusieurs aspects de l'exécution, de l'interface utilisateur, des préférences, etc.",
 
-                        "step6":  "Félicitations! Vous connaissez les éléments clés de l'interface WepSIM. <br>" +
-                                  "Dans la boîte de dialogue 'Aide', vous pouvez accéder au 'didacticiel de bienvenue' pour continuer à apprendre. <br>"
+        'step6': "Félicitations! Vous connaissez les éléments clés de l'interface WepSIM. <br>" +
+            "Dans la boîte de dialogue 'Aide', vous pouvez accéder au 'didacticiel de bienvenue' pour continuer à apprendre. <br>",
 
-                  } ;
+    };
+}
 

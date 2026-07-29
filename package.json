@@ -1,57 +1,151 @@
 {
-  "name": "wepsim-travisci",
+  "name": "wepsim",
+  "desktopName": "wepsim",
   "description": "Check WepSIM",
-  "author": "acaldero@inf.uc3m.es",
+  "author": {
+    "name": "acaldero",
+    "email": "acaldero@inf.uc3m.es"
+  },
   "version": "1.2.0",
+  "type": "module",
+  "main": "ws_dist/electron/main.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/wepsim/wepsim.git"
   },
   "license": "GPL-3.0",
   "devDependencies": {
-    "babel-eslint": "^10.1.0",
-    "eslint": "^10.8.0",
-    "eslint-plugin-json-format": "^2.0.1",
-    "jshint": "^0.5.9",
-    "nodemon": "^3.1.14",
-    "terser": "^5.48.0",
-    "typescript": "^6.0.3"
-  },
-  "scripts": {
-    "dev": "./scripts/dev.sh",
-    "build": "./devel/mk_dist_parallel.sh min",
-    "test-source1": "./devel/test_eslint.sh",
-    "test-wepsim-node1": "./devel/test_wepsim.sh co",
-    "test-wepsim-node2": "./devel/test_wepsim.sh rs"
-  },
-  "dependencies": {
-    "@codemirror/gutter": "^0.19.9",
-    "@codemirror/highlight": "^0.19.8",
-    "@codemirror/lang-javascript": "^6.1.9",
-    "@codemirror/state": "^6.2.1",
-    "@codemirror/view": "^6.13.2",
+    "@codemirror/autocomplete": "^6.20.3",
+    "@codemirror/commands": "^6.10.4",
+    "@codemirror/lang-javascript": "^6.2.5",
+    "@codemirror/language": "^6.12.4",
+    "@codemirror/lint": "^6.9.4",
+    "@codemirror/state": "^6.7.1",
+    "@codemirror/theme-one-dark": "^6.1.3",
+    "@codemirror/view": "^6.43.6",
+    "@eslint/js": "^10.0.1",
+    "@fortawesome/fontawesome-free": "^7.3.0",
+    "@popperjs/core": "^2.11.8",
+    "@replit/codemirror-emacs": "^6.1.0",
+    "@replit/codemirror-minimap": "^0.5.2",
+    "@replit/codemirror-vim": "^6.3.0",
     "@rollup/plugin-node-resolve": "^15.1.0",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "@types/jquery": "^4.0.1",
+    "@types/node": "^26.1.1",
+    "annyang": "^3.0.0",
     "async": "^3.2.4",
+    "babel-eslint": "^10.1.0",
+    "bootbox": "^6.0.4",
+    "bootstrap": "^5.3.8",
+    "bootstrap-tokenfield": "^0.12.0",
     "clear": "^0.1.0",
-    "codemirror": "^6.0.1",
+    "codemirror": "^6.0.2",
     "commander": "^10.0.1",
     "commander-completion": "^1.0.1",
+    "dropify": "^0.2.2",
+    "electron": "^43.1.1",
+    "electron-builder": "^26.15.3",
+    "electron-vite": "^6.0.0-beta.1",
+    "eslint": "^10.7.0",
+    "eslint-plugin-align-assignments": "^1.1.2",
     "fuzzy": "^0.1.3",
+    "globals": "^17.7.0",
     "inquirer": "^8.2.5",
     "inquirer-autocomplete-prompt": "^1.4.0",
     "inquirer-command-prompt": "^0.0.6",
+    "intro.js": "^8.3.2",
+    "jiti": "^2.7.0",
+    "jquery": "^3.7.1",
+    "jquery-knob": "^1.2.11",
+    "jshint": "^0.5.9",
+    "knockout": "^3.5.3",
+    "lz-string": "^1.5.0",
+    "mime-types": "^2.1.35",
+    "nodemon": "^3.1.14",
     "optionator": "^0.9.1",
+    "patch-package": "^8.0.1",
+    "qrcode": "^1.5.4",
     "readline-sync": "^1.4.10",
     "rollup": "^3.30.0",
-    "vue": "^3.5.12",
-    "vuex": "^4.1.0",
+    "rollup-plugin-visualizer": "^7.0.1",
+    "speechkitt": "^1.0.0",
+    "terser": "^5.48.0",
+    "tone": "^15.1.22",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.64.0",
+    "vis-network": "^10.1.0",
+    "vite": "^8.1.4",
+    "vite-multiple-assets": "^2.2.6",
+    "vite-plugin-checker": "^0.14.4",
+    "vite-plugin-eslint": "^1.8.1",
+    "vue": "^2.7.16",
+    "vuex": "^3.6.2",
     "winston": "^2.4.7",
     "yargs": "^15.4.1"
   },
-  "overrides": {
-    "tmp": "0.2.7"
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "build:node": "vite build --config vite.config.node.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "eslint . --fix",
+    "format:check": "eslint .",
+    "build:legacy": "./devel/mk_dist_parallel.sh min",
+    "test-source1": "./devel/test_eslint.sh",
+    "test-wepsim-node1": "./devel/test_wepsim.sh co",
+    "test-wepsim-node2": "./devel/test_wepsim.sh rs",
+    "electron:install": "node node_modules/electron/install.js",
+    "electron:dev": "electron-vite dev",
+    "electron:build": "electron-vite build",
+    "electron:preview": "electron-vite preview --skipBuild",
+    "electron:dist": "npm run electron:build && electron-builder",
+    "electron:dist:linux": "npm run electron:build && electron-builder --linux",
+    "electron:dist:win": "npm run electron:build && electron-builder --win",
+    "electron:dist:mac": "npm run electron:build && electron-builder --mac",
+    "postinstall": "patch-package --patch-dir devel/patches"
+  },
+  "build": {
+    "appId": "org.wepsim.simulator",
+    "productName": "WepSIM",
+    "directories": {
+      "output": "electron_dist"
+    },
+    "files": [
+      "ws_dist/**/*",
+      "!node_modules"
+    ],
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "images/icons/android-chrome-512x512.png",
+      "category": "Education",
+      "maintainer": "acaldero@inf.uc3m.es",
+      "syncDesktopName": true,
+      "synopsis": "WepSIM - Educational MIPS/RISC-V/Z80/ARM simulator"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "images/icons/android-chrome-512x512.png"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "images/icons/android-chrome-512x512.png",
+      "category": "public.app-category.education"
+    }
   },
   "allowScripts": {
-    "spawn-sync@1.0.15": true
+    "esbuild@0.25.12": true,
+    "node-jq@6.3.1": true,
+    "electron-winstaller@5.4.0": true,
+    "spawn-sync": true
   }
 }

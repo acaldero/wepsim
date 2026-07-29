@@ -18,204 +18,208 @@
  *
  */
 
+import { get_value, set_value } from '../../sim_core/sim_core_values.js';
+import { get_keyboard_content, set_keyboard_content } from '../../sim_core/sim_core_ui.js';
 
 /*
  *  KBD - simple keyboard
  */
 
-var KBDR_ID = 0x0100 ;
-var KBSR_ID = 0x0104 ;
+export var KBDR_ID = 0x0100 ;
+export var KBSR_ID = 0x0104 ;
 
-function io_keyboard_base_register ( sim_p )
+export function io_keyboard_base_register (sim_p)
 {
-	/*
-	 *  Components
-	 */
+    /*
+     *  Components
+     */
 
-        sim_p.components.KBD = {
-		                  name: "KBD",
-		                  version: "1",
-		                  abilities:    [ "KEYBOARD" ],
+    sim_p.components.KBD = {
+        name:      'KBD',
+        version:   '1',
+        abilities: ['KEYBOARD'],
 
-		                  // ui: details
-		                  details_name: [ "KEYBOARD" ],
-                                  details_fire: [ ['svg_p:text3829'] ],
+        // ui: details
+        details_name: ['KEYBOARD'],
+        details_fire: [['svg_p:text3829']],
 
-		                  // state: write_state, read_state, get_state
-		                  write_state: function ( vec ) {
-						    return vec;
-				               },
-		                  read_state:  function ( o, check ) {
-                                                    return false ;
-				               },
-		                  get_state:   function ( reg ) {
-					            return null ;
-				               },
+        // state: write_state, read_state, get_state
+        write_state: function (vec)
+        {
+            return vec;
+        },
+        read_state: function (o, check)
+        {
+            return false ;
+        },
+        get_state: function (reg)
+        {
+            return null ;
+        },
 
-		                  // native: get_value, set_value
-                                  get_value:   function ( elto ) {
-                                                    return sim_p.internal_states.keyboard_content ;
-                                               },
-                                  set_value:   function ( elto, value ) {
-                                                    sim_p.internal_states.keyboard_content = value ;
-						    return value ;
-                                               }
-                            	};
+        // native: get_value, set_value
+        get_value: function (elto)
+        {
+            return sim_p.internal_states.keyboard_content ;
+        },
+        set_value: function (elto, value)
+        {
+            sim_p.internal_states.keyboard_content = value ;
+            return value ;
+        },
+    };
 
+    /*
+     *  States - IO parameters
+     */
 
-	/*
-	 *  States - IO parameters
-	 */
+    sim_p.internal_states.io_hash[KBDR_ID] = 'KBDR' ;
+    sim_p.internal_states.io_hash[KBSR_ID] = 'KBSR' ;
 
-        sim_p.internal_states.io_hash[KBDR_ID] = "KBDR" ;
-        sim_p.internal_states.io_hash[KBSR_ID] = "KBSR" ;
+    /*
+     *  Internal States
+     */
 
+    sim_p.internal_states.keyboard_content = '' ;
 
-	/*
-	 *  Internal States
-	 */
-
-        sim_p.internal_states.keyboard_content = "" ;
-
-
-        /*
+    /*
          *  States
          */
 
-        sim_p.states.KBDR   = { name: "KBDR", verbal: "Keyboard Data Register",
-                                 visible:false, nbits: "32", value: 0, default_value: 0,
-                                 draw_data: [] };
-        sim_p.states.KBSR   = { name: "KBSR", verbal: "Keyboard Status Register",
-                                 visible:false, nbits: "32", value: 0, default_value: 0,
-                                 draw_data: [] };
+    sim_p.states.KBDR = { name:          'KBDR', verbal:        'Keyboard Data Register',
+        visible:       false, nbits:         '32', value:         0, default_value: 0,
+        draw_data:     [] };
+    sim_p.states.KBSR = { name:          'KBSR', verbal:        'Keyboard Status Register',
+        visible:       false, nbits:         '32', value:         0, default_value: 0,
+        draw_data:     [] };
 
-
-        /*
+    /*
          *  Signals
          */
 
-         sim_p.signals.KBD_IOR    = { name: "KBD_IOR",
-                                       visible: true, type: "L", value: 0, default_value:0, nbits: "1",
-		                       behavior: ["NOP", "KBD_IOR BUS_AB BUS_DB KBDR KBSR CLK; FIRE DB_UPDATED"],
-                                       fire_name: ['svg_p:tspan4057'],
-                                       draw_data: [[], ['svg_p:path3863', 'svg_p:path3847']],
-                                       draw_name: [[], []] };
+    sim_p.signals.KBD_IOR = { name:          'KBD_IOR',
+        visible:       true, type:          'L', value:         0, default_value: 0, nbits:         '1',
+        behavior:      ['NOP', 'KBD_IOR BUS_AB BUS_DB KBDR KBSR CLK; FIRE DB_UPDATED'],
+        fire_name:     ['svg_p:tspan4057'],
+        draw_data:     [[], ['svg_p:path3863', 'svg_p:path3847']],
+        draw_name:     [[], []] };
 
-
-        /*
+    /*
          *  Syntax of behaviors
          */
 
-        sim_p.behaviors.KBD_IOR   = { nparameters: 6,
-                                        types: ["E", "E", "E", "E", "E"],
-                                        operation: function (s_expr)
-                                                   {
-                                                      var bus_ab = get_value(sim_p.states[s_expr[1]]) ;
-                                                      var clk    = get_value(sim_p.states[s_expr[5]]) ;
+    sim_p.behaviors.KBD_IOR = { nparameters: 6,
+        types:       ['E', 'E', 'E', 'E', 'E'],
+        operation:   function (s_expr)
+        {
+            var bus_ab = get_value(sim_p.states[s_expr[1]]) ;
+            var clk    = get_value(sim_p.states[s_expr[5]]) ;
 
-                                                      if ( (bus_ab != KBDR_ID) && (bus_ab != KBSR_ID) ) {
-                                                              return;
-                                                      }
+            if ((bus_ab != KBDR_ID) && (bus_ab != KBSR_ID))
+            {
+                return;
+            }
 
-						      if (typeof sim_p.events.keybd[clk] != "undefined")
-                                                      {
-						              if (bus_ab == KBDR_ID)
-							          set_value(sim_p.states[s_expr[2]], sim_p.events.keybd[clk]);
-							      if (bus_ab == KBSR_ID)
-								  set_value(sim_p.states[s_expr[2]], 1);
-                                                              return;
-                                                      }
+            if (typeof sim_p.events.keybd[clk] != 'undefined')
+            {
+                if (bus_ab == KBDR_ID)
+                    set_value(sim_p.states[s_expr[2]], sim_p.events.keybd[clk]);
+                if (bus_ab == KBSR_ID)
+                    set_value(sim_p.states[s_expr[2]], 1);
+                return;
+            }
 
-                                                      if (get_value(sim_p.states[s_expr[4]]) == 0)
-                                                      {
-							      var keybuffer = get_keyboard_content() ;
-							      if (keybuffer.length !== 0)
-							      {
-								  var keybuffer_rest = keybuffer.substr(1, keybuffer.length-1);
-								  set_keyboard_content(keybuffer_rest) ;
+            if (get_value(sim_p.states[s_expr[4]]) == 0)
+            {
+                var keybuffer = get_keyboard_content() ;
+                if (keybuffer.length !== 0)
+                {
+                    var keybuffer_rest = keybuffer.substr(1, keybuffer.length - 1);
+                    set_keyboard_content(keybuffer_rest) ;
 
-								  set_value(sim_p.states[s_expr[4]], 1);
-								  set_value(sim_p.states[s_expr[3]], keybuffer[0].charCodeAt(0));
-							      }
-                                                      }
-                                                      if (get_value(sim_p.states[s_expr[4]]) == 1)
-                                                      {
-						              sim_p.events.keybd[clk] = get_value(sim_p.states[s_expr[3]]) ;
-                                                      }
+                    set_value(sim_p.states[s_expr[4]], 1);
+                    set_value(sim_p.states[s_expr[3]], keybuffer[0].charCodeAt(0));
+                }
+            }
+            if (get_value(sim_p.states[s_expr[4]]) == 1)
+            {
+                sim_p.events.keybd[clk] = get_value(sim_p.states[s_expr[3]]) ;
+            }
 
-						      if (bus_ab == KBSR_ID) {
-							      set_value(sim_p.states[s_expr[2]], get_value(sim_p.states[s_expr[4]]));
-						      }
-						      if (bus_ab == KBDR_ID) {
-							      if (get_value(sim_p.states[s_expr[4]]) == 1)
-							          set_value(sim_p.states[s_expr[2]], get_value(sim_p.states[s_expr[3]]));
-							      set_value(sim_p.states[s_expr[4]], 0);
-						      }
-                                                   },
-                                           verbal: function (s_expr)
-                                                   {
-					              var verbal = "" ;
+            if (bus_ab == KBSR_ID)
+            {
+                set_value(sim_p.states[s_expr[2]], get_value(sim_p.states[s_expr[4]]));
+            }
+            if (bus_ab == KBDR_ID)
+            {
+                if (get_value(sim_p.states[s_expr[4]]) == 1)
+                    set_value(sim_p.states[s_expr[2]], get_value(sim_p.states[s_expr[3]]));
+                set_value(sim_p.states[s_expr[4]], 0);
+            }
+        },
+        verbal: function (s_expr)
+        {
+            var verbal = '' ;
 
-                                                      var bus_ab = get_value(sim_p.states[s_expr[1]]) ;
-                                                      var clk    = get_value(sim_p.states[s_expr[5]]) ;
+            var bus_ab = get_value(sim_p.states[s_expr[1]]) ;
+            var clk    = get_value(sim_p.states[s_expr[5]]) ;
 
-						      if (bus_ab == KBDR_ID)
-                                                          verbal = "Read the screen data: " + sim_p.states[s_expr[2]] + ". " ;
-						      if (bus_ab == KBSR_ID)
-                                                          verbal = "Read the screen state: " + sim_p.states[s_expr[2]] + ". " ;
+            if (bus_ab == KBDR_ID)
+                verbal = 'Read the screen data: ' + sim_p.states[s_expr[2]] + '. ' ;
+            if (bus_ab == KBSR_ID)
+                verbal = 'Read the screen state: ' + sim_p.states[s_expr[2]] + '. ' ;
 
-					              return verbal ;
-                                                   }
-                                   } ;
+            return verbal ;
+        },
+    } ;
 
-        sim_p.behaviors.KBD_RESET   = { nparameters: 1,
-                                       operation: function (s_expr)
-                                                  {
-						     // reset events.keybd
-                                                     sim_p.events.keybd = {} ;
-                                                  },
-                                          verbal: function (s_expr)
-                                                  {
-                                                     return "Reset the keyboard content. " ;
-                                                  }
-                                   };
+    sim_p.behaviors.KBD_RESET = { nparameters: 1,
+        operation:   function (s_expr)
+        {
+            // reset events.keybd
+            sim_p.events.keybd = {} ;
+        },
+        verbal: function (s_expr)
+        {
+            return 'Reset the keyboard content. ' ;
+        },
+    };
 
-
-        /*
+    /*
          *  Model (see docs/WEPSIM-TEAM.md)
          */
 
-        sim_p.elements.keyboard = {
-			      name:              "Keyboard",
-			      description:       "Keyboard",
-			      type:              "subcomponent",
-			      belongs:           "KBD",
-			      states:            {
-						   "addr":      {
-								   ref:  "BUS_AB"
-								},
-						   "data":      {
-								   ref:  "BUS_DB"
-								},
-						   "data 1":    {
-								   ref:  KBDR_ID
-								},
-						   "status 1":  {
-								   ref:  KBSR_ID
-								}
-						 },
-			      signals:           {
-						   "ior":       {
-								   ref:  "KBD_IOR"
-								}
-						 },
-			      states_inputs:     [ "addr", "data" ],
-			      states_outputs:    [ "data" ],
-			      signals_inputs:    [ "ior" ],
-			      signals_output:    [ ],
-			      states_mapping:    [ "data 1", "status 1" ]
-		         } ;
+    sim_p.elements.keyboard = {
+        name:        'Keyboard',
+        description: 'Keyboard',
+        type:        'subcomponent',
+        belongs:     'KBD',
+        states:      {
+            'addr': {
+                ref: 'BUS_AB',
+            },
+            'data': {
+                ref: 'BUS_DB',
+            },
+            'data 1': {
+                ref: KBDR_ID,
+            },
+            'status 1': {
+                ref: KBSR_ID,
+            },
+        },
+        signals: {
+            'ior': {
+                ref: 'KBD_IOR',
+            },
+        },
+        states_inputs:  ['addr', 'data'],
+        states_outputs: ['data'],
+        signals_inputs: ['ior'],
+        signals_output: [],
+        states_mapping: ['data 1', 'status 1'],
+    } ;
 
-        return sim_p ;
+    return sim_p ;
 }
 

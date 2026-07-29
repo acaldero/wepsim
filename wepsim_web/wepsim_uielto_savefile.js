@@ -18,114 +18,127 @@
  *
  */
 
+import { dispatch, onClick } from './wepsim_web_actions.js';
+import { wepsim_checkpoint_get, wepsim_checkpoint_save } from '../wepsim_core/wepsim_checkpoint.js';
+import { wepsim_notify_success } from '../wepsim_core/wepsim_notify.js';
 
-        /*
-         *  Save file
-         */
+export class ws_save_file extends HTMLElement
+{
+    static get observedAttributes()
+    {
+        return ['fid', 'jsave', 'jshare'] ;
+    }
 
-        /* jshint esversion: 6 */
-        class ws_save_file extends HTMLElement
+    constructor ()
+    {
+        super();
+    }
+
+    update_internal_attributes ()
+    {
+        var fid = this.getAttribute('fid') ;
+        if (fid === null)
+            this.setAttribute('fid', 'id52') ;
+
+        var jsave = this.getAttribute('jsave') ;
+        if (jsave === null)
+            this.setAttribute('jsave', '') ;
+
+        var jshare = this.getAttribute('jshare') ;
+        if (jshare === null)
+            this.setAttribute('jshare', '') ;
+    }
+
+    render (event_name)
+    {
+        this.update_internal_attributes() ;
+
+        var o1 = '' ;
+        o1    += "<div class='card border-secondary h-100'>" +
+            "<div class='card-header border-secondary text-white bg-secondary p-1'>" +
+            " <h5 class='m-0'>" +
+            " <span class='text-white bg-secondary' data-langkey='Output file'>Output file</span>" +
+            " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
+            "         data-bind='click' data-action='save-file'><span data-langkey='Save'>Save</span></button>" +
+            ' </h5>' +
+            '</div>' +
+            "<div class='card-body'>" +
+            " <label for='" + this.fid + "' class='collapse7'><em><span data-langkey='Please write the file name'>Please write the file name</span>:</em></label>" +
+            " <p><input aria-label='filename to save content' id='" + this.fid + "' " +
+            "           class='form-control btn-outline-secondary' " +
+            "           placeholder='File name where information will be saved' " +
+            "           style='min-width: 90%;'/></p>" +
+            '</div>' +
+            '</div>' ;
+
+        this.innerHTML = o1 ;
+
+        onClick('save-file', (el) =>
         {
-              static get observedAttributes()
-	      {
-	            return [ 'fid', 'jsave', 'jshare' ] ;
-	      }
+            var host = el.closest('ws-save-file');
+            if (host)
+            {
+                var fid   = host.getAttribute('fid');
+                var tagId = host.getAttribute('data-tag-id') || 'tagToSave1';
+                wepsim_notify_success('<strong>INFO</strong>',
+                                      'Processing save request...');
+                var obj_tagName   = document.getElementById(tagId);
+                var checkpointObj = wepsim_checkpoint_get(obj_tagName.value);
+                wepsim_checkpoint_save(fid, tagId, checkpointObj);
+                return;
+            }
+        });
+    }
 
-	      constructor ()
-	      {
-		    // parent
-		    super();
-	      }
+    bindElements ()
+    {
+        this.addEventListener('click', (e) =>
+        {
+            const el = e.target.closest('[data-bind="click"]');
+            if (!el) return;
+            e.preventDefault();
+            if (dispatch('click', el, this, e)) e.stopPropagation();
+        });
+    }
 
-	      update_internal_attributes ( )
-	      {
-                    // fid
-                    var fid = this.getAttribute('fid') ;
-                    if (fid === null)
-                        this.setAttribute('fid', 'id52') ;
+    connectedCallback ()
+    {
+        this.render('connectedCallback') ;
+        this.bindElements();
+    }
 
-                    // jload
-                    var jload = this.getAttribute('jload') ;
-                    if (jload === null)
-                        this.setAttribute('jload', '') ;
+    attributeChangedCallback (name, oldValue, newValue)
+    {
+        this.render('attributeChangedCallback') ;
+    }
 
-                    // jshare
-                    var jshare = this.getAttribute('jshare') ;
-                    if (jshare === null)
-                        this.setAttribute('jshare', '') ;
-	      }
+    get fid ()
+    {
+        return this.getAttribute('fid') ;
+    }
 
-	      render ( event_name )
-	      {
-                    // update attributes
-                    this.update_internal_attributes() ;
+    set fid (value)
+    {
+        this.setAttribute('fid', value) ;
+    }
 
-                    // save html
-                    var o1 = '' ;
-		    o1 += "<div class='card border-secondary h-100'>" +
-			  "<div class='card-header border-secondary text-white bg-secondary p-1'>" +
-			  " <h5 class='m-0'>" +
-			  " <span class='text-white bg-secondary' data-langkey='Output file'>Output file</span>" +
-			  " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
-                          "         onclick='" + this.jsave + "'><span data-langkey='Save'>Save</span></button>" +
-		       // " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
-                       // "         onclick='" + this.jshare + "'><span data-langkey='Share'>Share</span></button>" +
-			  " </h5>" +
-			  "</div>" +
-			  "<div class='card-body'>" +
-			  " <label for='" + this.fid + "' class='collapse7'><em><span data-langkey='Please write the file name'>Please write the file name</span>:</em></label>" +
-	                  " <p><input aria-label='filename to save content' id='" + this.fid + "' " +
-                          "           class='form-control btn-outline-secondary' " +
-                          "           placeholder='File name where information will be saved' " +
-                          "           style='min-width: 90%;'/></p>" +
-			  "</div>" +
-			  "</div>" ;
+    get jsave ()
+    {
+        return this.getAttribute('jsave') ;
+    }
 
-                    this.innerHTML = o1 ;
-	      }
+    set jsave (value)
+    {
+        this.setAttribute('jsave', value) ;
+    }
 
-	      connectedCallback ()
-	      {
-		    this.render('connectedCallback') ;
-	      }
+    get jshare ()
+    {
+        return this.getAttribute('jshare') ;
+    }
 
-	      attributeChangedCallback (name, oldValue, newValue)
-	      {
-		    this.render('attributeChangedCallback') ;
-	      }
-
-	      get fid ( )
-	      {
-                   return this.getAttribute('fid') ;
-	      }
-
-	      set fid ( value )
-	      {
-                   this.setAttribute('fid', value) ;
-	      }
-
-	      get jsave ( )
-	      {
-                   return this.getAttribute('jsave') ;
-	      }
-
-	      set jsave ( value )
-	      {
-                   this.setAttribute('jsave', value) ;
-	      }
-
-	      get jshare ( )
-	      {
-                   return this.getAttribute('jshare') ;
-	      }
-
-	      set jshare ( value )
-	      {
-                   this.setAttribute('jshare', value) ;
-	      }
-        }
-
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-save-file', ws_save_file) ;
-        }
-
+    set jshare (value)
+    {
+        this.setAttribute('jshare', value) ;
+    }
+}

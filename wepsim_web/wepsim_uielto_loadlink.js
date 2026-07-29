@@ -18,97 +18,96 @@
  *
  */
 
+import { dispatch } from './wepsim_web_actions.js';
 
-        /*
-         *  Load link
-         */
+export class ws_load_link extends HTMLElement
+{
+    static get observedAttributes()
+    {
+        return ['fid', 'jload'] ;
+    }
 
-        /* jshint esversion: 6 */
-        class ws_load_link extends HTMLElement
+    constructor ()
+    {
+        super();
+    }
+
+    update_internal_attributes ()
+    {
+        var fid = this.getAttribute('fid') ;
+        if (fid === null)
+            this.setAttribute('fid', 'id58') ;
+
+        var jload = this.getAttribute('jload') ;
+        if (jload === null)
+            this.setAttribute('jload', '') ;
+    }
+
+    render (event_name)
+    {
+        this.update_internal_attributes() ;
+
+        var o1 = '' ;
+        o1    += "<div class='card border-secondary h-100'>" +
+            "<div class='card-header border-secondary text-white bg-secondary p-1'>" +
+            " <h5 class='m-0'>" +
+            " <span class='text-white bg-secondary' data-langkey='Input link'>Input link</span>" +
+            " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
+            "         data-bind='click' data-action='load'><span data-langkey='Load'>Load</span></button>" +
+            ' </h5>' +
+            '</div>' +
+            "<div class='card-body'>" +
+            'Load from the following link:<br>' +
+            '<textarea id="' + this.fid + '" class="form-control" ' +
+            '          row="5" style="height:70%" ' +
+            '></textarea>' +
+            '<br>' +
+            '</div>' +
+            '</div>' ;
+
+        this.innerHTML = o1 ;
+    }
+
+    bindElements ()
+    {
+        this.addEventListener('click', (e) =>
         {
-              static get observedAttributes()
-	      {
-	            return [ 'fid', 'jload' ] ;
-	      }
+            const el = e.target.closest('[data-bind="click"]');
+            if (!el) return;
+            e.preventDefault();
+            if (dispatch('click', el, this, e)) e.stopPropagation();
+        });
+    }
 
-	      constructor ()
-	      {
-		    // parent
-		    super();
-	      }
+    connectedCallback ()
+    {
+        this.render('connectedCallback') ;
+        this.bindElements();
+    }
 
-	      update_internal_attributes ( )
-	      {
-                    // fid
-                    var fid = this.getAttribute('fid') ;
-                    if (fid === null)
-                        this.setAttribute('fid', 'id58') ;
+    attributeChangedCallback (name, oldValue, newValue)
+    {
+        this.render('attributeChangedCallback') ;
+    }
 
-                    // jload
-                    var jload = this.getAttribute('jload') ;
-                    if (jload === null)
-                        this.setAttribute('jload', '') ;
-	      }
+    get fid ()
+    {
+        return this.getAttribute('fid') ;
+    }
 
-	      render ( event_name )
-	      {
-                    // update attributes
-                    this.update_internal_attributes() ;
+    set fid (value)
+    {
+        this.setAttribute('fid', value) ;
+    }
 
-                    // save html
-                    var o1 = '' ;
-		    o1 += "<div class='card border-secondary h-100'>" +
-			  "<div class='card-header border-secondary text-white bg-secondary p-1'>" +
-			  " <h5 class='m-0'>" +
-			  " <span class='text-white bg-secondary' data-langkey='Input link'>Input link</span>" +
-			  " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
-                          "         onclick='" + this.jload + "'><span data-langkey='Load'>Load</span></button>" +
-			  " </h5>" +
-			  "</div>" +
-			  "<div class='card-body'>" +
-		          'Load from the following link:<br>' +
-	                  '<textarea id="' + this.fid + '" class="form-control" ' +
-	                  '          row="5" style="height:70%" ' +
-                          '></textarea>' +
-	                  '<br>' +
-			  "</div>" +
-			  "</div>" ;
+    get jload ()
+    {
+        return this.getAttribute('jload') ;
+    }
 
-                    this.innerHTML = o1 ;
-	      }
-
-	      connectedCallback ()
-	      {
-		    this.render('connectedCallback') ;
-	      }
-
-	      attributeChangedCallback (name, oldValue, newValue)
-	      {
-		    this.render('attributeChangedCallback') ;
-	      }
-
-	      get fid ( )
-	      {
-                   return this.getAttribute('fid') ;
-	      }
-
-	      set fid ( value )
-	      {
-                   this.setAttribute('fid', value) ;
-	      }
-
-	      get jload ( )
-	      {
-                   return this.getAttribute('jload') ;
-	      }
-
-	      set jload ( value )
-	      {
-                   this.setAttribute('jload', value) ;
-	      }
-        }
-
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-load-link', ws_load_link) ;
-        }
+    set jload (value)
+    {
+        this.setAttribute('jload', value) ;
+    }
+}
 

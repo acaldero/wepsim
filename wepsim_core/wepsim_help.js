@@ -18,100 +18,116 @@
  *
  */
 
+import $ from 'jquery';
+import { simcore_record_append_new } from '../sim_core/sim_core_record.js';
+import { get_cfg, is_mobile } from '../sim_core/sim_cfg.js';
+import { simcore_ga } from '../sim_core/sim_core_ga.js';
 
-    /*
+/*
      * Help
      */
 
-    function wepsim_help_set ( type, ref )
-    {
-	    $('#help1_ref').attr('components', type + ':' + ref) ;
+export function wepsim_help_set (type, ref)
+{
+    $('#help1_ref').attr('components', type + ':' + ref) ;
 
-            // add if recording
-            simcore_record_append_new('Update help content',
-	       	                      'wepsim_help_set("' + type + '", "' + ref + '");\n') ;
-    }
+    // add if recording
+    simcore_record_append_new('Update help content',
+                              'wepsim_help_set("' + type + '", "' + ref + '");\n') ;
+}
 
-
-    /*
+/*
      * Help URI
      */
 
-    function request_html_url ( r_url )
-    {
-        var robj = null ;
+export function request_html_url (r_url)
+{
+    var robj = null ;
 
-	if (false === is_mobile())
+    if (false === is_mobile())
+    {
+        if (navigator.onLine)
+            robj = fetch(r_url);
+        else robj = caches.match(r_url).then() ;
+    }
+    else
+    {
+        robj = $.ajax(r_url, { type: 'GET', dataType: 'html' }) ;
+    }
+
+    return robj ;
+}
+
+export function update_div_frompartialhtml (helpdiv, key, data)
+{
+    var default_content = '<br>Sorry, No more details available for this element.<p>\n' ;
+
+    if ('' === data)
+        $(helpdiv).html(default_content) ;
+    else $(helpdiv).html(data) ;
+
+    if (('' === data) || ('' === key) || ('#' === key))
+    {
+        return ;
+    }
+
+    // (key != "") && (data != "")
+    var help_content = $(helpdiv).filter(key).html() ;
+    if (typeof help_content === 'undefined')
+    {
+        help_content = $(helpdiv).find(key).html() ;
+    }
+    if (typeof help_content === 'undefined')
+    {
+        help_content = default_content ;
+    }
+
+    $(helpdiv).html(help_content) ;
+}
+
+export function resolve_html_url (helpdiv, r_url, key, update_div)
+{
+    return request_html_url(r_url).then(function (data)
+    {
+        if (typeof data == 'object')
         {
-            if (navigator.onLine)
-                 robj = fetch(r_url);
-            else robj = caches.match(r_url).then() ;
+            data.text().then(function(res)
+            {
+                update_div_frompartialhtml(helpdiv, key, res);
+                update_div() ;
+            }) ;
         }
         else
         {
-            robj = $.ajax(r_url, { type: 'GET', dataType: 'html' }) ;
+            update_div_frompartialhtml(helpdiv, key, data) ;
+            update_div() ;
         }
+    }) ;
+}
 
-        return robj ;
-    }
+export function update_signal_loadhelp (helpdiv, simhw, key)
+{
+    var curr_idiom = get_cfg('ws_idiom') ;
 
-    function update_div_frompartialhtml ( helpdiv, key, data )
+    var help_base = 'repo/hardware/' + simhw + '/help/signals-' + curr_idiom + '.html' ;
+    resolve_html_url(helpdiv, help_base, '#' + key, function()
     {
-		var default_content = '<br>Sorry, No more details available for this element.<p>\n' ;
+        $(helpdiv).trigger('create') ;
+    }) ;
 
-		if ("" === data)
-		     $(helpdiv).html(default_content) ;
-		else $(helpdiv).html(data) ;
+    simcore_ga('help', 'help.signal', 'help.signal.' + simhw + '.' + key);
+}
 
-		if ( ("" === data) || ("" === key) || ("#" === key) ) {
-                     return ;
-		}
+export function update_checker_loadhelp (helpdiv, key)
+{
+    var curr_idiom = get_cfg('ws_idiom') ;
+    var help_base  = 'help/simulator-' + curr_idiom + '.html' ;
 
-                // (key != "") && (data != "")
-		var help_content = $(helpdiv).filter(key).html() ;
-		if (typeof help_content === "undefined") {
-		    help_content = $(helpdiv).find(key).html() ;
-		}
-		if (typeof help_content === "undefined") {
-		    help_content = default_content ;
-		}
-
-		$(helpdiv).html(help_content) ;
-    }
-
-    function resolve_html_url ( helpdiv, r_url, key, update_div )
+    resolve_html_url(helpdiv, help_base, '#' + key, function()
     {
-        return request_html_url(r_url).then(function (data) {
-		    if (typeof data == "object") {
-			 data.text().then(function(res) {
-                                             update_div_frompartialhtml(helpdiv, key, res);
-                                             update_div() ;
-                                          }) ;
-                    }
-		    else {
-                         update_div_frompartialhtml(helpdiv, key, data) ;
-                         update_div() ;
-                    }
-	       }) ;
-    }
+        $(helpdiv).trigger('create') ;
+    }) ;
 
-    function update_signal_loadhelp ( helpdiv, simhw, key )
-    {
-	 var curr_idiom = get_cfg('ws_idiom') ;
-
-	 var help_base = 'repo/hardware/' + simhw + '/help/signals-' + curr_idiom + '.html' ;
-         resolve_html_url(helpdiv, help_base, '#'+key, function() { $(helpdiv).trigger('create') ; }) ;
-
-         simcore_ga('help', 'help.signal', 'help.signal.' + simhw + '.' + key);
-    }
-
-    function update_checker_loadhelp ( helpdiv, key )
-    {
-         var curr_idiom = get_cfg('ws_idiom') ;
-  	 var help_base = 'help/simulator-' + curr_idiom + '.html' ;
-
-         resolve_html_url(helpdiv, help_base, '#'+key, function() { $(helpdiv).trigger('create') ; }) ;
-
-         simcore_ga('help', 'help.checker', 'help.checker.' + key);
-    }
+    simcore_ga('help', 'help.checker', 'help.checker.' + key);
+}
 

@@ -18,31 +18,34 @@
  *
  */
 
+// Tranlation thanks to https://github.com/shiptux
 
-    // Tranlation thanks to https://github.com/shiptux
+export function i18n_zh_cn_register_dialogs(i18n)
+{
 
     i18n.eltos.dialogs.zh_cn = {
 
-		'Show/Hide ActionBar':			'显示/隐藏动作栏',
-		'Show/Hide Slider':			'显示/隐藏滑块',
-		'WepSIM User Interface skin':		'WepSIM用户界面皮肤',
-		'Initial intro':			'初始介绍',
-		'About WepSIM':				'关于WepSIM',
-		'Title':				'标题',
-		'Message':				'信息',
-		'Duration':				'持续时间',
-		'Confirm remove record...':		'你想删除实际记录吗？',
-		'Close or Reset...':			'请单击“关闭”以保留它，或单击“重置”按钮将其删除。',
-		'Sure Control Memory...':		'你想让我保存当前的控制存储器内容而不是编辑器内容吗？',
-		'Show/Hide labels':			'显示/隐藏标签',
-		'Show/Hide content':			'显示/隐藏内容',
-		'Show/Hide assembly':			'显示/隐藏汇编',
-		'Show/Hide pseudo-instructions':	'显示/隐藏伪指令',
-		'Close':				'关',
-		'details':				'细节',
-                'idiom': 				'语言',
+        'Show/Hide ActionBar':           '显示/隐藏动作栏',
+        'Show/Hide Slider':              '显示/隐藏滑块',
+        'WepSIM User Interface skin':    'WepSIM用户界面皮肤',
+        'Initial intro':                 '初始介绍',
+        'About WepSIM':                  '关于WepSIM',
+        'Title':                         '标题',
+        'Message':                       '信息',
+        'Duration':                      '持续时间',
+        'Confirm remove record...':      '你想删除实际记录吗？',
+        'Close or Reset...':             '请单击“关闭”以保留它，或单击“重置”按钮将其删除。',
+        'Sure Control Memory...':        '你想让我保存当前的控制存储器内容而不是编辑器内容吗？',
+        'Show/Hide labels':              '显示/隐藏标签',
+        'Show/Hide content':             '显示/隐藏内容',
+        'Show/Hide assembly':            '显示/隐藏汇编',
+        'Show/Hide pseudo-instructions': '显示/隐藏伪指令',
+        'Close':                         '关',
+        'details':                       '细节',
+        'idiom':                         '语言',
 
-		'_last_':				'_last_'
+        '_last_': '_last_',
 
     };
+}
 

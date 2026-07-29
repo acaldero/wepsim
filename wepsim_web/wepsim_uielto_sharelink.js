@@ -18,126 +18,156 @@
  *
  */
 
+import $ from 'jquery';
+import QRCode from 'qrcode';
+import { share_as_uri, share_information } from '../wepsim_core/wepsim_share.js';
+import { wait_if_uievents } from '../sim_core/sim_core_ctrl.js';
+import { wepsim_notify_success } from '../wepsim_core/wepsim_notify.js';
 
-        /*
+/*
          *  Share link
          */
 
-        /* jshint esversion: 6 */
-        class ws_share_link extends HTMLElement
+/* jshint esversion: 6 */
+export class ws_share_link extends HTMLElement
+{
+    static get observedAttributes()
+    {
+        return ['fid', 'jshare'] ;
+    }
+
+    constructor ()
+    {
+        // parent
+        super();
+    }
+
+    update_internal_attributes ()
+    {
+        // fid
+        var fid = this.getAttribute('fid') ;
+        if (fid === null)
+            this.setAttribute('fid', 'id52') ;
+
+        // jshare
+        var jshare = this.getAttribute('jshare') ;
+        if (jshare === null)
+            this.setAttribute('jshare', '') ;
+    }
+
+    render (event_name)
+    {
+        // update attributes
+        this.update_internal_attributes() ;
+
+        // save html
+        var o1 = '' ;
+        o1    += "<div class='card border-secondary h-100'>" +
+            "<div class='card-header border-secondary text-white bg-secondary p-1'>" +
+            " <h5 class='m-0'>" +
+            " <span class='text-white bg-secondary' data-langkey='Link'>Link</span>" +
+            " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
+            "         data-bind='click' data-action='share'><span data-langkey='Share'>Share</span></button>" +
+            " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
+            "         data-bind='click' data-action='copy'><span data-langkey='Copy'>Copy</span></button>" +
+            ' </h5>' +
+            '</div>' +
+            "<div class='card-body p-2'>" +
+            'You can use the following link:<br>' +
+            '<input id="qrcode2" class="form-control" type="text" readonly ' +
+            '       data-bind="click" data-action="textarea-copy" ' +
+            '       value="Loading..." />' +
+            '<canvas id="qrcode1" class="mx-auto d-block" style="width:90%;aspect-ratio:1"></canvas>' +
+            '</div>' +
+            '</div>' ;
+
+        this.innerHTML = o1 ;
+
+        // get URL and QR
+        var this_jshare = this.jshare ;
+        wait_if_uievents(function()
         {
-              static get observedAttributes()
-	      {
-	            return [ 'fid', 'jshare' ] ;
-	      }
+            try
+            {
+                var share_text = share_as_uri(this_jshare) ;
+                $('#qrcode2').val(share_text) ;
 
-	      constructor ()
-	      {
-		    // parent
-		    super();
-	      }
+                var canvas = document.getElementById('qrcode1') ;
+                QRCode.toCanvas(canvas, share_text, function(error)
+                {
+                    if (error)
+                    {
+                        canvas.style.display = 'none' ;
+                    }
+                    else
+                    {
+                        canvas.style.width  = '90%';
+                        canvas.style.height = '';
+                    }
+                }) ;
+            }
+            catch (e)
+            {
+                var el = document.getElementById('qrcode1') ;
+                if (el) el.style.display = 'none' ;
+            }
+        }, 200) ;
+    }
 
-	      update_internal_attributes ( )
-	      {
-                    // fid
-                    var fid = this.getAttribute('fid') ;
-                    if (fid === null)
-                        this.setAttribute('fid', 'id52') ;
+    bindElements ()
+    {
+        this.addEventListener('click', (e) =>
+        {
+            const el = e.target.closest('[data-bind="click"]');
+            if (!el) return;
+            e.preventDefault();
+            switch (el.dataset.action)
+            {
+                case 'share':
+                    var c = document.getElementById('qrcode2').value;
+                    share_information('share', 'title', 'text', c);
+                    break;
+                case 'copy':
+                    var c2 = document.getElementById('qrcode2').value;
+                    navigator.clipboard.writeText(c2);
+                    wepsim_notify_success('<strong>INFO</strong>', 'Copied to clipboard!');
+                    break;
+                case 'textarea-copy':
+                    navigator.clipboard.writeText(el.value);
+                    break;
+            }
+        });
+    }
 
-                    // jshare
-                    var jshare = this.getAttribute('jshare') ;
-                    if (jshare === null)
-                        this.setAttribute('jshare', '') ;
-	      }
+    connectedCallback ()
+    {
+        this.render('connectedCallback') ;
+        this.bindElements();
+    }
 
-	      render ( event_name )
-	      {
-                    // update attributes
-                    this.update_internal_attributes() ;
+    attributeChangedCallback (name, oldValue, newValue)
+    {
+        this.render('attributeChangedCallback') ;
+    }
 
-                    // save html
-                    var o1 = '' ;
-		    o1 += "<div class='card border-secondary h-100'>" +
-			  "<div class='card-header border-secondary text-white bg-secondary p-1'>" +
-			  " <h5 class='m-0'>" +
-			  " <span class='text-white bg-secondary' data-langkey='Link'>Link</span>" +
-			  " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
-                          '         onclick="var c = document.getElementById(\'qrcode2\').value;' +
-                          '                  share_information(\'share\', \'title\', \'text\', c);" ' +
-                          "><span data-langkey='Share'>Share</span></button>" +
-			  " <button class='btn bg-body-tertiary mx-1 float-end py-0 col-auto' " +
-                          '         onclick="var c = document.getElementById(\'qrcode2\').value;' +
-                          '                  navigator.clipboard.writeText(c); ' +
-                          '                  wepsim_notify_success(\'<strong>INFO</strong>\', ' +
-                          '                                        \'Copied to clipboard!\');" ' +
-                          "><span data-langkey='Copy'>Copy</span></button>" +
-			  " </h5>" +
-			  "</div>" +
-			  "<div class='card-body'>" +
-		          'You can use the following link:<br>' +
-	                  '<textarea id="qrcode2" class="form-control" ' +
-	                  '          row="5" style="height:70%" ' +
-                          '          onclick="navigator.clipboard.writeText(this.value);" ' +
-                          '>Loading...</textarea>' +
-	                  '<br>' +
-	               // '<div id="qrcode1" class="mx-auto"></div>' +
-		       // '<br>' +
-			  "</div>" +
-			  "</div>" ;
+    get fid ()
+    {
+        return this.getAttribute('fid') ;
+    }
 
-                    this.innerHTML = o1 ;
+    set fid (value)
+    {
+        this.setAttribute('fid', value) ;
+    }
 
-                    // get URL and QR
-	            var this_jshare = this.jshare ;
-                    wait_if_uievents(function() {
-				    try
-				    {
-				       var share_text = share_as_uri(this_jshare) ;
-				       $("#qrcode2").html(share_text) ;
+    get jshare ()
+    {
+        return this.getAttribute('jshare') ;
+    }
 
-				    // $("#qrcode1").html('You can use the following QR-code:<br>') ;
-				    // var qrcode = new QRCode("qrcode1") ;
-				    // qrcode.makeCode(share_text) ;
-				    }
-				    catch (e) {
-				    // $("#qrcode1").html(e) ;
-				       $("#qrcode1").html('') ;
-				    }
-                               }, 200) ;
-	      }
-
-	      connectedCallback ()
-	      {
-		    this.render('connectedCallback') ;
-	      }
-
-	      attributeChangedCallback (name, oldValue, newValue)
-	      {
-		    this.render('attributeChangedCallback') ;
-	      }
-
-	      get fid ( )
-	      {
-                   return this.getAttribute('fid') ;
-	      }
-
-	      set fid ( value )
-	      {
-                   this.setAttribute('fid', value) ;
-	      }
-
-	      get jshare ( )
-	      {
-                   return this.getAttribute('jshare') ;
-	      }
-
-	      set jshare ( value )
-	      {
-                   this.setAttribute('jshare', value) ;
-	      }
-        }
-
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-share-link', ws_share_link) ;
-        }
+    set jshare (value)
+    {
+        this.setAttribute('jshare', value) ;
+    }
+}
 

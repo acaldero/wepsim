@@ -18,120 +18,144 @@
  *
  */
 
+import { get_value, set_value } from './sim_core_values.js';
+import { simhw_sim_components, simhw_sim_signal, simhw_sim_state } from '../sim_hw/sim_hw_index.js';
+import { signal_fire } from '../sim_hw/sim_hw_signal.js';
+import { compute_behavior } from '../sim_hw/sim_hw_behavior.js';
+import { get_simware } from './sim_adt_core.js';
+import { ws_alert } from './sim_core_ui.js';
 
-    /*
+/*
      * Native microcode support
      */
 
-    function simcore_native_get_signal ( elto )
+export function simcore_native_get_signal (elto)
+{
+    return (get_value(simhw_sim_signal(elto)) >>> 0) ;
+}
+
+export function simcore_native_set_signal (elto, value)
+{
+    set_value(simhw_sim_signal(elto), value) ;
+
+    signal_fire(elto) ; // compute_behavior("FIRE " + elto) ;
+
+    return value ;
+}
+
+export function simcore_native_get_value (component, elto)
+{
+    var index = 0 ;
+
+    var sim_components = simhw_sim_components() ;
+    var compo_index    = component ;
+
+    if ('DEVICE' === component)
     {
-        return (get_value(simhw_sim_signal(elto)) >>> 0) ;
+        compo_index = 'IO' ;
     }
 
-    function simcore_native_set_signal ( elto, value )
+    if (typeof sim_components[compo_index].get_value !== 'undefined')
     {
-        set_value(simhw_sim_signal(elto), value) ;
-
-	signal_fire(elto) ; //compute_behavior("FIRE " + elto) ;
-
-	return value ;
+        return sim_components[compo_index].get_value(elto) ;
     }
 
-    function simcore_native_get_value ( component, elto )
+    return false ;
+}
+
+export function simcore_native_set_value (component, elto, value)
+{
+    var index = 0 ;
+
+    var sim_components = simhw_sim_components() ;
+    var compo_index    = component ;
+
+    if ('BR' === component)
+        compo_index = 'CPU' ;
+    if ('DEVICE' === component)
+        compo_index = 'IO' ;
+
+    if (typeof sim_components[compo_index].set_value !== 'undefined')
     {
-        var index = 0 ;
+        return sim_components[compo_index].set_value(elto, value) ;
+    }
 
-        var sim_components = simhw_sim_components() ;
-	var compo_index = component ;
+    return false ;
+}
 
-        if ("DEVICE" === component) {
-	    compo_index = "IO" ;
+export function simcore_native_get_fields (signature_raw)
+{
+    var SIMWARE = get_simware() ;
+
+    for (var key in SIMWARE.firmware)
+    {
+        if (SIMWARE.firmware[key].signatureRaw === signature_raw)
+        {
+            return SIMWARE.firmware[key].fields ;
         }
+    }
+}
 
-        if (typeof sim_components[compo_index].get_value !== "undefined") {
-            return sim_components[compo_index].get_value(elto) ;
-        }
-
+export function simcore_native_get_field_from_ir (fields, index)
+{
+    if (typeof fields[index] === 'undefined')
+    {
+        ws_alert('simcore_native_get_field_from_ir: index (' + index + ') out of range.') ;
         return false ;
     }
 
-    function simcore_native_set_value ( component, elto, value )
+    var value       = get_value(simhw_sim_state('REG_IR')) ;
+    var left_shift  = (31 - parseInt(fields[index].startbit)) ;
+    var right_shift = parseInt(fields[index].stopbit) ;
+
+    value = value << left_shift ;
+    value = value >>> left_shift ;
+    value = value >>> right_shift ;
+
+    return value ;
+}
+
+export function simcore_native_deco ()
+{
+    compute_behavior('DECO') ;
+}
+
+export function simcore_native_go_maddr (maddr)
+{
+    set_value(simhw_sim_state('MUXA_MICROADDR'), maddr) ;
+}
+
+export function simcore_native_go_opcode ()
+{
+    var maddr = get_value(simhw_sim_state('ROM_MUXA')) ;
+    set_value(simhw_sim_state('MUXA_MICROADDR'), maddr) ;
+}
+
+export function simcore_native_go_instruction (signature_raw)
+{
+    var SIMWARE = get_simware() ;
+
+    for (var key in SIMWARE.firmware)
     {
-        var index = 0 ;
-
-        var sim_components = simhw_sim_components() ;
-	var compo_index = component ;
-
-        if ("BR" === component)
-	    compo_index = "CPU" ;
-        if ("DEVICE" === component)
-	    compo_index = "IO" ;
-
-        if (typeof sim_components[compo_index].set_value !== "undefined") {
-            return sim_components[compo_index].set_value(elto, value) ;
-        }
-
-        return false ;
-    }
-
-    function simcore_native_get_fields ( signature_raw )
-    {
-        var SIMWARE = get_simware() ;
-
-        for (var key in SIMWARE.firmware)
+        if (SIMWARE.firmware[key].signatureRaw === signature_raw)
         {
-             if (SIMWARE.firmware[key].signatureRaw === signature_raw) {
-                 return SIMWARE.firmware[key].fields ;
-             }
+            var maddr = SIMWARE.firmware[key]['mc-start'] ;
+            set_value(simhw_sim_state('MUXA_MICROADDR'), maddr) ;
+            return ;
         }
     }
+}
 
-    function simcore_native_get_field_from_ir ( fields, index )
-    {
-        if (typeof fields[index] === "undefined") {
-            ws_alert('simcore_native_get_field_from_ir: index (' + index + ') out of range.') ;
-            return false ;
-        }
-
-        var value = get_value(simhw_sim_state('REG_IR')) ;
-        var left_shift  = (31 - parseInt(fields[index].startbit)) ;
-        var right_shift =       parseInt(fields[index].stopbit) ;
-
-        value = value <<  left_shift ;
-        value = value >>> left_shift ;
-        value = value >>> right_shift ;
-
-        return value ;
-    }
-
-    function simcore_native_deco ( )
-    {
-        compute_behavior("DECO") ;
-    }
-
-    function simcore_native_go_maddr ( maddr )
-    {
-        set_value(simhw_sim_state('MUXA_MICROADDR'), maddr) ;
-    }
-
-    function simcore_native_go_opcode ( )
-    {
-	var maddr = get_value(simhw_sim_state('ROM_MUXA')) ;
-        set_value(simhw_sim_state('MUXA_MICROADDR'), maddr) ;
-    }
-
-    function simcore_native_go_instruction ( signature_raw )
-    {
-        var SIMWARE = get_simware() ;
-
-        for (var key in SIMWARE.firmware)
-        {
-             if (SIMWARE.firmware[key].signatureRaw === signature_raw)
-             {
-                 var maddr = SIMWARE.firmware[key]["mc-start"] ;
-                 set_value(simhw_sim_state('MUXA_MICROADDR'), maddr) ;
-                 return ;
-             }
-        }
-    }
+export var native_fns = {
+    'simcore_native_get_signal':        simcore_native_get_signal,
+    'simcore_native_set_signal':        simcore_native_set_signal,
+    'simcore_native_get_value':         simcore_native_get_value,
+    'simcore_native_set_value':         simcore_native_set_value,
+    'simcore_native_get_fields':        simcore_native_get_fields,
+    'simcore_native_get_field_from_ir': simcore_native_get_field_from_ir,
+    'simcore_native_deco':              simcore_native_deco,
+    'simcore_native_go_maddr':          simcore_native_go_maddr,
+    'simcore_native_go_opcode':         simcore_native_go_opcode,
+    'simcore_native_go_instruction':    simcore_native_go_instruction,
+} ;
 

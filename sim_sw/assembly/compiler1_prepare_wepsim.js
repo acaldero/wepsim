@@ -18,6 +18,12 @@
  *
  */
 
+import { BYTE_LENGTH, WORD_BYTES, WORD_LENGTH } from './datatypes.js';
+
+import { simhw_sim_ctrlStates_get } from '../../sim_hw/sim_hw_index.js';
+import { wsasm_make_signature_user, wsasm_order2index_startstop } from './compiler2_asm_obj.js';
+import { base_replaceAll } from '../../sim_core/sim_core_ctrl.js';
+import { wsasm_expand_options } from './compiler_options.js';
 
 /* jshint esversion: 9 */
 
@@ -29,354 +35,382 @@
 //   * wsasm_prepare_context_pseudoinstructions ( context, CU_data )
 //
 
-function wsasm_prepare_oc ( elto, aux )
+export function wsasm_prepare_oc (elto, aux)
 {
-	elto.oc = {
-                     value:         '',    // "begin {...}" has no 'co/oc' field
-                     asm_start_bit: [ 0 ], // initial value to 0:0 to skip this field by default
-                     asm_stop_bit:  [ 0 ]
-                  } ;
+    elto.oc = {
+        value:         '', // "begin {...}" has no 'co/oc' field
+        asm_start_bit: [0], // initial value to 0:0 to skip this field by default
+        asm_stop_bit:  [0],
+    } ;
 
-        // set elto.oc.value
-	if (typeof aux.oc !== "undefined") {
-	     elto.oc.value = aux.oc ;
-        }
+    // set elto.oc.value
+    if (typeof aux.oc !== 'undefined')
+    {
+        elto.oc.value = aux.oc ;
+    }
 
-        // IF empty 'oc' -> return default elto...
-        if (0 == elto.oc.value.length) {
-            return elto ;
-        }
-
-        // copy start/stop from ir.default_eltos by default
-        var xr_info = simhw_sim_ctrlStates_get() ;
-	elto.oc.asm_start_bit[0] = parseInt(xr_info.ir.default_eltos.oc.begin) ;
-	elto.oc.asm_stop_bit [0] = parseInt(xr_info.ir.default_eltos.oc.end) ;
-        elto.oc.asm_n_bits       = elto.oc.asm_stop_bit[0] - elto.oc.asm_start_bit[0] + 1 ;
-
-        // IF firmware v1 -> return elto...
-	if (typeof aux.fields_all == "undefined") {
-            return elto ;
-        }
-
-        // IF firmware v2 with start/stop bit -> copy + return elto
-        for (let k=0; k<aux.fields_all.length; k++)
-        {
-	     if (typeof aux.fields_all[k].type == "undefined") {
-                 continue ;
-             }
-	     if (aux.fields_all[k].type != "oc") {
-                 continue ;
-             }
-
-             // copy start/stop bits...
-	     for (let m=0; m<aux.fields_all[k].bits_start.length; m++) {
-	    	  elto.oc.asm_start_bit[m] = parseInt(aux.fields_all[k].bits_start[m]) ;
-                  elto.oc.asm_stop_bit [m] = parseInt(aux.fields_all[k].bits_stop[m]) ;
-	     }
-
-             // translate bit to index...
-             elto.oc.asm_n_bits = wsasm_order2index_startstop(elto.oc.asm_start_bit, elto.oc.asm_stop_bit) ;
-        }
-
+    // IF empty 'oc' -> return default elto...
+    if (0 == elto.oc.value.length)
+    {
         return elto ;
-}
+    }
 
-function wsasm_prepare_eoc ( elto, aux )
-{
-	elto.eoc = {
-                      value:         '',    // "begin {...}" has no 'cop/eoc' field
-                      asm_start_bit: [ 0 ], // initial value to 0:0 to skip this field by default
-                      asm_stop_bit:  [ 0 ]
-                   } ;
+    // copy start/stop from ir.default_eltos by default
+    var xr_info              = simhw_sim_ctrlStates_get() ;
+    elto.oc.asm_start_bit[0] = parseInt(xr_info.ir.default_eltos.oc.begin) ;
+    elto.oc.asm_stop_bit [0] = parseInt(xr_info.ir.default_eltos.oc.end) ;
+    elto.oc.asm_n_bits       = elto.oc.asm_stop_bit[0] - elto.oc.asm_start_bit[0] + 1 ;
 
-        // elto.eoc.value
-	if (typeof aux.eoc !== "undefined") {
-	     elto.eoc.value = aux.eoc ;
-        }
-	else if (typeof aux.eoc !== "undefined") {
-	     elto.eoc.value = aux.eoc ;
-        }
-
-        // copy start/stop from ir.default_eltos by default
-        var xr_info = simhw_sim_ctrlStates_get() ;
-	elto.eoc.asm_start_bit[0] = parseInt(xr_info.ir.default_eltos.eoc[0].begin) ;
-	elto.eoc.asm_stop_bit [0] = parseInt(xr_info.ir.default_eltos.eoc[0].end) ;
-        elto.eoc.asm_n_bits       = elto.eoc.asm_stop_bit[0] - elto.eoc.asm_start_bit[0] + 1 ;
-
-        // IF empty 'eoc' -> return elto...
-        if (0 == elto.eoc.value.length) {
-	    elto.eoc.asm_start_bit[0] = elto.eoc.asm_stop_bit[0] + 1 ; // in order to skip empty eoc
-            elto.eoc.asm_n_bits       = 0 ;
-            return elto ;
-        }
-
-        // IF firmware v1 -> return elto...
-	if (typeof aux.fields_all == "undefined") {
-            return elto ;
-        }
-
-        // IF firmware v2 with start/stop bit -> copy + return elto
-        for (let k=0; k<aux.fields_all.length; k++)
-        {
-	     if (typeof aux.fields_all[k].type == "undefined") {
-                 continue ;
-             }
-	     if (aux.fields_all[k].type != "eoc") {
-                 continue ;
-             }
-
-             // copy start/stop bits...
-	     for (let m=0; m<aux.fields_all[k].bits_start.length; m++) {
-	    	  elto.eoc.asm_start_bit[m] = parseInt(aux.fields_all[k].bits_start[m]) ;
-                  elto.eoc.asm_stop_bit [m] = parseInt(aux.fields_all[k].bits_stop[m]) ;
-	     }
-
-             // translate bit to index...
-             elto.eoc.asm_n_bits = wsasm_order2index_startstop(elto.eoc.asm_start_bit, elto.eoc.asm_stop_bit) ;
-        }
-
+    // IF firmware v1 -> return elto...
+    if (typeof aux.fields_all == 'undefined')
+    {
         return elto ;
+    }
+
+    // IF firmware v2 with start/stop bit -> copy + return elto
+    for (let k = 0; k < aux.fields_all.length; k++)
+    {
+        if (typeof aux.fields_all[k].type == 'undefined')
+        {
+            continue ;
+        }
+        if (aux.fields_all[k].type != 'oc')
+        {
+            continue ;
+        }
+
+        // copy start/stop bits...
+        for (let m = 0; m < aux.fields_all[k].bits_start.length; m++)
+        {
+            elto.oc.asm_start_bit[m] = parseInt(aux.fields_all[k].bits_start[m]) ;
+            elto.oc.asm_stop_bit [m] = parseInt(aux.fields_all[k].bits_stop[m]) ;
+        }
+
+        // translate bit to index...
+        elto.oc.asm_n_bits = wsasm_order2index_startstop(elto.oc.asm_start_bit, elto.oc.asm_stop_bit) ;
+    }
+
+    return elto ;
 }
 
-function wsasm_prepare_context_firmware ( context, CU_data )
+export function wsasm_prepare_eoc (elto, aux)
 {
-           let elto = null ;
-	   let aux  = null ;
-           let start_bit = [] ;
-           let stop_bit  = [] ;
-           let lower_bit = 0 ;
-           let w_n_bits  = 0 ;
-           let w_index   = 0 ;
-           let n_bits    = 0 ;
+    elto.eoc = {
+        value:         '', // "begin {...}" has no 'cop/eoc' field
+        asm_start_bit: [0], // initial value to 0:0 to skip this field by default
+        asm_stop_bit:  [0],
+    } ;
 
-	   // Fill firmware
-	   for (let i=0; i<CU_data.firmware.length; i++)
-           {
-		aux = CU_data.firmware[i];
+    // elto.eoc.value
+    if (typeof aux.eoc !== 'undefined')
+    {
+        elto.eoc.value = aux.eoc ;
+    }
 
-                // elto: initial fields...
-                elto = {} ;
+    // copy start/stop from ir.default_eltos by default
+    var xr_info               = simhw_sim_ctrlStates_get() ;
+    elto.eoc.asm_start_bit[0] = parseInt(xr_info.ir.default_eltos.eoc[0].begin) ;
+    elto.eoc.asm_stop_bit [0] = parseInt(xr_info.ir.default_eltos.eoc[0].end) ;
+    elto.eoc.asm_n_bits       = elto.eoc.asm_stop_bit[0] - elto.eoc.asm_start_bit[0] + 1 ;
 
-                elto.name                = aux.name.toLowerCase() ;
-		elto.isPseudoinstruction = false ;
-		elto.nwords              = parseInt(aux.nwords) ;
-		elto.oc                  = {} ;  // computed later
-		elto.eoc                 = {} ;  // computed later
-		elto.fields              = [] ;  // computed later
-		elto.signature           = aux.signature ;
-		elto.signature_type_str  = aux.name ;
-		elto.signature_type_arr  = [] ;  // computed later
-		elto.signature_size_str  = '' ;  // computed later
-		elto.signature_size_arr  = [] ;  // computed later
+    // IF empty 'eoc' -> return elto...
+    if (0 == elto.eoc.value.length)
+    {
+        elto.eoc.asm_start_bit[0] = elto.eoc.asm_stop_bit[0] + 1 ; // in order to skip empty eoc
+        elto.eoc.asm_n_bits       = 0 ;
+        return elto ;
+    }
 
-		if (typeof aux.signatureUser !== "undefined") {
-                    elto.signature_type_str = aux.signatureUser ;
-                }
+    // IF firmware v1 -> return elto...
+    if (typeof aux.fields_all == 'undefined')
+    {
+        return elto ;
+    }
 
-                // tooltip with details...
-		elto["mc-start"] = aux["mc-start"] ;
-		elto.microcode   = aux.microcode ;
-		elto.help        = aux.help ;
+    // IF firmware v2 with start/stop bit -> copy + return elto
+    for (let k = 0; k < aux.fields_all.length; k++)
+    {
+        if (typeof aux.fields_all[k].type == 'undefined')
+        {
+            continue ;
+        }
+        if (aux.fields_all[k].type != 'eoc')
+        {
+            continue ;
+        }
 
-                // fields: oc + eoc
-                wsasm_prepare_oc (elto, aux) ;
-                wsasm_prepare_eoc(elto, aux) ;
+        // copy start/stop bits...
+        for (let m = 0; m < aux.fields_all[k].bits_start.length; m++)
+        {
+            elto.eoc.asm_start_bit[m] = parseInt(aux.fields_all[k].bits_start[m]) ;
+            elto.eoc.asm_stop_bit [m] = parseInt(aux.fields_all[k].bits_stop[m]) ;
+        }
 
-                // fields...
-		if (typeof aux.fields !== "undefined") {
-                    elto.fields = aux.fields ;
-                }
+        // translate bit to index...
+        elto.eoc.asm_n_bits = wsasm_order2index_startstop(elto.eoc.asm_start_bit, elto.eoc.asm_stop_bit) ;
+    }
 
-		elto.signature_size_arr.push(elto.oc.value.length) ;
-                for (let j=0; j<elto.fields.length; j++)
+    return elto ;
+}
+
+export function wsasm_prepare_context_firmware (context, CU_data)
+{
+    let elto ;
+    let aux ;
+    let start_bit ;
+    let stop_bit ;
+    let lower_bit = 0 ;
+    let w_n_bits  = 0 ;
+    let w_index   = 0 ;
+    let n_bits ;
+    var om ;
+
+    // Fill firmware
+    for (let i = 0; i < CU_data.firmware.length; i++)
+    {
+        aux = CU_data.firmware[i];
+
+        // elto: initial fields...
+        elto = {} ;
+
+        elto.name                = aux.name.toLowerCase() ;
+        elto.isPseudoinstruction = false ;
+        elto.nwords              = parseInt(aux.nwords) ;
+        elto.oc                  = {} ; // computed later
+        elto.eoc                 = {} ; // computed later
+        elto.fields              = [] ; // computed later
+        elto.signature           = aux.signature ;
+        elto.signature_type_str  = aux.name ;
+        elto.signature_type_arr  = [] ; // computed later
+        elto.signature_size_str  = '' ; // computed later
+        elto.signature_size_arr  = [] ; // computed later
+
+        if (typeof aux.signatureUser !== 'undefined')
+        {
+            elto.signature_type_str = aux.signatureUser ;
+        }
+
+        // tooltip with details...
+        elto['mc-start'] = aux['mc-start'] ;
+        elto.microcode   = aux.microcode ;
+        elto.help        = aux.help ;
+
+        // cfg info
+        if (typeof aux.cfg_type !== 'undefined')
+            elto.cfg_type = aux.cfg_type ;
+        if (typeof aux.cfg_addr !== 'undefined')
+            elto.cfg_addr = aux.cfg_addr ;
+
+        // fields: oc + eoc
+        wsasm_prepare_oc (elto, aux) ;
+        wsasm_prepare_eoc(elto, aux) ;
+
+        // fields...
+        if (typeof aux.fields !== 'undefined')
+        {
+            elto.fields = aux.fields ;
+        }
+
+        elto.signature_size_arr.push(elto.oc.value.length) ;
+        for (let j = 0; j < elto.fields.length; j++)
+        {
+            // initial values...
+            start_bit = [] ;
+            stop_bit  = [] ;
+
+            if ('forwards' == context.options.field_multipart_order)
+            {
+                for (let m = 0; m < elto.fields[j].bits_start.length; m++)
                 {
-                     // initial values...
-                     start_bit = [] ;
-                     stop_bit  = [] ;
-
-                     if ("forwards" == context.options.field_multipart_order)
-                     {
-			 for (let m=0; m<elto.fields[j].bits_start.length; m++)
-			 {
-			      start_bit[m] = parseInt(elto.fields[j].bits_start[m]) ;
-	                      stop_bit[m]  = parseInt(elto.fields[j].bits_stop[m]) ;
-			 }
-                     }
-                     else // "backwards"
-                     {
-			 for (let m=0; m<elto.fields[j].bits_start.length; m++)
-			 {
-                              om = elto.fields[j].bits_start.length - 1 - m ;
-			      start_bit[m] = parseInt(elto.fields[j].bits_start[om]) ;
-	                      stop_bit[m]  = parseInt(elto.fields[j].bits_stop[om]) ;
-			 }
-                     }
-
-                     // translate from startbit/stop_bit to asm_start_bit/asm_stop_bit...
-                     n_bits = wsasm_order2index_startstop(start_bit, stop_bit) ;
-
-                     // copy back the computed values
-                     elto.fields[j].asm_start_bit = start_bit ;
-                     elto.fields[j].asm_stop_bit  = stop_bit ;
-                     elto.fields[j].asm_n_bits    = n_bits ;
-
-		     elto.signature_size_arr.push(n_bits) ;
+                    start_bit[m] = parseInt(elto.fields[j].bits_start[m]) ;
+                    stop_bit[m]  = parseInt(elto.fields[j].bits_stop[m]) ;
                 }
-
-                // elto: derived fields...
-                elto.signature_type_str = base_replaceAll(elto.signature_type_str, 'inm', 'imm') ;  // TODO: temporal fix
-		elto.signature_size_str = elto.signature_size_arr.join(' ') ;
-		elto.signature_type_arr = elto.signature_type_str.split(' ') ;
-                elto.signature_user     = wsasm_make_signature_user(elto, '') ;
-
-                // add elto to firmware
-	   	if (typeof context.firmware[elto.name] === "undefined") {
-	   	    context.firmware[elto.name] = [] ;
-		}
-
-	   	context.firmware[elto.name].push(elto) ;
-	   }
-
-	   return context ;
-}
-
-function wsasm_prepare_context_pseudoinstructions ( context, CU_data )
-{
-           let elto    = null ;
-	   let initial = null ;
-	   let finish  = null ;
-
-	   // Fill pseudoinstructions
-	   for (let i=0; i<CU_data.pseudoInstructions.length; i++)
-	   {
-		initial = CU_data.pseudoInstructions[i].initial ;
-		finish  = CU_data.pseudoInstructions[i].finish ;
-
-		if (typeof context.pseudoInstructions[initial.name] === "undefined")
+            }
+            else // "backwards"
+            {
+                for (let m = 0; m < elto.fields[j].bits_start.length; m++)
                 {
-	 	    context.pseudoInstructions[initial.name] = 0 ;
-		    if (typeof context.firmware[initial.name] === "undefined") {
-		        context.firmware[initial.name] = [] ;
-		    }
-		}
+                    om           = elto.fields[j].bits_start.length - 1 - m ;
+                    start_bit[m] = parseInt(elto.fields[j].bits_start[om]) ;
+                    stop_bit[m]  = parseInt(elto.fields[j].bits_stop[om]) ;
+                }
+            }
 
-		context.pseudoInstructions[initial.name]++;
+            // translate from startbit/stop_bit to asm_start_bit/asm_stop_bit...
+            n_bits = wsasm_order2index_startstop(start_bit, stop_bit) ;
 
-                // initial elto fields...
-                elto = {} ;
+            // copy back the computed values
+            elto.fields[j].asm_start_bit = start_bit ;
+            elto.fields[j].asm_stop_bit  = stop_bit ;
+            elto.fields[j].asm_n_bits    = n_bits ;
 
-                elto.name                = initial.name ;
-	        elto.isPseudoinstruction = true ;
-	        elto.fields              = [] ;
-	        elto.finish              = finish.signature ;
-	        elto.signature           = initial.signature ;
-	        elto.signature_type_str  = initial.signature.replace(/,/g," ") ;
+            elto.signature_size_arr.push(n_bits) ;
+        }
 
-                if (typeof initial.fields !== "undefined")  elto.fields = initial.fields ;
+        // elto: derived fields...
+        elto.signature_type_str = base_replaceAll(elto.signature_type_str, 'inm', 'imm') ; // TODO: temporal fix
+        elto.signature_size_str = elto.signature_size_arr.join(' ') ;
+        elto.signature_type_arr = elto.signature_type_str.split(' ') ;
+        elto.signature_user     = wsasm_make_signature_user(elto, '') ;
 
-                // elto: derived fields...
-                elto.signature_type_str = base_replaceAll(elto.signature_type_str, 'inm', 'imm') ;  // TODO: temporal fix
-	        elto.signature_type_arr = elto.signature_type_str.split(' ') ;
-		elto.signature_size_arr = Array(elto.signature_type_arr.length).fill(WORD_BYTES*BYTE_LENGTH);
-		elto.signature_size_str = elto.signature_size_arr.join(' ') ;
-                elto.signature_user     = wsasm_make_signature_user(elto, '') ;
+        // add elto to firmware
+        if (typeof context.firmware[elto.name] === 'undefined')
+        {
+            context.firmware[elto.name] = [] ;
+        }
 
-                // pseudoinstructions occupy at least 1 word (overridden in find_candidates if expand to more)
-                elto.nwords = 1 ;
+        context.firmware[elto.name].push(elto) ;
+    }
 
-                // add elto to firmware
-                context.firmware[initial.name].push(elto) ;
-	   }
-
-	   return context ;
+    return context ;
 }
 
-function wsasm_prepare_registers ( context, CU_data )
+export function wsasm_prepare_context_pseudoinstructions (context, CU_data)
 {
-	   var cu_data_rf_i = null ;
-	   var context_rf_i = null ;
-           var assoc_name   = '' ;
+    let elto ;
+    let initial ;
+    let finish ;
 
-           for (let key in CU_data.registers)
-           {
-                cu_data_rf_i = CU_data.registers[key] ;
+    // Fill pseudoinstructions
+    for (let i = 0; i < CU_data.pseudoInstructions.length; i++)
+    {
+        initial = CU_data.pseudoInstructions[i].initial ;
+        finish  = CU_data.pseudoInstructions[i].finish ;
 
-		context_rf_i = {} ;
-		context_rf_i.name = key ;
-		context_rf_i.registers = [] ;
-	        for (j=0; j<cu_data_rf_i.registers.length; j++)
-	        {
-	     	     if (typeof cu_data_rf_i.registers[j] === 'undefined') {
-                         continue ;
-                     }
-		     for (var k=0; k<cu_data_rf_i.registers[j].length; k++) {
-                          assoc_name = cu_data_rf_i.registers[j][k] ;
-		          context_rf_i.registers[assoc_name] = j ;
-                     }
-	        }
+        if (typeof context.pseudoInstructions[initial.name] === 'undefined')
+        {
+            context.pseudoInstructions[initial.name] = 0 ;
+            if (typeof context.firmware[initial.name] === 'undefined')
+            {
+                context.firmware[initial.name] = [] ;
+            }
+        }
 
-		context.registers[key] = context_rf_i ;
-	   }
+        context.pseudoInstructions[initial.name]++;
 
-	   return context ;
+        // initial elto fields...
+        elto = {} ;
+
+        elto.name                = initial.name ;
+        elto.isPseudoinstruction = true ;
+        elto.fields              = [] ;
+        elto.finish              = finish.signature ;
+        elto.signature           = initial.signature ;
+        elto.signature_type_str  = initial.signature.replace(/,/g, ' ') ;
+
+        if (typeof initial.fields !== 'undefined') elto.fields = initial.fields ;
+
+        // elto: derived fields...
+        elto.signature_type_str = base_replaceAll(elto.signature_type_str, 'inm', 'imm') ; // TODO: temporal fix
+        elto.signature_type_arr = elto.signature_type_str.split(' ') ;
+        elto.signature_size_arr = Array(elto.signature_type_arr.length).fill(WORD_BYTES * BYTE_LENGTH);
+        elto.signature_size_str = elto.signature_size_arr.join(' ') ;
+        elto.signature_user     = wsasm_make_signature_user(elto, '') ;
+
+        // cfg info from pseudo-instruction definition
+        if (typeof CU_data.pseudoInstructions[i].cfg_type !== 'undefined')
+            elto.cfg_type = CU_data.pseudoInstructions[i].cfg_type ;
+        if (typeof CU_data.pseudoInstructions[i].cfg_addr !== 'undefined')
+            elto.cfg_addr = CU_data.pseudoInstructions[i].cfg_addr ;
+
+        // pseudoinstructions occupy at least 1 word (overridden in find_candidates if expand to more)
+        elto.nwords = 1 ;
+
+        // add elto to firmware
+        context.firmware[initial.name].push(elto) ;
+    }
+
+    return context ;
 }
 
+export function wsasm_prepare_registers (context, CU_data)
+{
+    var cu_data_rf_i = null ;
+    var context_rf_i = null ;
+    var assoc_name   = '' ;
 
- /*
+    for (let key in CU_data.registers)
+    {
+        cu_data_rf_i = CU_data.registers[key] ;
+
+        context_rf_i           = {} ;
+        context_rf_i.name      = key ;
+        context_rf_i.registers = [] ;
+        for (let j = 0; j < cu_data_rf_i.registers.length; j++)
+        {
+            if (typeof cu_data_rf_i.registers[j] === 'undefined')
+            {
+                continue ;
+            }
+            for (var k = 0; k < cu_data_rf_i.registers[j].length; k++)
+            {
+                assoc_name                         = cu_data_rf_i.registers[j][k] ;
+                context_rf_i.registers[assoc_name] = j ;
+            }
+        }
+
+        context.registers[key] = context_rf_i ;
+    }
+
+    return context ;
+}
+
+/*
   *  Public API (see README.md for more information)
   */
 
-function wsasm_prepare_context ( CU_data, options )
+export function wsasm_prepare_context (CU_data, options)
 {
-	   // Check arguments
-           if (typeof CU_data == "undefined") {
-               return { error: 'CU_data is undefined in wsasm_prepare_context\n' } ;
-           }
+    // Check arguments
+    if (typeof CU_data == 'undefined')
+    {
+        return { error: 'CU_data is undefined in wsasm_prepare_context\n' } ;
+    }
 
-           // Initialize context...
-           var context = {} ;
-	   context.line           	= 1 ;      // here
-	   context.error          	= null ;
-	   context.i              	= 0 ;      // here
-           context.text                 = '' ;     // here
-	   context.tokens         	= [] ;
-	   context.token_types    	= [] ;
-	   context.t              	= 0 ;      // here
-           context.comments             = [] ;
-	   context.newlines       	= [] ;
-	   context.registers      	= {} ;     // here
-	   context.firmware             = {} ;     // here
-	   context.pseudoInstructions	= [];      // here
-	   context.stackRegister	= null ;
-	   context.metadata	        = CU_data.metadata ;
-	   context.options              = {} ;     // here
+    // Initialize context...
+    var context                = {} ;
+    context.line               = 1 ; // here
+    context.error              = null ;
+    context.i                  = 0 ; // here
+    context.text               = '' ; // here
+    context.tokens             = [] ;
+    context.token_types        = [] ;
+    context.t                  = 0 ; // here
+    context.comments           = [] ;
+    context.newlines           = [] ;
+    context.registers          = {} ; // here
+    context.firmware           = {} ; // here
+    context.pseudoInstructions = []; // here
+    context.stackRegister      = null ;
+    context.metadata           = CU_data.metadata ;
+    context.options            = {} ; // here
 
-           // Fill the assembler configuration
-           context.options = wsasm_expand_options(options) ;
+    // Fill the assembler configuration
+    context.options = wsasm_expand_options(options) ;
 
-	   if (typeof context.metadata.rel_mult != "undefined")
-                context.options.relative_offset_mult = parseInt(context.metadata.rel_mult) ;
-           else context.options.relative_offset_mult = WORD_BYTES ;
+    if (typeof context.metadata.rel_mult != 'undefined')
+        context.options.relative_offset_mult = parseInt(context.metadata.rel_mult) ;
+    else context.options.relative_offset_mult = WORD_BYTES ;
 
-           if (typeof context.metadata.endian != "undefined")
-                context.options.endian = context.metadata.endian ;
-           else context.options.endian = 'little' ;
+    if (typeof context.metadata.endian != 'undefined')
+        context.options.endian = context.metadata.endian ;
+    else context.options.endian = 'little' ;
 
-        context.options.pc_relative_offset = parseInt(context.metadata.pc_rel_offset) || 0;
+    context.options.pc_relative_offset = parseInt(context.metadata.pc_rel_offset) || 0;
 
-	   // Fill register names
-           context = wsasm_prepare_registers(context, CU_data) ;
+    // Fill register names
+    context = wsasm_prepare_registers(context, CU_data) ;
 
-	   // Fill firmware
-           var xr_info = simhw_sim_ctrlStates_get() ;
-           context.oc_size_default = parseInt(xr_info.ir.default_eltos.oc.length) ;
+    // Fill firmware
+    var xr_info             = simhw_sim_ctrlStates_get() ;
+    context.oc_size_default = parseInt(xr_info.ir.default_eltos.oc.length) ;
 
-           context = wsasm_prepare_context_firmware(context, CU_data) ;
+    context = wsasm_prepare_context_firmware(context, CU_data) ;
 
-	   // Fill pseudoinstructions
-           context = wsasm_prepare_context_pseudoinstructions(context, CU_data) ;
+    // Fill pseudoinstructions
+    context = wsasm_prepare_context_pseudoinstructions(context, CU_data) ;
 
-           // return context
-	   return context ;
+    // return context
+    return context ;
 }
 

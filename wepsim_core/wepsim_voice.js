@@ -18,58 +18,57 @@
  *
  */
 
+import { wepsim_notify_error } from './wepsim_notify.js';
+import { ws_info } from '../sim_core/sim_adt_core.js';
+import * as annyang from 'annyang';
+import SpeechKITT from '../src/lib/speechkitt.js';
 
-    /*
-     * Voice control
-     */
-
-    function wepsim_voice_init ( )
+export function wepsim_voice_init ()
+{
+    if (!annyang || !SpeechKITT)
     {
-	 // check if voice is available...
-         if (!annyang) {
-	     return false ;
-         }
-
-	 // setup annyang + speechkitt...
-         annyang.addCommands(ws_info.voice_commands);
-         annyang.addCallback('errorNetwork',
-                             function () {
-	                         annyang.abort() ;
-                                 alert('Sorry but some network connection is needed in order to use the voice recognition engine.');
-                             });
-
-         // setting up SpeachKITT...
-         SpeechKITT.annyang();
-         SpeechKITT.setStylesheet('external/speechkitt/themes/flat.css');
-         SpeechKITT.setInstructionsText('What can I help you with? (list)');
-         SpeechKITT.vroom();
-
-	 return true ;
+        return false ;
     }
 
-    function wepsim_voice_start ( )
-    {
-	 // check if voice is available...
-         if (!annyang) {
-              wepsim_notify_error('<h4>Warning:<br/>' + 'annyang not available' + '</h4>',
-                                  'Voice support is not available in this platform.') ;
-	     return false ;
-         }
+    // SpeechKITT expects annyang as a global, not a module-scoped import
+    window.annyang = annyang;
 
-	 //annyang.resume() ;
-         SpeechKITT.show();
-	 return true ;
+    annyang.addCommands(ws_info.voice_commands);
+    annyang.addCallback('errorNetwork',
+                        function ()
+                        {
+                            annyang.abort() ;
+                            alert('Sorry but some network connection is needed in order to use the voice recognition engine.');
+                        });
+
+    SpeechKITT.annyang();
+    SpeechKITT.setInstructionsText('What can I help you with? (list)');
+    SpeechKITT.vroom();
+
+    return true ;
+}
+
+export function wepsim_voice_start ()
+{
+    if (!annyang)
+    {
+        wepsim_notify_error('<h4>Warning:<br/>' + 'annyang not available' + '</h4>',
+                            'Voice support is not available in this platform.') ;
+        return false ;
     }
 
-    function wepsim_voice_stop ( )
-    {
-	 // check if voice is available...
-         if (!annyang) {
-	     return false ;
-         }
+    SpeechKITT.show();
+    return true ;
+}
 
-         SpeechKITT.hide();
-	 //annyang.pause() ;
-	 return true ;
+export function wepsim_voice_stop ()
+{
+    if (!annyang)
+    {
+        return false ;
     }
+
+    SpeechKITT.hide();
+    return true ;
+}
 

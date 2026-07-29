@@ -18,20 +18,66 @@
  *
  */
 
+/* jshint esversion: 8 */
 
-    /* jshint esversion: 8 */
+// Web Components
+globalThis.HTMLElement = class HTMLElement
+{};
+globalThis.customElements = { define:      function()
+{}, get:         function()
+{}, whenDefined: function()
+{
+    return Promise.resolve();
+} };
+globalThis.document = {
+    getElementById: function()
+    {
+        return null;
+    },
+    createElement: function()
+    {
+        return { appendChild:     function()
+        {}, setAttribute:    function()
+        {}, style:           {}, contentDocument: null, querySelector:   function()
+        {
+            return null;
+        }, querySelectorAll: function()
+        {
+            return [];
+        }, addEventListener:    function()
+        {}, removeEventListener: function()
+        {} };
+    },
+    createTextNode: function()
+    {
+        return {};
+    },
+    body: { appendChild: function()
+    {}, style:       {} },
+    head: { appendChild: function()
+    {} },
+    querySelector: function()
+    {
+        return null;
+    },
+    querySelectorAll: function()
+    {
+        return [];
+    },
+    addEventListener: function()
+    {},
+    removeEventListener: function()
+    {},
+    documentElement: { style: {} },
+};
+globalThis.window = globalThis;
 
-    // Web Components
-    class HTMLElement {
-    }
+// Vue + Vuex
+globalThis.Vue = class Vue
+{};
 
-    // Vue + Vuex
-    class Vue {
-    }
+globalThis.Vuex = class Vuex
+{};
 
-    class Vuex {
-    }
-
-    Vuex.Store = class {
-    } ;
-
+globalThis.Vuex.Store = class
+{} ;

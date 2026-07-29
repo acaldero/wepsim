@@ -18,246 +18,253 @@
  *
  */
 
+import Vue from 'vue';
+import Vuex from 'vuex';
 
-        /*
+/*
          *  Get/Set value
          */
 
-        function get_value ( sim_obj )
+export function get_value (sim_obj)
+{
+    // get value with vue
+    if (sim_obj.value instanceof Vuex.Store)
+    {
+        return sim_obj.value.state.value ;
+    }
+
+    // get value
+    return sim_obj.value ;
+}
+
+export function set_value (sim_obj, value)
+{
+    // set value with vue
+    if (sim_obj.value instanceof Vuex.Store)
+    {
+        sim_obj.value.commit('set_value', value) ;
+        return ;
+    }
+
+    // set value
+    if (sim_obj.value != value)
+    {
+        sim_obj.value   = value ;
+        sim_obj.changed = true ;
+    }
+}
+
+export function reset_value (sim_obj)
+{
+    // reset value with vue
+    if (sim_obj.value instanceof Vuex.Store)
+    {
+        set_value(sim_obj, sim_obj.default_value) ;
+        return ;
+    }
+
+    // reset object value (e.g.: REG_MICROINS)
+    if (typeof sim_obj.default_value == 'object')
+    {
+        sim_obj.changed = true ;
+        sim_obj.value   = Object.create(sim_obj.default_value) ;
+        return ;
+    }
+
+    // reset array (e.g.: BR)
+    if (sim_obj instanceof Array)
+    {
+        sim_obj.changed = true ;
+        for (var i = 0; i < sim_obj.length; i++)
         {
-           // get value with vue
-           if (sim_obj.value instanceof Vuex.Store)
-           {
-	       return sim_obj.value.state.value ;
-           }
-
-           // get value
-	   return sim_obj.value ;
+            set_value(sim_obj[i], sim_obj[i].default_value) ;
         }
+        return ;
+    }
 
-        function set_value ( sim_obj, value )
-        {
-           // set value with vue
-           if (sim_obj.value instanceof Vuex.Store)
-           {
-	       sim_obj.value.commit('set_value', value) ;
-               return ;
-           }
+    // reset value
+    var old_value = sim_obj.value ;
+    set_value(sim_obj, sim_obj.default_value) ;
+    if (old_value != sim_obj.default_value)
+    {
+        sim_obj.changed = true ;
+    }
+}
 
-           // set value
-	   if (sim_obj.value != value)
-	   {
-	       sim_obj.value   = value ;
-	       sim_obj.changed = true ;
-           }
-        }
+export function update_value (sim_obj)
+{
+    // forceUpdate value with vue
+    if (sim_obj.value instanceof Vuex.Store)
+    {
+        sim_obj.value.commit('inc_updates') ;
+        return ;
+    }
 
-        function reset_value ( sim_obj )
-        {
-           // reset value with vue
-           if (sim_obj.value instanceof Vuex.Store)
-           {
-	        set_value(sim_obj, sim_obj.default_value) ;
-                return ;
-           }
+    // forceUpdate value with vue
+    sim_obj.changed = true ;
+}
 
-           // reset object value (e.g.: REG_MICROINS)
-	   if (typeof sim_obj.default_value == "object")
-	   {
-	        sim_obj.changed = true ;
-	        sim_obj.value = Object.create(sim_obj.default_value) ;
-                return ;
-           }
-
-           // reset array (e.g.: BR)
-	   if (sim_obj instanceof Array)
-	   {
-	        sim_obj.changed = true ;
-	        for (var i=0; i<sim_obj.length; i++) {
-	  	     set_value(sim_obj[i], sim_obj[i].default_value) ;
-                }
-                return ;
-           }
-
-           // reset value
-	   var old_value = sim_obj.value ;
-	   set_value(sim_obj, sim_obj.default_value) ;
-	   if (old_value != sim_obj.default_value) {
-	       sim_obj.changed = true ;
-           }
-        }
-
-        function update_value ( sim_obj )
-        {
-           // forceUpdate value with vue
-           if (sim_obj.value instanceof Vuex.Store)
-           {
-	       sim_obj.value.commit('inc_updates') ;
-               return ;
-           }
-
-           // forceUpdate value with vue
-	   sim_obj.changed = true ;
-        }
-
-
-        /*
+/*
          *  Get/Set variable
          */
 
-        function get_var ( sim_var )
-        {
-           // get value with vue
-           if (sim_var instanceof Vuex.Store)
-	   {
-	       return sim_var.state.value ;
-	   }
+export function get_var (sim_var)
+{
+    // get value with vue
+    if (sim_var instanceof Vuex.Store)
+    {
+        return sim_var.state.value ;
+    }
 
-           // get value
-	   return sim_var.value ;
-        }
+    // get value
+    return sim_var.value ;
+}
 
-        function set_var ( sim_var, value )
-        {
-           // set value with vue
-           if (sim_var instanceof Vuex.Store)
-	   {
-	       sim_var.commit('set_value', value) ;
-               return ;
-           }
+export function set_var (sim_var, value)
+{
+    // set value with vue
+    if (sim_var instanceof Vuex.Store)
+    {
+        sim_var.commit('set_value', value) ;
+        return ;
+    }
 
-           // set value
-	   sim_var.value = value ;
-        }
+    // set value
+    sim_var.value = value ;
+}
 
-
-        /*
+/*
          *  value toString
          */
 
-        function value_toString ( elto_v )
-        {
-              if (typeof elto_v == 'undefined') {
-                  return '-' ;
-              }
+export function value_toString (elto_v)
+{
+    if (typeof elto_v == 'undefined')
+    {
+        return '-' ;
+    }
 
-              if (elto_v instanceof Vuex.Store) {
-                  elto_v = elto_v.state.value ;
-              }
+    if (elto_v instanceof Vuex.Store)
+    {
+        elto_v = elto_v.state.value ;
+    }
 
-              if (typeof elto_v == 'object') {
-                  return 'object' ;
-              }
+    if (typeof elto_v == 'object')
+    {
+        return 'object' ;
+    }
 
-              elto_v = '0x' + elto_v.toString(16) ;
-              return elto_v ;
-        }
+    elto_v = '0x' + elto_v.toString(16) ;
+    return elto_v ;
+}
 
-
-        /*
+/*
          *  vue binding
          */
 
-        function vue_observable ( initial_value )
+var vue_use_vuex = false;
+export function vue_observable (initial_value)
+{
+    if (!vue_use_vuex)
+    {
+        vue_use_vuex = true;
+        Vue.use(Vuex);
+    }
+    return new Vuex.Store({
+        state: {
+            value:   initial_value,
+            updates: 0,
+        },
+        mutations: {
+            set_value (state, newValue)
+            {
+                state.value = newValue ;
+            },
+            set_value_at (state, index, newValue)
+            {
+                state.value[index] = newValue ;
+            },
+            inc_updates (state)
+            {
+                state.updates++ ;
+            },
+        },
+    }) ;
+}
+
+export function vue_observable_ifnotjetdone (element)
+{
+    if (false == (element instanceof Vuex.Store))
+    {
+        element = vue_observable(element.value) ;
+    }
+
+    return element ;
+}
+
+export function vue_appyBinding (r_value, vue_context, f_computed_value, extra_methods)
+{
+    var methods = {
+        set_value (newValue)
         {
-	    // without Vuex
-	    if (typeof Vuex === "undefined") {
-	        return Vuex ;
-	    }
-
-	    // with Vuex
-	    return new Vuex.Store({
-				      state: {
-				          value:   initial_value,
-				          updates: 0
-				      },
-				      mutations: {
-				          set_value ( state, newValue ) {
-				 	     state.value = newValue ;
-				          },
-				          set_value_at ( state, index, newValue ) {
-				 	     state.value[index] = newValue ;
-				          },
-				          inc_updates ( state ) {
-				 	     state.updates++ ;
-				          }
-				      }
-				  }) ;
-        }
-
-        function vue_observable_ifnotjetdone ( element )
+            this.$store.commit('set_value', newValue) ;
+        },
+        set_value_at (index, newValue)
         {
-	    // without Vuex
-	    if (typeof Vuex === "undefined") {
-	        return Vuex ;
-	    }
-
-            // vue_observable if not done before
-            if (false == (element instanceof Vuex.Store)) {
-                element = vue_observable(element.value) ;
-            }
-
-            return element ;
-        }
-
-        function vue_appyBinding ( r_value, vue_context, f_computed_value )
+            this.$store.commit('set_value_at', index, newValue) ;
+        },
+        inc_updates ()
         {
-	    // without Vue
-	    if (typeof Vue === "undefined") {
-                return Vue ;
-            }
+            this.$store.commit('inc_updates') ;
+        },
+    } ;
 
-	    // with Vue
-	    return new Vue({
-				el:    vue_context,
-				store: r_value,
-				computed: {
-				    value: {
-				        get () {
-					   if (typeof this.$store.state == "undefined")
-                                               return 0 ;
-					   return this.$store.state.value ;
-				        },
-				        set (newValue) {
-					   this.$store.commit('set_value', newValue) ;
-				        }
-				    },
-				    computed_value () {
-     					this.$store.state.updates ;
-     					return f_computed_value(this.$store.state.value, vue_context) ;
-				    }
-				},
-				methods: {
-				    set_value ( newValue ) {
-					this.$store.commit('set_value', newValue) ;
-				    },
-				    set_value_at ( index, newValue ) {
-                                        // Vue.set(this, index, newValue) ;
-					this.$store.commit('set_value_at', index, newValue) ;
-				    },
-				    inc_updates () {
-					this.$store.commit('inc_updates') ;
-				    }
-				}
-			   }) ;
-        }
+    if (extra_methods)
+    {
+        Object.assign(methods, extra_methods) ;
+    }
 
-        function vue_rebind_state ( ref_obj, id_elto, f_computed_value )
+    return new Vue({
+        el:       vue_context,
+        store:    r_value,
+        computed: {
+            value: {
+                get ()
+                {
+                    if (typeof this.$store.state == 'undefined')
+                        return 0 ;
+                    return this.$store.state.value ;
+                },
+                set (newValue)
+                {
+                    this.$store.commit('set_value', newValue) ;
+                },
+            },
+            computed_value ()
+            {
+                this.$store.state.updates ;
+                return f_computed_value(this.$store.state.value, vue_context) ;
+            },
+        },
+        methods: methods,
+    }) ;
+}
+
+export function vue_rebind_state (ref_obj, id_elto, f_computed_value)
+{
+    if (false == (ref_obj.value instanceof Vuex.Store))
+    {
+        ref_obj.value = vue_observable(ref_obj.value) ;
+    }
+
+    if (typeof f_computed_value === 'undefined')
+    {
+        f_computed_value = function(value)
         {
-	    // without Vue
-	    if (typeof Vue === "undefined") {
-                return Vue ;
-            }
+            return value;
+        } ;
+    }
 
-	    // with Vue
-	    if (false == (ref_obj.value instanceof Vuex.Store)) {
-		ref_obj.value = vue_observable(ref_obj.value) ;
-	    }
-
-            if (typeof f_computed_value === "undefined") {
-                f_computed_value = function(value){ return value; } ;
-	    }
-
-	    vue_appyBinding(ref_obj.value, id_elto, f_computed_value) ;
-        }
+    vue_appyBinding(ref_obj.value, id_elto, f_computed_value) ;
+}
 

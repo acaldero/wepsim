@@ -1,0 +1,16 @@
+/* WepSIM CSS - npm packages + external/ for remaining 3rd-party assets */
+
+/* Bootstrap */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Other libs */
+@import 'bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css';
+@import 'intro.js/minified/introjs.min.css';
+@import 'dropify/dist/css/dropify.min.css';
+@import 'speechkitt/dist/themes/flat.css';
+
+/* WepSIM custom overrides */
+@import '../lib/css-tricks.css';
+
+/* FontAwesome */
+@import '@fortawesome/fontawesome-free/css/all.min.css';

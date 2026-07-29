@@ -4,6 +4,12 @@
 ## 2.4.2 -> 3.0.0:
 * Main improvements:
   * New rvpipe processor: RISC-V with 5-stage pipeline
+  * Migrate to Vite + ESM modules
+  * Add ESLint auto-format on build and reformat codebase
+  * Lazy dynamic import for all hw processors, i18n languages, sound module, and vis module
+  * Remove unnecessary legacy external and ws_dist directories
+* Main external dependencies updated:
+  * Bump codemirror from 5.65.21 to 6.0.2
 
 ## 2.4.1 -> 2.4.2:
 * Main improvements:

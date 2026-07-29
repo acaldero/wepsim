@@ -18,35 +18,38 @@
  *
  */
 
+// Translated thanks to Google translate
 
-    // Translated thanks to Google translate
+export function i18n_fr_register_dialogs(i18n)
+{
 
     i18n.eltos.dialogs.fr = {
 
-		"Show/Hide ActionBar":                          "Afficher/masquer la barre d'action",
-		"Show/Hide Slider":                             "Afficher/masquer le curseur",
-		"WepSIM User Interface skin":			"Apparence de l'interface utilisateur WepSIM",
-		"Initial intro":                                "Intro initiale",
-		"About WepSIM":                                 "À propos de WepSIM",
+        'Show/Hide ActionBar':        "Afficher/masquer la barre d'action",
+        'Show/Hide Slider':           'Afficher/masquer le curseur',
+        'WepSIM User Interface skin': "Apparence de l'interface utilisateur WepSIM",
+        'Initial intro':              'Intro initiale',
+        'About WepSIM':               'À propos de WepSIM',
 
-		"Title":                                 	"Titre",
-		"Message":                                 	"Message",
-		"Duration":                                 	"Durée",
+        'Title':    'Titre',
+        'Message':  'Message',
+        'Duration': 'Durée',
 
-		"Confirm remove record...":     		"Voulez-vous supprimer l'enregistrement en cours?",
-		"Close or Reset...":    			"Cliquez sur Fermer pour le conserver, <br> ou cliquez sur le bouton Réinitialiser pour le supprimer.",
-		"Sure Control Memory...":			"Voulez-vous que je sauvegarde le contenu actuel de la mémoire de contrôle plutôt que le contenu de l'éditeur?.",
+        'Confirm remove record...': "Voulez-vous supprimer l'enregistrement en cours?",
+        'Close or Reset...':        'Cliquez sur Fermer pour le conserver, <br> ou cliquez sur le bouton Réinitialiser pour le supprimer.',
+        'Sure Control Memory...':   "Voulez-vous que je sauvegarde le contenu actuel de la mémoire de contrôle plutôt que le contenu de l'éditeur?.",
 
-                "Show/Hide labels":                             "Afficher/masquer les étiquettes",
-                "Show/Hide content":                            "Afficher/masquer le contenu",
-                "Show/Hide assembly":                           "Afficher/masquer l'assemblage",
-                "Show/Hide pseudo-instructions":                "Afficher/masquer les pseudo-instructions",
+        'Show/Hide labels':              'Afficher/masquer les étiquettes',
+        'Show/Hide content':             'Afficher/masquer le contenu',
+        'Show/Hide assembly':            "Afficher/masquer l'assemblage",
+        'Show/Hide pseudo-instructions': 'Afficher/masquer les pseudo-instructions',
 
-		"Close": 		                	"Fermer",
-		'details':					'détails',
-                'idiom': 					'idiome',
+        'Close':   'Fermer',
+        'details': 'détails',
+        'idiom':   'idiome',
 
-		'_last_':					'_last_'
+        '_last_': '_last_',
 
-    } ;
+    };
+}
 

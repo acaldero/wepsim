@@ -18,39 +18,42 @@
  *
  */
 
+// Translated thanks to Google translate
 
-    // Translated thanks to Google translate
+export function i18n_fr_register_states(i18n)
+{
 
     i18n.eltos.states.fr = {
 
-		"States":					"États",
-		'state':					'etat',
-		"Current":					"Actuel",
-		"Current State":				"État actuel",
-		"History":					"Histoire",
-		"None":						"Aucune",
-		"Empty history":				"Historique vide",
-		"Empty (only modified values are shown)":	"Vide (seules les valeurs modifiées sont affichées)",
-		"Differences":					"Différences",
-		"differences with clipboard state":		"Différences avec l'état du presse-papiers",
-		"Meets the specified requirements":		"Répond aux exigences spécifiées",
-		"history":					"historique",
-		"Add":						"Ajouter",
-		"'Current State' to History":			"'État actuel' à l'historique",
-		"Check":					"Vérifier",
-		"Copy":						"Copier",
-		"to clipboard":					"dans le presse-papiers",
-		"Checkpoint":					"Point de contrôle",
-		"File name":					"Nom de fichier",
-		"Tag for checkpoint":				"Balise pour point de contrôle",
-		"File to be loaded":				"Fichier à charger",
-		"Save to File":					"Enregistrer dans un fichier",
-		"State(s) to checkpoint":			"État (s) au point de contrôle",
-		"Record to checkpoint":				"Enregistrer au point de contrôle",
-		"Browser cache":				"Cache du navigateur",
-		"Session to be restore":			"Session à restaurer",
+        'States':                                 'États',
+        'state':                                  'etat',
+        'Current':                                'Actuel',
+        'Current State':                          'État actuel',
+        'History':                                'Histoire',
+        'None':                                   'Aucune',
+        'Empty history':                          'Historique vide',
+        'Empty (only modified values are shown)': 'Vide (seules les valeurs modifiées sont affichées)',
+        'Differences':                            'Différences',
+        'differences with clipboard state':       "Différences avec l'état du presse-papiers",
+        'Meets the specified requirements':       'Répond aux exigences spécifiées',
+        'history':                                'historique',
+        'Add':                                    'Ajouter',
+        "'Current State' to History":             "'État actuel' à l'historique",
+        'Check':                                  'Vérifier',
+        'Copy':                                   'Copier',
+        'to clipboard':                           'dans le presse-papiers',
+        'Checkpoint':                             'Point de contrôle',
+        'File name':                              'Nom de fichier',
+        'Tag for checkpoint':                     'Balise pour point de contrôle',
+        'File to be loaded':                      'Fichier à charger',
+        'Save to File':                           'Enregistrer dans un fichier',
+        'State(s) to checkpoint':                 'État (s) au point de contrôle',
+        'Record to checkpoint':                   'Enregistrer au point de contrôle',
+        'Browser cache':                          'Cache du navigateur',
+        'Session to be restore':                  'Session à restaurer',
 
-	        "_last_":					"_last_"
+        '_last_': '_last_',
 
-    } ;
+    };
+}
 

@@ -18,30 +18,44 @@
  *
  */
 
-
-    /**
+/**
      * WepSIM actions
      */
 
-    var hash_action = {} ;
+import { simcore_do_nothing_handler, simcore_hardware_export } from '../sim_core/sim_api_core.js';
+import { get_screen_content, get_sound_content } from '../sim_core/sim_core_ui.js';
+import { wepsim_checkpoint_NB2Obj, wepsim_checkpoint_Obj2NB } from '../wepsim_core/wepsim_checkpoint.js';
+import { wepsim_nodejs_runApp, wepsim_nodejs_check, wepsim_nodejs_show_currentstate,
+    wepsim_nodejs_verbose_instructionlevel, wepsim_nodejs_verbose_microinstructionlevel,
+    wepsim_nodejs_verbose_verbalized, wepsim_nodejs_runAppInteractive,
+    wepsim_nodejs_show_record, wepsim_nodejs_init, wepsim_nodejs_prepareCode,
+    wepsim_nodejs_get_asmbin, wepsim_nodejs_get_instructionset,
+    wepsim_nodejs_get_instructionset_filtered, wepsim_nodejs_help_signal,
+    wepsim_nodejs_help_instructionset, wepsim_nodejs_help_component,
+    wepsim_nodejs_help_components, wepsim_nodejs_load_examples,
+    wepsim_nodejs_examples2tests } from './wepsim_node_core.js';
 
+export var hash_action = {} ;
 
-    //
-    // CHECK
-    //
+//
+// CHECK
+//
+export function wepsim_nodejs_regiter_action()
+{
 
-    hash_action.CHECK = function(data, options)
+    hash_action.CHECK = async function(data, options)
     {
         // set verbosity handlers
         options.before_instruction = simcore_do_nothing_handler ;
         options.after_instruction  = simcore_do_nothing_handler ;
 
         // run...
-        var ret = wepsim_nodejs_runApp(data, options) ;
-	    if (ret.ok === false) {
+        var ret = await wepsim_nodejs_runApp(data, options) ;
+        if (ret.ok === false)
+        {
             console.log(ret.msg);
             return false ;
-	    }
+        }
 
         // ...and check results
         ret = wepsim_nodejs_check(data, options) ;
@@ -53,18 +67,19 @@
     // RUN
     //
 
-    hash_action.RUN = function(data, options)
+    hash_action.RUN = async function(data, options)
     {
         // set verbosity handlers
         options.before_instruction = simcore_do_nothing_handler ;
         options.after_instruction  = simcore_do_nothing_handler ;
 
         // run...
-        var ret = wepsim_nodejs_runApp(data, options) ;
-	    if (ret.ok === false) {
+        var ret = await wepsim_nodejs_runApp(data, options) ;
+        if (ret.ok === false)
+        {
             console.log(ret.msg);
             return false ;
-	    }
+        }
 
         // ...and show state at the end
         ret = wepsim_nodejs_show_currentstate(options) ;
@@ -76,16 +91,17 @@
     // STEPBYSTEP
     //
 
-    hash_action.STEPBYSTEP = function(data, options)
+    hash_action.STEPBYSTEP = async function(data, options)
     {
         // set verbosity handlers
         wepsim_nodejs_verbose_instructionlevel(options) ;
 
         // run...
-        var ret = wepsim_nodejs_runApp(data, options) ;
-	    if (ret.ok === false) {
+        var ret = await wepsim_nodejs_runApp(data, options) ;
+        if (ret.ok === false)
+        {
             console.log(ret.msg);
-	    }
+        }
 
         return ret.ok ;
     } ;
@@ -94,16 +110,17 @@
     // MICROSTEPBYMICROSTEP
     //
 
-    hash_action.MICROSTEPBYMICROSTEP = function(data, options)
+    hash_action.MICROSTEPBYMICROSTEP = async function(data, options)
     {
         // set verbosity handlers
         wepsim_nodejs_verbose_microinstructionlevel(options) ;
 
         // run...
-        var ret = wepsim_nodejs_runApp(data, options) ;
-	    if (ret.ok === false) {
+        var ret = await wepsim_nodejs_runApp(data, options) ;
+        if (ret.ok === false)
+        {
             console.log(ret.msg);
-	    }
+        }
 
         return ret.ok ;
     } ;
@@ -112,16 +129,17 @@
     // MICROSTEPVERBALIZED
     //
 
-    hash_action.MICROSTEPVERBALIZED = function(data, options)
+    hash_action.MICROSTEPVERBALIZED = async function(data, options)
     {
         // set verbosity handlers
         wepsim_nodejs_verbose_verbalized(options) ;
 
         // run...
-        var ret = wepsim_nodejs_runApp(data, options) ;
-	    if (ret.ok === false) {
+        var ret = await wepsim_nodejs_runApp(data, options) ;
+        if (ret.ok === false)
+        {
             console.log(ret.msg);
-	    }
+        }
 
         return ret.ok ;
     } ;
@@ -130,28 +148,29 @@
     // INTERACTIVE
     //
 
-    hash_action.INTERACTIVE = function(data, options)
+    hash_action.INTERACTIVE = async function(data, options)
     {
         console.log('\n' +
-                    'WepSIM-cl\n' +
-                    '> WepSIM simulator interface for command line.\n' +
-                    '\n' +
-                    'Interactive mode enabled.\n' +
-                    '') ;
+            'WepSIM-cl\n' +
+            '> WepSIM simulator interface for command line.\n' +
+            '\n' +
+            'Interactive mode enabled.\n' +
+            '') ;
 
         // run...
-        var ret = wepsim_nodejs_runAppInteractive(data, options) ;
-	    if (ret.ok === false) {
+        var ret = await wepsim_nodejs_runAppInteractive(data, options) ;
+        if (ret.ok === false)
+        {
             console.log(ret.msg);
             return false ;
-	    }
+        }
     } ;
 
     //
     // EXPORT-HARDWARE
     //
 
-    hash_action["EXPORT-HARDWARE"] = function(data, options)
+    hash_action['EXPORT-HARDWARE'] = function(data, options)
     {
         var ret = simcore_hardware_export(data.mode) ;
 
@@ -163,7 +182,7 @@
     // SHOW-RECORD
     //
 
-    hash_action["SHOW-RECORD"] = function(data, options)
+    hash_action['SHOW-RECORD'] = function(data, options)
     {
         var ret = wepsim_nodejs_show_record(data.record) ;
 
@@ -175,7 +194,7 @@
     // SHOW-MICROCODE
     //
 
-    hash_action["SHOW-MICROCODE"] = function(data, options)
+    hash_action['SHOW-MICROCODE'] = function(data, options)
     {
         console.log(data.firmware) ;
         return true ;
@@ -185,34 +204,37 @@
     // SHOW-ASSEMBLY
     //
 
-    hash_action["SHOW-ASSEMBLY"] = function(data, options)
+    hash_action['SHOW-ASSEMBLY'] = function(data, options)
     {
         console.log(data.assembly) ;
         return true ;
     } ;
 
-    hash_action["SHOW-BINARY"] = function(data, options)
+    hash_action['SHOW-BINARY'] = async function(data, options)
     {
         // 1) initialize
-        var ret = wepsim_nodejs_init(data) ;
-	    if (false === ret.ok) {
+        var ret = await wepsim_nodejs_init(data) ;
+        if (false === ret.ok)
+        {
             console.log(ret.msg);
-	        return false ;
-	    }
+            return false ;
+        }
 
-	    // 2) prepare firmware-assembly
+        // 2) prepare firmware-assembly
         ret = wepsim_nodejs_prepareCode(data, options) ;
-	    if (false === ret.ok) {
+        if (false === ret.ok)
+        {
             console.log(ret.msg);
-	        return false ;
-	    }
+            return false ;
+        }
 
-	    // 3) transform into binary assembly
-        ret = wepsim_nodejs_get_asmbin(data, options) ;
-	    if (false === ret.ok) {
+        // 3) transform into binary assembly
+        ret = await wepsim_nodejs_get_asmbin(data, options) ;
+        if (false === ret.ok)
+        {
             console.log(ret.msg);
-    	    return false ;
-    	}
+            return false ;
+        }
 
         console.log(ret.simware.src_alt) ;
         return true ;
@@ -222,7 +244,7 @@
     // SHOW-MODE
     //
 
-    hash_action["SHOW-MODE"] = function(data, options)
+    hash_action['SHOW-MODE'] = function(data, options)
     {
         console.log(data.mode) ;
         return true ;
@@ -232,16 +254,17 @@
     // SHOW-CONSOLE
     //
 
-    hash_action["SHOW-CONSOLE"] = function(data, options)
+    hash_action['SHOW-CONSOLE'] = async function(data, options)
     {
         // run...
-        var ret = wepsim_nodejs_runApp(data, options) ;
-	    if (ret.ok === false) {
+        var ret = await wepsim_nodejs_runApp(data, options) ;
+        if (ret.ok === false)
+        {
             console.log(ret.msg);
             return false ;
-	    }
+        }
 
-    	// show screen at the end
+        // show screen at the end
         ret.msg = get_screen_content() ;
         console.log(ret.msg);
         return true ;
@@ -251,16 +274,17 @@
     // SHOW-SOUND
     //
 
-    hash_action["SHOW-SOUND"] = function(data, options)
+    hash_action['SHOW-SOUND'] = async function(data, options)
     {
         // run...
-        var ret = wepsim_nodejs_runApp(data, options) ;
-    	if (ret.ok === false) {
+        var ret = await wepsim_nodejs_runApp(data, options) ;
+        if (ret.ok === false)
+        {
             console.log(ret.msg);
             return false ;
-    	}
+        }
 
-	    // show screen at the end
+        // show screen at the end
         ret.msg = get_sound_content() ;
         console.log(ret.msg);
         return true ;
@@ -270,18 +294,18 @@
     // SHOW-MICROCODE-FIELDS
     //
 
-    hash_action["SHOW-MICROCODE-FIELDS"] = function(data, options)
+    hash_action['SHOW-MICROCODE-FIELDS'] = async function(data, options)
     {
-    	var elto_obj    = null ;
-    	var elto_fields = null ;
-        var ret = wepsim_nodejs_get_instructionset(data, options) ;
+        var elto_obj    = null ;
+        var elto_fields = null ;
+        var ret         = await wepsim_nodejs_get_instructionset(data, options) ;
 
         // empty firmware
-        if (typeof ret.firmware === "undefined")
+        if (typeof ret.firmware === 'undefined')
         {
             console.log('Begin microcode-fields\n' +
-                        '<Empty>\n' +
-                        'End microcode-fields\n') ;
+                '<Empty>\n' +
+                'End microcode-fields\n') ;
             return true ;
         }
 
@@ -289,98 +313,102 @@
         console.log('Begin microcode-fields') ;
 
         var keys_byname = {};
-        Object.keys(ret.firmware).forEach(function(key) {
-           keys_byname[ret.firmware[key].name] = ret.firmware[key];
+        Object.keys(ret.firmware).forEach(function(key)
+        {
+            keys_byname[ret.firmware[key].name] = ret.firmware[key];
         });
 
         var keys_sorted = Object.keys(keys_byname).sort() ;
-        for (var i=0; i<keys_sorted.length; i++)
+        for (var i = 0; i < keys_sorted.length; i++)
         {
-    	    elto_obj = keys_byname[keys_sorted[i]] ;
+            elto_obj = keys_byname[keys_sorted[i]] ;
 
-	        if (typeof elto_obj.fields !== "undefined")
-    	         elto_fields = elto_obj.fields ;
+            if (typeof elto_obj.fields !== 'undefined')
+                elto_fields = elto_obj.fields ;
             else elto_fields = [] ;
 
-	        console.log(elto_obj.name + ': ' + JSON.stringify(elto_fields, null, 5)) ;
+            console.log(elto_obj.name + ': ' + JSON.stringify(elto_fields, null, 5)) ;
         }
 
         console.log('End microcode-fields\n') ;
         return true ;
     } ;
 
-    hash_action["FILTER-MICROCODE"] = function(data, options)
+    hash_action['FILTER-MICROCODE'] = async function(data, options)
     {
-    	var elto_obj    = null ;
-    	var elto_fields = null ;
+        var elto_obj    = null ;
+        var elto_fields = null ;
 
         // get filtered firmware
-        var ret = wepsim_nodejs_get_instructionset_filtered(data, options) ;
-        if (typeof ret.firmware === "undefined") {
+        var ret = await wepsim_nodejs_get_instructionset_filtered(data, options) ;
+        if (typeof ret.firmware === 'undefined')
+        {
             ret.firmware = '<Empty>\n' ;
         }
 
         // dump filtered firmware
         console.log('Begin microcode-filtered\n') ;
         if (ret.ok)
-             console.log(ret.firmware) ;
+            console.log(ret.firmware) ;
         else console.log(ret.msg) ;
         console.log('End microcode-filtered\n') ;
 
         return true ;
     } ;
 
-
     //
     // HELP (signal, instruction set, etc.)
     //
 
-    hash_action.HELP = function(data, options)
+    hash_action.HELP = async function(data, options)
     {
-        var ret = null ;
+        var ret = wepsim_nodejs_runApp(data, options) ;
 
-        wepsim_nodejs_init(data) ;
+        await wepsim_nodejs_init(data) ;
 
-        if ((typeof data.assembly != 'undefined') && (data.assembly != '')) {
-             ret = wepsim_nodejs_help_signal(data, options) ;
+        if ((typeof data.assembly != 'undefined') && (data.assembly != ''))
+        {
+            ret = wepsim_nodejs_help_signal(data, options) ;
         }
-   else if ((typeof data.firmware != 'undefined') && (data.firmware != '')) {
-             ret = wepsim_nodejs_help_instructionset(data, options) ;
+        else if ((typeof data.firmware != 'undefined') && (data.firmware != ''))
+        {
+            ret = wepsim_nodejs_help_instructionset(data, options) ;
         }
-   else if ((typeof options.purify != 'undefined') && (options.purify != '')) {
-             ret = wepsim_nodejs_help_component(data, options) ;
+        else if ((typeof options.purify != 'undefined') && (options.purify != ''))
+        {
+            ret = wepsim_nodejs_help_component(data, options) ;
         }
-   else {
-             ret = wepsim_nodejs_help_components(data, options) ;
+        else
+        {
+            ret = wepsim_nodejs_help_components(data, options) ;
         }
 
         console.log(ret.msg);
         return ret.ok ;
     } ;
 
-
     //
     // BUILD-CHECKPOINT
     //
 
-    hash_action["BUILD-CHECKPOINT"] = function(data, options)
+    hash_action['BUILD-CHECKPOINT'] = function(data, options)
     {
         // pack elements
         var checkpointObj = {
-                              "mode":          data.mode,
-                              "firmware":      data.firmware,
-                              "assembly":      data.assembly,
-                              "state_current": {
-                                                   time:        Date().toString(),
-                                                   title:       '',
-                                                   title_short: '',
-				                                   content:     ''
-				               },
-                              "state_history": [],
-                              "record":        '',
-                              "tag":           Date().toString(),
-                              "notify":        true
-                           } ;
+            'mode':          data.mode,
+            'firmware':      data.firmware,
+            'assembly':      data.assembly,
+            'state_current': {
+                time:        Date().toString(),
+                title:       '',
+                title_short: '',
+                content:     '',
+            },
+            'state_history': [],
+            'record':        '',
+            'tag':           Date().toString(),
+            'notify':        true,
+        } ;
 
         var checkpointNB  = wepsim_checkpoint_Obj2NB(checkpointObj) ;
         var checkpointStr = JSON.stringify(checkpointNB, null, 2) ;
@@ -394,15 +422,16 @@
     // BUILD-EXAMPLETESTS
     //
 
-    hash_action["BUILD-EXAMPLETESTS"] = function(data, options)
+    hash_action['BUILD-EXAMPLETESTS'] = async function(data, options)
     {
         // initialize
-        wepsim_nodejs_init(data) ;
+        await wepsim_nodejs_init(data) ;
 
         // load default examples
         var examples  = wepsim_nodejs_load_examples() ;
-        var pack_name = "" ;
-        if (data.mode != "") {
+        var pack_name = '' ;
+        if (data.mode != '')
+        {
             pack_name = data.mode ;
         }
 
@@ -413,52 +442,43 @@
         // return ok
         return true ;
     } ;
+}
 
-
-    /**
+/**
      * WepSIM actions
      */
 
-    function wepsim_nodejs_doActionError ( err_action )
-    {
-        console.log('\n' +
-                    'WepSIM-cl\n' +
-                    '> WepSIM simulator interface for command line.\n' +
-                    '\n' +
-                    'For help details please use:\n' +
-                    ' ./wepsim.sh -h\n' +
-                    '\n' +
-                    ' Please check the command-line syntax used.\n' +
-                    ' Action ERROR: ' + err_action + '?\n' +
-                    '') ;
+export function wepsim_nodejs_doActionError (err_action)
+{
+    console.log('\n' +
+        'WepSIM-cl\n' +
+        '> WepSIM simulator interface for command line.\n' +
+        '\n' +
+        'For help details please use:\n' +
+        ' ./wepsim.sh -h\n' +
+        '\n' +
+        ' Please check the command-line syntax used.\n' +
+        ' Action ERROR: ' + err_action + '?\n' +
+        '') ;
 
-        return false ;
+    return false ;
+}
+
+export async function wepsim_nodejs_doAction (data, options)
+{
+    var action_f = hash_action[data.action] ;
+    if (typeof action_f !== 'undefined')
+    {
+        return await action_f(data, options) ;
     }
 
-    function wepsim_nodejs_doAction ( data, options )
-    {
-        var action_f = hash_action[data.action] ;
-        if (typeof action_f !== "undefined") {
-            return action_f(data, options) ;
-        }
+    return wepsim_nodejs_doActionError(data.action) ;
+}
 
-        return wepsim_nodejs_doActionError(data.action) ;
-    }
+export function wepsim_nodejs_loadCheckpoint (data_checkpoint)
+{
+    var obj_checkpoint = JSON.parse(data_checkpoint) ;
+    obj_checkpoint     = wepsim_checkpoint_NB2Obj(obj_checkpoint) ;
 
-    function wepsim_nodejs_loadCheckpoint ( data_checkpoint )
-    {
-	var obj_checkpoint = JSON.parse(data_checkpoint) ;
-            obj_checkpoint = wepsim_checkpoint_NB2Obj(obj_checkpoint) ;
-
-        return obj_checkpoint ;
-    }
-
-
-    /**
-     * Export API
-     */
-
-    module.exports.wepsim_nodejs_doActionError  = wepsim_nodejs_doActionError ;
-    module.exports.wepsim_nodejs_doAction       = wepsim_nodejs_doAction ;
-    module.exports.wepsim_nodejs_loadCheckpoint = wepsim_nodejs_loadCheckpoint ;
-
+    return obj_checkpoint ;
+}

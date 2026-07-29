@@ -18,302 +18,333 @@
  *
  */
 
+import { firm_fields_v2_write, firm_instruction_read_fields_v2 } from './firm_fields_v2.js';
+import { firm_fields_v1_write, firm_instruction_read_flexible_fields } from './firm_fields_v1.js';
+import { firm_mcode_signals_read, firm_mcode_write, read_native } from './firm_mcode.js';
+import { frm_getToken, frm_isToken, frm_langError, frm_nextToken } from './lexical.js';
+import { i18n, i18n_get_TagFor } from '../../wepsim_i18n/i18n.js';
 
-function firm_instruction_write ( context, elto, labels_firm )
+export function firm_instruction_write (context, elto, labels_firm)
 {
-	var o = "" ;
-        var j = 0 ;
-        var k = 0 ;
+    var o = '' ;
+    var j = 0 ;
+    var k = 0 ;
 
-        // no firmware -> return empty section
-	if (typeof elto == "undefined") {
-            return o ;
-        }
+    // no firmware -> return empty section
+    if (typeof elto == 'undefined')
+    {
+        return o ;
+    }
 
-        // signature { ...
-	o += elto.name + ' ' ;
-        if (typeof elto.fields != "undefined")
+    // signature { ...
+    o += elto.name + ' ' ;
+    if (typeof elto.fields != 'undefined')
+    {
+        for (k = 0; k < elto.fields.length; k++)
         {
-            for (var k=0; k<elto.fields.length; k++)
-            {
-	       if (elto.fields[k].indirect)
-	            o += '(' + elto.fields[k].name + ') ' ;
-	       else o += elto.fields[k].name + ' ' ;
-            }
+            if (elto.fields[k].indirect)
+                o += '(' + elto.fields[k].name + ') ' ;
+            else o += elto.fields[k].name + ' ' ;
         }
-        if ( (elto.name == "begin") && (elto.is_native) ) {
-            o += "\n\tnative,\n" ;
+    }
+    if ((elto.name == 'begin') && (elto.is_native))
+    {
+        o += '\n\tnative,\n' ;
+    }
+    o += ' {' + '\n';
+
+    // nwords = ...
+    if (typeof elto.nwords != 'undefined')
+    {
+        o += '\t' + 'nwords=' + elto.nwords + ',' + '\n';
+    }
+
+    // cfg_type = ...
+    if (typeof elto.cfg_type != 'undefined')
+    {
+        o += '\t' + 'type=' + elto.cfg_type + ',' + '\n';
+    }
+
+    // cfg_addr = ...
+    if (typeof elto.cfg_addr != 'undefined')
+    {
+        o += '\t' + 'addr=' + elto.cfg_addr + ',' + '\n';
+    }
+
+    // fields...
+    if (context.metadata.version == 2)
+    {
+        o += firm_fields_v2_write(elto.fields_all) ;
+    }
+    else // version == 1
+    {
+        // co = ...
+        if (typeof elto.oc != 'undefined')
+        {
+            o += '\t' + 'co=' + elto.oc + ',' + '\n';
         }
-	o += " {" + '\n';
 
-	// nwords = ...
-	if (typeof elto.nwords != "undefined") {
-	    o += '\t' + "nwords=" + elto.nwords + "," + '\n';
-	}
+        // cop = ...
+        if (typeof elto.eoc != 'undefined')
+        {
+            o += '\t' + 'cop=' + elto.eoc + ',' + '\n';
+        }
 
-	// fields...
-	if (context.metadata.version == 2)
-	{
-	     o += firm_fields_v2_write(elto.fields_all) ;
-	}
-	else // version == 1
-	{
-	     // co = ...
-	     if (typeof elto.oc != "undefined") {
-	         o += '\t' +"co=" + elto.oc + "," + '\n';
-	     }
+        o += firm_fields_v1_write(elto.fields) ;
+    }
+    if ((elto.name != 'begin') && (elto.is_native))
+    {
+        o += '\tnative,\n' ;
+    }
 
-	     // cop = ...
-	     if (typeof elto.eoc != "undefined") {
-	         o += '\t' +"cop=" + elto.eoc + "," + '\n';
-	     }
+    // microcode...
+    o += firm_mcode_write(elto, labels_firm) ;
 
-	     o += firm_fields_v1_write(elto.fields) ;
-	}
-        if ( (elto.name != "begin") && (elto.is_native) ) {
-            o += "\tnative,\n" ;
-	}
+    // end instruction as string...
+    o += '\n}\n\n';
 
-	// microcode...
-        o += firm_mcode_write(elto, labels_firm) ;
-
-        // end instruction as string...
-	o += '\n}\n\n';
-
-        // return string
-	return o ;
+    // return string
+    return o ;
 }
 
-
-function firm_instruction_read ( context, xr_info, all_ones_oc )
+export function firm_instruction_read (context, xr_info, all_ones_oc)
 {
-       var ret = {};
+    var ret = {};
 
-// *li reg val {*
-//             co=000000,
-//             nwords=1,
-//             reg=reg(25,21),
-//             val=inm(15,0),
-//             {
-//                 (SE=0, OFFSET=0, SIZE=10000, T3=1, LE=1, MR=0, RE=10101, A0=1, B=1, C=0)
-//             }
-// }
+    // *li reg val {*
+    //             co=000000,
+    //             nwords=1,
+    //             reg=reg(25,21),
+    //             val=inm(15,0),
+    //             {
+    //                 (SE=0, OFFSET=0, SIZE=10000, T3=1, LE=1, MR=0, RE=10101, A0=1, B=1, C=0)
+    //             }
+    // }
 
-       var instruccionAux = {};
-       instruccionAux.name           = frm_getToken(context) ;
-       instruccionAux["mc-start"]    = context.contadorMC ;
-       instruccionAux.nwords         = 1 ;
-       instruccionAux.is_native      = false ;
-       instruccionAux.help           = '' ;
-       instruccionAux.overlapping    = {} ;
-       instruccionAux.opcode_pattern = [] ; // v2
-       instruccionAux.numeroCampos   = 0 ;
-       instruccionAux.fields         = [] ;
-       instruccionAux.fields_all     = [] ;
-       instruccionAux.fields_eoc     = [] ; // v2
+    var instruccionAux            = {};
+    instruccionAux.name           = frm_getToken(context) ;
+    instruccionAux['mc-start']    = context.contadorMC ;
+    instruccionAux.nwords         = 1 ;
+    instruccionAux.is_native      = false ;
+    instruccionAux.help           = '' ;
+    instruccionAux.overlapping    = {} ;
+    instruccionAux.opcode_pattern = [] ; // v2
+    instruccionAux.numeroCampos   = 0 ;
+    instruccionAux.fields         = [] ;
+    instruccionAux.fields_all     = [] ;
+    instruccionAux.fields_eoc     = [] ; // v2
 
-       // semantic check: valid instruction name
-       var re_name = "[a-zA-Z_0-9\.]*" ;
-       if (instruccionAux.name.match(re_name)[0] != instruccionAux.name) {
-	   return frm_langError(context,
-			        i18n_get_TagFor('compiler', 'INS. NAME') +
-			        "'" + instruccionAux.name + "' " +
-			        i18n_get_TagFor('compiler', 'NOT VALID FOR') + re_name) ;
-       }
+    // semantic check: valid instruction name
+    var re_name = '[a-zA-Z_0-9\.]*' ;
+    if (instruccionAux.name.match(re_name)[0] != instruccionAux.name)
+    {
+        return frm_langError(context,
+                             i18n_get_TagFor('compiler', 'INS. NAME') +
+                             "'" + instruccionAux.name + "' " +
+                             i18n_get_TagFor('compiler', 'NOT VALID FOR') + re_name) ;
+    }
 
-       var firma = "";
-       var firmaGlobal= "";
-       var firmaUsuario= "";
+    var firma        = '';
+    var firmaGlobal  = '';
+    var firmaUsuario = '';
 
-       firma = frm_getToken(context)  + ',';
-       firmaUsuario = frm_getToken(context) + " ";
-       frm_nextToken(context);
+    firma        = frm_getToken(context) + ',';
+    firmaUsuario = frm_getToken(context) + ' ';
+    frm_nextToken(context);
 
-       // match optional ,
-       while (frm_isToken(context, ',')) {
-	      frm_nextToken(context) ;
-       }
+    // match optional ,
+    while (frm_isToken(context, ','))
+    {
+        frm_nextToken(context) ;
+    }
 
-       while (! frm_isToken(context,"{"))
-       {
-	   // match optional ,
-	   while (frm_isToken(context, ',')) {
-		  frm_nextToken(context) ;
-           }
+    while (! frm_isToken(context, '{'))
+    {
+        // match optional ,
+        while (frm_isToken(context, ','))
+        {
+            frm_nextToken(context) ;
+        }
 
-	   var plus_found = false;
+        var plus_found = false;
 
-	   // match optional FIELD
-	   if ( !frm_isToken(context, ",") && !frm_isToken(context, "(") && !frm_isToken(context, ")") )
-	   {
-	       var campoAux = {};
-	       var auxValue = frm_getToken(context);
+        // match optional FIELD
+        if (!frm_isToken(context, ',') && !frm_isToken(context, '(') && !frm_isToken(context, ')'))
+        {
+            var campoAux = {};
+            var auxValue = frm_getToken(context);
 
-	       if (auxValue[auxValue.length-1] == "+")
-	       {
-		   auxValue = auxValue.substring(0,auxValue.length-1);
-		   plus_found = true;
-	       }
+            if (auxValue[auxValue.length - 1] == '+')
+            {
+                auxValue   = auxValue.substring(0, auxValue.length - 1);
+                plus_found = true;
+            }
 
-	       campoAux.name     = auxValue ;
-	       campoAux.indirect = false ;
-	       instruccionAux.fields.push(campoAux);
-	       instruccionAux.numeroCampos++;
-	       firma = firma + auxValue ;
-	       firmaUsuario = firmaUsuario + auxValue;
-	       frm_nextToken(context);
+            campoAux.name     = auxValue ;
+            campoAux.indirect = false ;
+            instruccionAux.fields.push(campoAux);
+            instruccionAux.numeroCampos++;
+            firma        = firma + auxValue ;
+            firmaUsuario = firmaUsuario + auxValue;
+            frm_nextToken(context);
 
-	       if (instruccionAux.numeroCampos > 100) {
-		   return frm_langError(context,
-				        i18n_get_TagFor('compiler', 'MORE 100 FIELDS')) ;
-	       }
-	       if (auxValue == "co") {
-		   return frm_langError(context,
-				        i18n_get_TagFor('compiler', 'CO AS FIELD NAME')) ;
-	       }
-	       if (auxValue == "nwords") {
-		   return frm_langError(context,
-				        i18n_get_TagFor('compiler', 'NW AS FIELD NAME')) ;
-	       }
-	   }
+            if (instruccionAux.numeroCampos > 100)
+            {
+                return frm_langError(context,
+                                     i18n_get_TagFor('compiler', 'MORE 100 FIELDS')) ;
+            }
+            if (auxValue == 'co')
+            {
+                return frm_langError(context,
+                                     i18n_get_TagFor('compiler', 'CO AS FIELD NAME')) ;
+            }
+            if (auxValue == 'nwords')
+            {
+                return frm_langError(context,
+                                     i18n_get_TagFor('compiler', 'NW AS FIELD NAME')) ;
+            }
+        }
 
-	   // match optional "(" FIELD ")"
-	   if (frm_isToken(context, "("))
-	   {
-		   firma = firma + ',(';
-                   var current_oc = '*unknown* instruction'  ;
-                   if (
-                        (typeof instruccionAux.oc                           != "undefined") &&
-                        (typeof context.oc_eoc[instruccionAux.oc]           != "undefined") &&
-                        (typeof context.oc_eoc[instruccionAux.oc].signature != "undefined")
-                      )
-                   {
-                         current_oc = context.oc_eoc[instruccionAux.oc].signature ;
-                   }
+        // match optional "(" FIELD ")"
+        if (frm_isToken(context, '('))
+        {
+            firma          = firma + ',(';
+            var current_oc = '*unknown* instruction' ;
+            if (
+                (typeof instruccionAux.oc != 'undefined') &&
+                (typeof context.oc_eoc[instruccionAux.oc] != 'undefined') &&
+                (typeof context.oc_eoc[instruccionAux.oc].signature != 'undefined')
+            )
+            {
+                current_oc = context.oc_eoc[instruccionAux.oc].signature ;
+            }
 
-		   // TODO: next line needs concatenate '+' otherwise saveFirmware is not going to work!
-		   if (plus_found)
-			firmaUsuario = firmaUsuario + '+(';
-		   else	firmaUsuario = firmaUsuario + ' (';
+            // TODO: next line needs concatenate '+' otherwise saveFirmware is not going to work!
+            if (plus_found)
+                firmaUsuario = firmaUsuario + '+(';
+            else firmaUsuario = firmaUsuario + ' (';
 
-		   frm_nextToken(context);
+            frm_nextToken(context);
 
-		   if ( !frm_isToken(context, ",") && !frm_isToken(context, "(") && !frm_isToken(context, ")") )
-		   {
-		       var campoAux = {};
-		       campoAux.name     = frm_getToken(context) ;
-		       campoAux.indirect = true ;
-		       instruccionAux.fields.push(campoAux);
-		       instruccionAux.numeroCampos++;
+            if (!frm_isToken(context, ',') && !frm_isToken(context, '(') && !frm_isToken(context, ')'))
+            {
+                campoAux          = {};
+                campoAux.name     = frm_getToken(context) ;
+                campoAux.indirect = true ;
+                instruccionAux.fields.push(campoAux);
+                instruccionAux.numeroCampos++;
 
-		       firma = firma + frm_getToken(context) ;
-		       firmaUsuario = firmaUsuario + frm_getToken(context);
+                firma        = firma + frm_getToken(context) ;
+                firmaUsuario = firmaUsuario + frm_getToken(context);
 
-		       frm_nextToken(context);
-		   }
-		   else
-		   {
-		       return frm_langError(context,
-					    i18n_get_TagFor('compiler', 'MISSING TOKEN ON') +
-                                            "'" + current_oc + "'") ;
-		   }
+                frm_nextToken(context);
+            }
+            else
+            {
+                return frm_langError(context,
+                                     i18n_get_TagFor('compiler', 'MISSING TOKEN ON') +
+                                     "'" + current_oc + "'") ;
+            }
 
-		   if (frm_isToken(context,")"))
-		   {
-			firma = firma + ')';
-			firmaUsuario = firmaUsuario + ')';
+            if (frm_isToken(context, ')'))
+            {
+                firma        = firma + ')';
+                firmaUsuario = firmaUsuario + ')';
 
-			frm_nextToken(context);
-		   }
-		   else
-		   {
-		       return frm_langError(context,
-					    i18n_get_TagFor('compiler', 'MISSING ) ON') +
-                                            "'" + current_oc + "'") ;
-		   }
-	   }
+                frm_nextToken(context);
+            }
+            else
+            {
+                return frm_langError(context,
+                                     i18n_get_TagFor('compiler', 'MISSING ) ON') +
+                                     "'" + current_oc + "'") ;
+            }
+        }
 
-	   firma = firma + ',';
-	   firmaUsuario = firmaUsuario + ' ';
-       }
+        firma        = firma + ',';
+        firmaUsuario = firmaUsuario + ' ';
+    }
 
-       firma = firma.substr(0, firma.length-1);
-       firma = firma.replace(/,,/g, ",") ;
-       firmaUsuario = firmaUsuario.substr(0, firmaUsuario.length-1);
-       firmaUsuario = firmaUsuario.replace(/  /g, " ") ;
-       instruccionAux.signature       = firma;
-       instruccionAux.signatureGlobal = firma;
-       instruccionAux.signatureUser   = firmaUsuario;
-       instruccionAux.signatureRaw    = firmaUsuario;
+    firma                          = firma.substr(0, firma.length - 1);
+    firma                          = firma.replace(/,,/g, ',') ;
+    firmaUsuario                   = firmaUsuario.substr(0, firmaUsuario.length - 1);
+    firmaUsuario                   = firmaUsuario.replace(/ {2}/g, ' ') ;
+    instruccionAux.signature       = firma;
+    instruccionAux.signatureGlobal = firma;
+    instruccionAux.signatureUser   = firmaUsuario;
+    instruccionAux.signatureRaw    = firmaUsuario;
 
+    // li reg val {
+    //             *co=000000,
+    //             [cop=00000,]
+    //             nwords=1,
+    //             reg=reg(25,21),
+    //             val=inm(15,0),
+    //             [help='this instruction is used for...',]
+    //             [native,]*
+    //             {
+    //                 (SE=0, OFFSET=0, SIZE=10000, T3=1, LE=1, MR=0, RE=10101, A0=1, B=1, C=0)
+    //             }
+    // }
 
-// li reg val {
-//             *co=000000,
-//             [cop=00000,]
-//             nwords=1,
-//             reg=reg(25,21),
-//             val=inm(15,0),
-//             [help='this instruction is used for...',]
-//             [native,]*
-//             {
-//                 (SE=0, OFFSET=0, SIZE=10000, T3=1, LE=1, MR=0, RE=10101, A0=1, B=1, C=0)
-//             }
-// }
+    if (2 == context.metadata.version)
+    {
+        ret = firm_instruction_read_fields_v2(context, instruccionAux, xr_info, all_ones_oc) ;
+    }
+    else
+    {
+        ret = firm_instruction_read_flexible_fields(context, instruccionAux, xr_info, all_ones_oc) ;
+    }
+    if (ret.error != null)
+    {
+        return ret ;
+    }
 
-       if (2 == context.metadata.version) {
-           ret = firm_instruction_read_fields_v2(context, instruccionAux, xr_info, all_ones_oc) ;
-       }
-       else {
-           ret = firm_instruction_read_flexible_fields(context, instruccionAux, xr_info, all_ones_oc) ;
-       }
-       if (ret.error != null) {
-           return ret ;
-       }
+    // li reg val {
+    //             co=000000,
+    //             nwords=1,
+    //             reg=reg(25,21),
+    //             val=inm(15,0),
+    //             *{
+    //                 (SE=0, OFFSET=0, SIZE=10000, T3=1, LE=1, MR=0, RE=10101, A0=1, B=1, C=0)
+    //             }*
+    // }
 
+    //    ret = {} ;
+    if (true == instruccionAux.is_native)
+        ret = read_native(context) ;
+    else ret = firm_mcode_signals_read(context) ;
 
-// li reg val {
-//             co=000000,
-//             nwords=1,
-//             reg=reg(25,21),
-//             val=inm(15,0),
-//             *{
-//                 (SE=0, OFFSET=0, SIZE=10000, T3=1, LE=1, MR=0, RE=10101, A0=1, B=1, C=0)
-//             }*
-// }
+    if (typeof ret.error != 'undefined')
+    {
+        return ret ;
+    }
 
-	   ret = {} ;
-	   if (true == instruccionAux.is_native)
-		ret = read_native(context) ;
-	   else ret = firm_mcode_signals_read(context) ;
+    instruccionAux.NATIVE        = ret.NATIVE ;
+    instruccionAux.microcode     = ret.microprograma ;
+    instruccionAux.microcomments = ret.microcomments ;
+    context.instrucciones.push(instruccionAux);
 
-	   if (typeof ret.error != "undefined") {
-	       return ret ;
-           }
+    context.contadorMC = context.contadorMC + 9; // padding between instrucctions
 
-       instruccionAux.NATIVE        = ret.NATIVE ;
-       instruccionAux.microcode     = ret.microprograma ;
-       instruccionAux.microcomments = ret.microcomments ;
-       context.instrucciones.push(instruccionAux);
+    // li reg val {
+    //             co=000000,
+    //             nwords=1,
+    //             reg=reg(25,21),
+    //             val=inm(15,0),
+    //             {
+    //                 (SE=0, OFFSET=0, SIZE=10000, T3=1, LE=1, MR=0, RE=10101, A0=1, B=1, C=0)
+    //             }
+    // *}*
 
-       context.contadorMC = context.contadorMC + 9; // padding between instrucctions
+    if (! frm_isToken(context, '}'))
+    {
+        return frm_langError(context,
+                             i18n_get_TagFor('compiler', 'CLOSE BRACE NOT FOUND')) ;
+    }
 
-// li reg val {
-//             co=000000,
-//             nwords=1,
-//             reg=reg(25,21),
-//             val=inm(15,0),
-//             {
-//                 (SE=0, OFFSET=0, SIZE=10000, T3=1, LE=1, MR=0, RE=10101, A0=1, B=1, C=0)
-//             }
-// *}*
+    frm_nextToken(context);
 
-       if (! frm_isToken(context,"}")) {
-	   return frm_langError(context,
-			        i18n_get_TagFor('compiler', 'CLOSE BRACE NOT FOUND')) ;
-       }
-
-       frm_nextToken(context);
-
-       return {} ;
+    return {} ;
 }
 

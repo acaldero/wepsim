@@ -18,8 +18,11 @@
  *
  */
 
+import { get_var, set_var } from './sim_core_values.js';
+import { simhw_internalState } from '../sim_hw/sim_hw_index.js';
+import { segments_addr_within_data, segments_addr_within_text } from '../sim_sw/assembly/memory_segments.js';
 
-        /*
+/*
          *  cache_memory => {
          *               "stats": {
          *                           n_access:     0,
@@ -51,46 +54,47 @@
          *            }
          */
 
+//
+// Auxiliar functions
+//
 
-        //
-        // Auxiliar functions
-        //
+export function cache_memory_update_stats (memory, address, parts, r_w, m_h, clock_timestamp)
+{
 
-        function cache_memory_update_stats ( memory, address, parts, r_w, m_h, clock_timestamp )
-        {
-            var val = '' ;
+    // global stats
+    let val = get_var(memory.stats.n_access) ;
+    set_var(memory.stats.n_access, val + 1) ;
+    set_var(memory.stats.last_addr, address) ;
+    set_var(memory.stats.last_r_w, r_w) ;
+    set_var(memory.stats.last_h_m, m_h) ;
+    // memory.stats.last_parts:
+    set_var(memory.stats.last_parts.tag, parts.tag) ;
+    set_var(memory.stats.last_parts.set, parts.set) ;
+    set_var(memory.stats.last_parts.offset, parts.offset) ;
 
-            // global stats
-            val = get_var(memory.stats.n_access) ;
-            set_var(memory.stats.n_access,   val + 1) ;
-            set_var(memory.stats.last_addr,  address) ;
-            set_var(memory.stats.last_r_w,   r_w) ;
-            set_var(memory.stats.last_h_m,   m_h) ;
-         // memory.stats.last_parts:
-            set_var(memory.stats.last_parts.tag,    parts.tag) ;
-            set_var(memory.stats.last_parts.set,    parts.set) ;
-            set_var(memory.stats.last_parts.offset, parts.offset) ;
+    if (m_h == 'miss')
+    {
+        val = get_var(memory.stats.n_misses) ;
+        set_var(memory.stats.n_misses, val + 1) ;
+    }
+    else
+    {
+        val = get_var(memory.stats.n_hits) ;
+        set_var(memory.stats.n_hits, val + 1) ;
+    }
 
-            if (m_h == "miss") {
-                 val = get_var(memory.stats.n_misses) ;
-                 set_var(memory.stats.n_misses, val + 1) ;
-            }
-            else {
-                 val = get_var(memory.stats.n_hits) ;
-                 set_var(memory.stats.n_hits,   val + 1) ;
-            }
+    // block stats
+    val                                             = memory.sets[parts.set].tags[parts.tag].n_access ;
+    memory.sets[parts.set].tags[parts.tag].n_access = val + 1 ;
 
-            // block stats
-            val = memory.sets[parts.set].tags[parts.tag].n_access ;
-                  memory.sets[parts.set].tags[parts.tag].n_access = val + 1 ;
+    if (r_w == 'write')
+    {
+        memory.sets[parts.set].tags[parts.tag].dirty = 1 ;
+    }
 
-            if (r_w == "write") {
-                memory.sets[parts.set].tags[parts.tag].dirty = 1 ;
-            }
+    memory.sets[parts.set].tags[parts.tag].timestamp = clock_timestamp ;
 
-            memory.sets[parts.set].tags[parts.tag].timestamp = clock_timestamp ;
-
-	    /*
+    /*
             val = get_var(memory.sets[parts.set].tags[parts.tag].n_access) ;
                   set_var(memory.sets[parts.set].tags[parts.tag].n_access, val + 1) ;
 
@@ -99,288 +103,293 @@
             }
 
             set_var(memory.sets[parts.set].tags[parts.tag].timestamp, clock_timestamp) ;
-	    */
-        }
+        */
+}
 
-        function cache_memory_select_victim ( memory, set )
+export function cache_memory_select_victim (memory, set)
+{
+    var keys       = Object.keys(memory.sets[set].tags) ;
+    var tag_victim = 0 ;
+
+    if (get_var(memory.cfg.replace_pol) == 'lfu')
+    {
+        tag_victim      = keys[0] ;
+        var tag_naccess = memory.sets[set].tags[tag_victim].n_access ;
+        for (var i = 1; i < keys.length; i++)
         {
-            var keys = Object.keys(memory.sets[set].tags) ;
-            var tag_victim  = 0 ;
-
-            if (get_var(memory.cfg.replace_pol) == "lfu")
+            if (tag_naccess > memory.sets[set].tags[keys[i]].n_access)
             {
-		tag_victim  = keys[0] ;
-                var tag_naccess = memory.sets[parts.set].tags[tag_victim].n_access ;
-		for (var i=1; i<keys.length; i++)
-		{
-                     if (tag_naccess > memory.sets[parts.set].tags[keys[i]].n_access) {
-		         tag_victim = keys[i] ;
-                         tag_naccess = memory.sets[parts.set].tags[tag_victim].n_access ;
-                     }
-                }
+                tag_victim  = keys[i] ;
+                tag_naccess = memory.sets[set].tags[tag_victim].n_access ;
             }
+        }
+    }
 
-       else if (get_var(memory.cfg.replace_pol) == "fifo")
+    else if (get_var(memory.cfg.replace_pol) == 'fifo')
+    {
+        tag_victim    = keys[0] ;
+        var tag_stamp = memory.sets[set].tags[tag_victim].timestamp ;
+        for (i = 1; i < keys.length; i++)
+        {
+            if (tag_stamp > memory.sets[set].tags[keys[i]].timestamp)
             {
-		tag_victim  = keys[0] ;
-                var tag_stamp = memory.sets[parts.set].tags[tag_victim].timestamp ;
-		for (var i=1; i<keys.length; i++)
-		{
-                     if (tag_stamp > memory.sets[parts.set].tags[keys[i]].timestamp) {
-		         tag_victim = keys[i] ;
-                         tag_stamp = memory.sets[parts.set].tags[tag_victim].timestamp ;
-                     }
-                }
+                tag_victim = keys[i] ;
+                tag_stamp  = memory.sets[set].tags[tag_victim].timestamp ;
             }
-
-       else if (get_var(memory.cfg.replace_pol) == "first") {
-                tag_victim = keys[0] ;
-            }
-
-            return tag_victim ;
         }
+    }
 
+    else if (get_var(memory.cfg.replace_pol) == 'first')
+    {
+        tag_victim = keys[0] ;
+    }
 
-        //
-        // API
-        //
+    return tag_victim ;
+}
 
-        // Example: var cm = cache_memory_init(12, 5, 6, "first", "unified", null) ;
-        //                   * name:                    "L1"
-        //                   * bits for via    in line: 12 bits,
-        //                   * bits for offset in line:  5 bits,
-        //                   * bits for set_per_cache:   6 bits,
-        //                   * replace_policy:          "first" | "lfu",
-        //                   * su_policy:               "unified" | "split_i" | "split_d",
-        //                   * level:                    1,
-        //                   * next_cache:               null (cm) | -1 (cm_cfg)
-        function cache_memory_init ( name, via_size, off_size, set_size, replace_pol, su_pol, level, next_cache )
+//
+// API
+//
+
+// Example: var cm = cache_memory_init(12, 5, 6, "first", "unified", null) ;
+//                   * name:                    "L1"
+//                   * bits for via    in line: 12 bits,
+//                   * bits for offset in line:  5 bits,
+//                   * bits for set_per_cache:   6 bits,
+//                   * replace_policy:          "first" | "lfu",
+//                   * su_policy:               "unified" | "split_i" | "split_d",
+//                   * level:                    1,
+//                   * next_cache:               null (cm) | -1 (cm_cfg)
+export function cache_memory_init (name, via_size, off_size, set_size, replace_pol, su_pol, level, next_cache)
+{
+    var c = {
+        'stats': {
+            n_access:   {},
+            n_hits:     {},
+            n_misses:   {},
+            last_addr:  {},
+            last_r_w:   {},
+            last_h_m:   {},
+            last_parts: { tag: {}, set: {}, offset: {} },
+        },
+        'cfg': {
+            name:        {},
+            via_size:    {},
+            off_size:    {},
+            set_size:    {},
+            vps_size:    {},
+            tag_size:    {},
+            mask_tag:    {},
+            mask_set:    {},
+            mask_off:    {},
+            replace_pol: {},
+            su_pol:      {},
+            level:       {},
+            next_cache:  {},
+        },
+        'sets': {},
+    } ;
+
+    set_var(c.cfg.name, name) ;
+    set_var(c.cfg.via_size, via_size) ;
+    set_var(c.cfg.off_size, off_size) ;
+    set_var(c.cfg.set_size, set_size) ;
+    set_var(c.cfg.vps_size, via_size - set_size) ;
+    set_var(c.cfg.tag_size, 32 - set_size - off_size) ;
+
+    set_var(c.cfg.mask_tag, ((1 << get_var(c.cfg.tag_size)) - 1) >>> 0) ;
+    set_var(c.cfg.mask_set, ((1 << get_var(c.cfg.set_size)) - 1) >>> 0) ;
+    set_var(c.cfg.mask_off, ((1 << get_var(c.cfg.off_size)) - 1) >>> 0) ;
+    set_var(c.cfg.mask_tag, (get_var(c.cfg.mask_tag) << (32 - get_var(c.cfg.tag_size))) >>> 0) ;
+    set_var(c.cfg.mask_set, (get_var(c.cfg.mask_set) << (get_var(c.cfg.off_size))) >>> 0) ;
+
+    set_var(c.cfg.replace_pol, replace_pol) ;
+    set_var(c.cfg.su_pol, su_pol) ;
+    set_var(c.cfg.level, level) ;
+    set_var(c.cfg.next_cache, next_cache) ;
+
+    set_var(c.stats.n_access, 0) ;
+    set_var(c.stats.n_hits, 0) ;
+    set_var(c.stats.n_misses, 0) ;
+    set_var(c.stats.last_addr, 0x0) ;
+    set_var(c.stats.last_r_w, '') ;
+    set_var(c.stats.last_h_m, '') ;
+
+    var p = cache_memory_split(c, 0x0) ;
+    set_var(c.stats.last_parts.tag, p.tag) ;
+    set_var(c.stats.last_parts.set, p.set) ;
+    set_var(c.stats.last_parts.offset, p.offset) ;
+
+    return c ;
+}
+
+// Example: var cm = cache_memory_init_eltofromcfg(cfg) ;
+export function cache_memory_init_eltofromcfg (cfg)
+{
+    return cache_memory_init(get_var(cfg.name),
+                             get_var(cfg.via_size), get_var(cfg.off_size), get_var(cfg.set_size),
+                             get_var(cfg.replace_pol), get_var(cfg.su_pol),
+                             get_var(cfg.level), get_var(cfg.next_cache)) ;
+    // next_cache: first, it is -1/value but not reference...
+}
+
+export function cache_memory_init_eltonextcache (cm, cfg_i, cm_i)
+{
+    // next_cache: ...then, it is reference associated
+
+    if (get_var(cfg_i.cfg.next_cache) != -1)
+        set_var(cm_i.cfg.next_cache, cm[cfg_i.cfg.next_cache]) ;
+    else set_var(cm_i.cfg.next_cache, null) ;
+
+    return cm_i ;
+}
+
+// Example: var array_cm = cache_memory_init_cm(array_cm_cfg) ;
+export function cache_memory_init_cm (array_cm_cfg)
+{
+    var array_cm = [] ;
+
+    for (var i = 0; i < array_cm_cfg.length; i++)
+    {
+        array_cm[i] = cache_memory_init_eltofromcfg(array_cm_cfg[i].cfg) ;
+    }
+
+    // link each other...
+    for (i = 0; i < array_cm_cfg.length; i++)
+    {
+        cache_memory_init_eltonextcache(array_cm, array_cm_cfg[i], array_cm[i]) ;
+    }
+
+    return array_cm ;
+}
+
+export function cache_memory_update (name, via_size, off_size, set_size, replace_pol, su_pol, level, next_cache)
+{
+    var c = { 'stats': {}, 'cfg': {}, 'sets': {} } ;
+
+    set_var(c.cfg.name, name) ;
+    set_var(c.cfg.via_size, via_size) ;
+    set_var(c.cfg.off_size, off_size) ;
+    set_var(c.cfg.set_size, set_size) ;
+    set_var(c.cfg.vps_size, via_size - set_size) ;
+    set_var(c.cfg.tag_size, 32 - set_size - off_size) ;
+
+    set_var(c.cfg.mask_tag, ((1 << get_var(c.cfg.tag_size)) - 1) >>> 0) ;
+    set_var(c.cfg.mask_set, ((1 << get_var(c.cfg.set_size)) - 1) >>> 0) ;
+    set_var(c.cfg.mask_off, ((1 << get_var(c.cfg.off_size)) - 1) >>> 0) ;
+    set_var(c.cfg.mask_tag, (get_var(c.cfg.mask_tag) << (32 - get_var(c.cfg.tag_size))) >>> 0) ;
+    set_var(c.cfg.mask_set, (get_var(c.cfg.mask_set) << (get_var(c.cfg.off_size))) >>> 0) ;
+
+    set_var(c.cfg.replace_pol, replace_pol) ;
+    set_var(c.cfg.su_pol, su_pol) ;
+    set_var(c.cfg.level, level) ;
+    set_var(c.cfg.next_cache, next_cache) ;
+
+    set_var(c.stats.n_access, 0) ;
+    set_var(c.stats.n_hits, 0) ;
+    set_var(c.stats.n_misses, 0) ;
+    set_var(c.stats.last_addr, 0x0) ;
+    set_var(c.stats.last_r_w, '') ;
+    set_var(c.stats.last_h_m, '') ;
+
+    var p = cache_memory_split(c, 0x0) ;
+    set_var(c.stats.last_parts.tag, p.tag) ;
+    set_var(c.stats.last_parts.set, p.set) ;
+    set_var(c.stats.last_parts.offset, p.offset) ;
+
+    return c ;
+}
+
+export function cache_memory_update_eltofromcfg (cfg)
+{
+    return cache_memory_update(get_var(cfg.name),
+                               get_var(cfg.via_size), get_var(cfg.off_size), get_var(cfg.set_size),
+                               get_var(cfg.replace_pol), get_var(cfg.su_pol),
+                               get_var(cfg.level), get_var(cfg.next_cache)) ;
+}
+
+// Example: var parts = cache_memory_split(cm, 0x12345678)
+//          console.log("set: " + parts.set + ", tag: " + parts.tag + ", off: " + parts.offset) ;
+export function cache_memory_split (memory, address)
+{
+    var parts = {
+        set:    0,
+        tag:    0,
+        offset: 0,
+    } ;
+
+    address      = (address >>> 0) ;
+    parts.tag    = (address & get_var(memory.cfg.mask_tag)) >>> (32 - get_var(memory.cfg.tag_size)) ;
+    parts.set    = (address & get_var(memory.cfg.mask_set)) >>> (get_var(memory.cfg.off_size)) ;
+    parts.offset = (address & get_var(memory.cfg.mask_off)) ;
+
+    return parts ;
+}
+
+// Example: var cm_cache  = simhw_internalState('CM') ;
+//          var cache_cfg = cache_memory_configuration_get(cm_cache) ;
+export function cache_memory_configuration_get (memory)
+{
+    return memory.cfg ;
+}
+
+// Example: var h_or_m = cache_memory_access(cm, 0x12345678, "read", clock_timestamp)
+//                       * memory:    cm
+//                       * address:   0x12345678
+//                       * r_w:       "read" | "write"
+//                       * clk_stamp: 100
+export function cache_memory_access (memory, address, r_w, clock_timestamp)
+{
+    if (get_var(memory.cfg.su_pol) != 'unified')
+    {
+        if (('split_i' == get_var(memory.cfg.su_pol)) && (segments_addr_within_text(address) == false))
         {
-            var c = {
-		       "stats": {
-				    n_access:{},
-				    n_hits:{},
-				    n_misses:{},
-				    last_addr:{},
-				    last_r_w:{},
-				    last_h_m:{},
-				    last_parts:{ tag:{}, set:{}, offset:{} }
-		                },
-		       "cfg":   {
-				    name:{},
-				    via_size:{},
-				    off_size:{},
-				    set_size:{},
-				    vps_size:{},
-				    tag_size:{},
-				    mask_tag:{},
-				    mask_set:{},
-				    mask_off:{},
-				    mask_tag:{},
-				    mask_set:{},
-				    replace_pol:{},
-				    su_pol:{},
-				    level:{},
-				    next_cache:{}
-		                },
-		       "sets":  {}
-	            } ;
-
-	    set_var(c.cfg.name ,     name) ;
-	    set_var(c.cfg.via_size, via_size) ;
-	    set_var(c.cfg.off_size, off_size) ;
-	    set_var(c.cfg.set_size, set_size) ;
-	    set_var(c.cfg.vps_size, via_size - set_size) ;
-	    set_var(c.cfg.tag_size, 32 - set_size - off_size) ;
-
-            set_var(c.cfg.mask_tag, ((1 << get_var(c.cfg.tag_size)) - 1) >>> 0) ;
-            set_var(c.cfg.mask_set, ((1 << get_var(c.cfg.set_size)) - 1) >>> 0) ;
-            set_var(c.cfg.mask_off, ((1 << get_var(c.cfg.off_size)) - 1) >>> 0) ;
-            set_var(c.cfg.mask_tag, (get_var(c.cfg.mask_tag) << (32 - get_var(c.cfg.tag_size))) >>> 0) ;
-            set_var(c.cfg.mask_set, (get_var(c.cfg.mask_set) <<      (get_var(c.cfg.off_size))) >>> 0) ;
-
-	    set_var(c.cfg.replace_pol, replace_pol) ;
-	    set_var(c.cfg.su_pol,      su_pol) ;
-	    set_var(c.cfg.level,       level) ;
-	    set_var(c.cfg.next_cache,  next_cache) ;
-
-	    set_var(c.stats.n_access,  0) ;
-	    set_var(c.stats.n_hits,    0) ;
-	    set_var(c.stats.n_misses,  0) ;
-            set_var(c.stats.last_addr, 0x0) ;
-            set_var(c.stats.last_r_w,  "") ;
-            set_var(c.stats.last_h_m,  "") ;
-
-            var p = cache_memory_split(c, 0x0) ;
-            set_var(c.stats.last_parts.tag,    p.tag) ;
-            set_var(c.stats.last_parts.set,    p.set) ;
-            set_var(c.stats.last_parts.offset, p.offset) ;
-
-            return c ;
-        }
-
-        // Example: var cm = cache_memory_init_eltofromcfg(cfg) ;
-        function cache_memory_init_eltofromcfg ( cfg )
-        {
-            return cache_memory_init(get_var(cfg.name),
-                                     get_var(cfg.via_size),    get_var(cfg.off_size), get_var(cfg.set_size),
-                                     get_var(cfg.replace_pol), get_var(cfg.su_pol),
-                                     get_var(cfg.level),       get_var(cfg.next_cache)) ;
-	    // next_cache: first, it is -1/value but not reference...
-        }
-
-        function cache_memory_init_eltonextcache ( cm, cfg_i, cm_i )
-        {
-	    // next_cache: ...then, it is reference associated
-
-            if (get_var(cfg_i.cfg.next_cache) != -1)
-                 set_var(cm_i.cfg.next_cache, cm[cfg_i.cfg.next_cache]) ;
-	    else set_var(cm_i.cfg.next_cache, null) ;
-
-	    return cm_i ;
-        }
-
-        // Example: var array_cm = cache_memory_init_cm(array_cm_cfg) ;
-        function cache_memory_init_cm ( array_cm_cfg )
-        {
-            var array_cm = [] ;
-
-            for (var i=0; i<array_cm_cfg.length; i++) {
-                 array_cm[i] = cache_memory_init_eltofromcfg(array_cm_cfg[i].cfg) ;
-            }
-
-	    // link each other...
-            for (var i=0; i<array_cm_cfg.length; i++) {
-                 cache_memory_init_eltonextcache(array_cm, array_cm_cfg[i], array_cm[i]) ;
-            }
-
-            return array_cm ;
-        }
-
-
-        function cache_memory_update ( name, via_size, off_size, set_size, replace_pol, su_pol, level, next_cache )
-        {
-            var c = { "stats":{}, "cfg":{}, "sets":{} } ;
-
-	    set_var(c.cfg.name,     name) ;
-	    set_var(c.cfg.via_size, via_size) ;
-	    set_var(c.cfg.off_size, off_size) ;
-	    set_var(c.cfg.set_size, set_size) ;
-	    set_var(c.cfg.vps_size, via_size - set_size) ;
-	    set_var(c.cfg.tag_size, 32 - set_size - off_size) ;
-
-            set_var(c.cfg.mask_tag, ((1 << get_var(c.cfg.tag_size)) - 1) >>> 0) ;
-            set_var(c.cfg.mask_set, ((1 << get_var(c.cfg.set_size)) - 1) >>> 0) ;
-            set_var(c.cfg.mask_off, ((1 << get_var(c.cfg.off_size)) - 1) >>> 0) ;
-            set_var(c.cfg.mask_tag, (get_var(c.cfg.mask_tag) << (32 - get_var(c.cfg.tag_size))) >>> 0) ;
-            set_var(c.cfg.mask_set, (get_var(c.cfg.mask_set) <<      (get_var(c.cfg.off_size))) >>> 0) ;
-
-	    set_var(c.cfg.replace_pol, replace_pol) ;
-	    set_var(c.cfg.su_pol,      su_pol) ;
-	    set_var(c.cfg.level,       level) ;
-	    set_var(c.cfg.next_cache,  next_cache) ;
-
-	    set_var(c.stats.n_access, 0) ;
-	    set_var(c.stats.n_hits,   0) ;
-	    set_var(c.stats.n_misses, 0) ;
-            set_var(c.stats.last_addr, 0x0) ;
-            set_var(c.stats.last_r_w, "") ;
-            set_var(c.stats.last_h_m, "") ;
-
-            var p = cache_memory_split(c, 0x0) ;
-            set_var(c.stats.last_parts.tag,    p.tag) ;
-            set_var(c.stats.last_parts.set,    p.set) ;
-            set_var(c.stats.last_parts.offset, p.offset) ;
-
-            return c ;
-        }
-
-        function cache_memory_update_eltofromcfg ( cfg )
-        {
-            return cache_memory_update(get_var(cfg.name),
-                                       get_var(cfg.via_size),    get_var(cfg.off_size),   get_var(cfg.set_size),
-                                       get_var(cfg.replace_pol), get_var(cfg.su_pol),
-                                       get_var(cfg.level),       get_var(cfg.next_cache)) ;
-        }
-
-        // Example: var parts = cache_memory_split(cm, 0x12345678)
-        //          console.log("set: " + parts.set + ", tag: " + parts.tag + ", off: " + parts.offset) ;
-        function cache_memory_split ( memory, address )
-        {
-            var parts = {
-                           set:    0,
-                           tag:    0,
-                           offset: 0
-                        } ;
-
-            address      = (address >>> 0) ;
-            parts.tag    = (address & get_var(memory.cfg.mask_tag)) >>> (32 - get_var(memory.cfg.tag_size)) ;
-            parts.set    = (address & get_var(memory.cfg.mask_set)) >>> (     get_var(memory.cfg.off_size)) ;
-            parts.offset = (address & get_var(memory.cfg.mask_off)) ;
-
-            return parts ;
-        }
-
-        // Example: var cm_cache  = simhw_internalState('CM') ;
-        //          var cache_cfg = cache_memory_configuration_get(cm_cache) ;
-        function cache_memory_configuration_get ( memory )
-        {
-            return memory.cfg ;
-        }
-
-        // Example: var h_or_m = cache_memory_access(cm, 0x12345678, "read", clock_timestamp)
-        //                       * memory:    cm
-        //                       * address:   0x12345678
-        //                       * r_w:       "read" | "write"
-        //                       * clk_stamp: 100
-        function cache_memory_access ( memory, address, r_w, clock_timestamp )
-        {
-            if (get_var(memory.cfg.su_pol) != 'unified')
-            {
-                if (('split_i' == get_var(memory.cfg.su_pol)) && (segments_addr_within_text(address) == false)) {
-                      return false ;
-                }
-                if (('split_d' == get_var(memory.cfg.su_pol)) && (segments_addr_within_data(address) == false)) {
-                      return false ;
-                }
-            }
-
-            // divide address into set:tag:offset
-            var parts = cache_memory_split(memory, address) ;
-
-            // initialize set (if not done before)
-            if (typeof memory.sets[parts.set] == "undefined") {
-                memory.sets[parts.set] = { tags:{}, number_tags:0 } ;
-            }
-
-            // if tag is loaded in any entry of the set -> update stats and return hit (true)
-            if ( (typeof memory.sets[parts.set].tags[parts.tag] != "undefined") &&
-                        (memory.sets[parts.set].tags[parts.tag].valid == 1) )
-            {
-                cache_memory_update_stats(memory, address, parts, r_w, "hit", clock_timestamp) ;
-                return true ;
-            }
-
-            // tag is not loaded in set... make room first?
-            if (typeof memory.sets[parts.set].number_tags > 3)
-            {
-                var tag_victim = cache_memory_select_victim(memory, parts.set) ;
-
-                memory.sets[parts.set].tags[tag_victim].valid = 0 ;
-                memory.sets[parts.set].number_tags-- ;
-            }
-
-            // load tag in set, update stats and return miss (false)
-            memory.sets[parts.set].tags[parts.tag] = { n_access:0, valid:1, dirty:0 } ;
-            memory.sets[parts.set].number_tags++ ;
-            cache_memory_update_stats(memory, address, parts, r_w, "miss", clock_timestamp) ;
-
-            // chain request to the next cache level... if any
-            if (get_var(memory.cfg.next_cache) != null) {
-                cache_memory_access(get_var(memory.cfg.next_cache), address, r_w) ;
-            }
-
-            // return miss (false) for this cache
             return false ;
         }
+        if (('split_d' == get_var(memory.cfg.su_pol)) && (segments_addr_within_data(address) == false))
+        {
+            return false ;
+        }
+    }
+
+    // divide address into set:tag:offset
+    var parts = cache_memory_split(memory, address) ;
+
+    // initialize set (if not done before)
+    if (typeof memory.sets[parts.set] == 'undefined')
+    {
+        memory.sets[parts.set] = { tags: {}, number_tags: 0 } ;
+    }
+
+    // if tag is loaded in any entry of the set -> update stats and return hit (true)
+    if ((typeof memory.sets[parts.set].tags[parts.tag] != 'undefined') &&
+        (memory.sets[parts.set].tags[parts.tag].valid == 1))
+    {
+        cache_memory_update_stats(memory, address, parts, r_w, 'hit', clock_timestamp) ;
+        return true ;
+    }
+
+    // tag is not loaded in set... make room first?
+    if (typeof memory.sets[parts.set].number_tags > 3)
+    {
+        var tag_victim = cache_memory_select_victim(memory, parts.set) ;
+
+        memory.sets[parts.set].tags[tag_victim].valid = 0 ;
+        memory.sets[parts.set].number_tags-- ;
+    }
+
+    // load tag in set, update stats and return miss (false)
+    memory.sets[parts.set].tags[parts.tag] = { n_access: 0, valid: 1, dirty: 0 } ;
+    memory.sets[parts.set].number_tags++ ;
+    cache_memory_update_stats(memory, address, parts, r_w, 'miss', clock_timestamp) ;
+
+    // chain request to the next cache level... if any
+    if (get_var(memory.cfg.next_cache) != null)
+    {
+        cache_memory_access(get_var(memory.cfg.next_cache), address, r_w) ;
+    }
+
+    // return miss (false) for this cache
+    return false ;
+}
 

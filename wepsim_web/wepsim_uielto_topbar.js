@@ -17,72 +17,72 @@
  *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import { ws_uielto } from './wepsim_uielto.js';
+import { onClick } from './wepsim_web_actions.js';
+import { wepsim_popover_action } from './wepsim_web_ui_popover.js';
+import { wepsim_uicfg_apply } from './wepsim_web_simulator.js';
+import { wsweb_quickmenu_show, wsweb_dialog_open } from './wepsim_web_api.js';
 
-
-        /*
+/*
          *  Navbar: topbar
          */
+/* jshint esversion: 6 */
+export class ws_topbar extends ws_uielto
+{
+    constructor ()
+    {
+        // parent
+        super();
+    }
 
-        /* jshint esversion: 6 */
-        class ws_topbar extends ws_uielto
+    render (event_name)
+    {
+        // html holder
+        var o1 = '<nav class="navbar navbar-expand-lg p-0 bg-body-secondary w-100">' +
+            '    <span class="navbar-brand me-auto">' +
+            '       <a class="ui-title ps-2 mx-2 text-primary" ' +
+            '          style="text-decoration: none"' +
+            '          id="po1"' +
+            '       data-container="body"' +
+            '          data-bind="click" data-action="quickmenu-toggle"' +
+            '      data-bs-html="true"' +
+            '      data-bs-placement="bottom">WepSIM&nbsp;<span class="badge rounded-pill text-bg-secondary"><div class="wsversion">loading ...</div></span>' +
+            '       </a>' +
+            '    </span>' +
+            '' +
+            '    <span class="navbar-brand ms-auto">' +
+            '       <a class="ui-title ps-2 mx-2 text-primary" ' +
+            '          style="text-decoration: none"' +
+            '          id="po1"' +
+            '       data-container="body"' +
+            '          data-bind="click" data-action="dialog-about"' +
+            '      data-bs-html="true"' +
+            '      data-bs-placement="bottom"><span data-langkey="About">About</span>...</a>' +
+            '    </span>' +
+            '</nav>' ;
+
+        this.innerHTML = o1 ;
+
+        onClick('quickmenu-toggle', () =>
         {
-	      constructor ()
-	      {
-		    // parent
-		    super();
-	      }
+            if (typeof wsweb_quickmenu_show === 'function') wsweb_quickmenu_show() ;
+        }) ;
+        onClick('dialog-about', () => wsweb_dialog_open('about')) ;
+    }
+}
 
-	      render ( event_name )
-	      {
-		    // html holder
-		    var o1 =    '<nav class="navbar navbar-expand-lg fixed-top p-0 bg-body-secondary">' +
-				'    <span class="navbar-brand me-auto">' +
-				'       <a class="ui-title ps-2 mx-2 text-primary" ' +
-                                '          style="text-decoration: none"' +
-				'          id="po1"' +
-				'	   data-container="body"' +
-	// bs5 toggle fails	'          onclick="if (typeof wsweb_quickmenu_toggle === \'function\')' +
-	// bs5 toggle fails	'	               wsweb_quickmenu_toggle();' +
-				'          onclick="if (typeof wsweb_quickmenu_show === \'function\')' +
-				'	                wsweb_quickmenu_show();' +
-				'	            return false;"' +
-				'	  data-bs-html="true"' +
-				'	  data-bs-placement="bottom">WepSIM&nbsp;<span class="badge rounded-pill text-bg-secondary"><div class="wsversion">loading ...</div></span>' +
-				'       </a>' +
-				'    </span>' +
-				'' +
-				'    <span class="navbar-brand ms-auto">' +
-				'       <a class="ui-title ps-2 mx-2 text-primary" ' +
-                                '          style="text-decoration: none"' +
-				'          id="po1"' +
-				'	   data-container="body"' +
-				'          onclick="wsweb_dialog_open(\'about\');' +
-				'	            return true;"' +
-				'	  data-bs-html="true"' +
-				'	  data-bs-placement="bottom"><span data-langkey="About">About</span>...</a>' +
-				'    </span>' +
-				'</nav>' ;
+// quick menu
+export function topbar_quickmenu_action(action)
+{
+    wepsim_popover_action('po1', action) ;
 
-		    this.innerHTML = o1 ;
-	      }
-        }
+    // set UI config (if shown)
+    if (action != 'hide')
+    {
+        wepsim_uicfg_apply() ;
+    }
 
-        if (typeof window !== "undefined") {
-            window.customElements.define('ws-topbar', ws_topbar) ;
-        }
-
-
-        // quick menu
-        function topbar_quickmenu_action ( action )
-        {
-            wepsim_popover_action('po1', action) ;
-
-            // set UI config (if shown)
-            if (action != 'hide') {
-    	        wepsim_uicfg_apply() ;
-	    }
-
-            // return ok
-            return true ;
-        }
+    // return ok
+    return true ;
+}
 

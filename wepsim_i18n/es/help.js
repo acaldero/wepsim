@@ -18,47 +18,50 @@
  *
  */
 
+export function i18n_es_register_help(i18n)
+{
 
     i18n.eltos.help.es = {
 
-	"Welcome tutorial":		"Tutorial de bienvenida",
-	"help_01_01":			"Abre el tutorial de bienvenida",
+        'Welcome tutorial': 'Tutorial de bienvenida',
+        'help_01_01':       'Abre el tutorial de bienvenida',
 
-	"Simple usage tutorial":	"Tutorial simple de uso",
-	"help_01_02":			"Tutorial de uso simple, ejemplo b&aacute;sico para microprogramar y programar en ensamblador",
+        'Simple usage tutorial': 'Tutorial simple de uso',
+        'help_01_02':            'Tutorial de uso simple, ejemplo b&aacute;sico para microprogramar y programar en ensamblador',
 
-	"Execute example":		"Ejecuci&oacute;n de ejemplo",
-	"help_01_03":			"Reproduce el tutorial de ejecuci&oacute;n de ejemplo",
+        'Execute example': 'Ejecuci&oacute;n de ejemplo',
+        'help_01_03':      'Reproduce el tutorial de ejecuci&oacute;n de ejemplo',
 
-	"Simulator: firmware":		"Simulador: microc&oacute;digo",
-	"help_02_01":			"Descripci&oacute;n de c&oacute;mo trabajar en el simulador con el microc&oacute;digo",
+        'Simulator: firmware': 'Simulador: microc&oacute;digo',
+        'help_02_01':          'Descripci&oacute;n de c&oacute;mo trabajar en el simulador con el microc&oacute;digo',
 
-	"Microcode format":		"Formato del microc&oacute;digo",
-	"help_02_02":			"Sint&aacute;xis del microc&oacute;digo usado",
+        'Microcode format': 'Formato del microc&oacute;digo',
+        'help_02_02':       'Sint&aacute;xis del microc&oacute;digo usado',
 
-	"Simulator: assembly":		"Simulador: ensamblador",
-	"help_02_03":			"Descripci&oacute;n de c&oacute;mo trabajar en el simulador con el ensamblador",
+        'Simulator: assembly': 'Simulador: ensamblador',
+        'help_02_03':          'Descripci&oacute;n de c&oacute;mo trabajar en el simulador con el ensamblador',
 
-	"Assembly format":		"Formato del ensamblador",
-	"help_02_04":			"Sint&aacute;xis del ensamblador",
+        'Assembly format': 'Formato del ensamblador',
+        'help_02_04':      'Sint&aacute;xis del ensamblador',
 
-	"Simulator: execution":		"Simulador: ejecuci&oacute;n",
-	"help_02_05":			"Descripci&oacute;n de c&oacute;mo ejecutar en el simulador el ensamblador y microc&oacute;digo",
+        'Simulator: execution': 'Simulador: ejecuci&oacute;n',
+        'help_02_05':           'Descripci&oacute;n de c&oacute;mo ejecutar en el simulador el ensamblador y microc&oacute;digo',
 
-	"Simulated architecture":	"Arquitectura del simulador",
-	"help_03_01":			"Descripci&oacute;n de la arquitectura del procesador simulado",
+        'Simulated architecture': 'Arquitectura del simulador',
+        'help_03_01':             'Descripci&oacute;n de la arquitectura del procesador simulado',
 
-	"Simulated signals":		"Señales simuladas",
-	"help_03_02":			"Resumen de las señales principales del procesador elemental",
+        'Simulated signals': 'Señales simuladas',
+        'help_03_02':        'Resumen de las señales principales del procesador elemental',
 
-	"Hardware summary":		"Resumen del Hardware",
-	"help_03_03":			"Resumen del hardware del procesador elemental simulado",
+        'Hardware summary': 'Resumen del Hardware',
+        'help_03_03':       'Resumen del hardware del procesador elemental simulado',
 
-	"License, platforms, etc.":	"Licencia, plataformas, etc.",
-	"help_04_01":			"Licencia de WepSIM, plataformas disponibles, tecnolog&iacute;as usadas",
+        'License, platforms, etc.': 'Licencia, plataformas, etc.',
+        'help_04_01':               'Licencia de WepSIM, plataformas disponibles, tecnolog&iacute;as usadas',
 
-	"Authors":			"Equipo de WepSIM",
-	"help_04_02":			"Equipo de WepSIM"
+        'Authors':    'Equipo de WepSIM',
+        'help_04_02': 'Equipo de WepSIM',
 
-    } ;
+    };
+}
 

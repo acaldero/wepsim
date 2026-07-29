@@ -1,9 +1,8 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en" class="h-100">
 
 <head>
-    <title>WepSIM</title>
+    <title>WepSIM (dev)</title>
     <meta name="Description" content="The Web Elemental Processor SIMulator (WepSIM) for microprogramming and assembly programming" />
 
     <meta http-equiv="cache-control" content="max-age=0" />
@@ -17,63 +16,82 @@
     <meta name="msapplication-tap-highlight" content="no" />
     <meta name="viewport" content="user-scalable=yes, width=device-width, initial-scale=1, maximum-scale=2.5, minimum-scale=.5" />
 
-    <script type="application/javascript"
-            src="external/jquery.min.js"></script>
-    <link async href="ws_dist/min.external.css" rel="stylesheet" />
-
-    <script type="application/javascript"
-            src="ws_dist/min.external.js"></script><noscript>Your browser does not support JavaScript!</noscript>
-    <script type="application/javascript"
-            src="ws_dist/min.sim_all.js"></script><noscript>Your browser does not support JavaScript!</noscript>
-    <script type="application/javascript"
-            src="ws_dist/min.wepsim_web.js"></script><noscript>Your browser does not support JavaScript!</noscript>
+    <!-- PWA -->
+    <link  rel="manifest"                              href="docs/manifest.json" />
+    <meta name="msapplication-config"                  content="images/icons/browserconfig.xml" />
+    <meta name="mobile-web-app-capable"                content="yes" />
+    <meta name="mobile-web-app-status-bar-style"       content="black" />
+    <meta name="mobile-web-app-title"                  content="WepSIM 2.4.1" />
+    <meta name="msapplication-TileImage"               content="images/arcos.svg" />
+    <meta name="msapplication-TileColor"               content="#2F3BA2" />
+    <meta name="theme-color"                           content="#ffffff" />
 
     <link rel="shortcut icon" href="images/icons/favicon.ico" />
     <link rel="mask-icon"     href="images/icons/safari-pinned-tab.svg" color="#5bbad5" />
 
-    <meta name="google-site-verification" content="gbIx0pN_mlbiXYFvWz9h251qfap7r2W4yMRkS2tVCS4" />
+    <link href="images/icons/apple-touch-icon.png"  rel="apple-touch-icon" sizes="180x180" type="image/png" />
+    <link href="images/icons/favicon-16x16.png"     rel="apple-touch-icon" sizes="16x16"   type="image/png" />
+    <link href="images/icons/favicon-32x32.png"     rel="apple-touch-icon" sizes="32x32"   type="image/png" />
+    <link href="images/icons/favicon-152x152.png"   rel="apple-touch-icon" sizes="152x152" type="image/png" />
+    <link href="images/icons/favicon-167x167.png"   rel="apple-touch-icon" sizes="167x167" type="image/png" />
+    <link href="images/icons/favicon-180x180.png"   rel="apple-touch-icon" sizes="180x180" type="image/png" />
+
+    <link href="images/splash/iphone5_splash.png"    media="(device-width: 320px)  and (device-height: 568px)  and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image"/>
+    <link href="images/splash/iphone6_splash.png"    media="(device-width: 375px)  and (device-height: 667px)  and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image"/>
+    <link href="images/splash/iphoneplus_splash.png" media="(device-width: 621px)  and (device-height: 1104px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image"/>
+    <link href="images/splash/iphonex_splash.png"    media="(device-width: 375px)  and (device-height: 812px)  and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image"/>
+    <link href="images/splash/ipad_splash.png"       media="(device-width: 768px)  and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image"/>
+    <link href="images/splash/ipadpro1_splash.png"   media="(device-width: 834px)  and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image"/>
+    <link href="images/splash/ipadpro2_splash.png"   media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image"/>
+    <script>
+        function wsl_apply_loader_theme() {
+            try {
+                var darkMode = localStorage.getItem('wepsim_ws_skin_dark_mode');
+                var isDark = false;
+                switch (darkMode) {
+                    case 'on': isDark = true; break;
+                    case 'off': isDark = false; break;
+                    default: isDark = window.matchMedia('(prefers-color-scheme: dark)').matches; break;
+                }
+                if (isDark) document.documentElement.setAttribute('data-bs-theme', 'dark');
+            }
+            catch (e) {
+                console.error(e);
+            }
+        }
+        wsl_apply_loader_theme();
+    </script>
 </head>
 
-
-<body>
+<body style="min-height:100vh;">
 
     <span id="ws_loader" class="collapse show">
-	<table style="width:100%; height:100%; position:fixed; background-color: white;  z-index:100;">
-	<tr>
-	<td align="center">
-	    <div class="spinner-border spinner-border-xl text-success" role="status">
-	      <span class="visually-hidden">Loading...</span>
-	    </div>
-	    <br/><br/>
-	    <span class="text-primary font-weight-bold p-3"><strong><span data-langkey='Loading WepSIM...'>Loading WepSIM...</span></strong></span>
-	</td>
-	</tr>
-	</table>
+        <table class="bg-body" style="width:100%; height:100%; position:fixed; z-index:4096;">
+        <tr>
+        <td align="center">
+            <div id="wsl_spinner1" class="spinner-border spinner-border-xl text-success" role="status">
+              <span id="wsl_msg1" class="visually-hidden">Loading...</span>
+            </div>
+            <br/><br/>
+            <div class="d-inline-block">
+                <div class="text-primary fw-bold mb-1"><span data-langkey='Loading WepSIM...'>Loading WepSIM...</span></div>
+                <div class="progress" style="width:200%;max-width:90vw;height:1rem;margin-left:-50%;">
+                    <div id="wsl_progressbar"
+                         class="progress-bar bg-success"
+                         role="progressbar"
+                         style="width:0%;transition:none"
+                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    </div>
+                </div>
+            </div>
+        </td>
+        </tr>
+        </table>
     </span>
 
+    <ws-web-main id="ws1" layout="classic" style="display:flex;flex-direction:column;height:100vh"></ws-web-main>
 
-<script type="text/javascript">
-    try
-    {
-	    // basic initialization of wepsim...
-	    simcore_init(true) ;
-	    upgrade_cfg() ;
-
-	    // go to wepsim UI skin...
-	    var optValue = get_cfg('ws_skin_ui') ;
-            window.location='ws_dist/wepsim-' + optValue + '.html' ;
-    }
-    catch(err)
-    {
-          alert("Please try to cleanup the browser cache and try again (just in case).\n" +
-		"\n" +
-                "WepSIM was improperly used:\n" + err.message + "\n" +
-		"\n" +
-		"More details:\n" + err.stack) ;
-    }
-</script>
-<noscript>Your browser does not support JavaScript!</noscript>
+    <script type="module" src="/src/entries/web-main.js"></script>
 
 </body>
-
 </html>

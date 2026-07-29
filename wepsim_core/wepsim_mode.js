@@ -18,94 +18,125 @@
  *
  */
 
+import { simhw_getIdByName } from '../sim_hw/sim_hw_index.js';
+import { simhw_hwset_load } from '../sim_hw/sim_hw_index.js';
+import { simhw_ensure_processor_loaded } from '../sim_hw/sim_hw_lazy.js';
+import { wepsim_activehw, wepsim_activeview } from '../wepsim_web/wepsim_web_simulator.js';
+import { get_cfg } from '../sim_core/sim_cfg.js';
+import { load_from_example_firmware, wepsim_example_load } from './wepsim_example.js';
+import { wsweb_recordbar_show } from '../wepsim_web/wepsim_web_api.js';
+import { wepsim_checkpoint_loadExample } from './wepsim_checkpoint.js';
+import { wepsim_newbie_tour } from './wepsim_tour.js';
+import { ws_info } from '../sim_core/sim_adt_core.js';
 
-    /*
+/*
      * Execution Modes
      */
 
-    ws_info.modes = [ 'ep', 'ep2', 'rv', 'poc',
-	              'newbie', 'intro',
-	              'asm_mips', 'asm_rv32', 'asm_z80',
-	              'ep2_asm_mips', 'ep2_asm_rv32', 'ep2_asm_z80' ] ;
+export function wepsim_register_modes()
+{
+    ws_info.modes = ['ep', 'ep2', 'rv', 'poc',
+        'newbie', 'intro',
+        'asm_mips', 'asm_rv32', 'asm_z80',
+        'ep2_asm_mips', 'ep2_asm_rv32', 'ep2_asm_z80'] ;
 
     ws_info.default_example = {
-	                         'ep':           'Default-MIPS',
-	                         'ep2':          'Default-RISCV',
-	                         'poc':          'Default-MIPS',
-	                         'rv':           'Default-RISCV',
-	                         'rvpipe':       'Default-RISCV',
+        'ep':     'Default-MIPS',
+        'ep2':    'Default-RISCV',
+        'poc':    'Default-MIPS',
+        'rv':     'Default-RISCV',
+        'rvpipe': 'Default-RISCV',
 
-	                         'asm_mips':     'ep:ep_mix1_l3:mips_s4e1',
-	                         'asm_rv32':     'ep:ep_js1_l10:rv32_s7e2',
-	                         'asm_z80':      'ep:ep_js1_l3:z80_s7e3',
+        'asm_mips': 'ep:ep_mix1_l3:mips_s4e1',
+        'asm_rv32': 'ep:ep_js1_l10:rv32_s7e2',
+        'asm_z80':  'ep:ep_js1_l3:z80_s7e3',
 
-	                         'ep2_asm_mips': 'ep2:ep2_sig1_l10:mips_s4e1',
-	                         'ep2_asm_rv32': 'ep2:ep2_sig1_l10:rv32_s7e2',
-	                         'ep2_asm_z80':  'ep2:ep2_js2_l3:z80_s7e3'
-	                      } ;
+        'ep2_asm_mips': 'ep2:ep2_sig1_l10:mips_s4e1',
+        'ep2_asm_rv32': 'ep2:ep2_sig1_l10:rv32_s7e2',
+        'ep2_asm_z80':  'ep2:ep2_js2_l3:z80_s7e3',
+    } ;
 
-    ws_info.modes_ep  = [ 'newbie', 'intro',     'asm_mips',     'asm_rv32',     'asm_z80' ] ;
-    ws_info.modes_ep2 = [ 'newbie', 'intro', 'ep2_asm_mips', 'ep2_asm_rv32', 'ep2_asm_z80' ] ;
+    ws_info.modes_ep  = ['newbie', 'intro', 'asm_mips', 'asm_rv32', 'asm_z80'] ;
+    ws_info.modes_ep2 = ['newbie', 'intro', 'ep2_asm_mips', 'ep2_asm_rv32', 'ep2_asm_z80'] ;
+}
 
-
-    // get equivalent base mode
-    function wepsim_mode_getBaseMode ( derive_model )
+// get equivalent base mode
+export function wepsim_mode_getBaseMode (derive_model)
+{
+    if (derive_model == null)
     {
-        if (derive_model == null) {
-            return 'ep' ;
-        }
-
-        if (ws_info.modes_ep.includes(derive_model)) {
-            return 'ep' ;
-        }
-        if (ws_info.modes_ep2.includes(derive_model)) {
-            return 'ep2' ;
-        }
-
-        return derive_model ;
+        return 'ep' ;
     }
 
-    // Change WepSIM mode -> activate_hw + UI view
-    function wepsim_mode_change ( optValue )
+    if (ws_info.modes_ep.includes(derive_model))
     {
-	    // switch active hardware by name...
-            var bm   = wepsim_mode_getBaseMode(optValue) ;
-            var hwid = simhw_getIdByName(bm) ;
-            if (hwid != -1) {
-                wepsim_activehw(hwid) ;
-	    }
-
-            // load default example set
-            var eset_name = get_cfg('ws_examples_set') ;
-            if (eset_name != 'Empty')
-                 wepsim_example_load(eset_name) ;
-	    else wepsim_example_load(ws_info.default_example[optValue]) ;
-
-	    // show/hide microcode...
-            wepsim_activeview('extra_mcode', true) ;
-	    if ( optValue.startsWith('asm_') ||
-	         optValue.startsWith('ep2_asm_') )
-	    {
-                wepsim_activeview('extra_mcode', false) ;
-		load_from_example_firmware(ws_info.default_example[optValue], false) ;
-                return true ;
-	    }
-
-	    // intro mode...
-	    if ('intro' == optValue)
-	    {
-	         wsweb_recordbar_show() ;
-                 wepsim_checkpoint_loadExample('tutorial_2.txt') ;
-                 return true ;
-	    }
-
-	    // newbie mode...
-            if ('newbie' == optValue)
-            {
-                 wepsim_newbie_tour('tour2') ;
-                 return true ;
-            }
-
-            return true ;
+        return 'ep' ;
     }
+    if (ws_info.modes_ep2.includes(derive_model))
+    {
+        return 'ep2' ;
+    }
+
+    return derive_model ;
+}
+
+// Change WepSIM mode -> activate_hw + UI view
+export async function wepsim_mode_change (optValue)
+{
+    // switch active hardware by name...
+    var bm   = wepsim_mode_getBaseMode(optValue) ;
+    var hwid = simhw_getIdByName(bm) ;
+
+    // lazy load processor if not yet registered
+    if (hwid < 0)
+    {
+        var loaded = await simhw_ensure_processor_loaded(bm) ;
+        if (!loaded)
+        {
+            // fallback: try external JSON hardware
+            loaded = await simhw_hwset_load(bm) ;
+        }
+
+        if (loaded)
+            hwid = simhw_getIdByName(bm) ;
+    }
+
+    if (hwid != -1)
+    {
+        wepsim_activehw(hwid) ;
+    }
+
+    // load default example set
+    var eset_name = get_cfg('ws_examples_set') ;
+    if (eset_name != 'Empty')
+        await wepsim_example_load(eset_name) ;
+    else await wepsim_example_load(ws_info.default_example[optValue]) ;
+
+    // show/hide microcode...
+    wepsim_activeview('extra_mcode', true) ;
+    if (optValue.startsWith('asm_') ||
+        optValue.startsWith('ep2_asm_'))
+    {
+        wepsim_activeview('extra_mcode', false) ;
+        load_from_example_firmware(ws_info.default_example[optValue], false) ;
+        return true ;
+    }
+
+    // intro mode...
+    if ('intro' == optValue)
+    {
+        wsweb_recordbar_show() ;
+        wepsim_checkpoint_loadExample('tutorial_2.txt') ;
+        return true ;
+    }
+
+    // newbie mode...
+    if ('newbie' == optValue)
+    {
+        await wepsim_newbie_tour('tour2') ;
+        return true ;
+    }
+
+    return true ;
+}
 

@@ -18,38 +18,41 @@
  *
  */
 
+// Tranlation thanks to https://github.com/shiptux
 
-    // Tranlation thanks to https://github.com/shiptux
+export function i18n_zh_cn_register_help(i18n)
+{
 
     i18n.eltos.help.zh_cn = {
 
-		'Welcome tutorial':		'欢迎教程',
-		'help_01_01':		'打开欢迎教程',
-		'Simple usage tutorial':		'简单的使用教程',
-		'help_01_02':		'打开简单的使用教程，进行微程序设计和汇编编程',
-		'Execute example':		'执行例程',
-		'help_01_03':			'运行教程例程',
-		'Simulator: firmware':		'模拟器：固件',
-		'help_02_01':		'如何使用要加载到控制存储器中的固件',
-		'Microcode format':		'微代码格式',
-		'help_02_02':		'使用的微代码的语法',
-		'Simulator: assembly':		'模拟器：汇编',
-		'help_02_03':		'如何使用使用上述固件的汇编',
-		'Assembly format':		'汇编格式',
-		'help_02_04':		'汇编的语法',
-		'Simulator: execution':		'模拟器：执行',
-		'help_02_05':		'模拟器如何执行汇编和固件',
-		'Simulated architecture':		'模拟的架构',
-		'help_03_01':		'模拟处理器体系结构的描述',
-		'Simulated signals':		'模拟信号',
-		'help_03_02':		'模拟元素处理器的主要信号摘要',
-		'Hardware summary':		'硬件摘要',
-		'help_03_03':		'模拟元素处理器硬件所参考的硬件',
-		'License, platforms, etc.':		'许可证，平台等',
-		'help_04_01':		'WepSIM许可证，支持的平台，使用的技术',
-		'Authors':		'WepSIM 團隊',
-		'help_04_02':		'WepSIM 團隊',
-		'_last_':		'_last_'
+        'Welcome tutorial':         '欢迎教程',
+        'help_01_01':               '打开欢迎教程',
+        'Simple usage tutorial':    '简单的使用教程',
+        'help_01_02':               '打开简单的使用教程，进行微程序设计和汇编编程',
+        'Execute example':          '执行例程',
+        'help_01_03':               '运行教程例程',
+        'Simulator: firmware':      '模拟器：固件',
+        'help_02_01':               '如何使用要加载到控制存储器中的固件',
+        'Microcode format':         '微代码格式',
+        'help_02_02':               '使用的微代码的语法',
+        'Simulator: assembly':      '模拟器：汇编',
+        'help_02_03':               '如何使用使用上述固件的汇编',
+        'Assembly format':          '汇编格式',
+        'help_02_04':               '汇编的语法',
+        'Simulator: execution':     '模拟器：执行',
+        'help_02_05':               '模拟器如何执行汇编和固件',
+        'Simulated architecture':   '模拟的架构',
+        'help_03_01':               '模拟处理器体系结构的描述',
+        'Simulated signals':        '模拟信号',
+        'help_03_02':               '模拟元素处理器的主要信号摘要',
+        'Hardware summary':         '硬件摘要',
+        'help_03_03':               '模拟元素处理器硬件所参考的硬件',
+        'License, platforms, etc.': '许可证，平台等',
+        'help_04_01':               'WepSIM许可证，支持的平台，使用的技术',
+        'Authors':                  'WepSIM 團隊',
+        'help_04_02':               'WepSIM 團隊',
+        '_last_':                   '_last_',
 
     };
+}
 
