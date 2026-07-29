@@ -223,6 +223,20 @@ export function signal_apply_behaviour_allByLevel (mc_elto)
     }
 }
 
+export function signal_update_draw_allByEdge (mc_elto)
+{
+    if ((typeof mc_elto == 'undefined') || (mc_elto.is_native))
+    { // skip signal activation if undefined OR is_native
+        return ;
+    }
+
+    for (const signal_name of jit_fire_order_E)
+    {
+        let signal_obj = simhw_sim_signal(signal_name) ;
+        update_draw(signal_obj, signal_obj.value) ;
+    }
+}
+
 // function update edge/level now
 export function fn_updateE_now (signal_name)
 {

@@ -54,9 +54,9 @@ export default defineConfig({
             },
             output: {
                 entryFileNames:  '[name].mjs',
-                chunkFileNames:  'chunks/[name].mjs',
                 format:          'es',
                 preserveModules: false,
+                codeSplitting:   false,
             },
             external: ['fs', 'path', 'perf_hooks', 'os'],
         },

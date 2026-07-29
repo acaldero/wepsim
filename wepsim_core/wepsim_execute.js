@@ -23,7 +23,7 @@ import bootbox from 'bootbox';
 import { wepsim_state_history_add, wepsim_state_history_reset } from './wepsim_state.js';
 import { get_simware } from '../sim_core/sim_adt_core.js';
 import { update_memories, wait_uievents_and_settimeout } from '../sim_core/sim_core_ctrl.js';
-import { simcore_check_if_can_execute, simcore_reset, simcore_execute_microprogram, simcore_execute_microinstruction, simcore_check_if_can_continue, simcore_execute_microinstruction2 } from '../sim_core/sim_api_core.js';
+import { simcore_check_if_can_execute, simcore_reset, simcore_execute_microprogram, simcore_execute_microinstruction, simcore_check_if_can_continue, simcore_execute_microinstruction2, simcore_execute_microinstruction_backwards } from '../sim_core/sim_api_core.js';
 import { wsweb_dlg_alert, wsweb_dlg_close, wsweb_dlg_open } from './wepsim_dialog.js';
 import { get_cfg } from '../sim_core/sim_cfg.js';
 import { simhw_internalState, simhw_internalState_get, simhw_sim_ctrlStates_get, simhw_sim_state } from '../sim_hw/sim_hw_index.js';
@@ -92,6 +92,25 @@ export function wepsim_execute_microinstruction ()
     }
 
     ret = simcore_execute_microinstruction() ;
+    if (false === ret.ok)
+    {
+        wepsim_show_stopbyevent('Info', ret.msg) ;
+        return false ;
+    }
+
+    return true ;
+}
+
+export function wepsim_execute_microinstruction_backwards ()
+{
+    var ret = simcore_check_if_can_execute() ;
+    if (false === ret.ok)
+    {
+        wsweb_dlg_alert(ret.msg) ;
+        return false ;
+    }
+
+    ret = simcore_execute_microinstruction_backwards() ;
     if (false === ret.ok)
     {
         wepsim_show_stopbyevent('Info', ret.msg) ;

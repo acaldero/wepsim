@@ -29,7 +29,7 @@ import { compute_signal_verbals } from '../sim_hw_behavior.js';
 import { decode_instruction } from '../../sim_sw/firmware.js';
 import { get_deco_from_pc, main_memory_getvalue } from '../../sim_core/sim_adt_mainmemory.js';
 import { cache_memory_access } from '../../sim_core/sim_adt_cachememory.js';
-import { signal_apply_behaviour_allByEdge, signal_apply_behaviour_allByLevel, signal_fire, signal_reset_and_apply } from '../sim_hw_signal.js';
+import { signal_apply_behaviour_allByEdge, signal_apply_behaviour_allByLevel, signal_fire, signal_reset_and_apply, signal_update_draw_allByEdge } from '../sim_hw_signal.js';
 
 /*
  *  CPU
@@ -2799,6 +2799,7 @@ export function cpu_rv_register (sim_p)
             signal_reset_and_apply(sim_p.signals, mcelto) ;
 
             // 5.- Finally, 'fire' the (High) Level signals
+            signal_update_draw_allByEdge(mcelto) ;
             signal_apply_behaviour_allByLevel(mcelto) ;
 
             // X.- Register 0 must always be zero.
@@ -2872,6 +2873,28 @@ export function cpu_rv_register (sim_p)
                                   sim_p.internal_states.alu_flags.flag_n + " " +
                                   sim_p.internal_states.alu_flags.flag_z + " " +
 */
+        },
+    };
+
+    sim_p.behaviors['HISTORY_RESTORE'] = { nparameters: 1,
+        operation:   function(s_expr)
+        {
+            ws_alert('ERROR: undo execution not supported in this CPU. ') ;
+        },
+        verbal: function (s_expr)
+        {
+            return '' ;
+        },
+    };
+    sim_p.behaviors['REFRESH']         = { nparameters: 1,
+        operation:   function(s_expr)
+        {
+            var reg_ir_deco = get_value(simhw_sim_state('REG_IR_DECO')) ;
+            show_dbg_ir(reg_ir_deco) ;
+        },
+        verbal: function (s_expr)
+        {
+            return '' ;
         },
     };
 

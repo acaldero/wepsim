@@ -11,7 +11,7 @@ export const MERGE_CONFIGS: MergeConfig[] = [
         output: 'mips/default.json' },
     { inputs: ['mips/es_ep_instructive.json', 'mips/es_poc_instructive.json', 'mips/es_ep2_instructive.json'],
         output: 'mips/default_instructive.json' },
-    { inputs: ['rv32/es_ep.json', 'rv32/es_ep_native.json', 'rv32/es_ep2.json', 'rv32/es_ep2_native.json', 'rv32/es_poc.json', 'rv32/es_poc_native.json', 'rv32/es_rv.json'],
+    { inputs: ['rv32/es_ep.json', 'rv32/es_ep_native.json', 'rv32/es_ep2.json', 'rv32/es_ep2_native.json', 'rv32/es_poc.json', 'rv32/es_poc_native.json', 'rv32/es_rv.json', 'rv32/es_rvpipe.json'],
         output: 'rv32/default.json' },
     { inputs: ['rv32/es_ep_instructive.json', 'rv32/es_poc_instructive.json', 'rv32/es_ep2_instructive.json'],
         output: 'rv32/default_instructive.json' },

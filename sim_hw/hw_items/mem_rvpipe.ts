@@ -402,7 +402,7 @@ export function mem_rvpipe_register(sim_p: Simulator): Simulator
 
     /*
      *  Model (see docs/WEPSIM-TEAM.md)
- */
+     */
 
     sim_p.elements.memory = {
         name:        'Main memory',

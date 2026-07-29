@@ -651,43 +651,44 @@ export function wepsim_init_states()
         return rf_value;
     };
 
-    for (i = 0; i < filter.length; i++)
+    for (var i = 0; i < filter.length; i++)
+    {
         bind_state_vue(filter[i], 'rf_', f_computed_value);
+    }
 
     // filter_states_groups (below register file)
-    if (filter_groups)
-    {
-        var o2         = '';
-        var last_group = null;
-        for (var group_name in filter_groups)
-        {
-            var group = filter_groups[group_name];
-            for (var j = 0; j < group.length; j++)
-            {
-                if (group_name != last_group)
-                {
-                    o2        += "<div class='w-100 mt-1 mb-0 text-center border border-secondary bg-body-tertiary rounded py-0 px-1'><small><strong>" +
-                        group_name +
-                        '</strong></small></div>';
-                    last_group = group_name;
-                }
-                filspl = group[j].split(',');
-                o2    += render_state_button(filspl[0], filspl[1], separator_class, 'rpg', 'rfg_', 'popover-grp');
-            }
-        }
-        $('#states_GR').html("<div class='d-flex flex-row flex-wrap justify-content-around justify-content-sm-between'>" + o2 + '</div>');
-        wepsim_popovers_init('[data-bs-toggle=popover-grp]', popover_cfg_make('rpg'), null);
-
-        for (group_name in filter_groups)
-        {
-            group = filter_groups[group_name];
-            for (j = 0; j < group.length; j++)
-                bind_state_vue(group[j], 'rfg_', f_computed_value);
-        }
-    }
-    else
+    if (typeof filter_groups == 'undefined')
     {
         $('#states_GR').html('');
+        return ;
+    }
+
+    var o2         = '';
+    var last_group = null;
+    for (var group_name in filter_groups)
+    {
+        var group = filter_groups[group_name];
+        for (var j = 0; j < group.length; j++)
+        {
+            if (group_name != last_group)
+            {
+                o2        += "<div class='w-100 mt-1 mb-0 text-center border border-secondary bg-body-tertiary rounded py-0 px-1'><small><strong>" +
+                    group_name +
+                    '</strong></small></div>';
+                last_group = group_name;
+            }
+            filspl = group[j].split(',');
+            o2    += render_state_button(filspl[0], filspl[1], separator_class, 'rpg', 'rfg_', 'popover-grp');
+        }
+    }
+    $('#states_GR').html("<div class='d-flex flex-row flex-wrap justify-content-around justify-content-sm-between'>" + o2 + '</div>');
+    wepsim_popovers_init('[data-bs-toggle=popover-grp]', popover_cfg_make('rpg'), null);
+
+    for (group_name in filter_groups)
+    {
+        group = filter_groups[group_name];
+        for (j = 0; j < group.length; j++)
+            bind_state_vue(group[j], 'rfg_', f_computed_value);
     }
 }
 

@@ -30,7 +30,7 @@ import { wait_if_uievents } from '../sim_core/sim_core_ctrl.js';
 import { show_memories_values } from '../sim_core/sim_core_ui.js';
 import { compute_general_behavior } from '../sim_hw/sim_hw_behavior.js';
 import { saveFirmware } from '../sim_sw/firmware.js';
-import { wepsim_execute_instruction, wepsim_execute_microinstruction, wepsim_execute_reset, wepsim_reset_max_turbo } from '../wepsim_core/wepsim_execute.js';
+import { wepsim_execute_instruction, wepsim_execute_microinstruction, wepsim_execute_microinstruction_backwards, wepsim_execute_reset, wepsim_reset_max_turbo } from '../wepsim_core/wepsim_execute.js';
 import { wepsim_help_set } from '../wepsim_core/wepsim_help.js';
 import { wepsim_mode_change } from '../wepsim_core/wepsim_mode.js';
 import { wepsim_newbie_tour } from '../wepsim_core/wepsim_tour.js';
@@ -281,18 +281,7 @@ export function wsweb_execution_reset()
     return true ;
 }
 
-export function wsweb_execution_previous_microinstruction()
-{
-    if (simhw_active() !== null)
-    {
-        compute_general_behavior('HISTORY_RESTORE') ;
-        simcoreui_show_hw() ;
-    }
-
-    return true ;
-}
-
-export function wsweb_execution_microinstruction()
+export function wsweb_execution_microinstruction ()
 {
     if (simhw_active() !== null)
     {
@@ -305,6 +294,21 @@ export function wsweb_execution_microinstruction()
                               'wsweb_execution_microinstruction();\n') ;
 
     // return ok
+    return true ;
+}
+
+export function wsweb_execution_previous_microinstruction ()
+{
+    if (simhw_active() !== null)
+    {
+        wepsim_execute_microinstruction_backwards() ;
+        simcoreui_show_hw() ;
+    }
+
+    // add if recording
+    simcore_record_append_new('Execute previous instruction',
+                              'wsweb_execution_previous_microinstruction();\n') ;
+
     return true ;
 }
 

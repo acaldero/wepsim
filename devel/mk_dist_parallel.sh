@@ -43,7 +43,9 @@ while getopts 'vdh' opt; do
 
     d)
       echo "  Please install first:"
+      echo ""
       echo "   sudo apt-get install jq"
+      echo "   sudo npm install -g typescript@6"
       echo ""
       echo "   npm i terser jshint eslint"
       echo "   npm i yargs clear inquirer@8.2.6 fuzzy commander async"
@@ -85,7 +87,7 @@ cp external/jquery.min.js    ws_dist/external
 
 #  compile TypeScript files (cpu_rvpipe, mem_rvpipe, hw_rvpipe)
 echo "  * compile TypeScript (sim_hw/*.ts)"
-tsc -p sim_hw/tsconfig.json || { echo "ERROR: TypeScript compilation failed"; exit 1; }
+tsc -p ./tsconfig.json || { echo "ERROR: TypeScript compilation failed"; exit 1; }
 echo "  Done."
 echo ""
 
@@ -127,27 +129,28 @@ PARALLEL_PIDS=""
       sim_hw/hw_items/cpu_ep2.js \
       sim_hw/hw_items/mem_ep2.js \
       sim_hw/hw_items/cpu_rv.js \
-      sim_hw/ts_out/hw_items/cpu_rvpipe.js \
       sim_hw/hw_items/mem_rv.js \
-      sim_hw/ts_out/hw_items/mem_rvpipe.js \
       sim_hw/hw_items/cpu_poc.js \
       sim_hw/hw_items/mem_poc.js \
       sim_hw/hw_items/cu_poc.js \
       sim_hw/hw_items/io_clk_base.js \
       sim_hw/hw_items/io_screen_base.js \
-      sim_hw/ts_out/hw_items/io_clk_rvpipe.js \
-      sim_hw/ts_out/hw_items/io_screen_rvpipe.js \
-      sim_hw/ts_out/hw_items/io_keyboard_rvpipe.js \
       sim_hw/hw_items/io_keyboard_base.js \
       sim_hw/hw_items/io_ldm_base.js \
       sim_hw/hw_items/io_l3d_base.js \
       sim_hw/hw_items/io_sound_base.js \
       \
+      ts_out/sim_hw/hw_items/cpu_rvpipe.js \
+      ts_out/sim_hw/hw_items/mem_rvpipe.js \
+      ts_out/sim_hw/hw_items/io_clk_rvpipe.js \
+      ts_out/sim_hw/hw_items/io_screen_rvpipe.js \
+      ts_out/sim_hw/hw_items/io_keyboard_rvpipe.js \
+      \
       sim_hw/hw_ep.js \
       sim_hw/hw_ep2.js \
       sim_hw/hw_rv.js \
-      sim_hw/ts_out/hw_rvpipe.js \
       sim_hw/hw_poc.js \
+      ts_out/sim_hw/hw_rvpipe.js \
       \
       sim_sw/firmware/lexical.js \
       sim_sw/firmware/firm_mcode.js \
@@ -443,7 +446,8 @@ PARALLEL_PIDS="${PARALLEL_PIDS}${PARALLEL_PIDS:+ }$!"
   DEFAULT_EXAMPLE_SET_P2="repo/examples_set/rv32/es_ep2.json repo/examples_set/rv32/es_ep2_native.json"
   DEFAULT_EXAMPLE_SET_P3="repo/examples_set/rv32/es_poc.json repo/examples_set/rv32/es_poc_native.json"
   DEFAULT_EXAMPLE_SET_P4="repo/examples_set/rv32/es_rv.json"
-  DEFAULT_EXAMPLE_SET="$DEFAULT_EXAMPLE_SET_P1 $DEFAULT_EXAMPLE_SET_P2 $DEFAULT_EXAMPLE_SET_P3 $DEFAULT_EXAMPLE_SET_P4"
+  DEFAULT_EXAMPLE_SET_P5="repo/examples_set/rv32/es_rvpipe.json"
+  DEFAULT_EXAMPLE_SET="$DEFAULT_EXAMPLE_SET_P1 $DEFAULT_EXAMPLE_SET_P2 $DEFAULT_EXAMPLE_SET_P3 $DEFAULT_EXAMPLE_SET_P4 $DEFAULT_EXAMPLE_SET_P5"
   jq 'reduce inputs as $i (.; . += $i)' $DEFAULT_EXAMPLE_SET > repo/examples_set/rv32/default.json
 
   # RV32 instructive

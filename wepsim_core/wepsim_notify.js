@@ -29,18 +29,8 @@ import { onClick } from '../wepsim_web/wepsim_web_actions.js';
      * API - one notification
      */
 
-export function wepsim_notify_show_notify (ntf_title, ntf_message, ntf_type, ntf_delay)
+function wepsim_notify_show_notify (ntf_title, ntf_message, ntf_type, ntf_delay)
 {
-    if (typeof document == 'undefined')
-    {
-        console.log(' *********************') ;
-        console.log("Notification type '" + ntf_type + "' and title '" + ntf_title + "': " + ntf_message + '. ') ;
-        console.log(' *********************') ;
-        console.trace();
-        console.log(' *********************') ;
-        return ;
-    }
-
     // alerts-container does not exist, create it
     var ac = $('#alerts-container') ;
     if (ac.length === 0)
@@ -78,14 +68,24 @@ export function wepsim_notify_show_notify (ntf_title, ntf_message, ntf_type, ntf
 
 export function wepsim_notify_do_notify (ntf_title, ntf_message, ntf_type, ntf_delay)
 {
-    var title_text = ntf_title ;
-    var mesg_text  = ntf_message ;
-
-    if (typeof document != 'undefined')
+    if (typeof document == 'undefined')
     {
-        title_text = $('<p>').html(ntf_title).text() ;
-        mesg_text  = $('<p>').html(ntf_message).text() ;
+        // add to notifications
+        simcore_notifications_add(ntf_title, ntf_message, ntf_type, ntf_delay) ;
+
+        // show up notifications
+        console.log(' *********************') ;
+        console.log(" Notification type '" + ntf_type + "' and title '" + ntf_title + "': " + ntf_message + '.') ;
+        console.log(' *********************') ;
+        console.trace();
+        console.log(' *********************') ;
+
+        return ;
     }
+
+    // get title and message as text...
+    var title_text = $('<p>').html(ntf_title).text() ;
+    var mesg_text  = $('<p>').html(ntf_message).text() ;
 
     // add to notifications (plain text)
     simcore_notifications_add(title_text, mesg_text, ntf_type, ntf_delay) ;

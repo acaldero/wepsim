@@ -47,7 +47,7 @@ export function wepsim_nodejs_regiter_action()
     {
         // set verbosity handlers
         options.before_instruction = simcore_do_nothing_handler ;
-        options.after_instruction = simcore_do_nothing_handler ;
+        options.after_instruction  = simcore_do_nothing_handler ;
 
         // run...
         var ret = await wepsim_nodejs_runApp(data, options) ;
@@ -71,7 +71,7 @@ export function wepsim_nodejs_regiter_action()
     {
         // set verbosity handlers
         options.before_instruction = simcore_do_nothing_handler ;
-        options.after_instruction = simcore_do_nothing_handler ;
+        options.after_instruction  = simcore_do_nothing_handler ;
 
         // run...
         var ret = await wepsim_nodejs_runApp(data, options) ;
@@ -296,9 +296,9 @@ export function wepsim_nodejs_regiter_action()
 
     hash_action['SHOW-MICROCODE-FIELDS'] = async function(data, options)
     {
-        var elto_obj = null ;
+        var elto_obj    = null ;
         var elto_fields = null ;
-        var ret = await wepsim_nodejs_get_instructionset(data, options) ;
+        var ret         = await wepsim_nodejs_get_instructionset(data, options) ;
 
         // empty firmware
         if (typeof ret.firmware === 'undefined')
@@ -336,7 +336,7 @@ export function wepsim_nodejs_regiter_action()
 
     hash_action['FILTER-MICROCODE'] = async function(data, options)
     {
-        var elto_obj = null ;
+        var elto_obj    = null ;
         var elto_fields = null ;
 
         // get filtered firmware
@@ -410,7 +410,7 @@ export function wepsim_nodejs_regiter_action()
             'notify':        true,
         } ;
 
-        var checkpointNB = wepsim_checkpoint_Obj2NB(checkpointObj) ;
+        var checkpointNB  = wepsim_checkpoint_Obj2NB(checkpointObj) ;
         var checkpointStr = JSON.stringify(checkpointNB, null, 2) ;
         console.log(checkpointStr);
 
@@ -428,7 +428,7 @@ export function wepsim_nodejs_regiter_action()
         await wepsim_nodejs_init(data) ;
 
         // load default examples
-        var examples = wepsim_nodejs_load_examples() ;
+        var examples  = wepsim_nodejs_load_examples() ;
         var pack_name = '' ;
         if (data.mode != '')
         {
@@ -478,7 +478,7 @@ export async function wepsim_nodejs_doAction (data, options)
 export function wepsim_nodejs_loadCheckpoint (data_checkpoint)
 {
     var obj_checkpoint = JSON.parse(data_checkpoint) ;
-    obj_checkpoint = wepsim_checkpoint_NB2Obj(obj_checkpoint) ;
+    obj_checkpoint     = wepsim_checkpoint_NB2Obj(obj_checkpoint) ;
 
     return obj_checkpoint ;
 }

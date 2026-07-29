@@ -23,6 +23,7 @@ import { compute_references } from './sim_hw_values.js';
 import { simcore_hardware_import } from '../sim_core/sim_api_core.js';
 import { get_cfg } from '../sim_core/sim_cfg.js';
 import { wepsim_url_getJSON } from '../wepsim_core/wepsim_url.js';
+import { simhw_get_processor_properties } from './sim_hw_lazy.js';
 
 /*
          *  Simulated Hardware: add & active
@@ -129,6 +130,13 @@ export function simhw_active ()
 export function simhw_short_name ()
 {
     return sim.active.sim_short_name ;
+}
+
+// properties
+
+export function simhw_properties ()
+{
+    return simhw_get_processor_properties(sim.active.sim_short_name);
 }
 
 // sim_signals

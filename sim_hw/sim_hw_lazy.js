@@ -53,11 +53,24 @@ var processorRegistry = {
     }),
 };
 
+var processorProperties = {
+    'ep':     [],
+    'ep2':    [],
+    'poc':    ['beta'],
+    'rv':     [],
+    'rvpipe': ['beta', 'pipeline'],
+};
+
 var loaded = new Set();
 
 export function simhw_get_processor_names()
 {
     return Object.keys(processorRegistry);
+}
+
+export function simhw_get_processor_properties(name)
+{
+    return processorProperties[name] || [];
 }
 
 export async function simhw_ensure_processor_loaded(name)

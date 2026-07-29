@@ -529,6 +529,23 @@ export function simcore_execute_microinstruction2 (reg_maddr, reg_pc)
     return ret ;
 }
 
+export function simcore_execute_microinstruction_backwards ()
+{
+    var ret = simcore_check_if_can_continue() ;
+    if (false === ret.ok)
+    {
+        return ret ;
+    }
+
+    // CPU - Hardware
+    compute_general_behavior('HISTORY_RESTORE') ;
+
+    // CPU - User Interface
+    show_dbg_mpc();
+
+    return ret ;
+}
+
 /**
          * Execute the next instruction.
          */

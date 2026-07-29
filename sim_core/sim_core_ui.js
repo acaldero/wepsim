@@ -374,12 +374,8 @@ export function refresh()
         update_draw(all_signals[key], all_signals[key].value) ;
     }
 
-    show_dbg_ir(get_value(simhw_sim_state('REG_IR_DECO'))) ;
-
-    if (simhw_syntax_behavior('REFRESH') !== undefined)
-    {
-        compute_behavior('REFRESH');
-    }
+    // Callback for CPU refresh
+    compute_behavior('REFRESH');
 }
 
 /*

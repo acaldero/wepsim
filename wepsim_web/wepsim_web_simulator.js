@@ -80,6 +80,8 @@ export function wepsim_uicfg_apply()
 
     // history UI
     wepsim_toggle_bar_component('history_enable', 'ws-executionbar', 'btn_pm', 1);
+    if (get_cfg('history_enable') === true)
+        wepsim_activeview('beta_history', true);
 
     // CFG button
     wepsim_toggle_bar_component('CFG_enable', 'ws-compilationbar', 'btn_acfg', -1, 'asm-compilationbar');
@@ -137,6 +139,7 @@ export var hash_opt_wsx = {
     'beta_poc':      '.wsx_poc',
     'beta_rv':       '.wsx_rv',
     'beta_cache':    '.wsx_cache',
+    'beta_history':  '.wsx_history',
 } ;
 
 export function wepsim_restore_view(view)

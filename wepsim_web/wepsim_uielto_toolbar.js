@@ -22,7 +22,7 @@ import { ws_uielto } from './wepsim_uielto.js';
 import { onClick } from './wepsim_web_actions.js';
 import { get_cfg, is_cfg_empty } from '../sim_core/sim_cfg.js';
 import { sim } from '../sim_hw/sim_hw_index.js';
-import { simhw_get_processor_names } from '../sim_hw/sim_hw_lazy.js';
+import { simhw_get_processor_names, simhw_get_processor_properties } from '../sim_hw/sim_hw_lazy.js';
 import { ws_info } from '../sim_core/sim_adt_core.js';
 import * as api from './wepsim_web_api.js';
 import { wepsim_tooltips_hide } from './wepsim_web_ui_tooltip.js';
@@ -405,22 +405,31 @@ export class ws_toolbar extends ws_uielto
             wepsim_tooltips_hide('[data-bs-toggle=tooltip]') ;
         }) ;
 
-        var item ;
-        var wip_class ;
-        var allProcs = simhw_get_processor_names() ;
+        var item       = '' ;
+        var wip_class  = '' ;
+        var wip_badged = '' ;
+        var wip_props  = [] ;
+        var allProcs   = simhw_get_processor_names() ;
         for (var i = 0; i < allProcs.length; i++)
         {
+            // get cpu name
             item = allProcs[i] ;
 
-            wip_class = '' ;
-            if (item == 'poc') wip_class = 'wsx_poc' ;
-            else if (item == 'ep2') wip_class = 'wsx_ep2' ;
-            else if (item == 'rv') wip_class = 'wsx_rv' ;
+            // get cpu properties
+            wip_class  = '' ;
+            wip_badged = '' ;
+            wip_props  = simhw_get_processor_properties(item) ;
+            if (wip_props.includes('beta'))
+            {
+                wip_badged = '<sup><span class="badge text-bg-secondary p-1">beta</span></sup>' ;
+                wip_class  = 'wsx_' + item ;
+            }
 
+            // building dropdown entry...
             o += '     <a class="dropdown-item py-2 ' + wip_class + '" ' +
                 '        href="#" id="s4_' + item + '" value="' + item + '" ' +
                 '        data-bind="click" data-action="select-main" data-value="' + item + '"' +
-                '     ><em class="fas fa-microchip"></em>&nbsp;' + item.toUpperCase() + '</a>' ;
+                '     ><em class="fas fa-microchip"></em>&nbsp;' + item.toUpperCase() + '&nbsp;' + wip_badged + '</a>' ;
         }
         onClick('select-main', (el) =>
         {

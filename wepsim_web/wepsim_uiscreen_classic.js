@@ -178,7 +178,7 @@ export class ws_uiscreen_classic extends ws_uielto
             '              data-bind="click" data-action="open-state">' +
             '<em class="fas fa-camera"></em>' + '&nbsp;' +
             '<span data-langkey="States">States</span></button>' +
-            '          <ws-ddown-sel class="col btn-group p-0 mx-1" style="flex-grow:2;"' +
+            '          <ws-ddown-sel class="col-auto btn-group p-0 mx-1" style="flex-grow:2;"' +
             '                       components="' + ui1 + '"></ws-ddown-sel>' +
             '     </div>' +
             '     </div>' +

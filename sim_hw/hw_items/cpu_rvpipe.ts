@@ -518,7 +518,8 @@ export function cpu_rvpipe_register(sim_p: Simulator): Simulator
         scause = 0x142,
         stval = 0x143,
         sip = 0x144,
-    }
+    };
+
     /*
      *  Internal States
      */

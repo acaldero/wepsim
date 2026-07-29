@@ -16,11 +16,17 @@ const rootDir = process.cwd();
 
 function wepsimPostBuildPlugin()
 {
-    var active = false;
+    var active         = false;
+    let buildHasFailed = false;
     return {
         name: 'wepsim-post-build',
-        async closeBundle()
+        buildEnd(error?: Error)
         {
+            if (error) buildHasFailed = true;
+        },
+        async closeBundle(error?: Error)
+        {
+            if (error || buildHasFailed) return;
             if (active) return;
             active = true;
             console.time('[post-build] Done');
@@ -136,7 +142,7 @@ export const vite_config_ts:UserConfig = {
         wepsimPostBuildPlugin(),
         wepsimDevMergePlugin(),
         // Visualizer of chunks
-        visualizer({ open: true, filename: 'ws_dist/stats.html', gzipSize: true }),
+        // visualizer({ open: true, filename: 'ws_dist/stats.html', gzipSize: true }),
     ],
     build: {
         outDir:                'ws_dist',
