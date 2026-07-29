@@ -10,6 +10,7 @@ import { exec } from 'child_process';
 import path from 'path';
 import { promisify } from 'util';
 import { PreRenderedChunk } from 'rollup';
+import { merge_example_sets } from './src/build/merge-examples';
 
 const rootDir = process.cwd();
 
@@ -40,46 +41,11 @@ function wepsimPostBuildPlugin()
                 copyFileSync('wepsim_i18n/' + l + '/about.html', 'ws_dist/help/about-' + l + '.html');
             }
 
-            // 3. Merge example sets (jq)
+            // 3. Merge example sets
             console.timeEnd('[post-build] Copying help files');
             const execAsync = promisify(exec);
             console.time('[post-build] Merging example sets');
-            const mkdir_task = [
-                mkdir('ws_dist/repo/examples_set/mips', { recursive: true }),
-                mkdir('ws_dist/repo/examples_set/rv32', { recursive: true }),
-                mkdir('ws_dist/repo/examples_set/arm', { recursive: true }),
-                mkdir('ws_dist/repo/examples_set/z80', { recursive: true }),
-                mkdir('ws_dist/repo/examples_set/mips_ocw', { recursive: true }),
-                mkdir('ws_dist/repo/examples_set/rv32_ag', { recursive: true }),
-            ];
-            await Promise.all(mkdir_task);
-            var jq = async function (inputs: string[], output: string)
-            {
-                inputs = inputs.map((value) => ('repo/examples_set/' + value));
-                output = 'ws_dist/repo/examples_set/' + output;
-                await execAsync("node-jq 'reduce inputs as $i (.; . += $i)' " + inputs.join(' ') + ' > ' + output);
-            };
-
-            const jq_tasks = [
-                jq(['mips/es_ep.json', 'mips/es_ep_native.json', 'mips/es_ep2.json', 'mips/es_ep2_native.json', 'mips/es_poc.json', 'mips/es_poc_native.json'],
-                   'mips/default.json'),
-                jq(['mips/es_ep_instructive.json', 'mips/es_poc_instructive.json', 'mips/es_ep2_instructive.json'],
-                   'mips/default_instructive.json'),
-                jq(['rv32/es_ep.json', 'rv32/es_ep_native.json', 'rv32/es_ep2.json', 'rv32/es_ep2_native.json', 'rv32/es_poc.json', 'rv32/es_poc_native.json', 'rv32/es_rv.json'],
-                   'rv32/default.json'),
-                jq(['rv32/es_ep_instructive.json', 'rv32/es_poc_instructive.json', 'rv32/es_ep2_instructive.json'],
-                   'rv32/default_instructive.json'),
-                jq(['arm/es_ep.json', 'arm/es_ep2.json'],
-                   'arm/default.json'),
-                jq(['z80/es_ep.json', 'z80/es_ep2.json'],
-                   'z80/default.json'),
-                jq(['mips_ocw/es_ep.json', 'mips_ocw/es_ep2.json'],
-                   'mips_ocw/default.json'),
-                jq(['rv32_ag/es_ep.json', 'rv32_ag/es_poc.json', 'rv32_ag/es_ep2.json'],
-                   'rv32_ag/default.json'),
-            ];
-
-            await Promise.all(jq_tasks);
+            merge_example_sets('repo/examples_set', 'ws_dist/repo/examples_set');
 
             // 4. Export hardware definitions
             console.timeEnd('[post-build] Merging example sets');
@@ -98,6 +64,35 @@ function wepsimPostBuildPlugin()
 
             console.timeEnd('[post-build] Exporting hardware definitions');
             console.timeEnd('[post-build] Done');
+        },
+    };
+}
+
+function wepsimDevMergePlugin()
+{
+    var merged = false;
+    return {
+        name: 'wepsim-dev-merge',
+        configureServer(server: any)
+        {
+            if (merged) return;
+            merged = true;
+
+            const examplesDir = path.resolve(rootDir, 'repo/examples_set');
+
+            console.time('[dev-merge] Merging example sets');
+            merge_example_sets('repo/examples_set', 'repo/examples_set');
+            console.timeEnd('[dev-merge] Merging example sets');
+
+            server.watcher.on('change', (file: string) =>
+            {
+                if (!file.startsWith(examplesDir)) return;
+                const name = path.basename(file);
+                if (!name.startsWith('es_') || !name.endsWith('.json')) return;
+                console.time('[dev-merge] Re-merging example sets');
+                merge_example_sets('repo/examples_set', 'repo/examples_set');
+                console.timeEnd('[dev-merge] Re-merging example sets');
+            });
         },
     };
 }
@@ -139,8 +134,9 @@ export const vite_config_ts:UserConfig = {
             },
         ]),
         wepsimPostBuildPlugin(),
+        wepsimDevMergePlugin(),
         // Visualizer of chunks
-        // visualizer({ open: true, filename: 'ws_dist/stats.html', gzipSize: true }),
+        visualizer({ open: true, filename: 'ws_dist/stats.html', gzipSize: true }),
     ],
     build: {
         outDir:                'ws_dist',

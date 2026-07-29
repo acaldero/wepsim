@@ -62,7 +62,6 @@
     "knockout": "^3.5.3",
     "lz-string": "^1.5.0",
     "mime-types": "^2.1.35",
-    "node-jq": "^6.3.1",
     "nodemon": "^3.1.14",
     "optionator": "^0.9.1",
     "patch-package": "^8.0.1",
