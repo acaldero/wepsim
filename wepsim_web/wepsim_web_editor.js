@@ -35,7 +35,7 @@ import { oneDark } from '@codemirror/theme-one-dark';
 
 import { get_cfg } from '../sim_core/sim_cfg.js';
 import { get_simware, set_simware } from '../sim_core/sim_adt_core.js';
-import { i18n_get } from '../wepsim_i18n/i18n.js';
+import { i18n_get, i18n_get_TagFor } from '../wepsim_i18n/i18n.js';
 import { simcore_compile_firmware, simcore_reset } from '../sim_core/sim_api_core.js';
 import { update_memories, wait_if_uievents } from '../sim_core/sim_core_ctrl.js';
 import { onClick } from './wepsim_web_actions.js';
@@ -46,6 +46,7 @@ import { inputasm, inputfirm, sim_change_workspace } from './wepsim_web_simulato
 import { wsasm_src2mem } from '../sim_sw/assembly.js';
 import { ws_directives } from '../sim_sw/assembly/directives.js';
 import { dt_get_imm_value } from '../sim_sw/assembly/datatypes.js';
+import { render_asm_cfg } from '../wepsim_core/wepsim_asm_cfg.js';
 
 var themeCompartment    = new Compartment();
 var keymapCompartment   = new Compartment();
@@ -834,8 +835,139 @@ export function wepsim_compile_assembly(textToCompile)
     // update UI
     asmdbg_update_assembly() ;
 
+    wepsim_render_cfg_panel();
+
     simcore_reset();
     return true;
+}
+
+var wepsim_cfg_network = null;
+
+export function wepsim_is_cfg_panel_visible()
+{
+    var panel = document.getElementById('cfg-side-panel');
+    return panel && panel.dataset.cfgOpen === 'true';
+}
+
+async function wepsim_render_cfg_panel()
+{
+    if (!wepsim_is_cfg_panel_visible()) return;
+    if (wepsim_cfg_network)
+    {
+        wepsim_cfg_network.destroy();
+        wepsim_cfg_network = null;
+    }
+    wepsim_cfg_network = await render_asm_cfg('cfg-side-content');
+}
+
+function wepsim_on_panel_transition_end(e)
+{
+    if (e.propertyName !== 'width') return;
+    e.target.removeEventListener('transitionend', wepsim_on_panel_transition_end);
+    wepsim_render_cfg_panel();
+}
+
+// splitter state (session only)
+var wepsim_splitter_last_width = null;
+
+export function wepsim_set_cfg_panel_visible(visible)
+{
+    var panel = document.getElementById('cfg-side-panel');
+    if (!panel) return;
+
+    var splitter    = document.getElementById('splitter-t4');
+    var is_expanded = wepsim_is_cfg_panel_visible();
+
+    if (is_expanded === visible)
+        return;
+
+    if (visible)
+    {
+        panel.dataset.cfgOpen = 'true';
+        panel.style.width     = (wepsim_splitter_last_width || 50) + '%';
+        if (splitter)
+        {
+            splitter.style.display = 'block';
+            wepsim_attach_splitter(splitter);
+        }
+        wepsim_update_cfg_button_label('Hide CFG');
+        panel.addEventListener('transitionend', wepsim_on_panel_transition_end);
+    }
+    else
+    {
+        panel.dataset.cfgOpen = 'false';
+        panel.style.width     = '0';
+        if (splitter) splitter.style.display = 'none';
+        wepsim_update_cfg_button_label('Show CFG');
+    }
+}
+
+function wepsim_update_cfg_button_label(label)
+{
+    var btn = document.getElementById('acfg1');
+    if (!btn) return;
+    var span = btn.querySelector('[data-langkey]');
+    if (span)
+    {
+        span.setAttribute('data-langkey', label);
+        span.textContent = i18n_get_TagFor('gui', label);
+    }
+}
+
+// shared handlers (module-level so removeEventListener works)
+function wepsim_on_splitter_down(e)
+{
+    if (e.type === 'mousedown' && e.button !== 0) return;
+    e.preventDefault();
+
+    var splitter    = e.currentTarget;
+    var panel       = document.getElementById('cfg-side-panel');
+    var placeholder = splitter.parentElement;
+    if (!panel || !placeholder) return;
+
+    var origTransition     = panel.style.transition;
+    panel.style.transition = 'none';
+
+    var getX = (e.type === 'touchstart') ?
+        ((e) => e.changedTouches[0].clientX) :
+        ((e) => e.clientX);
+
+    function onMove(e)
+    {
+        e.preventDefault();
+        var rect          = placeholder.getBoundingClientRect();
+        var panelPct      = 100 - ((getX(e) - rect.left) / rect.width) * 100;
+        panelPct          = Math.max(20, Math.min(80, panelPct));
+        panel.style.width = panelPct + '%';
+
+        wepsim_splitter_last_width = panelPct;
+    }
+
+    function onEnd()
+    {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onEnd);
+        document.removeEventListener('touchmove', onMove);
+        document.removeEventListener('touchend', onEnd);
+        document.removeEventListener('touchcancel', onEnd);
+
+        panel.style.transition = origTransition;
+    }
+
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onEnd);
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('touchend', onEnd);
+    document.addEventListener('touchcancel', onEnd);
+}
+
+function wepsim_attach_splitter(splitter)
+{
+    // remove first to prevent duplicates
+    splitter.removeEventListener('mousedown', wepsim_on_splitter_down);
+    splitter.removeEventListener('touchstart', wepsim_on_splitter_down);
+    splitter.addEventListener('mousedown', wepsim_on_splitter_down);
+    splitter.addEventListener('touchstart', wepsim_on_splitter_down, { passive: false });
 }
 
 export function wepsim_compile_firmware(textToMCompile)

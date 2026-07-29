@@ -25,8 +25,8 @@ import { get_cfg, update_cfg, reset_cfg } from '../sim_core/sim_cfg.js';
 import { wepsim_popovers_init } from './wepsim_web_ui_popover.js';
 import { wepsim_config_button_toggle, wepsim_config_button_toggle2 } from './wepsim_web_ui_config.js';
 import { wepsim_refresh_registers, wepsim_show_rf_names } from './wepsim_uielto_registers.js';
-import { wepsim_toggle_history_ui, wepsim_restore_darkmode, wepsim_confirm_exit, inputfirm, inputasm } from './wepsim_web_simulator.js';
-import { sim_cfg_editor_theme, sim_cfg_editor_mode } from './wepsim_web_editor.js';
+import { wepsim_toggle_bar_component, wepsim_restore_darkmode, wepsim_confirm_exit, inputfirm, inputasm } from './wepsim_web_simulator.js';
+import { sim_cfg_editor_theme, sim_cfg_editor_mode, wepsim_set_cfg_panel_visible } from './wepsim_web_editor.js';
 import { show_memories_values } from '../sim_core/sim_core_ui.js';
 import { i18n_handle_idiom_change } from '../wepsim_i18n/i18n.js';
 
@@ -136,10 +136,6 @@ export class ws_config extends ws_uielto
             {
                 $('#dbg_ick_limit').text(el.value);
             }
-            else if (el.dataset.key === 'history_size')
-            {
-                wepsim_toggle_history_ui();
-            }
         }) ;
     }
 }
@@ -160,7 +156,7 @@ var _cfg_toggle_handler = (el) =>
         }
         else if (el.dataset.key === 'history_enable')
         {
-            wepsim_toggle_history_ui();
+            wepsim_toggle_bar_component('history_enable', 'ws-executionbar', 'btn_pm', 1);
         }
         else if (el.dataset.key === 'ws_skin_dark_mode')
         {
@@ -169,6 +165,12 @@ var _cfg_toggle_handler = (el) =>
         else if (el.dataset.key === 'RF_display_format')
         {
             wepsim_refresh_registers();
+        }
+        else if (el.dataset.key === 'CFG_enable')
+        {
+            wepsim_toggle_bar_component('CFG_enable', 'ws-compilationbar', 'btn_acfg', -1, 'asm-compilationbar');
+            if (get_cfg('CFG_enable') !== true)
+                wepsim_set_cfg_panel_visible(false);
         }
     };
 };

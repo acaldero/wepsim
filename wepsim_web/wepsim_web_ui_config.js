@@ -175,16 +175,6 @@ export function wepsim_config_dialog_dropdown(color, base_buttons, extra_compone
 
 export function wepsim_config_button_html_onoff(id2, arial2, name_off, name_on, config_key)
 {
-    onClick('config_toggle_off', (el) =>
-    {
-        var setId = el.id.match(/^label(\d+)/)[1];
-        wepsim_config_button_toggle(el.dataset.key, false, setId);
-    });
-    onClick('config_toggle_on', (el) =>
-    {
-        var setId = el.id.match(/^label(\d+)/)[1];
-        wepsim_config_button_toggle(el.dataset.key, true, setId);
-    });
     return "<div class='col-12 p-0 btn-group btn-group-toggle d-flex' data-bs-toggle='buttons'>" +
         "    <label id='label" + id2 + "-false' " +
         "           class='btn btn-sm w-50 btn-outline-secondary p-1 fw-bold' " +

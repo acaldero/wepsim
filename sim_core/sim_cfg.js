@@ -339,6 +339,7 @@ export function get_primary_cfg ()
         'use_ga':         { upgrade: false, type: 'boolean', value: true },
         'history_enable': { upgrade: false, type: 'boolean', value: false },
         'history_size':   { upgrade: false, type: 'int', value: 100 },
+        'CFG_enable':     { upgrade: false, type: 'boolean', value: false },
     } ;
 
     // some mobile-tuning

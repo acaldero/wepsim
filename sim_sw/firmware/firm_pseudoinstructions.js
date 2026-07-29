@@ -64,6 +64,12 @@ export function firm_pseudoinstructions_write (context)
             }
         }
 
+        // cfg info
+        if (typeof elto.cfg_type !== 'undefined')
+            o += '\n\ttype=' + elto.cfg_type + ',';
+        if (typeof elto.cfg_addr !== 'undefined')
+            o += '\n\taddr=' + elto.cfg_addr + ',';
+
         // { instruction-1 ... }
         o += ' {' + '\n';
 
@@ -128,6 +134,40 @@ export function firm_pseudoinstructions_read (context)
         frm_nextToken(context);
         while (! frm_isToken(context, '{'))
         {
+            // type=
+            if (frm_isToken(context, 'type'))
+            {
+                frm_nextToken(context);
+                if (! frm_isToken(context, '='))
+                {
+                    return frm_langError(context,
+                                         i18n_get_TagFor('compiler', 'EQUAL NOT FOUND')) ;
+                }
+                frm_nextToken(context);
+                pseudoInstructionAux.cfg_type = frm_getToken(context) ;
+                frm_nextToken(context);
+                if (frm_isToken(context, ','))
+                    frm_nextToken(context);
+                continue ;
+            }
+
+            // addr=
+            if (frm_isToken(context, 'addr'))
+            {
+                frm_nextToken(context);
+                if (! frm_isToken(context, '='))
+                {
+                    return frm_langError(context,
+                                         i18n_get_TagFor('compiler', 'EQUAL NOT FOUND')) ;
+                }
+                frm_nextToken(context);
+                pseudoInstructionAux.cfg_addr = frm_getToken(context) ;
+                frm_nextToken(context);
+                if (frm_isToken(context, ','))
+                    frm_nextToken(context);
+                continue ;
+            }
+
             var pseudoFieldAux      = {};
             pseudoFieldAux.name     = '' ;
             pseudoFieldAux.type     = '' ;
@@ -160,7 +200,7 @@ export function firm_pseudoinstructions_read (context)
             if (! frm_isToken(context, '='))
             {
                 return frm_langError(context,
-                                     i18n_get_TagFor('compiler', 'EQUAL NOT FOUND') + ' (for name=type)') ;
+                                 i18n_get_TagFor('compiler', 'EQUAL NOT FOUND') + ' (for name=type)') ;
             }
 
             // name=*type*
@@ -170,9 +210,9 @@ export function firm_pseudoinstructions_read (context)
             if (['reg', 'inm', 'imm', 'addr', 'address'].includes(pseudoFieldAux.type) == false)
             {
                 return frm_langError(context,
-                                     i18n_get_TagFor('compiler', 'INVALID PARAMETER') +
-                                     pseudoFieldAux.type + '.' +
-                                     i18n_get_TagFor('compiler', 'ALLOWED PARAMETER')) ;
+                                 i18n_get_TagFor('compiler', 'INVALID PARAMETER') +
+                                 pseudoFieldAux.type + '.' +
+                                 i18n_get_TagFor('compiler', 'ALLOWED PARAMETER')) ;
             }
 
             pseudoInitial.fields.push(pseudoFieldAux);

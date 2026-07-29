@@ -21,6 +21,7 @@ import $ from 'jquery';
 import { ws_uielto, register_uielto } from './wepsim_uielto.js';
 import { onClick } from './wepsim_web_actions.js';
 import { wsweb_dialog_open, wsweb_firmware_compile, wsweb_assembly_compile } from './wepsim_web_api.js';
+import { wepsim_set_cfg_panel_visible, wepsim_is_cfg_panel_visible } from './wepsim_web_editor.js';
 
 /*
          *  Compilation bar
@@ -230,6 +231,19 @@ export class ws_compilationbar extends ws_uielto
                 onClick('show-binary-asm', () => wsweb_dialog_open('binary_asm')) ;
                 o += this.render_icon('<em class="fas fa-memory"></em>') ;
                 o += '<strong><span class="d-none d-sm-inline-flex"><span data-langkey="Show Main Memory">Show Main Memory</span></span><span class="d-sm-none">Memory</span></strong></button>' ;
+                break ;
+
+            case 'btn_acfg':
+                o += '<button' +
+                    '        id="acfg1"' +
+                    '        class="btn bg-body-tertiary shadow-sm col-auto mx-1 border border-secondary"' +
+                    '        data-bind="click" data-action="show-asm-cfg">' ;
+                onClick('show-asm-cfg', () =>
+                {
+                    wepsim_set_cfg_panel_visible(!wepsim_is_cfg_panel_visible());
+                }) ;
+                o += this.render_icon('<em class="fas fa-code-branch"></em>') ;
+                o += '<strong><span class="d-none d-sm-inline-flex"><span data-langkey="Show CFG">Show CFG</span></span><span class="d-sm-none">CFG</span></strong></button>' ;
                 break ;
         }
 

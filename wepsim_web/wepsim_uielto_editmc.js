@@ -99,12 +99,12 @@ export class ws_edit_mc extends ws_uielto
         if (ly.includes('placeholder'))
             o1 += '<div id="' + ed_id + '_placeholder2" ' +
                 '     class="ui-body-d ui-content px-2 py-0" ' +
-                '     style="height:55vh; overflow-y:auto; -webkit-overflow-scrolling:touch;">' +
+                '     style="height:55vh; display:flex; flex-direction:row; flex:1; min-height:0">' +
                 '</div>' ;
 
         if (ly.includes('editor'))
             o1 += '<div id="' + ed_id + '" class="ui-body-d ui-content p-0"' +
-                '    style="display:flex; flex-direction:column;">' +
+                '    style="height:80vh; display:flex; flex-direction:column;">' +
                 this.render_textarea(ta_id) +
                 '</div>' ;
 

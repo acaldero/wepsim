@@ -27,7 +27,7 @@ import { simcore_record_init, simcore_record_captureInit } from '../sim_core/sim
 import { show_control_memory, show_main_memory } from '../sim_core/sim_core_ui.js';
 import { update_memories } from '../sim_core/sim_core_ctrl.js';
 import { wsweb_change_workspace_simulator, wsweb_change_show_processor, wsweb_set_details, wsweb_set_cpucu_size, wsweb_set_c1c2_size, wsweb_select_main } from './wepsim_web_api.js';
-import { sim_cfg_editor_theme, sim_cm_get_firmcfg, sim_cm_get_asmcfg, sim_init_editor } from './wepsim_web_editor.js';
+import { sim_cfg_editor_theme, sim_cm_get_firmcfg, sim_cm_get_asmcfg, sim_init_editor, wepsim_set_cfg_panel_visible } from './wepsim_web_editor.js';
 import { wepsim_svg_refresh, wepsim_svg_update_draw, wepsim_svg_update_bus_visibility } from './wepsim_uielto_cpusvg.js';
 import { wepsim_show_main_memory } from './wepsim_uielto_mem.js';
 import { wepsim_show_control_memory, wepsim_show_dbg_mpc } from './wepsim_uielto_dbg_mc.js';
@@ -79,7 +79,12 @@ export function wepsim_uicfg_apply()
     wepsim_set_darkmode(cfgValue) ;
 
     // history UI
-    wepsim_toggle_history_ui();
+    wepsim_toggle_bar_component('history_enable', 'ws-executionbar', 'btn_pm', 1);
+
+    // CFG button
+    wepsim_toggle_bar_component('CFG_enable', 'ws-compilationbar', 'btn_acfg', -1, 'asm-compilationbar');
+    if (get_cfg('CFG_enable') !== true)
+        wepsim_set_cfg_panel_visible(false);
 }
 
 export function wepsim_uicfg_restore()
@@ -169,23 +174,35 @@ export function wepsim_restore_view(view)
     }
 }
 
-export function wepsim_toggle_history_ui()
+export function wepsim_toggle_bar_component(cfg_key, bar_selector, btn_name, position, element_id)
 {
     try
     {
-        var history_enabled = (get_cfg('history_enable') === true);
-        var bars            = document.querySelectorAll('ws-executionbar');
+        var enabled = (get_cfg(cfg_key) === true);
+        var bars    = [];
+        if (element_id)
+        {
+            var el = document.getElementById(element_id);
+            if (el) bars = [el];
+        }
+        else
+        {
+            bars = document.querySelectorAll(bar_selector);
+        }
         for (var i = 0; i < bars.length; i++)
         {
             var comps = bars[i].getAttribute('components');
             if (comps === null) continue;
             var arr = comps.split(',');
-            var idx = arr.indexOf('btn_pm');
-            if (history_enabled)
+            var idx = arr.indexOf(btn_name);
+            if (enabled)
             {
                 if (idx === -1)
                 {
-                    arr.splice(1, 0, 'btn_pm');
+                    if (position >= 0)
+                        arr.splice(position, 0, btn_name);
+                    else
+                        arr.push(btn_name);
                 }
             }
             else

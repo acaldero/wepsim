@@ -97,22 +97,29 @@ export class ws_edit_as extends ws_uielto
         if (ly.includes('placeholder'))
             o1 += '<div id="' + ed_id + '_placeholder2" ' +
                 '     class="ui-body-d ui-content px-2 py-0" ' +
-                // '     style="height:55vh; overflow-y:auto; -webkit-overflow-scrolling:touch;">' +
+                '     style="height:55vh; display:flex; flex-direction:row; flex:1; min-height:0">' +
                 '</div>' ;
 
         if (ly.includes('editor'))
             o1 += '<div id="' + ed_id + '" class="ui-body-d ui-content p-0"' +
-                '    style="display:flex; flex-direction:column;">' +
+                '    style="height:80vh; display:flex; flex-direction:column;">' +
                 this.render_textarea(ta_id) +
                 '</div>' ;
 
         if (ly.includes('both'))
             o1 += ' <div id="' + ed_id + '_placeholder1" ' +
                 '      class="ui-body-d ui-content px-2 py-0" ' +
-                '      style="display:flex; flex-direction:column; flex:1; min-height:0">' +
+                '      style="display:flex; flex-direction:row; flex:1; min-height:0">' +
                 ' <div id="' + ed_id + '" class="ui-body-d ui-content p-0"' +
-                '      style="flex:1; min-height:0; display:flex; flex-direction:column;">' +
+                '      style="flex:1; min-height:0; display:flex; flex-direction:column; min-width:0">' +
                 this.render_textarea(ta_id) +
+                ' </div>' +
+                ' <div id="splitter-t4" class="bg-secondary"' +
+                '      style="width:12px;border:5px solid transparent;background-clip:content-box;flex-shrink:0;display:none;cursor:col-resize;border-radius:3px;touch-action:none">' +
+                ' </div>' +
+                ' <div id="cfg-side-panel"' +
+                '      style="width:0;overflow:hidden;transition:width 0.25s ease;display:flex;flex-direction:column;flex-shrink:0">' +
+                '   <div id="cfg-side-content" style="flex:1;min-height:0"></div>' +
                 ' </div>' +
                 ' </div>' ;
 

@@ -1928,6 +1928,12 @@ export function wsasm_try_resolve_pseudo (context, ret, pseudo_elto, pseudo_elto
             return ret ;
         }
 
+        // propagate cfg_type and cfg_addr from pseudo-instruction definition
+        if (pseudo_elto_candidate.cfg_type)
+            elto.cfg_type = pseudo_elto_candidate.cfg_type;
+        if (pseudo_elto_candidate.cfg_addr)
+            elto.cfg_addr = pseudo_elto_candidate.cfg_addr;
+
         if (0 == ret2.eltos.length)
         {
             elto.labels   = pseudo_elto.labels ;

@@ -209,7 +209,7 @@ export class ws_uiscreen_classic extends ws_uielto
             '          </div>' +
             '' +
             '          <div class="btn-group me-2 my-1" role="group"   aria-label="Toolbar load and save buttons">' +
-            '           <ws-compilationbar icons="left" components="btn_acompile,btn_ashowbin"></ws-compilationbar>' +
+            '           <ws-compilationbar id="asm-compilationbar" icons="left" components="btn_acompile,btn_ashowbin,btn_acfg"></ws-compilationbar>' +
             '          </div>' +
             '' +
             '          <div class="btn-group me-2" role="group"   aria-label="Toolbar load and save buttons">' +

@@ -440,6 +440,8 @@ sh rs2 offset(rs1) {
 
 #  BEQ rs1,rs2,offset         Branch Equal                         if rs1 = rs2 then pc ← pc + sext(offset)
 beq rs1 rs2 offset {
+    type=branch,
+    addr=offset,
     oc(6:0)=1100011,
     eoc(14:12)=000,
     reg(19:15)=rs1,
@@ -453,6 +455,8 @@ beq rs1 rs2 offset {
 
 #  BNE rs1,rs2,offset         Branch Not Equal                     if rs1 != rs2 then pc ← pc + sext(offset)
 bne rs1 rs2 offset {
+    type=branch,
+    addr=offset,
     oc(6:0)=1100011,
     eoc(14:12)=001,
     reg(19:15)=rs1,
@@ -466,6 +470,8 @@ bne rs1 rs2 offset {
 
 #  BLT rs1,rs2,offset         Branch Less Than                     if rs1 < rs2 then pc ← pc + sext(offset)
 blt rs1 rs2 offset {
+    type=branch,
+    addr=offset,
     oc(6:0)=1100011,
     eoc(14:12)=100,
     reg(19:15)=rs1,
@@ -479,6 +485,8 @@ blt rs1 rs2 offset {
 
 #  BGE rs1,rs2,offset         Branch Greater or Equal              if rs1 >= rs2 then pc ← pc + sext(offset)
 bge rs1 rs2 offset {
+    type=branch,
+    addr=offset,
     oc(6:0)=1100011,
     eoc(14:12)=101,
     reg(19:15)=rs1,
@@ -492,6 +500,8 @@ bge rs1 rs2 offset {
 
 #  BLTU rs1,rs2,offset        Branch Less Than Unsigned            if rs1 < rs2 then pc ← pc + sext(offset)
 bltu rs1 rs2 offset {
+    type=branch,
+    addr=offset,
     oc(6:0)=1100011,
     eoc(14:12)=110,
     reg(19:15)=rs1,
@@ -505,6 +515,8 @@ bltu rs1 rs2 offset {
 
 #  BGEU rs1,rs2,offset        Branch Greater or Equal Unsigned     if rs1 >= rs2 then pc ← pc + sext(offset)
 bgeu rs1 rs2 offset {
+    type=branch,
+    addr=offset,
     oc(6:0)=1100011,
     eoc(14:12)=111,
     reg(19:15)=rs1,
@@ -519,6 +531,8 @@ bgeu rs1 rs2 offset {
 #  JAL rd,offset              Jump and Link                       rd ← pc + 4
 #                                                               pc ← pc + sext(offset)
 addpc offset {
+    type=jump,
+    addr=offset,
     oc(6:0)=1101111,
     address-rel(31:7)=offset,
     help='PC = PC + imm',
@@ -543,6 +557,8 @@ savepc rd imm {
 #  JALR_JUMP rs1,imm         JALR Jump (pseudo)                  pc ← rs1 + sext(imm)
 #                                                               (no link, for splitting JALR into two steps)
 jumpto rs1 imm {
+    type=jump,
+    addr=rs1,
     oc(6:0)=1100111,
     eoc(14:12)=000,
     reg(19:15)=rs1,
@@ -583,6 +599,7 @@ out rs imm {
 
 #  SRET        Return from trap
 sret {
+    type=jump,
     oc(6:0)=1110011,
     eoc(14:12|31:25)=0000001000,
     nwords=1,
@@ -792,6 +809,8 @@ pseudoinstructions
 
     # call                jalr x0, x1, 0        Call subroutine
     call offset=imm
+    type=call,
+    addr=offset,
     {
         savepc ra 4
         addpc offset
@@ -799,12 +818,15 @@ pseudoinstructions
     
     # ret                jalr x0, x1, 0        Return from subroutine
     ret
+    type=return,
     {
         jumpto ra, 0
     }
     
     # jal rd, offset              Jump and Link                rd ← pc + 4, pc ← pc + sext(offset)
     jal rd=reg, offset=imm
+    type=call,
+    addr=offset,
     {
         savepc rd 4
         addpc offset
@@ -812,12 +834,15 @@ pseudoinstructions
 
     # j offset          addpc x0, offset         Jump
     j offset=imm
+    type=jump,
+    addr=offset,
     {
         addpc offset
     }
 
     # jr rs            jalr x0, rs, 0        Jump register
     jr rs=reg
+    type=return,
     {
         jumpto rs, 0
     }

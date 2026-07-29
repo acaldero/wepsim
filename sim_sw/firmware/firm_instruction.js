@@ -59,6 +59,18 @@ export function firm_instruction_write (context, elto, labels_firm)
         o += '\t' + 'nwords=' + elto.nwords + ',' + '\n';
     }
 
+    // cfg_type = ...
+    if (typeof elto.cfg_type != 'undefined')
+    {
+        o += '\t' + 'type=' + elto.cfg_type + ',' + '\n';
+    }
+
+    // cfg_addr = ...
+    if (typeof elto.cfg_addr != 'undefined')
+    {
+        o += '\t' + 'addr=' + elto.cfg_addr + ',' + '\n';
+    }
+
     // fields...
     if (context.metadata.version == 2)
     {

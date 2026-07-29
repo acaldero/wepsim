@@ -195,6 +195,12 @@ export function wsasm_prepare_context_firmware (context, CU_data)
         elto.microcode   = aux.microcode ;
         elto.help        = aux.help ;
 
+        // cfg info
+        if (typeof aux.cfg_type !== 'undefined')
+            elto.cfg_type = aux.cfg_type ;
+        if (typeof aux.cfg_addr !== 'undefined')
+            elto.cfg_addr = aux.cfg_addr ;
+
         // fields: oc + eoc
         wsasm_prepare_oc (elto, aux) ;
         wsasm_prepare_eoc(elto, aux) ;
@@ -300,6 +306,12 @@ export function wsasm_prepare_context_pseudoinstructions (context, CU_data)
         elto.signature_size_arr = Array(elto.signature_type_arr.length).fill(WORD_BYTES * BYTE_LENGTH);
         elto.signature_size_str = elto.signature_size_arr.join(' ') ;
         elto.signature_user     = wsasm_make_signature_user(elto, '') ;
+
+        // cfg info from pseudo-instruction definition
+        if (typeof CU_data.pseudoInstructions[i].cfg_type !== 'undefined')
+            elto.cfg_type = CU_data.pseudoInstructions[i].cfg_type ;
+        if (typeof CU_data.pseudoInstructions[i].cfg_addr !== 'undefined')
+            elto.cfg_addr = CU_data.pseudoInstructions[i].cfg_addr ;
 
         // pseudoinstructions occupy at least 1 word (overridden in find_candidates if expand to more)
         elto.nwords = 1 ;

@@ -38,7 +38,7 @@ import { sim_core_breakpointicon_get } from '../wepsim_core/wepsim_dbg_breakpoin
 import { wepsim_execute_toggle_breakpoint } from '../wepsim_core/wepsim_execute.js';
 import { wepsim_config_button_pretoggle, wepsim_config_button_toggle, wepsim_show_breakpoint_icon_list, wepsim_show_breakpoint_icon_template, wepsim_config_button_html_onoff, wepsim_config_button_html_2options, wepsim_config_button_html_color, wepsim_config_color_initial, wepsim_config_button_pretoggle_val2, wepsim_config_button_toggle2 } from './wepsim_web_ui_config.js';
 import { wepsim_quickcfg_init } from './wepsim_web_ui_quickcfg.js';
-import { wepsim_toggle_history_ui, wepsim_uicfg_apply, wepsim_restore_darkmode, wepsim_keepsync_darkmode_start, wepsim_keepsync_darkmode_stop } from './wepsim_web_simulator.js';
+import { wepsim_toggle_bar_component, wepsim_uicfg_apply, wepsim_restore_darkmode, wepsim_keepsync_darkmode_start, wepsim_keepsync_darkmode_stop } from './wepsim_web_simulator.js';
 import { WORD_BYTES } from '../sim_sw/assembly/datatypes.js';
 import { main_memory_getsrc, main_memory_getsrcbin } from '../sim_core/sim_adt_mainmemory.js';
 import { simhw_active } from '../sim_hw/sim_hw_index.js';
@@ -815,6 +815,21 @@ export function wepsim_register_config_ui()
     });
 
     ws_info.config_ui.push({
+        id:       'radio14h',
+        type:     'Extra Features',
+        u_class:  '',
+        code_cfg: wepsim_config_button_html_onoff('14h', 'CFG',
+                                                  i18n_get_TagFor('cfg', 'Off'),
+                                                  i18n_get_TagFor('cfg', 'On'),
+                                                  'CFG_enable'),
+        code_init: function()
+        {
+            wepsim_config_button_pretoggle('CFG_enable', '14h') ;
+        },
+        description: "<span data-langkey='CFG: show control flow graph button'>CFG: show control flow graph button</span>&nbsp;<span class='badge text-bg-secondary py-0 px-1'>beta</span>",
+    });
+
+    ws_info.config_ui.push({
         id:       'radio14g',
         type:     'Extra Features',
         u_class:  '',
@@ -825,7 +840,6 @@ export function wepsim_register_config_ui()
         code_init: function()
         {
             wepsim_config_button_pretoggle('history_enable', '14g') ;
-            wepsim_toggle_history_ui();
         },
         description: "<span data-langkey='History: save execution history to allow going back'>History: save execution history to allow going back</span>&nbsp;",
     });

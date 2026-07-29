@@ -716,6 +716,30 @@ export function firm_instruction_read_fields_v2 (context, instruccionAux, xr_inf
                 frm_nextToken(context);
         }
 
+        // match optional type = ...
+        else if (frm_isToken(context, 'type'))
+        {
+            ret = firm_instruction_keynumber_read(context, instruccionAux) ;
+            if (typeof ret.error != 'undefined')
+            {
+                return ret ;
+            }
+
+            instruccionAux.cfg_type = ret.value ;
+        }
+
+        // match optional addr = ...
+        else if (frm_isToken(context, 'addr'))
+        {
+            ret = firm_instruction_keynumber_read(context, instruccionAux) ;
+            if (typeof ret.error != 'undefined')
+            {
+                return ret ;
+            }
+
+            instruccionAux.cfg_addr = ret.value ;
+        }
+
         // match field...
         else
         {
