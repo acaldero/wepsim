@@ -41,19 +41,7 @@ while getopts 'vdh' opt; do
     d)
       echo "  Please install dependencies first by using:"
       echo ""
-      echo "   sudo apt install jq"
-      echo "   sudo npm install -g typescript@6"
-      echo ""
-      echo "   npm i terser jshint eslint"
-      echo "   npm i webpack webpack-cli terser-webpack-plugin"
-      echo ""
-      echo "   npm i yargs clear inquirer@8.2.6 fuzzy commander async"
-      echo "   npm i inquirer-command-prompt inquirer-autocomplete-prompt@1"
-      echo ""
-      echo "   npm i codemirror @codemirror/lang-javascript"
-      echo "   npm i codemirror @codemirror/view";
-      echo "   npm i codemirror @codemirror/state";
-      echo "   npm i codemirror @codemirror/language";
+      cat $(dirname $0)/install_prereq.sh | sed "s/^/     /g"
       echo ""
       exit
       ;;

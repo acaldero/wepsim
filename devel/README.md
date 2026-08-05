@@ -5,19 +5,21 @@
 ## Pre-requisites
 
 ```bash
-   sudo apt install jq"
-   sudo npm install -g typescript@6"
+   sudo apt install jq
 
-   npm i webpack webpack-cli terser-webpack-plugin
-   npm i terser jshint eslint glob"
+   npm i --save-dev typescript@6
+   npm i --save-dev webpack webpack-cli terser-webpack-plugin
+   npm i --save-dev ts-loader
+   npm i --save-dev terser jshint eslint glob
 
-   npm i yargs clear inquirer@8.2.6 fuzzy commander async"
-   npm i inquirer-command-prompt inquirer-autocomplete-prompt@1"
+   npm i yargs clear inquirer@8.2.6 fuzzy commander async
+   npm i inquirer-command-prompt inquirer-autocomplete-prompt@1
 
-   npm i codemirror @codemirror/lang-javascript"
-   npm i codemirror @codemirror/view";
-   npm i codemirror @codemirror/state";
-   npm i codemirror @codemirror/language";
+   npm i codemirror
+   npm i @codemirror/lang-javascript
+   npm i @codemirror/view
+   npm i @codemirror/state
+   npm i @codemirror/language
 ```
 
 

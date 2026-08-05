@@ -16,6 +16,7 @@
     "jshint": "^0.5.9",
     "nodemon": "^3.1.14",
     "terser": "^5.48.0",
+    "ts-loader": "^9.6.2",
     "typescript": "^6.0.3"
   },
   "scripts": {
