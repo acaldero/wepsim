@@ -21,7 +21,7 @@
   },
   "scripts": {
     "wp": "webpack",
-    "build": "./devel/mk_dist_wp.sh",
+    "build": "./devel/mk_dist.sh",
     "watch": "webpack --watch",
     "dev": "./devel/dev.sh",
     "test-source1": "./devel/test_eslint.sh",

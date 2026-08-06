@@ -41,7 +41,18 @@ while getopts 'vdh' opt; do
     d)
       echo "  Please install dependencies first by using:"
       echo ""
-      cat $(dirname $0)/install_prereq.sh | sed "s/^/     /g"
+      echo "   sudo apt install jq"
+      echo "   sudo npm install -g typescript@6"
+      echo ""
+      echo "   npm i terser jshint eslint"
+      echo "   npm i yargs clear inquirer@8.2.6 fuzzy commander async"
+      echo "   npm i inquirer-command-prompt inquirer-autocomplete-prompt@1"
+      echo "   npm i rollup @rollup/plugin-node-resolve"
+      echo ""
+      echo "   npm i codemirror @codemirror/lang-javascript"
+      echo "   npm i codemirror @codemirror/view";
+      echo "   npm i codemirror @codemirror/state";
+      echo "   npm i codemirror @codemirror/language";
       echo ""
       exit
       ;;
@@ -92,28 +103,219 @@ cp external/jquery.min.js    ws_dist/external
 # echo ""
 
 
-# Build ws_dist/min.*
-echo "  Step for webpack:"
-npm run wp
+#  hardware model + software model + core (simulation ctrl + UI)
+echo "  * ws_dist/min.sim_all.js"
+cat sim_core/sim_cfg.js \
+    sim_core/sim_core_ga.js \
+    sim_core/sim_adt_core.js \
+    sim_core/sim_core_record.js \
+    sim_core/sim_core_ctrl.js \
+    sim_core/sim_core_ui.js \
+    sim_core/sim_api_core.js \
+    sim_core/sim_api_native.js \
+    sim_core/sim_api_stateshots.js \
+    sim_core/sim_core_voice.js \
+    sim_core/sim_core_sound.js \
+    sim_core/sim_core_rest.js \
+    sim_core/sim_core_notify.js \
+    sim_core/sim_core_values.js \
+    sim_core/sim_core_decode.js \
+    sim_core/sim_adt_ctrlmemory.js \
+    sim_core/sim_adt_mainmemory.js \
+    sim_core/sim_adt_cachememory.js \
+    \
+    sim_hw/sim_hw_index.js \
+    sim_hw/sim_hw_values.js \
+    sim_hw/sim_hw_behavior.js \
+    sim_hw/sim_hw_signal.js \
+    sim_hw/sim_hw_eltos.js \
+    \
+    sim_hw/hw_items/board_base.js \
+    sim_hw/hw_items/cpu_ep.js \
+    sim_hw/hw_items/mem_ep.js \
+    sim_hw/hw_items/cpu_ep2.js \
+    sim_hw/hw_items/mem_ep2.js \
+    sim_hw/hw_items/cpu_rv.js \
+    sim_hw/hw_items/mem_rv.js \
+    sim_hw/hw_items/cpu_poc.js \
+    sim_hw/hw_items/mem_poc.js \
+    sim_hw/hw_items/cu_poc.js \
+    sim_hw/hw_items/io_clk_base.js \
+    sim_hw/hw_items/io_screen_base.js \
+    sim_hw/hw_items/io_keyboard_base.js \
+    sim_hw/hw_items/io_ldm_base.js \
+    sim_hw/hw_items/io_l3d_base.js \
+    sim_hw/hw_items/io_sound_base.js \
+    \
+    ts_out/sim_hw/hw_items/cpu_rvpipe.js \
+    ts_out/sim_hw/hw_items/mem_rvpipe.js \
+    ts_out/sim_hw/hw_items/io_clk_rvpipe.js \
+    ts_out/sim_hw/hw_items/io_screen_rvpipe.js \
+    ts_out/sim_hw/hw_items/io_keyboard_rvpipe.js \
+    \
+    sim_hw/hw_ep.js \
+    sim_hw/hw_ep2.js \
+    sim_hw/hw_rv.js \
+    ts_out/sim_hw/hw_rvpipe.js \
+    sim_hw/hw_poc.js \
+    \
+    sim_sw/firmware/lexical.js \
+    sim_sw/firmware/firm_mcode.js \
+    sim_sw/firmware/firm_metadata.js \
+    sim_sw/firmware/firm_begin.js \
+    sim_sw/firmware/firm_pseudoinstructions.js \
+    sim_sw/firmware/firm_registers.js \
+    sim_sw/firmware/firm_fields_v1.js \
+    sim_sw/firmware/firm_fields_v2.js \
+    sim_sw/firmware/firm_oc_eoc_v1.js \
+    sim_sw/firmware/firm_oc_eoc_v2.js \
+    sim_sw/firmware/firm_instruction.js \
+    sim_sw/firmware.js \
+    sim_sw/assembly/lexical.js \
+    sim_sw/assembly/memory_segments.js \
+    sim_sw/assembly/directives.js \
+    sim_sw/assembly/datatypes.js \
+    sim_sw/assembly/compiler1_prepare_wepsim.js \
+    sim_sw/assembly/compiler2_asm_obj.js \
+    sim_sw/assembly/compiler3_obj2mem_wepsim.js \
+    sim_sw/assembly/compiler_options.js \
+    sim_sw/assembly.js > ws_dist/sim_all.js
+terser -o ws_dist/min.sim_all.js ws_dist/sim_all.js
+rm -fr ws_dist/sim_all.js
 
-
-# Add resources to ws_dist/
+#  WepSIM internalization (i18n)
 echo "  * ws_dist/help/..."
+cat wepsim_i18n/i18n.js > ws_dist/wepsim_i18n.js
 for LANG in es en fr kr ja it pt hi zh_cn ru sv de; do
+cat wepsim_i18n/$LANG/gui.js \
+    wepsim_i18n/$LANG/tutorial-welcome.js \
+    wepsim_i18n/$LANG/tutorial-simpleusage.js \
+    wepsim_i18n/$LANG/tour-intro.js \
+    wepsim_i18n/$LANG/cfg.js \
+    wepsim_i18n/$LANG/help.js \
+    wepsim_i18n/$LANG/states.js \
+    wepsim_i18n/$LANG/examples.js \
+    wepsim_i18n/$LANG/compiler.js \
+    wepsim_i18n/$LANG/hw.js \
+    wepsim_i18n/$LANG/dialogs.js  >> ws_dist/wepsim_i18n.js
 cp  wepsim_i18n/$LANG/simulator.html ws_dist/help/simulator-"$LANG".html
 cp  wepsim_i18n/$LANG/about.html     ws_dist/help/about-"$LANG".html
 done
+terser -o ws_dist/min.wepsim_i18n.js ws_dist/wepsim_i18n.js
+rm -fr ws_dist/wepsim_i18n.js
 
+#  WepSIM web
+echo "  * ws_dist/min.wepsim_core.js"
+cat wepsim_core/wepsim_url.js \
+    wepsim_core/wepsim_clipboard.js \
+    wepsim_core/wepsim_preload_commands.js \
+    wepsim_core/wepsim_preload.js \
+    wepsim_core/wepsim_checkpoint.js \
+    wepsim_core/wepsim_signal.js \
+    wepsim_core/wepsim_state.js \
+    wepsim_core/wepsim_execute.js \
+    wepsim_core/wepsim_notify.js \
+    \
+    wepsim_core/wepsim_mode.js \
+    wepsim_core/wepsim_share.js \
+    wepsim_core/wepsim_dialog.js \
+    wepsim_core/wepsim_example.js \
+    wepsim_core/wepsim_help.js \
+    wepsim_core/wepsim_help_commands.js \
+    wepsim_core/wepsim_tutorial.js \
+    wepsim_core/wepsim_tutorial_welcome.js \
+    wepsim_core/wepsim_tutorial_simpleusage.js \
+    wepsim_core/wepsim_tour.js \
+    wepsim_core/wepsim_tour_commands.js \
+    wepsim_core/wepsim_voice.js \
+    wepsim_core/wepsim_voice_commands.js \
+    \
+    wepsim_core/wepsim_dbg_breakpointicons.js > ws_dist/wepsim_core.js
+terser -o ws_dist/min.wepsim_core.js ws_dist/wepsim_core.js
+rm -fr ws_dist/wepsim_core.js
 
-#  (1/2) WepSIM web engine
+#  WepSIM web engine
+cat wepsim_web/wepsim_uielto.js \
+    wepsim_web/wepsim_uielto_cpu.js \
+    wepsim_web/wepsim_uielto_mem.js \
+    wepsim_web/wepsim_uielto_mem_config.js \
+    wepsim_web/wepsim_uielto_cache.js \
+    wepsim_web/wepsim_uielto_cache_config.js \
+    wepsim_web/wepsim_uielto_registers.js \
+    wepsim_web/wepsim_uielto_hw.js \
+    wepsim_web/wepsim_uielto_editmc.js \
+    wepsim_web/wepsim_uielto_editas.js \
+    wepsim_web/wepsim_uielto_dbg_mc.js \
+    wepsim_web/wepsim_uielto_bin_mc.js \
+    wepsim_web/wepsim_uielto_dbg_asm.js \
+    wepsim_web/wepsim_uielto_bin_asm.js \
+    wepsim_web/wepsim_uielto_flash_asm.js \
+    wepsim_web/wepsim_uielto_flash_fpga.js \
+    wepsim_web/wepsim_uielto_cpusvg.js \
+    wepsim_web/wepsim_uielto_about.js \
+    wepsim_web/wepsim_uielto_segments.js \
+    wepsim_web/wepsim_uielto_topbar.js \
+    wepsim_web/wepsim_uielto_notifications.js \
+    wepsim_web/wepsim_uielto_states.js \
+    wepsim_web/wepsim_uielto_help_hweltos.js \
+    wepsim_web/wepsim_uielto_help_swset.js \
+    wepsim_web/wepsim_uielto_slider_cpucu.js \
+    wepsim_web/wepsim_uielto_slider_details.js \
+    \
+    wepsim_web/wepsim_uielto_console.js \
+    wepsim_web/wepsim_uielto_timer_info.js \
+    wepsim_web/wepsim_uielto_timer_config.js \
+    wepsim_web/wepsim_uielto_l3d.js \
+    wepsim_web/wepsim_uielto_ldm.js \
+    wepsim_web/wepsim_uielto_sound.js \
+    \
+    wepsim_web/wepsim_uipacker_ddown_sel.js \
+    wepsim_web/wepsim_uipacker_ddown_info.js \
+    wepsim_web/wepsim_uipacker_cpu_cu.js \
+    wepsim_web/wepsim_uipacker_cto_asm.js \
+    wepsim_web/wepsim_uipacker_sim_mic_asm.js \
+    \
+    wepsim_web/wepsim_web_ui_config.js \
+    wepsim_web/wepsim_web_ui_config_commands.js \
+    wepsim_web/wepsim_web_ui_popover.js \
+    wepsim_web/wepsim_web_ui_tooltip.js \
+    wepsim_web/wepsim_web_ui_dialogs.js \
+    wepsim_web/wepsim_web_ui_quickcfg.js \
+    \
+    wepsim_web/wepsim_uielto_loadfile.js \
+    wepsim_web/wepsim_uielto_savefile.js \
+    wepsim_web/wepsim_uielto_savefiles.js \
+    wepsim_web/wepsim_uielto_sharelink.js \
+    wepsim_web/wepsim_uielto_loadlink.js \
+    wepsim_web/wepsim_uielto_listcfg.js \
+    wepsim_web/wepsim_uielto_listexample.js \
+    wepsim_web/wepsim_uielto_listprocessor.js \
+    wepsim_web/wepsim_uielto_index_help.js \
+    wepsim_web/wepsim_uielto_index_examples.js \
+    wepsim_web/wepsim_uielto_index_config.js \
+    \
+    wepsim_web/wepsim_uielto_recordbar.js \
+    wepsim_web/wepsim_uielto_executionbar.js \
+    wepsim_web/wepsim_uielto_compilationbar.js \
+    wepsim_web/wepsim_uielto_toolbar.js \
+    \
+    wepsim_web/wepsim_uiscreen_classic.js \
+    wepsim_web/wepsim_uiscreen_compact.js \
+    wepsim_web/wepsim_uiscreen_main.js \
+    \
+    wepsim_web/wepsim_web_api.js \
+    wepsim_web/wepsim_web_editor.js \
+    wepsim_web/wepsim_web_simulator.js > ws_dist/wepsim_webui.js
+terser -o ws_dist/min.wepsim_webui.js ws_dist/wepsim_webui.js
+rm -fr ws_dist/wepsim_webui.js
+
 cat ws_dist/min.sim_all.js \
     ws_dist/min.wepsim_i18n.js \
     ws_dist/min.wepsim_core.js \
-    ws_dist/min.wepsim_webui.js   > ws_dist/wepsim_web.js
-terser -o ws_dist/min.wepsim_web.js ws_dist/wepsim_web.js
-rm -fr ws_dist/wepsim_web.js
+    ws_dist/min.wepsim_webui.js > ws_dist/min.wepsim_web.js
+rm -fr ws_dist/min.wepsim_webui.js
 
-#  (2/2) WepSIM nodejs engine
+#  WepSIM nodejs engine
 echo "  * ws_dist/min.wepsim_node.js"
 cat wepsim_nodejs/wepsim_node_adapt.js \
     ws_dist/min.sim_all.js \
@@ -122,7 +324,6 @@ cat wepsim_nodejs/wepsim_node_adapt.js \
     \
     wepsim_nodejs/wepsim_node_core.js \
     wepsim_nodejs/wepsim_node_action.js > ws_dist/min.wepsim_node.js
-
 
 #  external
 echo "  * ws_dist/min.external.js"
@@ -168,7 +369,6 @@ cat external/vue/vue.min.js \
 terser --comments -o ws_dist/min.external.js ws_dist/external.js
 rm -fr ws_dist/external.js
 
-
 echo "  * ws_dist/min.external.css"
 cat external/bootstrap/bootstrap.min.css \
     external/codemirror/codemirror.css \
@@ -191,7 +391,6 @@ cat external/bootstrap/bootstrap.min.css \
     external/speech-input.css \
     external/dropify/dropify.min.css \
     external/css-tricks.css | grep -v sourceMappingURL > ws_dist/min.external.css
-
 
 echo "  * ws_dist/external/..."
 cp    -a external/fontawesome           ws_dist/external
