@@ -10,7 +10,7 @@ import TerserPlugin from 'terser-webpack-plugin';
 
 
 // 20. base variables
-const globSync = globPkg.globSync || globPkg; 
+const globSync = globPkg.globSync || globPkg;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = path.dirname(__filename);
 
@@ -32,30 +32,31 @@ function WepSIM_build_i18n_index ( )
 
 async function WepSIM_PlanarConcatenation ( )
 {
-    console.log('\n[WepSIM] re-packing as flat file...');
+    console.log('\n  * [pack] re-packing as flat file...');
 
     // 1. Mapping rollup index to final file
     const mapCompilation = [
-      { index: 'min.wepsim_i18n.js',  destination: 'ws_dist/min.wepsim_i18n.js' },
-      { index: 'min.sim_all.js',      destination: 'ws_dist/min.sim_all.js' },
+      { index: 'min.wepsim_i18n.js',  destination: 'ws_dist/min.wepsim_i18n.js'  },
+      { index: 'min.sim_all.js',      destination: 'ws_dist/min.sim_all.js'      },
+      { index: 'min.wepsim_core.js',  destination: 'ws_dist/min.wepsim_core.js'  },
+      { index: 'min.external.js',     destination: 'ws_dist/min.external.js'     },
       { index: 'min.wepsim_webui.js', destination: 'ws_dist/min.wepsim_webui.js' },
-      { index: 'min.wepsim_core.js',  destination: 'ws_dist/min.wepsim_core.js' },
-      { index: 'min.wepsim_node.js',  destination: 'ws_dist/min.wepsim_node.js' }
+      { index: 'min.wepsim_node.js',  destination: 'ws_dist/min.wepsim_node.js'  }
     ];
 
     // 2. Work on each file...
-    for (const item of mapCompilation) 
+    for (const item of mapCompilation)
     {
         const { index, destination } = item;
 
         const dirIndexes = path.resolve('./devel/webpack_indexes');
         const indexPath  = path.join(dirIndexes, index);
         if (!fs.existsSync(indexPath)) return;
-      
+
         // read index file associated
         const contenidoIndice = fs.readFileSync(indexPath, 'utf-8');
         const regexImports    = /import\s+['"]([^'"]+)['"]/g;
-      
+
         // extract path one by one
         let codigoUnificado = '\n\n';
         let match;
@@ -63,7 +64,7 @@ async function WepSIM_PlanarConcatenation ( )
         {
            const rutaRelativa = match[1];
            const rutaAbsoluta = path.resolve(path.dirname(indexPath), rutaRelativa);
-        
+
            // if it exists then read the file content
            if (fs.existsSync(rutaAbsoluta)) {
                codigoUnificado += `\n/* --- WepSIM file: ${rutaRelativa} --- */\n`;
@@ -96,11 +97,11 @@ async function WepSIM_PlanarConcatenation ( )
             fs.mkdirSync(path.dirname(destinationAbsolutePath), { recursive: true });
             fs.writeFileSync(destinationAbsolutePath, codigoUnificado, 'utf-8');
 
-            console.log(`[WepSIM] -> ${destination} added...`);
+            console.log(`  * [pack] -> ${destination} added...`);
         }
     }
-    
-    console.log('[WepSIM] Done !.\n');
+
+    console.log('  * [pack] Done !.\n');
 }
 
 
@@ -128,6 +129,23 @@ export default
       filename: '[name].js',  // [name] will be replace by 'entry:' keys
       scriptType: 'text/javascript',
       devtoolModuleFilenameTemplate: '[resource-path]'
+    },
+
+    devServer: {
+      static: {
+        directory: path.resolve(__dirname),
+        publicPath: "/ws_dist",
+      },
+
+      devMiddleware: {
+        writeToDisk: true,
+      },
+
+      open:       false,
+      compress:   true,
+      hot:        false,
+      liveReload: true,
+      port:       8000
     },
 
     devtool: 'source-map', // sourcemap: on

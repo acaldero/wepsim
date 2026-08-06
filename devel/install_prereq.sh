@@ -10,6 +10,7 @@ npm i --save-dev webpack webpack-cli
 npm i --save-dev terser-webpack-plugin
 npm i --save-dev ts-loader
 npm i --save-dev glob
+npm i --save-dev webpack-dev-server
 
 npm i --save-dev yargs clear inquirer@8.2.6 fuzzy commander async
 npm i --save-dev inquirer-command-prompt inquirer-autocomplete-prompt@1

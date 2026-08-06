@@ -17,16 +17,19 @@
     "nodemon": "^3.1.14",
     "terser": "^5.48.0",
     "ts-loader": "^9.6.2",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "webpack-dev-server": "^6.0.0"
   },
   "scripts": {
-    "wp": "webpack",
-    "build": "./devel/mk_dist.sh",
-    "watch": "webpack --watch",
-    "dev": "./devel/dev.sh",
+    "build":  "./devel/mk_dist.sh",
+    "pack":   "webpack",
+    "dev":    "webpack --watch",
+    "server": "webpack serve",
     "test-source1": "./devel/test_eslint.sh",
     "test-wepsim-node1": "./devel/test_wepsim.sh co",
-    "test-wepsim-node2": "./devel/test_wepsim.sh rs"
+    "test-wepsim-node2": "./devel/test_wepsim.sh rs",
+    "xbuild": "mk_dist_parallel.sh",
+    "xdev": "./devel/dev.sh"
   },
   "dependencies": {
     "@codemirror/gutter": "^0.19.9",

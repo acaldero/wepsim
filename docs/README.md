@@ -493,8 +493,10 @@ For example, the following link loads the RISC-V assembly code for the factorial
 + If you want to use the WepSIM engine within your App, there is a WepSIM API in JavaScript available too.
   You will need to include the WepSIM engine in your proyect:
   ```javascript
-  <script src="min.sim_all.js"   ></script><noscript>Your browser does not support JavaScript!</noscript>
-  <script src="min.wepsim_web.js"></script><noscript>Your browser does not support JavaScript!</noscript>
+  <script type="application/javascript" src="min.sim_all.js"></script>
+  <script type="application/javascript" src="min.wepsim_i18n.js"></script>
+  <script type="application/javascript" src="min.wepsim_core.js"></script>
+  <script type="application/javascript" src="min.wepsim_webui.js"></script>
   ```
 
 + And then, one simple example of using this WepSIM API is the following:

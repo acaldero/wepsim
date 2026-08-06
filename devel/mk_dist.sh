@@ -41,7 +41,7 @@ while getopts 'vdh' opt; do
     d)
       echo "  Please install dependencies first by using:"
       echo ""
-      cat $(dirname $0)/install_prereq.sh | sed "s/^/     /g"
+      cat $(dirname $0)/install_prereq.sh | sed "s/^/     /g" | grep -v "set -x" | grep -v "/bin/bash"
       echo ""
       exit
       ;;
@@ -80,6 +80,8 @@ echo "  * ws_dist"
 cp external/jquery.min.js    ws_dist/external
                     mkdir -p ws_dist/help
                     touch    ws_dist/help/index.html
+echo "  Done."
+echo ""
 
 
 # # pre-bundle
@@ -94,10 +96,13 @@ cp external/jquery.min.js    ws_dist/external
 
 # Build ws_dist/min.*
 echo "  Step for webpack:"
-npm run wp
+npm run pack
+echo "  Done."
+echo ""
 
 
 # Add resources to ws_dist/
+echo "  Copy resources to ws_dist:"
 echo "  * ws_dist/help/..."
 for LANG in es en fr kr ja it pt hi zh_cn ru sv de; do
 cp  wepsim_i18n/$LANG/simulator.html ws_dist/help/simulator-"$LANG".html
@@ -105,13 +110,7 @@ cp  wepsim_i18n/$LANG/about.html     ws_dist/help/about-"$LANG".html
 done
 
 
-#  (1/2) WepSIM web engine
-cat ws_dist/min.sim_all.js \
-    ws_dist/min.wepsim_i18n.js \
-    ws_dist/min.wepsim_core.js \
-    ws_dist/min.wepsim_webui.js   > ws_dist/min.wepsim_web.js
-
-#  (2/2) WepSIM nodejs engine
+#  WepSIM nodejs engine
 echo "  * ws_dist/min.wepsim_node.js"
 cat wepsim_nodejs/wepsim_node_adapt.js \
     ws_dist/min.sim_all.js \
@@ -123,50 +122,6 @@ cat wepsim_nodejs/wepsim_node_adapt.js \
 
 
 #  external
-echo "  * ws_dist/min.external.js"
-cat external/vue/vue.min.js \
-    external/vue/vuex.min.js \
-    external/popper.min.js \
-    external/bootstrap/bootstrap.min.js \
-    external/bootbox/bootbox.all.min.js \
-    external/tone.min.js \
-    external/codemirror/codemirror.js \
-    external/codemirror/mode/javascript/javascript.js \
-    external/codemirror/mode/gas/gas.js \
-    external/codemirror/keymap/sublime.js \
-    external/codemirror/keymap/emacs.js \
-    external/codemirror/keymap/vim.js \
-    external/codemirror/addon/edit/matchbrackets.js \
-    external/codemirror/addon/fold/foldcode.js \
-    external/codemirror/addon/fold/foldgutter.js \
-    external/codemirror/addon/fold/brace-fold.js \
-    external/codemirror/addon/fold/xml-fold.js \
-    external/codemirror/addon/fold/comment-fold.js \
-    external/codemirror/addon/fold/indent-fold.js \
-    external/codemirror/addon/fold/markdown-fold.js \
-    external/codemirror/addon/hint/show-hint.js \
-    external/codemirror/addon/runmode/colorize.js \
-    external/codemirror/addon/comment/comment.js \
-    external/codemirror/addon/comment/continuecomment.js \
-    external/codemirror/addon/search/jump-to-line.js \
-    external/codemirror/addon/search/searchcursor.js \
-    external/codemirror/addon/search/search.js \
-    external/codemirror/addon/dialog/dialog.js \
-    external/jquery.knob.min.js \
-    external/vis/vis-network.min.js \
-    external/async.min.js \
-    external/compress/lz-string.min.js \
-    external/qrcode/qrcode.min.js \
-    external/bootstrap-tokenfield.js \
-    external/introjs/introjs.min.js \
-    external/speech-input.js \
-    external/annyang.min.js \
-    external/speechkitt/speechkitt.min.js \
-    external/dropify/dropify.min.js | grep -v sourceMappingURL > ws_dist/external.js
-terser --comments -o ws_dist/min.external.js ws_dist/external.js
-rm -fr ws_dist/external.js
-
-
 echo "  * ws_dist/min.external.css"
 cat external/bootstrap/bootstrap.min.css \
     external/codemirror/codemirror.css \
@@ -267,13 +222,21 @@ cp   docs/manifest.webapp         ws_dist/
 cp wepsim_nodejs/wepsim.sh        ws_dist/
 chmod a+x ws_dist/*.sh
 
+
 #  json: update processors
+echo "  * ws_dist/repo/hardware/*"
 ./ws_dist/wepsim.sh -a export-hardware -m ep  > ws_dist/repo/hardware/ep/hw_def.json
 ./ws_dist/wepsim.sh -a export-hardware -m ep2 > ws_dist/repo/hardware/ep2/hw_def.json
 ./ws_dist/wepsim.sh -a export-hardware -m poc > ws_dist/repo/hardware/poc/hw_def.json
 ./ws_dist/wepsim.sh -a export-hardware -m rv  > ws_dist/repo/hardware/rv/hw_def.json
 
+echo "  Done."
+echo ""
+
+
 # the end
 echo ""
 echo "  WepSIM packed in ws_dist (if no error was shown)."
+echo ""
+
 
