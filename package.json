@@ -18,11 +18,12 @@
     "typescript": "^6.0.3"
   },
   "scripts": {
-    "dev": "./scripts/dev.sh",
-    "build": "./devel/mk_dist_parallel.sh min",
+    "build": "./devel/mk_dist.sh min",
     "test-source1": "./devel/test_eslint.sh",
     "test-wepsim-node1": "./devel/test_wepsim.sh co",
     "test-wepsim-node2": "./devel/test_wepsim.sh rs"
+    "xbuild": "./devel/mk_dist_parallel.sh min",
+    "xdev": "./scripts/dev.sh",
   },
   "dependencies": {
     "@codemirror/gutter": "^0.19.9",
