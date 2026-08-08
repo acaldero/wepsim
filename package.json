@@ -21,9 +21,9 @@
     "build": "./devel/mk_dist.sh min",
     "test-source1": "./devel/test_eslint.sh",
     "test-wepsim-node1": "./devel/test_wepsim.sh co",
-    "test-wepsim-node2": "./devel/test_wepsim.sh rs"
+    "test-wepsim-node2": "./devel/test_wepsim.sh rs",
     "xbuild": "./devel/mk_dist_parallel.sh min",
-    "xdev": "./scripts/dev.sh",
+    "xdev": "./scripts/dev.sh"
   },
   "dependencies": {
     "@codemirror/gutter": "^0.19.9",
