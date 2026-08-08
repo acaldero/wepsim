@@ -15,15 +15,15 @@ jobs:
     steps:
     # 1. Download
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
 
     # 2. Setup nodeJS
     - name: Setup nodeJS
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v7
       with:
-        node-version: [22.x]
+        node-version: [24.x]
         cache: 'npm'
 
     # 3. Build ws_dist/
@@ -31,6 +31,7 @@ jobs:
       run: |
         npm ci
         rm -fr ws_dist/
+        npm install
         npm run build
 
     # 4. Testing ws_dist/
