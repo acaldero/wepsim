@@ -1,6 +1,0 @@
-pep8:
-    disable:
-        - E501
-    options:
-        max-line-length: 480
-
