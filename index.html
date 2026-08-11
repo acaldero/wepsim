@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>WepSIM</title>
+    <meta name="Description" content="The Web Elemental Processor SIMulator (WepSIM) for microprogramming and assembly programming" />
+
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+    <meta http-equiv="pragma" content="no-cache" />
+
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=yes, width=device-width, initial-scale=1, maximum-scale=2.5, minimum-scale=.5" />
+
+    <link async href="ws_dist/min.external.css" rel="stylesheet" />
+
+    <script type="application/javascript" src="external/jquery.min.js"></script>
+    <script type="application/javascript" src="ws_dist/min.external.js"></script>
+    <script type="application/javascript" src="ws_dist/min.wepsim_web.js"></script>
+
+    <link rel="shortcut icon" href="images/icons/favicon.ico" />
+    <link rel="mask-icon"     href="images/icons/safari-pinned-tab.svg" color="#5bbad5" />
+
+    <meta name="google-site-verification" content="gbIx0pN_mlbiXYFvWz9h251qfap7r2W4yMRkS2tVCS4" />
+</head>
+
+
+<body>
+
+    <noscript>Your browser does not support JavaScript!</noscript>
+
+    <span id="ws_loader" class="collapse show">
+	<table style="width:100%; height:100%; position:fixed; background-color: white;  z-index:100;">
+	<tr>
+	<td align="center">
+	    <div class="spinner-border spinner-border-xl text-success" role="status">
+	      <span class="visually-hidden">Loading...</span>
+	    </div>
+	    <br/><br/>
+	    <span class="text-primary font-weight-bold p-3"><strong><span data-langkey='Loading WepSIM...'>Loading WepSIM...</span></strong></span>
+	</td>
+	</tr>
+	</table>
+    </span>
+
+
+<script type="text/javascript">
+    try
+    {
+	    // basic initialization of wepsim...
+	    simcore_init(true) ;
+	    upgrade_cfg() ;
+
+	    // go to wepsim UI skin...
+	    var optValue = get_cfg('ws_skin_ui') ;
+            window.location='ws_dist/wepsim-' + optValue + '.html' ;
+    }
+    catch(err)
+    {
+          alert("Please try to cleanup the browser cache and try again (just in case).\n" +
+		"\n" +
+                "WepSIM was improperly used:\n" + err.message + "\n" +
+		"\n" +
+		"More details:\n" + err.stack) ;
+    }
+</script>
+
+</body>
+
+</html>
