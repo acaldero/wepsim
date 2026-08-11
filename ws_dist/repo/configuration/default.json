@@ -1,0 +1,22 @@
+[
+   {
+      "name": "Desktop",
+      "url":  "repo/configuration/desktop_light.json"
+   },
+   {
+      "name": "Mobile",
+      "url":  "repo/configuration/mobile_light.json"
+   },
+   {
+      "name": "Desktop-Dark",
+      "url":  "repo/configuration/desktop_dark.json"
+   },
+   {
+      "name": "Mobile-Dark",
+      "url":  "repo/configuration/mobile_dark.json"
+   },
+   {
+      "name": "Developer",
+      "url":  "repo/configuration/developer.json"
+   }
+]
