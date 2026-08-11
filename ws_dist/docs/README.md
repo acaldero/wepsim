@@ -5,7 +5,7 @@
 [![Maintainability](https://qlty.sh/gh/acaldero/projects/wepsim/maintainability.svg)](https://qlty.sh/gh/acaldero/projects/wepsim)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/579e744cedde4dc78f8084d9db7abd32)](https://app.codacy.com/gh/acaldero/wepsim/dashboard)
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
-[![Release](https://img.shields.io/badge/Stable-3.0.0-green.svg)](https://github.com/wepsim/wepsim/releases/tag/v3.0.0)
+[![Release](https://img.shields.io/badge/Stable-2.4.2-green.svg)](https://github.com/wepsim/wepsim/releases/tag/v2.4.2)
 
 <html>
 	<ul>
@@ -493,8 +493,8 @@ For example, the following link loads the RISC-V assembly code for the factorial
 + If you want to use the WepSIM engine within your App, there is a WepSIM API in JavaScript available too.
   You will need to include the WepSIM engine in your proyect:
   ```javascript
-  <script src="min.sim_all.js"   ></script><noscript>Your browser does not support JavaScript!</noscript>
-  <script src="min.wepsim_web.js"></script><noscript>Your browser does not support JavaScript!</noscript>
+  <script src="min.sim_all.js"   ></script>
+  <script src="min.wepsim_web.js"></script>
   ```
 
 + And then, one simple example of using this WepSIM API is the following:

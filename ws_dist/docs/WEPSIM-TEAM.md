@@ -8,5 +8,4 @@
 * Juan Banga Pardo (the RISC-V CPU)
 * Juan Francisco Perez Carrasco (collaborating in the design of the hardware model description)
 * Álvaro Guerrero Espinosa (The FPGA deployment of WepSIM)
-* Dario Muñoz Muñoz (The RVpipe processor)
 

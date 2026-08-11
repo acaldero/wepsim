@@ -1,9 +1,10 @@
 
 # Changelog
 
-## 2.4.2 -> 3.0.0:
+## 2.4.2 -> 2.5.0:
 * Main improvements:
-  * New rvpipe processor: RISC-V with 5-stage pipeline
+  * Migration to modules ES
+  * Migration to webpack
 
 ## 2.4.1 -> 2.4.2:
 * Main improvements:
