@@ -1,33 +1,47 @@
 
    // import
-   import { basicSetup }          from "codemirror";
+   import { minimalSetup }        from "codemirror";
+   import { lineNumbers,
+            highlightActiveLineGutter,
+            highlightSpecialChars,
+            drawSelection,
+            dropCursor,
+            rectangularSelection,
+            highlightActiveLine,
+            EditorView,
+            keymap,
+            Decoration } from "@codemirror/view";
+   import { syntaxHighlighting,
+            defaultHighlightStyle,
+            HighlightStyle,
+            foldGutter,
+            bracketMatching,
+            indentUnit,
+            foldService,
+            StreamLanguage }       from "@codemirror/language";
+   import { history,
+            defaultKeymap,
+            historyKeymap,
+            indentLess,
+            indentMore,
+            toggleComment }        from "@codemirror/commands";
    import { EditorState,
             Compartment,
             StateField,
             StateEffect }         from "@codemirror/state";
-   import { EditorView,
-            keymap,
-            Decoration }          from "@codemirror/view";
-   import { defaultKeymap,
-            historyKeymap,
-            indentLess,
-            indentMore,
-            toggleComment }       from "@codemirror/commands";
    import { autocompletion,
             startCompletion,
+            closeBracketsKeymap,
             completeFromList }    from "@codemirror/autocomplete";
-   import { syntaxHighlighting,
-            defaultHighlightStyle,
-            HighlightStyle,
-            indentUnit,
-            foldService,
-            StreamLanguage }      from "@codemirror/language";
+   import { lintKeymap }          from "@codemirror/lint";
    import { javascript }          from "@codemirror/lang-javascript";
    import { gas }                 from "@codemirror/legacy-modes/mode/gas";
    import { languages }           from "@codemirror/language-data";
    import { showMinimap }         from "@replit/codemirror-minimap";
    import { vim }                 from "@replit/codemirror-vim";
    import { emacs }               from "@replit/codemirror-emacs";
+   import { highlightSelectionMatches,
+            searchKeymap }        from "@codemirror/search";
 
 
    const bracesOnlyFoldService = foldService.of((state, lineStart, lineEnd) => {
@@ -73,7 +87,24 @@
 
    function createSetup ( options = {} )
    {
-         const extensions = [ basicSetup ] ;
+         var extensions = [
+                            minimalSetup,
+                            lineNumbers(),
+                            highlightActiveLineGutter(),
+                            dropCursor(),
+                            rectangularSelection(),
+                            highlightActiveLine(),
+                            foldGutter(),
+                            bracketMatching(),
+                            highlightSelectionMatches(),
+                            keymap.of([
+                                ...closeBracketsKeymap,
+                                ...defaultKeymap,
+                                ...historyKeymap,
+                                ...searchKeymap,
+                                ...lintKeymap
+                            ])
+                          ] ;
 
          // CM5: mode: javascript | gas
          if (options.mode === 'javascript')
