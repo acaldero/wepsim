@@ -112,11 +112,13 @@
                 this.theme_compartment.of([]),
                 this.keymap_compartment.of([]),
                 this.readonly_compartment.of( this.CM6.EditorState.readOnly.of(false) ),
-                this.autocomplete_compartment.of(
+                this.autocomplete_compartment.of([
                     this.CM6.autocompletion({
+                        activateOnTyping: false,
+                        defaultKeymap: true,
                         override: [this.CM6.completeFromList(this.pendingAutoList)]
                     })
-                ),
+                ]),
 
                 this.CM6.EditorView.theme({
                     '&':            { height: '100%' },
@@ -335,12 +337,14 @@
                   return;
             }
 
-            const newExtension = this.CM6.autocompletion({
-                override: [ this.CM6.completeFromList(newAutoList) ]
-            });
+            const newExt = this.CM6.autocompletion({
+                               activateOnTyping: false,
+                               defaultKeymap: true,
+                               override: [this.CM6.completeFromList(this.pendingAutoList)]
+                           }) ;
 
             this.view.dispatch({
-                effects: this.autocomplete_compartment.reconfigure(newExtension)
+                effects: this.autocomplete_compartment.reconfigure(newExt)
             });
         }
 
@@ -385,6 +389,8 @@
         // rebuild list
 	var result  = [];
 	var simware = get_simware() ;
+
+        // add instructions...
 	for (var i=0; i<simware.firmware.length; i++)
         {
 	     if (simware.firmware[i].name != "begin") {
@@ -392,12 +398,14 @@
                       {
                         label:  simware.firmware[i].name,
                         type:   "keyword",
-                        detail: simware.firmware[i].signatureUser || '',
+                        detail: '- ' + simware.firmware[i].signatureUser || '',
                         info:   simware.firmware[i].help || ''
                       }
                  ) ;
 	     }
 	}
+
+        // add pseudo-instructions...
 	for (var i=0; i<simware.pseudoInstructions.length; i++)
         {
 	     if (simware.pseudoInstructions[i].initial.name != "begin") {
@@ -405,11 +413,28 @@
                       {
                         label:  simware.pseudoInstructions[i].initial.name,
                         type:   "keyword",
-                        detail: simware.pseudoInstructions[i].initial.signature || '',
+                        detail: '- ' + simware.pseudoInstructions[i].initial.signature,
                         info:   ''
                       }
                  ) ;
 	     }
+	}
+
+        // add registers...
+        var neltos = simware?.registers?.default?.registers?.length ?? 0;
+	for (var i=0; i<neltos; i++)
+        {
+	     for (var j=0; j<simware.registers.default.registers[i].length; j++)
+             {
+		 result.push(
+                      {
+                        label: simware.registers.default.registers[i][j],
+                        type:   "keyword",
+                        detail: '- ' + simware.registers.default.registers[i].join(' '),
+                        info:   ''
+                      }
+                 ) ;
+             }
 	}
 
         // update list
