@@ -90,6 +90,20 @@
         return ret ;
     }
 
+    // check if using pipeline processor
+    function wepsim_nodejs_has_pipeline ()
+    {
+        if (typeof simhw_properties === "undefined") {
+            return false ;
+        }
+
+        if (typeof simhw_properties().includes === "undefined") {
+            return false ;
+        }
+
+        return simhw_properties().includes("pipeline")
+    }
+
     export var hash_detail_ui = {
 
 	    "SCREEN":    {
@@ -322,11 +336,28 @@
     export var before_state = null ;
     export var  after_state = null ;
 
+    var   header_printed = false ;
+    const PADPIPE = 22;
+    const PADCLK = 4;
+
     export function wepsim_nodejs_header2 ( )
     {
-        console.log('pc'          + ','.padEnd(3, '\t') +
-                    'instruction' + ','.padEnd(4, '\t') +
-                    'changes_from_zero_or_current_value') ;
+        if (wepsim_nodejs_has_pipeline())
+        {
+            console.log('CLK'.padEnd(PADCLK) + '| ' +
+                        'IF'.padEnd(PADPIPE)  + '| ' +
+                        'ID'.padEnd(PADPIPE)  + '| ' +
+                        'EX'.padEnd(PADPIPE)  + '| ' +
+                        'MEM'.padEnd(PADPIPE) + '| ' +
+                        'WB'.padEnd(PADPIPE)  + '| ' +
+                        'changes_from_zero_or_current_value') ;
+        }
+        else
+        {
+            console.log('pc'          + ','.padEnd(3, '\t') +
+                        'instruction' + ','.padEnd(4, '\t') +
+                        'changes_from_zero_or_current_value') ;
+        }
     }
 
     export function wepsim_nodejs_before_instruction2 ( SIMWARE, reg_pc )
@@ -342,6 +373,48 @@
         if (typeof curr_mp[reg_pc] === 'undefined') {
 	    return ;
 	}
+
+        // lazy header: print on first instruction so processor is initialized
+        if (false == header_printed)
+        {
+            wepsim_nodejs_header2() ;
+            header_printed = true ;
+        }
+
+        // for rvpipe show instructions at each pipeline stage
+        if (wepsim_nodejs_has_pipeline())
+        {
+            var stage_names = ['IF_FETCH_PC', 'IF_ID_PC', 'ID_EX_PC', 'EX_MEM_PC', 'MEM_WB_PC'] ;
+            var stage_ins = [] ;
+            for (var i = 0; i < stage_names.length; i++)
+            {
+                var state = simhw_sim_state(stage_names[i]) ;
+                var pc = 0 ;
+                if (typeof state !== 'undefined') {
+                    pc = get_value(state) ;
+                }
+                var ins = '' ;
+                if (pc !== 0 && typeof curr_mp[pc] !== 'undefined') {
+                    ins = get_deco_from_pc(pc) ;
+                    ins = ins.replace(/,/g, "") ;
+                    ins = ins.replace(/&nbsp;/g, ' ') ;
+                }
+                stage_ins.push(ins) ;
+            }
+
+            after_state = simcore_simstate_current2state() ;
+            var diff_states = simcore_simstate_diff_states(before_state, after_state) ;
+
+            var clk_val = get_value(simhw_sim_state('CLK')) - 1 ;
+            console.log(clk_val.toString().padEnd(PADCLK) + '| ' +
+                        stage_ins[0].padEnd(PADPIPE) + '| ' +
+                        stage_ins[1].padEnd(PADPIPE) + '| ' +
+                        stage_ins[2].padEnd(PADPIPE) + '| ' +
+                        stage_ins[3].padEnd(PADPIPE) + '| ' +
+                        stage_ins[4].padEnd(PADPIPE) + '| ' +
+                        diff_states) ;
+            return ;
+        }
 
         var curr_pc = '0x' + reg_pc.toString(16) ;
         var source_line = main_memory_getsrc(curr_mp, reg_pc) ;

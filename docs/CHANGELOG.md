@@ -3,7 +3,7 @@
 
 ## 2.5.0 -> 2.6.0:
 * Main improvements:
-  * RVpipe added
+  * New rvpipe processor: RISC-V with 5-stage pipeline (beta)
 
 ## 2.4.2 -> 2.5.0:
 * Main improvements:

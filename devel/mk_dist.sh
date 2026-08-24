@@ -64,6 +64,13 @@ echo "  Done."
 echo ""
 
 
+# TypeScript files
+echo "  Step for TypeScript:"
+tsc -p ./tsconfig.json || { echo "ERROR: TypeScript compilation failed"; exit 1; }
+echo "  Done."
+echo ""
+
+
 ### Make skeleton
 echo "  Step for inital directory tree:"
 echo "  * ws_dist/..."
@@ -118,21 +125,21 @@ echo "  Step for packing min.*:"
 BASE_DIR=$(dirname $0)/webpack_indexes/
 
 # building cat_indexes/min.wepsim_i18n.js
-    echo "export * from '../../src/wepsim_i18n/i18n.js';"                         > "${BASE_DIR}"/min.wepsim_i18n.js
-    echo ""                                                                      >> "${BASE_DIR}"/min.wepsim_i18n.js
+    echo "export * from '../../src_ts/src/wepsim_i18n/i18n.js';"                         > "${BASE_DIR}"/min.wepsim_i18n.js
+    echo ""                                                                             >> "${BASE_DIR}"/min.wepsim_i18n.js
 for LANG in es en fr kr ja it pt hi zh_cn ru sv de; do
-    echo "export * from '../../src/wepsim_i18n/$LANG/gui.js';"                   >> "${BASE_DIR}"/min.wepsim_i18n.js
-    echo "export * from '../../src/wepsim_i18n/$LANG/tutorial-welcome.js';"      >> "${BASE_DIR}"/min.wepsim_i18n.js
-    echo "export * from '../../src/wepsim_i18n/$LANG/tutorial-simpleusage.js';"  >> "${BASE_DIR}"/min.wepsim_i18n.js
-    echo "export * from '../../src/wepsim_i18n/$LANG/tour-intro.js';"            >> "${BASE_DIR}"/min.wepsim_i18n.js
-    echo "export * from '../../src/wepsim_i18n/$LANG/cfg.js';"                   >> "${BASE_DIR}"/min.wepsim_i18n.js
-    echo "export * from '../../src/wepsim_i18n/$LANG/help.js';"                  >> "${BASE_DIR}"/min.wepsim_i18n.js
-    echo "export * from '../../src/wepsim_i18n/$LANG/states.js';"                >> "${BASE_DIR}"/min.wepsim_i18n.js
-    echo "export * from '../../src/wepsim_i18n/$LANG/examples.js';"              >> "${BASE_DIR}"/min.wepsim_i18n.js
-    echo "export * from '../../src/wepsim_i18n/$LANG/compiler.js';"              >> "${BASE_DIR}"/min.wepsim_i18n.js
-    echo "export * from '../../src/wepsim_i18n/$LANG/hw.js';"                    >> "${BASE_DIR}"/min.wepsim_i18n.js
-    echo "export * from '../../src/wepsim_i18n/$LANG/dialogs.js';"               >> "${BASE_DIR}"/min.wepsim_i18n.js
-    echo ""                                                                      >> "${BASE_DIR}"/min.wepsim_i18n.js
+    echo "export * from '../../src_ts/src/wepsim_i18n/$LANG/gui.js';"                   >> "${BASE_DIR}"/min.wepsim_i18n.js
+    echo "export * from '../../src_ts/src/wepsim_i18n/$LANG/tutorial-welcome.js';"      >> "${BASE_DIR}"/min.wepsim_i18n.js
+    echo "export * from '../../src_ts/src/wepsim_i18n/$LANG/tutorial-simpleusage.js';"  >> "${BASE_DIR}"/min.wepsim_i18n.js
+    echo "export * from '../../src_ts/src/wepsim_i18n/$LANG/tour-intro.js';"            >> "${BASE_DIR}"/min.wepsim_i18n.js
+    echo "export * from '../../src_ts/src/wepsim_i18n/$LANG/cfg.js';"                   >> "${BASE_DIR}"/min.wepsim_i18n.js
+    echo "export * from '../../src_ts/src/wepsim_i18n/$LANG/help.js';"                  >> "${BASE_DIR}"/min.wepsim_i18n.js
+    echo "export * from '../../src_ts/src/wepsim_i18n/$LANG/states.js';"                >> "${BASE_DIR}"/min.wepsim_i18n.js
+    echo "export * from '../../src_ts/src/wepsim_i18n/$LANG/examples.js';"              >> "${BASE_DIR}"/min.wepsim_i18n.js
+    echo "export * from '../../src_ts/src/wepsim_i18n/$LANG/compiler.js';"              >> "${BASE_DIR}"/min.wepsim_i18n.js
+    echo "export * from '../../src_ts/src/wepsim_i18n/$LANG/hw.js';"                    >> "${BASE_DIR}"/min.wepsim_i18n.js
+    echo "export * from '../../src_ts/src/wepsim_i18n/$LANG/dialogs.js';"               >> "${BASE_DIR}"/min.wepsim_i18n.js
+    echo ""                                                                             >> "${BASE_DIR}"/min.wepsim_i18n.js
 done
 
 # building cat_indexes/min.wepsim_web.js
@@ -216,7 +223,8 @@ DEFAULT_EXAMPLE_SET_P1="repo/examples_set/rv32/es_ep.json  repo/examples_set/rv3
 DEFAULT_EXAMPLE_SET_P2="repo/examples_set/rv32/es_ep2.json repo/examples_set/rv32/es_ep2_native.json"
 DEFAULT_EXAMPLE_SET_P3="repo/examples_set/rv32/es_poc.json repo/examples_set/rv32/es_poc_native.json"
 DEFAULT_EXAMPLE_SET_P4="repo/examples_set/rv32/es_rv.json"
-DEFAULT_EXAMPLE_SET="$DEFAULT_EXAMPLE_SET_P1 $DEFAULT_EXAMPLE_SET_P2 $DEFAULT_EXAMPLE_SET_P3 $DEFAULT_EXAMPLE_SET_P4"
+DEFAULT_EXAMPLE_SET_P5="repo/examples_set/rv32/es_rvpipe.json"
+DEFAULT_EXAMPLE_SET="$DEFAULT_EXAMPLE_SET_P1 $DEFAULT_EXAMPLE_SET_P2 $DEFAULT_EXAMPLE_SET_P3 $DEFAULT_EXAMPLE_SET_P4 $DEFAULT_EXAMPLE_SET_P5"
 jq 'reduce inputs as $i (.; . += $i)' $DEFAULT_EXAMPLE_SET > repo/examples_set/rv32/default.json
 
 # RV32 instructive

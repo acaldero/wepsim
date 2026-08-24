@@ -67,6 +67,11 @@ echo "checking sim_hw..."
      eslint ./src/sim_hw/hw_items/cpu_rv.js \
             ./src/sim_hw/hw_items/mem_rv.js
 
+     eslint ./src/sim_hw/hw_items/cpu_rv.js \
+            ./src/sim_hw/hw_items/cpu_rvpipe.js \
+            ./src/sim_hw/hw_items/mem_rv.js \
+            ./src/sim_hw/hw_items/mem_rvpipe.js
+
      eslint ./src/sim_hw/hw_items/cpu_poc.js \
             ./src/sim_hw/hw_items/cu_poc.js \
             ./src/sim_hw/hw_items/mem_poc.js

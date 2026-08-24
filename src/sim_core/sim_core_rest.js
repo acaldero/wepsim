@@ -74,11 +74,10 @@
                 if (api_endpoint instanceof Vuex.Store) {
 	            api_endpoint = get_var(api_endpoint) ;
                 }
+                else if (typeof api_endpoint.value != "undefined") {
+	            api_endpoint = api_endpoint.value ;
+                }
             }
-
-	    if (api_endpoint.trim() === "") {
-		return false ;
-	    }
 
 	    // build request
             var basic_auth = "Basic " + btoa(rest_info.user + ":" + rest_info.pass) ;
