@@ -1,6 +1,10 @@
 
 # Changelog
 
+## 2.5.0 -> 2.6.0:
+* Main improvements:
+  * RVpipe added
+
 ## 2.4.2 -> 2.5.0:
 * Main improvements:
   * Migration to ES modules

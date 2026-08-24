@@ -24,8 +24,8 @@
 
 ### Welcome
 echo ""
-echo "  WepSIM packer"
-echo " ---------------"
+echo "  Builder of ws_dist/ for WepSIM"
+echo " --------------------------------"
 echo ""
 
 

@@ -60,9 +60,9 @@
     ```
   * Get WepSIM by executing:
     ```bash
-    wget https://github.com/wepsim/wepsim/releases/download/v2.5.0/wepsim-2.5.0.zip
-    unzip wepsim-2.5.0.zip
-    cd wepsim-2.5.0
+    wget https://github.com/wepsim/wepsim/releases/download/v2.6.0/wepsim-2.6.0.zip
+    unzip wepsim-2.6.0.zip
+    cd wepsim-2.6.0
     npm install
     ``` 
   * Execute wepsim.sh with the help flag in order to show the available command switches:
