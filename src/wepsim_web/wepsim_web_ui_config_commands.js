@@ -737,18 +737,18 @@
                    });
 
     ws_info.config_ui.push({
-                      id:          "radio14d",
+                      id:          "radio14h",
                       type:        "Extra Features",
                       u_class:     "",
                       code_cfg:    "<div class='btn-group btn-group-toggle d-flex' data-bs-toggle='buttons' >" +
-				   "		<input type='radio' name='options' id='radio14d-true'  aria-label='more-cfg-options: true'  autocomplete='off' class='btn-check'>" +
-				   "	    <label id='label14-extra_morecfg-false' for='radio14d-true' " +
+				   "		<input type='radio' name='options' id='radio14h-true'  aria-label='more-cfg-options: true'  autocomplete='off' class='btn-check'>" +
+				   "	    <label id='label14-extra_morecfg-false' for='radio14h-true' " +
 				   "		  class='btn btn-sm w-50 btn-outline-secondary p-1 fw-bold' " +
                                    "              aria-label='User Interface set of features for WepSIM: true' " +
 				   "		  onclick=\"ws.wepsim_config_button_toggle2('extra_morecfg',false,'14');\">Off" +
 				   "	    </label>" +
-				   "		<input type='radio' name='options' id='radio14d-false' aria-label='more-cfg-options: false' autocomplete='off' class='btn-check'>" +
-				   "	    <label id='label14-extra_morecfg-true' for='radio14d-false' " +
+				   "		<input type='radio' name='options' id='radio14h-false' aria-label='more-cfg-options: false' autocomplete='off' class='btn-check'>" +
+				   "	    <label id='label14-extra_morecfg-true' for='radio14h-false' " +
 				   "		  class='btn btn-sm w-50 btn-outline-secondary p-1 fw-bold' " +
                                    "              aria-label='User Interface set of features for WepSIM: false' " +
 				   "		  onclick=\"ws.wepsim_config_button_toggle2('extra_morecfg',true,'14');\">On" +
