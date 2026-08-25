@@ -1,3 +1,3 @@
 
-export * from '../../src_ts/src/wepsim_nodejs/wepsim_node_adapt.js';
+export * from '../../src_js/src/wepsim_nodejs/wepsim_node_adapt.js';
 

@@ -6,7 +6,7 @@
             "es2017",
             "dom"
         ],
-        "outDir": "./src_ts",
+        "outDir": "./src_js",
         "rootDir": "./",
         "strict": true,
         "esModuleInterop": true,

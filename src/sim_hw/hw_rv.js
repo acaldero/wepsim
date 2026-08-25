@@ -36,22 +36,22 @@
          */
 
         export var rv_def = {
-                       sim_name:            "RISC-V Processor",
-                       sim_short_name:      "rv",
-                       sim_img_processor:   "repo/hardware/rv/images/processor.svg",
-                       sim_img_controlunit: "",
-                       sim_img_cpu:         "repo/hardware/rv/images/cpu.svg",
-                       sim_properties:      [],
+                         sim_name:            "RISC-V Processor",
+                         sim_short_name:      "rv",
+                         sim_img_processor:   "repo/hardware/rv/images/processor.svg",
+                         sim_img_controlunit: "",
+                         sim_img_cpu:         "repo/hardware/rv/images/cpu.svg",
+                         sim_properties:      ["beta"],
 
-                       components:          {},
-                       states:              {},
-                       signals:             {},
-                       behaviors:           {},
-                       elements:            {},
+                         components:          {},
+                         states:              {},
+                         signals:             {},
+                         behaviors:           {},
+                         elements:            {},
 
-                       internal_states:     {},
-                       ctrl_states:         {},
-                       events:              {}
+                         internal_states:     {},
+                         ctrl_states:         {},
+                         events:              {}
 	             } ;
 
             // registering elements

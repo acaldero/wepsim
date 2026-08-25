@@ -67,7 +67,7 @@
 		return false ;
 	    }
 
-	    // check endpoint
+	    // get api_endpoint
 	    var api_endpoint = rest_info.endpoint ;
             if (typeof Vuex != "undefined")
             {
@@ -78,6 +78,11 @@
 	            api_endpoint = api_endpoint.value ;
                 }
             }
+
+	    // check api_endpoint
+	    if ("" == api_endpoint) {
+		return false ;
+	    }
 
 	    // build request
             var basic_auth = "Basic " + btoa(rest_info.user + ":" + rest_info.pass) ;

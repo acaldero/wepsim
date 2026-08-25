@@ -713,18 +713,18 @@
                    });
 
     ws_info.config_ui.push({
-                      id:          "radio14d",
+                      id:          "radio14h",
                       type:        "Extra Features",
                       u_class:     "",
                       code_cfg:    "<div class='btn-group btn-group-toggle d-flex' data-bs-toggle='buttons' >" +
-				   "		<input type='radio' name='options' id='radio14d-true'  aria-label='rv-cpu: true'  autocomplete='off' class='btn-check'>" +
-				   "	    <label id='label14-beta_rv-false' for='radio14d-true' " +
+				   "		<input type='radio' name='options' id='radio14h-true'  aria-label='rv-cpu: true'  autocomplete='off' class='btn-check'>" +
+				   "	    <label id='label14-beta_rv-false' for='radio14h-true' " +
 				   "		  class='btn btn-sm w-50 btn-outline-secondary p-1 fw-bold' " +
                                    "              aria-label='User Interface set of features for WepSIM: true' " +
 				   "		  onclick=\"ws.wepsim_config_button_toggle2('beta_rv',false,'14');\">Off" +
 				   "	    </label>" +
-				   "		<input type='radio' name='options' id='radio14d-false' aria-label='rv-cpu: false' autocomplete='off' class='btn-check'>" +
-				   "	    <label id='label14-beta_rv-true' for='radio14d-false' " +
+				   "		<input type='radio' name='options' id='radio14h-false' aria-label='rv-cpu: false' autocomplete='off' class='btn-check'>" +
+				   "	    <label id='label14-beta_rv-true' for='radio14h-false' " +
 				   "		  class='btn btn-sm w-50 btn-outline-secondary p-1 fw-bold' " +
                                    "              aria-label='User Interface set of features for WepSIM: false' " +
 				   "		  onclick=\"ws.wepsim_config_button_toggle2('beta_rv',true,'14');\">On" +
@@ -734,6 +734,30 @@
                                        wepsim_config_button_pretoggle_val2('ws_skin_user', 'beta_rv', '14') ;
 		                   },
                       description: "<span data-langkey='RV CPU'>RV CPU</span>&nbsp;"
+                   });
+
+    ws_info.config_ui.push({
+                      id:          "radio14i",
+                      type:        "Extra Features",
+                      u_class:     "",
+                      code_cfg:    "<div class='btn-group btn-group-toggle d-flex' data-bs-toggle='buttons' >" +
+				   "		<input type='radio' name='options' id='radio14i-true'  aria-label='rvpipe-cpu: true'  autocomplete='off' class='btn-check'>" +
+				   "	    <label id='label14-beta_rvpipe-false' for='radio14i-true' " +
+				   "		  class='btn btn-sm w-50 btn-outline-secondary p-1 fw-bold' " +
+                                   "              aria-label='User Interface set of features for WepSIM: true' " +
+				   "		  onclick=\"ws.wepsim_config_button_toggle2('beta_rvpipe',false,'14');\">Off" +
+				   "	    </label>" +
+				   "		<input type='radio' name='options' id='radio14i-false' aria-label='rvpipe-cpu: false' autocomplete='off' class='btn-check'>" +
+				   "	    <label id='label14-beta_rvpipe-true' for='radio14i-false' " +
+				   "		  class='btn btn-sm w-50 btn-outline-secondary p-1 fw-bold' " +
+                                   "              aria-label='User Interface set of features for WepSIM: false' " +
+				   "		  onclick=\"ws.wepsim_config_button_toggle2('beta_rvpipe',true,'14');\">On" +
+				   "	    </label>" +
+				   "	</div>",
+		      code_init:   function() {
+                                       wepsim_config_button_pretoggle_val2('ws_skin_user', 'beta_rvpipe', '14') ;
+		                   },
+                      description: "<span data-langkey='RVpipe CPU'>RVpipe CPU</span>&nbsp;"
                    });
 
     ws_info.config_ui.push({
