@@ -77,7 +77,7 @@
     }
 
     // Change WepSIM mode -> activate_hw + UI view
-    export function wepsim_mode_change ( optValue )
+    export async function wepsim_mode_change ( optValue )
     {
 	    // switch active hardware by name...
             var bm   = wepsim_mode_getBaseMode(optValue) ;
@@ -89,8 +89,8 @@
             // load default example set
             var eset_name = get_cfg('ws_examples_set') ;
             if (eset_name != 'Empty')
-                 wepsim_example_load(eset_name) ;
-	    else wepsim_example_load(ws_info.default_example[optValue]) ;
+                 await wepsim_example_load(eset_name) ;
+            else await wepsim_example_load(ws_info.default_example[optValue]) ;
 
 	    // show/hide microcode...
             wepsim_activeview('extra_mcode', true) ;

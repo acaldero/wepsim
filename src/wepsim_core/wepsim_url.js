@@ -220,14 +220,18 @@
 	}
     }
 
-    export function wepsim_url_getJSON ( url_json )
+    export async function wepsim_url_getJSON ( url_json )
     {
-       var jstr = {} ;
+       var jres = {} ;
        var jobj = [] ;
 
        try {
-           jstr = $.getJSON({'url': url_json, 'async': false}) ;
-           jobj = JSON.parse(jstr.responseText) ;
+              jres = await fetch(url_json) ;
+              if (! jres.ok) {
+                  throw new Error('HTTP error! status: ' + jres.status);
+              }
+
+              jobj = await jres.json() ;
        }
        catch (e) {
            ws_alert("Unable to load '" + url_json + "': " + e + ".\n") ;
