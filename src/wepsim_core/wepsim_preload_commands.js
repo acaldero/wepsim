@@ -65,9 +65,9 @@
 	 // parameter: config_set
 	 {
 	    'name':   'config_set',
-	    'action': function( hash )
+	    'action': async function( hash )
 		      {
-                          cfgset_load(hash.config_set) ;
+                          await cfgset_load(hash.config_set) ;
 	                  wepsim_uicfg_restore() ;
 			  return '<li>Configuration set titled <strong>' + hash.config_set + '</strong> loaded.</li>';
 		      }
