@@ -63,11 +63,11 @@ export class ws_list_cfg extends ws_uielto {
         for (var e_cfg in e_cfgs) {
             o1 += '<button type="button" ' +
                 '    class="text-danger btn border-secondary m-1 btn-block" ' +
-                '    onclick="ws.cfgset_load(\'' + e_cfg + '\') ;' +
+                '    onclick="(async () => { ws.cfgset_load(\'' + e_cfg + '\') ;' +
                 '	     ws.wepsim_notify_success(\'<strong>INFO</strong>\',' +
                 '	  		           \'Configuration loaded!.\') ;' +
                 '	     ws.wepsim_uicfg_restore() ;' +
-                '	     return false;">' +
+                '	     return false; })() ;">' +
                 '<span data-langkey="' + e_cfg + '">' + e_cfg + '</span>' +
                 '</button>';
         }
