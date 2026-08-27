@@ -123,8 +123,7 @@
 
 	      render_textarea ( ta_id )
 	      {
-                   return '<label class="my-0" for="' + ta_id + '">' +
-                          '<span data-langkey="microcode">microcode</span>:</label>' +
+                   return '<span data-langkey="microcode">microcode</span>:' +
                           '<div aria-label="microcode"' +
 			  '	style="min-width:90%; overflow-x:auto; -webkit-overflow-scrolling:touch;"' +
 			  '	placeholder="Please select \'Example\' or \'Load\' first in order to have an initial Microcode."' +

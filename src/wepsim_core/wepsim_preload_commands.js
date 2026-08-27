@@ -42,7 +42,8 @@
               wsweb_do_action }                 from "../wepsim_web/wepsim_web_api.js";
      import { wepsim_uicfg_restore }            from "../wepsim_web/wepsim_web_simulator.js";
      import { wepsim_show_cache_memory_config } from "../wepsim_web/wepsim_uielto_cache_config.js";
-     import { get_inputfirm, get_inputasm }      from "../wepsim_web/wepsim_web_simulator.js";
+     import { get_inputfirm,
+              get_inputasm }                    from "../wepsim_web/wepsim_web_simulator.js";
 
 
     ws_info.preload_tasks = [
@@ -79,8 +80,8 @@
 		      {
 			 var url_examples_set = get_cfg('example_url') ;
 			 var ret = await wepsim_example_loadSet(url_examples_set) ;
-			 wepsim_example_reset() ;
-			 wepsim_example_load(hash.examples_set) ;
+			           wepsim_example_reset() ;
+			           await wepsim_example_load(hash.examples_set) ;
 
 			 var result_txt = ' has been loaded' ;
 			 if (null == ret) {
