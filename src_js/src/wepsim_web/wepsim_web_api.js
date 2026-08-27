@@ -418,12 +418,12 @@ export function wsweb_select_refresh() {
     return true;
 }
 //  Workspace simulator: Mode
-export function wsweb_select_main(opt) {
+export async function wsweb_select_main(opt) {
     // save ws_mode
     set_cfg('ws_mode', opt);
     save_cfg();
     // update select4
-    wepsim_mode_change(opt);
+    await wepsim_mode_change(opt);
     // set button label...
     webui_toolbar_updateMode(opt);
     // adapt to idiom
