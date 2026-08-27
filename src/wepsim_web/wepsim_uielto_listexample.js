@@ -84,12 +84,12 @@
 			  '        v-for="ex in examples" ' +
 			  '        v-bind:data-name="ex.name" ' +
 			  '        class="text-danger btn border-secondary m-1 btn-block" ' +
-			  '        onclick="ws.wepsim_example_reset() ;' +
+			  '        onclick="(async () => { ws.wepsim_example_reset() ;' +
                           '                 var ex_name = this.getAttribute(\'data-name\') ;' +
-			  '	            ws.wepsim_example_load(ex_name) ;' +
+			  '	            await ws.wepsim_example_load(ex_name) ;' +
 			  '	            ws.wepsim_notify_success(\'<strong>INFO</strong>\',' +
 			  '		    	                  \'Examples list loaded!.\') ;' +
-			  '	            return false;">' +
+			  '	            return false; })() ;">' +
 			  '<span :data-langkey="ex.name">{{ ex.name }}</span>' +
 			  '</button>' +
 		          '</div>' ;

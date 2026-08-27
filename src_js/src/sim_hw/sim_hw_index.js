@@ -163,10 +163,10 @@ export function simhw_sim_ctrlStates_get() {
  */
 export var ws_hw_hash = {};
 export var ws_hw_set = [];
-export function simhw_hwset_init() {
+export async function simhw_hwset_init() {
     var url_list = get_cfg('hw_url');
     // try to load the index
-    ws_hw_set = wepsim_url_getJSON(url_list);
+    ws_hw_set = await wepsim_url_getJSON(url_list);
     // build reference hash
     for (var i = 0; i < ws_hw_set.length; i++) {
         ws_hw_hash[ws_hw_set[i].name] = ws_hw_set[i].url;

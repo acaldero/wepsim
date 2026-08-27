@@ -244,12 +244,12 @@
 
                 o += '<li class="list-group-item d-flex justify-content-between align-items-start" ' +
                      '    id="exs_' + item.name + '" value="' + i + '" ' +
-                     '    onclick="ws.wepsim_example_reset();' +
-                     '             ws.wepsim_example_load(\'' + item.name + '\');' +
+                     '    onclick="(async () => { ws.wepsim_example_reset();' +
+                     '             await ws.wepsim_example_load(\'' + item.name + '\');' +
                      '             ws.wsweb_dialog_close(\'examples\');' +
                      '             ws.wsweb_dialog_open(\'examples\');' +
                      '             ws.wepsim_tooltips_hide(\'[data-bs-toggle=tooltip]\');' +
-                     '             return false;">' +
+                     '             return false; }() ;">' +
                      '  <div class="ms-2 me-auto">' +
                      '     <div class="fw-bold">' + item.name + '</div>' +
                            item.description +

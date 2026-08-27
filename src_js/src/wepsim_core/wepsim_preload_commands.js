@@ -52,11 +52,11 @@ ws_info.preload_tasks = [
     // parameter: examples_set
     {
         'name': 'examples_set',
-        'action': function (hash) {
+        'action': async function (hash) {
             var url_examples_set = get_cfg('example_url');
-            var ret = wepsim_example_loadSet(url_examples_set);
+            var ret = await wepsim_example_loadSet(url_examples_set);
             wepsim_example_reset();
-            wepsim_example_load(hash.examples_set);
+            await wepsim_example_load(hash.examples_set);
             var result_txt = ' has been loaded';
             if (null == ret) {
                 result_txt = ' could not be loaded';

@@ -42,7 +42,7 @@ export function wepsim_example_reset() {
     ws_info.example_active = -1;
     webui_toolbar_updateExampleSet();
 }
-export function wepsim_example_load(e_name) {
+export async function wepsim_example_load(e_name) {
     var jobj = null;
     // try to load each one
     ws_info.examples = [];
@@ -53,7 +53,7 @@ export function wepsim_example_load(e_name) {
         if (typeof ws_info.example_set[i].url === "undefined") {
             continue;
         }
-        jobj = wepsim_url_getJSON(ws_info.example_set[i].url);
+        jobj = await wepsim_url_getJSON(ws_info.example_set[i].url);
         ws_info.examples = ws_info.examples.concat(jobj);
         ws_info.example_active = i;
         set_cfg('ws_examples_set', e_name);
@@ -61,9 +61,9 @@ export function wepsim_example_load(e_name) {
     webui_toolbar_updateExampleSet();
     return ws_info.examples;
 }
-export function wepsim_example_loadSet(url_example_set, set_name) {
+export async function wepsim_example_loadSet(url_example_set, set_name) {
     // try to load the set
-    ws_info.example_set = wepsim_url_getJSON(url_example_set);
+    ws_info.example_set = await wepsim_url_getJSON(url_example_set);
     return ws_info.example_set;
 }
 export function wepsim_example_getSet() {
