@@ -19,7 +19,7 @@
  */
 
 
-     import { ws_info } from "../sim_core/sim_adt_core.js";
+     import { ws_info }                    from "../sim_core/sim_adt_core.js";
      import { simcore_do_nothing_handler } from "../sim_core/sim_api_core.js";
 
 

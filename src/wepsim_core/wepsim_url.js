@@ -23,8 +23,8 @@
               wepsim_notify_success,
               wepsim_notify_do_notify } from "./wepsim_notify.js";
      import { is_cordova,
-              is_mobile, get_cfg } from "../sim_core/sim_cfg.js";
-     import { ws_alert } from "../sim_core/sim_core_ui.js";
+              is_mobile, get_cfg }      from "../sim_core/sim_cfg.js";
+     import { ws_alert }                from "../sim_core/sim_core_ui.js";
 
 
     /*
