@@ -36,7 +36,6 @@ export * from '../../src/wepsim_web/wepsim_uipacker_cpu_cu.js';
 export * from '../../src/wepsim_web/wepsim_uipacker_cto_asm.js';
 export * from '../../src/wepsim_web/wepsim_uipacker_sim_mic_asm.js';
  export * from '../../src/wepsim_web/wepsim_web_ui_config.js';
-export * from '../../src/wepsim_web/wepsim_web_ui_config_commands.js';
 export * from '../../src/wepsim_web/wepsim_web_ui_popover.js';
 export * from '../../src/wepsim_web/wepsim_web_ui_tooltip.js';
 export * from '../../src/wepsim_web/wepsim_web_ui_dialogs.js';
