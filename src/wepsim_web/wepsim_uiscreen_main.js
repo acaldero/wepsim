@@ -41,6 +41,24 @@
 	      {
 		   // parent
 		   super();
+
+                   // (1/2) to "fire a ready event"-like when rendered...
+                   this.ready = new Promise(resolve => {
+                                         this._resolveReady = resolve;
+                                    });
+	      }
+
+	      signal_ready ()
+	      {
+		   // (2/2) resolv isReady and signal isReady (if wait for it before)
+		   this._resolveReady(this) ;
+
+		   var cevopt = {
+				   bubbles:  true,
+				   composed: true
+				} ;
+
+		   this.dispatchEvent(new CustomEvent('ws-ready', cevopt)) ;
 	      }
 
               // render
@@ -107,19 +125,19 @@
 	           upgrade_cfg() ;
 
 	           // ...and full initialization after jquery-ready
-	           $(document).ready(function()
-	           {
-		       try
-		       {
-			   wepsim_init_ui() ;
-                           wepsim_example_reset() ;
-    			   wepsim_init_default() ;
-		       }
-		       catch(err)
-		       {
-			   wepsim_general_exception_handler(err) ;
-		       }
-	           }) ;
+	           $(document).ready( async () => {
+					       try
+					       {
+						   wepsim_init_ui() ;
+						   wepsim_example_reset() ;
+						   await wepsim_init_default() ;
+	                                           this.signal_ready() ;
+					       }
+					       catch(err)
+					       {
+						   wepsim_general_exception_handler(err) ;
+					       }
+				    }) ;
 	      }
         }
 
