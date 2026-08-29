@@ -8,26 +8,26 @@ from pydantic     import BaseModel
 from urllib.parse import urlparse
 
 import uvicorn
-import os, sys
 import subprocess, requests
+import tempfile
+import os
 
 
 #
 # Auxiliar functions
 #
 
-def wepsim_helper(cmd_options:str) -> tuple[int, str]:
-    # Build associated command
-    ws_path = '../ws_dist/wepsim.sh'
-    cmd = ws_path + ' ' + cmd_options
-
-    # Code inspired from https://stackoverflow.com/questions/89228/how-do-i-execute-a-program-or-call-a-system-command
-    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    ret_val  = p.stdout.readlines()
-    ret_code = p.wait()
+def wepsim_helper(cmd_options: list[str]) -> tuple[int, str]:
+    # Run the associated command
+    result = subprocess.run(
+        ['../ws_dist/wepsim.sh', *cmd_options],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True
+    )
 
     # Return status and output
-    return ret_code, ret_val
+    return result.returncode, result.stdout
 
 def is_valid_url(url):
     # Code from https://www.slingacademy.com/article/python-ways-to-check-if-a-string-is-a-valid-url/
@@ -54,24 +54,30 @@ def ws_save2file(filename:str, value: str) -> bool:
        print(f"ERROR: {error}")
        return False
 
-def wepsim_action(action:str, model: str, firm: str, asm: str) -> tuple[int, str]:
-    # options
-    fname_firm  = '/tmp/firm.mc'
-    fname_asm   = '/tmp/app.asm'
+def wepsim_action(action: str, model: str, firm: str, asm: str) -> tuple[int, str]:
+    with tempfile.TemporaryDirectory() as tmpdir:
+         # Options
+         fname_firm = os.path.join(tmpdir, 'firm.mc')
+         fname_asm  = os.path.join(tmpdir, 'app.asm')
 
-    # Save firmware on file
-    ret = ws_save2file(fname_firm, firm)
-    if (False == ret):
-        return -1, "firmware file cannot be written"
+         # Save firmware on file
+         if not ws_save2file(fname_firm, firm):
+            return -1, "firmware file cannot be written"
 
-    # Save assembly on file
-    ret = ws_save2file(fname_asm, asm)
-    if (False == ret):
-        return -1, "assembly file cannot be written"
+         # Save assembly on file
+         if not ws_save2file(fname_asm, asm):
+            return -1, "assembly file cannot be written"
 
-    # Return action on files
-    cmd_options = " -a " + action + " -m " + model + " -f " + fname_firm + " -s " + fname_asm
-    return wepsim_helper(cmd_options)
+         # Command arguments
+         cmd_options = [
+            "-a", action,
+            "-m", model,
+            "-f", fname_firm,
+            "-s", fname_asm
+         ]
+
+         # Return action on files
+         return wepsim_helper(cmd_options)
 
 
 #
@@ -120,5 +126,5 @@ def rest_action(item: Item):
 ##
 
 if __name__ == "__main__":
-    uvicorn.run(api, host="0.0.0.0", port=8008)
+    uvicorn.run(api, host="127.0.0.1", port=8008)
 
