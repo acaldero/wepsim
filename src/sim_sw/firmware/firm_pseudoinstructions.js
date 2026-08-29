@@ -23,7 +23,7 @@
      import { frm_nextToken,
               frm_isToken,
               frm_langError,
-              frm_getToken } from "./lexical.js";
+              frm_getToken }    from "./lexical.js";
 
 
 export function firm_pseudoinstructions_write ( context )
