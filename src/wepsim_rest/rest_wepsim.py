@@ -16,22 +16,18 @@ import subprocess, requests
 # Auxiliar functions
 #
 
-def wepsim_helper(cmd_options: str) -> tuple[int, str]:
+def wepsim_helper(cmd_options:str) -> tuple[int, str]:
     # Build associated command
     ws_path = '../ws_dist/wepsim.sh'
     cmd = ws_path + ' ' + cmd_options
 
-    # Run subprocess
-    result = subprocess.run(
-        cmd,
-        shell=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True
-    )
+    # Code inspired from https://stackoverflow.com/questions/89228/how-do-i-execute-a-program-or-call-a-system-command
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    ret_val  = p.stdout.readlines()
+    ret_code = p.wait()
 
     # Return status and output
-    return result.returncode, result.stdout
+    return ret_code, ret_val
 
 def is_valid_url(url):
     # Code from https://www.slingacademy.com/article/python-ways-to-check-if-a-string-is-a-valid-url/
