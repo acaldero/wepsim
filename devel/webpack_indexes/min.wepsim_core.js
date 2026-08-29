@@ -14,6 +14,8 @@ export * from '../../src/wepsim_core/wepsim_example.js';
 export * from '../../src/wepsim_core/wepsim_help.js';
 export * from '../../src/wepsim_core/wepsim_help_commands.js';
 export * from '../../src/wepsim_core/wepsim_tutorial.js';
+export * from '../../src/wepsim_core/wepsim_tutorial_welcome.js';
+export * from '../../src/wepsim_core/wepsim_tutorial_simpleusage.js';
 export * from '../../src/wepsim_core/wepsim_tour.js';
 export * from '../../src/wepsim_core/wepsim_tour_commands.js';
 export * from '../../src/wepsim_core/wepsim_voice.js';

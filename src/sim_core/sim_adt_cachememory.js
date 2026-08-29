@@ -181,8 +181,6 @@
 				    mask_tag:{},
 				    mask_set:{},
 				    mask_off:{},
-				    mask_tag:{},
-				    mask_set:{},
 				    replace_pol:{},
 				    su_pol:{},
 				    level:{},
