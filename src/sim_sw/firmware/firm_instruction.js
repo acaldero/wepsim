@@ -19,7 +19,7 @@
  */
 
 
-     import { i18n_get_TagFor } from "../../wepsim_i18n/i18n.js";
+     import { i18n_get_TagFor }                       from "../../wepsim_i18n/i18n.js";
      import { firm_fields_v2_write,
               firm_instruction_read_fields_v2 }       from "./firm_fields_v2.js";
      import { firm_fields_v1_write,

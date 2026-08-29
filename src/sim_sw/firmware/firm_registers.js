@@ -23,7 +23,7 @@
      import { frm_nextToken,
               frm_isToken,
               frm_getToken,
-              frm_langError } from "./lexical.js";
+              frm_langError }   from "./lexical.js";
 
 
 export function firm_registers_write ( context )
