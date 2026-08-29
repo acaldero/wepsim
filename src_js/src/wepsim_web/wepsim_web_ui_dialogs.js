@@ -437,7 +437,7 @@ export var wsweb_dialogs = {
         },
         body: function () {
             return "<div id='scroller-about1' " +
-                "     class='container-fluid p-1' style='max-height:80vh; '>" +
+                "     class='container-fluid p-0' style='max-height:80vh; '>" +
                 "<ws-about name='about1'></ws-about>" +
                 "</div>";
         },

@@ -299,8 +299,7 @@ export function sim_cfg_editor_mode(editor) {
     editor.setOption('keyMap', edt_mode);
 }
 export function sim_cfg_autocomplete_list(editor) {
-    var _a, _b, _c;
-    var _d;
+    var _a, _b, _c, _d;
     // rebuild list
     var result = [];
     var simware = get_simware();
@@ -329,6 +328,9 @@ export function sim_cfg_autocomplete_list(editor) {
     // add registers...
     var neltos = (_d = (_c = (_b = (_a = simware === null || simware === void 0 ? void 0 : simware.registers) === null || _a === void 0 ? void 0 : _a.default) === null || _b === void 0 ? void 0 : _b.registers) === null || _c === void 0 ? void 0 : _c.length) !== null && _d !== void 0 ? _d : 0;
     for (var i = 0; i < neltos; i++) {
+        if (typeof simware.registers.default.registers[i] == "undefined") {
+            continue; // e.g.: registers 0..31 and then jump to 256
+        }
         for (var j = 0; j < simware.registers.default.registers[i].length; j++) {
             result.push({
                 label: simware.registers.default.registers[i][j],

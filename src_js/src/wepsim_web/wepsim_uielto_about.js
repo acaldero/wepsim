@@ -40,7 +40,7 @@ export class ws_about extends ws_uielto {
         // build HTML
         var o1 = "<form>" +
             "" +
-            "	<div class='form-group m-0'>" +
+            "	<div class='form-group mb-1'>" +
             "	   <label for='about_license' class='text-secondary'>License:</label>" +
             "	   <span class='text-primary'" +
             "                 onclick='ws.wepsim_help_set('relative', 'about#');" +
@@ -58,6 +58,8 @@ export class ws_about extends ws_uielto {
             "      <li>Saul Alonso Monsalve</li>" +
             "      <li>Juan Banga Pardo</li>" +
             "      <li>Alejandro Calderon Mateos</li>" +
+            "      <li>Álvaro Guerrero Espinosa</li>" +
+            "      <li>Dario Muñoz Muñoz</li>" +
             "	     </ul>" +
             "	   </div>" +
             "	</div>" +
@@ -85,13 +87,15 @@ export class ws_about extends ws_uielto {
         var o1 = '<div id="team_' + this.name_str + '" ' +
             '     class="card-desk row mx-auto">' +
             '<div v-for="member in team" class="card bg-tertiary text-center col p-0">' +
-            '  <img class="card-img-top img-fluid shadow no-dark-mode" ' +
+            '  <img class="card-img-top img-fluid shadow no-dark-mode collapse show collapse8" ' +
             '       v-bind:id="member.c_id"' +
             '       v-bind:src="member.i_src" v-bind:alt="member.i_alt" />' +
             '  <div class="card-body pt-2 pb-1 px-0">' +
             '       <a class="btn p-0 text-primary d-md-none text-vertical-lr "' +
+            '          data-bs-toggle="collapse" href=".collapse8"' +
             '          v-bind:id="member.a_id">{{ member.i_alt }}</a>' +
             '       <a class="btn p-0 text-primary d-none d-md-block"' +
+            '          data-bs-toggle="collapse" href=".collapse8"' +
             '          v-bind:id="member.a_id">{{ member.i_alt }}</a>' +
             '  </div>' +
             '  <div class="card-footer p-0 collapse collapse7 show bg-secundary text-start">' +

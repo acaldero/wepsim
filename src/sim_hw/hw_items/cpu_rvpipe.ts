@@ -32,6 +32,7 @@
               float_class,
               show_dbg_ir,
               show_main_memory,
+	      refresh,
               update_draw }                   from "../../sim_core/sim_core_ui.js";
      import { update_cpu_bus_fire,
               update_system_bus_fire,
@@ -63,6 +64,7 @@
 
      import { decode_instruction }            from "../../sim_sw/firmware.js";
      import { DBG_stop }                      from "../../wepsim_core/wepsim_execute.js";
+     import { wepsim_svg_is_drawing }         from "../../wepsim_web/wepsim_uielto_cpusvg.js";
 
 
 /*
@@ -160,6 +162,25 @@ export function cpu_rvpipe_register ( sim_p: Simulator ): Simulator
 
             return null;
         },
+
+
+	 // state: save_state, load_state
+	 save_state:  function ( vec ) {
+			  vec.CPU = vec.CPU || {} ;
+			  hw_signals_save(vec.CPU, sim_p.signals) ;
+			   hw_states_save(vec.CPU, sim_p.states) ;
+			   vec.CPU.alu_flags = Object.assign({}, sim_p.internal_states.alu_flags) ;
+			  return vec;
+		      },
+	 load_state:  function ( vec ) {
+			  if ( (typeof vec == "undefined") || (typeof vec.CPU == "undefined") ) {
+				return false ;
+			  }
+			  hw_signals_load(vec.CPU, sim_p.signals) ;
+			   hw_states_load(vec.CPU, sim_p.states) ;
+			   sim_p.internal_states.alu_flags = Object.assign({}, vec.CPU.alu_flags) ;
+			  return true ;
+		      },
 
         get_value: function (elto) {
             var r_ref = simhw_sim_state_getref(elto);

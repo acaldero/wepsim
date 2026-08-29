@@ -1,64 +1,9 @@
 // Global declarations for functions defined in other JS files
 
-declare function get_value(obj: any): number;
-declare function set_value(obj: any, value: number): void;
-declare function reset_value(obj: any): void;
-declare function get_var(obj: any): number;
-declare function set_var(obj: any, value: number | boolean): void;
-declare function get_reference(sim_name: string): any;
-declare function show_verbal(key: string): string;
-declare function show_value(value: number): string;
 declare function update_value(obj: any): void;
 declare function value_toString(elto_v: any): string;
 declare function vue_observable(initial_value: any): any;
 declare function vue_rebind_state(ref_obj: any, id_elto: string, f_computed_value?: any): void;
-
-declare function simhw_sim_state_getref(id: string): any;
-declare function simhw_sim_ctrlStates_get(): any;
-declare function simhw_sim_state(id: string): any;
-declare function simhw_sim_signal(id: string): any;
-declare function simhw_sim_signals(): Record<string, any>;
-declare function simhw_sim_states(): Record<string, any>;
-declare function simhw_sim_components(): Record<string, any>;
-declare function simhw_sim_component(id: string): any;
-declare function simhw_active(): any;
-declare function simhw_short_name(): string;
-declare function simhw_properties(): string[];
-declare function simhw_getActive(): number;
-declare function simhw_setActive(newActive: number): void;
-declare function simhw_getIdByName(short_name: string): number;
-declare function simhw_getObjByName(short_name: string): any;
-declare function simhw_internalState(name: string): any;
-declare function simhw_internalState_get(name: string, id: string): any;
-declare function simhw_internalState_set(name: string, id: string, val: any): void;
-declare function simhw_internalState_reset(name: string, val: any): void;
-declare function simhw_syntax_behaviors(): Record<string, any>;
-declare function simhw_syntax_behavior(id: string): any;
-declare function simhw_hwset_init(): Record<string, string>;
-declare function simhw_hwset_getSet(): Record<string, string>;
-declare function simhw_hwset_loadAll(): boolean;
-declare function simhw_hwset_load(p_name: string): boolean;
-
-declare function show_main_memory(memory: any, index: number, redraw: boolean, updates: boolean): void;
-declare function show_asmdbg_pc(): void;
-declare function show_dbg_ir(value: number): void;
-declare function update_draw(obj: any, value: number): void;
-declare function signal_apply_behaviour(key: string): void;
-declare function fn_updateE_now(key: string): void;
-declare function fn_updateL_now(key: string): void;
-declare function compute_behavior(name: string): void;
-//declare var jit_fire_order: string[];
-declare function refresh(): void;
-declare function ws_alert(msg: string): void;
-declare function get_cfg(field: string): string | boolean;
-declare function get_deco_from_pc(pc: number): any;
-
-declare function main_memory_getvalue(memory: any, elto: any): number | undefined;
-declare function main_memory_set(memory: any, elto: any, melto: any): any;
-declare function main_memory_get_program_counter(): number | null;
-declare function main_memory_fusionvalues(dbvalue: number, value: number, filter: number): number;
-declare function main_memory_extractvalues(value: number, filter_size: number, filter_elto: number, sign_extension: number): number;
-declare function main_memory_updatevalues(value: number, dbvalue: number, filter_size: number, filter_elto: number): number;
 
 type DecodedInstruction = {
     oinstruction: {
@@ -73,13 +18,6 @@ type DecodedInstruction = {
 
 declare function cache_memory_access(memory: any, address: number, r_w: string, clock_timestamp: number): void;
 
-declare function wepsim_svg_is_drawing(): boolean;
-
-declare function compute_references(): void;
-declare function check_behavior(): void;
-declare function compile_behaviors(): void;
-declare function firedep_to_fireorder(jit_fire_dep: any): void;
-declare function compile_verbals(): void;
 declare function simcore_sound_playNote(note: string, duration: string): void;
 declare function get_screen_content(): string;
 declare function set_screen_content(new_value: string): void;
@@ -87,13 +25,8 @@ declare function get_keyboard_content(): string;
 declare function set_keyboard_content(new_value: string): void;
 
 declare function simcore_hardware_import(data: string): void;
-declare function simcore_init(flag: boolean): void;
-declare function simcore_init_hw(name: string): void;
-declare function simcore_reset(): void;
 declare function simcore_record_init(recMsg: string, recPb: string): void;
 declare function simcore_record_captureInit(): void;
-
-declare function upgrade_cfg(): void;
 
 declare var ws_empty_firmware: any;
 declare var sim_references: Record<string, any>;
@@ -204,6 +137,8 @@ interface SimComponent {
     details_fire?: string[][];
     write_state?: (vec: any) => any;
     read_state?: (vec: any, check: any) => boolean;
+    save_state?: (vec: any) => any;
+    load_state?: (vec: any) => boolean;
     get_state?: (reg: string) => string | null;
     get_value?: (elto: any) => any;
     set_value?: (elto: any, value: any) => void;
@@ -227,25 +162,6 @@ interface Simulator
     internal_states: Record<string, any> ;
     events:          Record<string, any> ;
 }
-
-// Register functions (defined in other hw_items JS files)
-declare function board_base_register         ( sim_p: any ): any ;
-declare function cpu_ep_register             ( sim_p: Simulator ): void ;
-declare function mem_ep_register             ( sim_p: Simulator ): void ;
-declare function cpu_ep2_register            ( sim_p: Simulator ): void ;
-declare function mem_ep2_register            ( sim_p: Simulator ): void ;
-declare function cpu_rv_register             ( sim_p: Simulator ): void ;
-declare function mem_rv_register             ( sim_p: Simulator ): void ;
-declare function cpu_poc_register            ( sim_p: Simulator ): void ;
-declare function mem_poc_register            ( sim_p: Simulator ): void ;
-declare function cu_poc_register             ( sim_p: Simulator ): void ;
-declare function io_clk_base_register        ( sim_p: Simulator ): void ;
-declare function io_screen_base_register     ( sim_p: Simulator ): void ;
-declare function io_screen_rvpipe_register   ( sim_p: Simulator ): void ;
-declare function io_keyboard_rvpipe_register ( sim_p: Simulator ): void ;
-declare function io_ldm_base_register        ( sim_p: Simulator ): void ;
-declare function io_l3d_base_register        ( sim_p: Simulator ): void ;
-declare function io_sound_base_register      ( sim_p: Simulator ): void ;
 
 declare var DBG_stop: boolean;
 
