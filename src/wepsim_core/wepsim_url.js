@@ -226,12 +226,12 @@
        var jobj = [] ;
 
        try {
-              jres = await fetch(url_json) ;
-              if (! jres.ok) {
-                  throw new Error('HTTP error! status: ' + jres.status);
-              }
+           jres = await fetch(url_json) ;
+           if (! jres.ok) {
+                 throw new Error('HTTP error! status: ' + jres.status);
+           }
 
-              jobj = await jres.json() ;
+           jobj = await jres.json() ;
        }
        catch (e) {
            ws_alert("Unable to load '" + url_json + "': " + e + ".\n") ;

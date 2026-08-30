@@ -198,6 +198,7 @@
 			  'beta_ep2':      '.wsx_ep2',
 			  'beta_poc':      '.wsx_poc',
 			  'beta_rv':       '.wsx_rv',
+			  'beta_rvpipe':   '.wsx_rvpipe',
 			  'beta_cache':    '.wsx_cache',
 			  'beta_history':  '.wsx_history'
 		       } ;

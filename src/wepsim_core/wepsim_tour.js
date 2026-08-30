@@ -19,16 +19,16 @@
  */
 
 
-     import { ws_info }           from "../sim_core/sim_adt_core.js";
+     import { ws_info }             from "../sim_core/sim_adt_core.js";
      import { get_cfg,
               set_cfg,
-              save_cfg }          from "../sim_core/sim_cfg.js";
+              save_cfg }            from "../sim_core/sim_cfg.js";
      import { i18n_get,
               i18n,
-              i18n_update_tags }  from "../wepsim_i18n/i18n.js";
+              i18n_update_tags }    from "../wepsim_i18n/i18n.js";
      import { wsweb_dialog_close,
-              wsweb_select_main } from "../wepsim_web/wepsim_web_api.js";
-     import { simcore_ga }        from "../sim_core/sim_core_ga.js";
+              wsweb_select_main }   from "../wepsim_web/wepsim_web_api.js";
+     import { simcore_ga }          from "../sim_core/sim_core_ga.js";
 
 
     //  tours collection
