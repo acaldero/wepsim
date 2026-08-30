@@ -23,8 +23,8 @@
               wepsim_notify_success,
               wepsim_notify_do_notify } from "./wepsim_notify.js";
      import { is_cordova,
-              is_mobile, get_cfg } from "../sim_core/sim_cfg.js";
-     import { ws_alert } from "../sim_core/sim_core_ui.js";
+              is_mobile, get_cfg }      from "../sim_core/sim_cfg.js";
+     import { ws_alert }                from "../sim_core/sim_core_ui.js";
 
 
     /*
@@ -220,14 +220,18 @@
 	}
     }
 
-    export function wepsim_url_getJSON ( url_json )
+    export async function wepsim_url_getJSON ( url_json )
     {
-       var jstr = {} ;
+       var jres = {} ;
        var jobj = [] ;
 
        try {
-           jstr = $.getJSON({'url': url_json, 'async': false}) ;
-           jobj = JSON.parse(jstr.responseText) ;
+              jres = await fetch(url_json) ;
+              if (! jres.ok) {
+                  throw new Error('HTTP error! status: ' + jres.status);
+              }
+
+              jobj = await jres.json() ;
        }
        catch (e) {
            ws_alert("Unable to load '" + url_json + "': " + e + ".\n") ;

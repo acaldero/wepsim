@@ -490,7 +490,7 @@
 		      },
             body:    function() {
 		        return "<div id='scroller-about1' " +
-                               "     class='container-fluid p-1' style='max-height:80vh; '>" +
+                               "     class='container-fluid p-0' style='max-height:80vh; '>" +
 			       "<ws-about name='about1'></ws-about>" +
 			       "</div>" ;
 		     },
@@ -679,12 +679,12 @@
                                  {
                                       o1 += '<a  href="#" ' +
                                             '    class="list-group-item list-group-item-action" ' +
-                                            '    onclick="ws.cfgset_load(\'' + e_cfg + '\') ;' +
+                                            '    onclick="(async () => { ws.cfgset_load(\'' + e_cfg + '\') ;' +
                                             '             ws.wepsim_notify_success(\'<strong>INFO</strong>\',' +
                                             '                                      \'Configuration loaded!.\') ;' +
                                             '             ws.wepsim_uicfg_restore() ;' +
                                             '             ws.wsweb_dialog_open(\'config\');' +
-                                            '             return false;">' +
+                                            '             return false; })() ;">' +
                                             '<span data-langkey="' + e_cfg + '">' + e_cfg + '</span>' +
                                             '</a>' ;
                                  }

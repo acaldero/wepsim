@@ -711,7 +711,7 @@
             }
        }
 
-    export function wepsim_init_default ( )
+    export async function wepsim_init_default ( )
     {
 	    // Get URL params
             var url_hash = wepsim_preload_get2hash(window.location,
@@ -720,15 +720,15 @@
 	    // 1.- Pre-load defaults
 
 	       // 1.A.- Pre-load hardware...
-	       simhw_hwset_init() ;
+	       await simhw_hwset_init() ;
 	       simcore_init_hw('ep') ;
 
 	       // 1.B.- Pre-load examples
                var ws_examples_index_url = get_cfg('example_url') ;
-               wepsim_example_loadSet(ws_examples_index_url) ;
+               await wepsim_example_loadSet(ws_examples_index_url) ;
 
 	       // 1.C.- Pre-load UI configuration
-               cfgset_init() ;
+               await cfgset_init() ;
 
 	    // 2.- Restore configuration
 
@@ -737,7 +737,7 @@
 
 	       // 2.B.- Set mode
 	       var ws_mode = get_cfg('ws_mode');
-	       wsweb_select_main(ws_mode) ;
+	       await wsweb_select_main(ws_mode) ;
 	       if (simhw_active() !== null) {
 	      	   simcore_reset();
 	       }

@@ -20,13 +20,13 @@
 
 
      import { get_value,
-              set_value }          from "../../sim_core/sim_core_values.js";
+              set_value }                from "../../sim_core/sim_core_values.js";
      import { simcore_sound_ascii2note,
               simcore_sound_playNote,
               simcore_sound_start,
-              simcore_sound_stop } from "../../sim_core/sim_core_sound.js";
+              simcore_sound_stop }       from "../../sim_core/sim_core_sound.js";
      import { get_sound_content,
-              set_sound_content }  from "../../sim_core/sim_core_ui.js";
+              set_sound_content }        from "../../sim_core/sim_core_ui.js";
 
 
 /*

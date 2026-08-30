@@ -28,7 +28,7 @@
      import { wsweb_dlg_alert }                 from "./wepsim_dialog.js";
 
      import { wepsim_show_cache_memory_config } from "../wepsim_web/wepsim_uielto_cache_config.js";
-     import { get_inputfirm, get_inputasm }      from "../wepsim_web/wepsim_web_simulator.js";
+     import { get_inputfirm, get_inputasm }     from "../wepsim_web/wepsim_web_simulator.js";
 
 
     /*

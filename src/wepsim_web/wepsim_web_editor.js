@@ -424,6 +424,10 @@
         var neltos = simware?.registers?.default?.registers?.length ?? 0;
 	for (var i=0; i<neltos; i++)
         {
+	     if (typeof simware.registers.default.registers[i] == "undefined") {
+	         continue ; // e.g.: registers 0..31 and then jump to 256
+	     }
+
 	     for (var j=0; j<simware.registers.default.registers[i].length; j++)
              {
 		 result.push(

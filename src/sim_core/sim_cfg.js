@@ -370,12 +370,12 @@
     export var ws_cfg_hash = {} ;
     export var ws_cfg_set  = [] ;
 
-    export function cfgset_init ( )
+    export async function cfgset_init ( )
     {
          var url_list = get_cfg('cfg_url') ;
 
          // try to load the index
-         ws_cfg_set = wepsim_url_getJSON(url_list) ;
+         ws_cfg_set = await wepsim_url_getJSON(url_list) ;
 
          // build reference hash
          for (var i=0; i<ws_cfg_set.length; i++) {
@@ -390,7 +390,7 @@
          return ws_cfg_hash ;
     }
 
-    export function cfgset_load ( cfg_name )
+    export async function cfgset_load ( cfg_name )
     {
          var ret  = null ;
          var jobj = null ;
@@ -401,8 +401,7 @@
 
          // try to import the requested one
 	 try {
-	     jobj = $.getJSON({'url': ws_cfg_hash[cfg_name], 'async': false}) ;
-	     jobj = JSON.parse(jobj.responseText) ;
+             jobj = await wepsim_url_getJSON( ws_cfg_hash[cfg_name] ) ;
 	     ret  = cfgset_import(jobj) ;
 	 }
 	 catch (e) {

@@ -122,8 +122,7 @@
 
 	      render_textarea ( ta_id )
 	      {
-                   return '<label class="my-0" for="' + ta_id + '">' +
-                          '<span data-langkey="assembly">assembly</span>:</label>' +
+                   return '<span data-langkey="assembly">assembly</span>:' +
                           '<div aria-label="assembly"' +
 			  '     style="min-width:90%; overflow-x:auto; -webkit-overflow-scrolling:touch;"' +
 			  '     placeholder="Please select \'Load\' first to have the assembly code to work with."' +

@@ -21,7 +21,7 @@
 
      import { wait_if_uievents }     from "../sim_core/sim_core_ctrl.js";
      import { refresh,
-             show_memories_values } from "../sim_core/sim_core_ui.js";
+              show_memories_values } from "../sim_core/sim_core_ui.js";
      import { get_cfg,
               set_cfg,
               save_cfg,
@@ -81,7 +81,7 @@
      import { wepsim_newbie_tour }             from "../wepsim_core/wepsim_tour.js";
      import { wepsim_help_set }                from "../wepsim_core/wepsim_help.js";
      import { wepsim_save_to_file }            from "../wepsim_core/wepsim_url.js";
-     import { get_inputfirm, get_inputasm }      from "../wepsim_web/wepsim_web_simulator.js";
+     import { get_inputfirm, get_inputasm }    from "../wepsim_web/wepsim_web_simulator.js";
 
 
     //
@@ -598,14 +598,14 @@
 
     //  Workspace simulator: Mode
 
-    export function wsweb_select_main ( opt )
+    export async function wsweb_select_main ( opt )
     {
 	    // save ws_mode
 	    set_cfg('ws_mode', opt) ;
 	    save_cfg() ;
 
 	    // update select4
-	    wepsim_mode_change(opt) ;
+	    await wepsim_mode_change(opt) ;
 
 	    // set button label...
             webui_toolbar_updateMode(opt) ;
