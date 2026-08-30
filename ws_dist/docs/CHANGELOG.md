@@ -1,6 +1,14 @@
 
 # Changelog
 
+## 2.4.2 -> 2.5.0:
+* Main improvements:
+  * Migration to ES modules
+  * Migration to webpack
+  * Minor bugfixes
+* Main external dependencies updated:
+  * Bump codemirror from 5.65.21 up to 6.0.2
+
 ## 2.4.1 -> 2.4.2:
 * Main improvements:
   * Firmware syntax for immediate formats updated
