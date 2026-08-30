@@ -152,8 +152,6 @@ export function cache_memory_init(name, via_size, off_size, set_size, replace_po
             mask_tag: {},
             mask_set: {},
             mask_off: {},
-            mask_tag: {},
-            mask_set: {},
             replace_pol: {},
             su_pol: {},
             level: {},

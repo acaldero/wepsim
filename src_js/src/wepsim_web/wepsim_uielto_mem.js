@@ -94,6 +94,7 @@ export function wepsim_show_main_memory(memory, index, redraw, updates) {
         show_main_memory_deferred = null;
     }, cfg_show_main_memory_delay);
 }
+export var old_main_addr = 0;
 export function hard_refresh_main_memory(memory, index, redraw) {
     // configuration
     var cfg = {};
@@ -194,7 +195,6 @@ export function hard_refresh_main_memory(memory, index, redraw) {
     // * Update old_main_add for light_update
     old_main_addr = index;
 }
-export var old_main_addr = 0;
 export function light_refresh_main_memory(memory, index, redraw) {
     // if not visible -> skip
     var o1 = $("#memory_MP");
@@ -205,7 +205,7 @@ export function light_refresh_main_memory(memory, index, redraw) {
     if (redraw) {
         var ri = 0;
         var svalue = '';
-        var addrplusn = index + 4 * n;
+        var addrplusn = 0;
         for (var n = 0; n < cfg_nwords; n++) {
             addrplusn = index + 4 * n;
             svalue = main_memory_getword(memory, addrplusn);
