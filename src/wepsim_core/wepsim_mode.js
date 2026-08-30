@@ -19,16 +19,18 @@
  */
 
 
-     import { ws_info }                        from "../sim_core/sim_adt_core.js";
-     import { simhw_getIdByName }              from "../sim_hw/sim_hw_index.js";
+     import { ws_info }                       from "../sim_core/sim_adt_core.js";
+     import { get_cfg }                       from "../sim_core/sim_cfg.js";
+     import { simhw_getIdByName }             from "../sim_hw/sim_hw_index.js";
+
+     import { wsweb_recordbar_show }          from "../wepsim_web/wepsim_web_api.js";
      import { wepsim_activehw,
-              wepsim_activeview }              from "../wepsim_web/wepsim_web_simulator.js";
-     import { get_cfg }                        from "../sim_core/sim_cfg.js";
+              wepsim_activeview }             from "../wepsim_web/wepsim_web_simulator.js";
+
      import { wepsim_example_load,
-              load_from_example_firmware }     from "./wepsim_example.js";
-     import { wsweb_recordbar_show }           from "../wepsim_web/wepsim_web_api.js";
-     import { wepsim_checkpoint_loadExample }  from "./wepsim_checkpoint.js";
-     import { wepsim_newbie_tour }             from "./wepsim_tour.js";
+              load_from_example_firmware }    from "./wepsim_example.js";
+     import { wepsim_checkpoint_loadExample } from "./wepsim_checkpoint.js";
+     import { wepsim_newbie_tour }            from "./wepsim_tour.js";
 
 
     /*
@@ -37,7 +39,7 @@
 
     ws_info.modes = [ 'ep', 'ep2', 'rv', 'poc',
 	              'newbie', 'intro',
-	              'asm_mips', 'asm_rv32', 'asm_z80',
+	              'asm_mips',     'asm_rv32',     'asm_z80',
 	              'ep2_asm_mips', 'ep2_asm_rv32', 'ep2_asm_z80' ] ;
 
     ws_info.default_example = {
@@ -45,6 +47,7 @@
 	                         'ep2':          'Default-RISCV',
 	                         'poc':          'Default-MIPS',
 	                         'rv':           'Default-RISCV',
+	                         'rvpipe':       'Default-RISCV',
 
 	                         'asm_mips':     'ep:ep_mix1_l3:mips_s4e1',
 	                         'asm_rv32':     'ep:ep_js1_l10:rv32_s7e2',
@@ -90,7 +93,7 @@
             var eset_name = get_cfg('ws_examples_set') ;
             if (eset_name != 'Empty')
                  await wepsim_example_load(eset_name) ;
-            else await wepsim_example_load(ws_info.default_example[optValue]) ;
+	    else await wepsim_example_load(ws_info.default_example[optValue]) ;
 
 	    // show/hide microcode...
             wepsim_activeview('extra_mcode', true) ;

@@ -1,6 +1,10 @@
 
 # Changelog
 
+## 2.5.0 -> 2.6.0:
+* Main improvements:
+  * New rvpipe processor: RISC-V with 5-stage pipeline (beta)
+
 ## 2.4.2 -> 2.5.0:
 * Main improvements:
   * Migration to ES modules
