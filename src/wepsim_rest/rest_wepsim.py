@@ -23,7 +23,8 @@ def wepsim_helper(cmd_options: list[str]) -> tuple[int, str]:
         ['../ws_dist/wepsim.sh', *cmd_options],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
-        text=True
+        text=True,
+        check=False
     )
 
     # Return status and output
@@ -69,12 +70,7 @@ def wepsim_action(action: str, model: str, firm: str, asm: str) -> tuple[int, st
             return -1, "assembly file cannot be written"
 
          # Command arguments
-         cmd_options = [
-            "-a", action,
-            "-m", model,
-            "-f", fname_firm,
-            "-s", fname_asm
-         ]
+         cmd_options = [ "-a", action, "-m", model, "-f", fname_firm, "-s", fname_asm ]
 
          # Return action on files
          return wepsim_helper(cmd_options)
@@ -101,23 +97,10 @@ class Item(BaseModel):
 ## Post action as REST API (-1: error)
 @api.post("/api/action/")
 def rest_action(item: Item):
-    # Options
-    fname_firm  = '/tmp/firm.mc'
-    fname_asm   = '/tmp/app.asm'
-    cmd_options = " -a " + item.action + " -m " + item.model + " -f " + fname_firm + " -s " + fname_asm
+    # Do action on files
+    status, output = wepsim_action(item.action, item.model, item.firmware, item.assembly)
 
-    # Save firmware on file
-    ret = ws_save2file(fname_firm, item.firmware)
-    if (False == ret):
-        return -1, "firmware file cannot be written"
-
-    # Save assembly on file
-    ret = ws_save2file(fname_asm, item.assembly)
-    if (False == ret):
-        return -1, "assembly file cannot be written"
-
-    # Return action on files
-    status, output = wepsim_helper(cmd_options)
+    # Return action results
     return { "status": status, "output": output }
 
 
