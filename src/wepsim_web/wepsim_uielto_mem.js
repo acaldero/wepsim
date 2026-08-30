@@ -137,6 +137,8 @@
                                                    }, cfg_show_main_memory_delay);
         }
 
+        export var old_main_addr = 0;
+
         export function hard_refresh_main_memory ( memory, index, redraw )
         {
             // configuration
@@ -262,8 +264,6 @@
             old_main_addr = index ;
         }
 
-        export var old_main_addr = 0;
-
         export function light_refresh_main_memory ( memory, index, redraw )
         {
 	    // if not visible -> skip
@@ -278,7 +278,7 @@
             {
                 var ri = 0 ;
                 var svalue = '' ;
-                var addrplusn = index + 4*n ;
+                var addrplusn = 0 ;
 		for (var n=0; n<cfg_nwords; n++)
 		{
                      addrplusn = index + 4*n ;

@@ -95,7 +95,7 @@ test_wepsimnode_ckoutput_single ()
 	fi
 
 	# cleanup...
-	rm -fr ./devel/test_output/test-expect-$I.txt ./devel/test_output/test-obtained-$I.txt ./devel/test_output/diff-$I.txt
+	rm -fr "./devel/test_output/test-expect-$I.txt" "./devel/test_output/test-obtained-$I.txt" "./devel/test_output/diff-$I.txt"
 }
 
 test_wepsimnode_ckoutput ()
@@ -162,7 +162,7 @@ test_wepsimnode_detect_ncores ()
              NC=$(sysctl -n hw.ncpu)
         fi
 
-        echo $NC
+        echo "$NC"
 }
 
 
@@ -196,7 +196,7 @@ echo -n "  -> Detecting CPU cores ... "
 NC=$(test_wepsimnode_detect_ncores)
 echo -e " ($NC) Done\n"
 
-test_wepsimnode_load $NC
+test_wepsimnode_load "$NC"
 
 # Do requests
 for arg_i in "$@"
@@ -214,7 +214,7 @@ do
 		test_wepsimnode_mkoutput
 	     ;;
 	     co)
-		test_wepsimnode_ckoutput $NC
+		test_wepsimnode_ckoutput "$NC"
 	     ;;
 	     *)
 		echo "  -> ERROR: unknow command '$arg_i'"
