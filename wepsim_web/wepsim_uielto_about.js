@@ -63,10 +63,11 @@
                               "         style='overflow:auto; -webkit-overflow-scrolling:touch;' >"+
 			      "	     <ul>" +
                               "      <li>Felix Garcia Carballeira</li>" +
+                              "      <li>Alejandro Calderon Mateos</li>" +
                               "      <li>Javier Prieto Cepeda</li>" +
                               "      <li>Saul Alonso Monsalve</li>" +
                               "      <li>Juan Banga Pardo</li>" +
-                              "      <li>Alejandro Calderon Mateos</li>" +
+                              "      <li>Álvaro Guerrero Espinosa</li>" +
 			      "	     </ul>" +
 			      "	   </div>" +
 			      "	</div>" +

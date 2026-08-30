@@ -90,7 +90,6 @@ function loadFirmware (text)
 	   context.labelsNotFound 	= [] ;
 	   context.instrucciones  	= [] ;
 	   context.oc_eoc         	= {} ;
-	   context.oc_eoc       	= {} ;
 	   context.registers      	= [] ;
            context.text           	= text ;
 	   context.tokens         	= [] ;

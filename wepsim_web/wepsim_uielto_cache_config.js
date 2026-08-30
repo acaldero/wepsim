@@ -458,7 +458,7 @@
               if ('sa' == value)
               {
                   var curr_cfg = simhw_internalState('CM_cfg') ;
-                      curr_sz  = parseInt(get_var(curr_cfg[index].cfg.via_size)) ;
+                  var curr_sz  = parseInt(get_var(curr_cfg[index].cfg.via_size)) ;
                   wepsim_cm_update_cfg(index, "set_size", curr_sz) ;
                   $("#cpp_sa").show();
               }
@@ -468,7 +468,7 @@
               {
                   var curr_cfg = simhw_internalState('CM_cfg') ;
                   var curr_sz  = 0 ;
-                  if ( (typeof curr_cfg != "undefined") &&
+                  if ( (typeof curr_cfg        != "undefined") &&
                        (typeof curr_cfg[index] != "undefined") )
                   {
                       curr_sz  = parseInt(get_var(curr_cfg[index].cfg.via_size)) ;

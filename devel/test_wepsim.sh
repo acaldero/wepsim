@@ -76,26 +76,26 @@ test_wepsimnode_ckoutput_single ()
 	D="${DESC_ARR[$I]}"
 
 	# expected...
-	gunzip -c ./devel/test_output/$I.txt.gz >& ./devel/test_output/test-expect-$I.txt
+	gunzip -c "./devel/test_output/$I.txt.gz" >& "./devel/test_output/test-expect-$I.txt"
 
 	# obtained...
-	$T >& ./devel/test_output/test-obtained-$I.txt
+	$T >& "./devel/test_output/test-obtained-$I.txt"
 
 	# diff...
-	diff   ./devel/test_output/test-expect-$I.txt ./devel/test_output/test-obtained-$I.txt >& ./devel/test_output/diff-$I.txt
+	diff   "./devel/test_output/test-expect-$I.txt" "./devel/test_output/test-obtained-$I.txt" >& "./devel/test_output/diff-$I.txt"
 	if [ $? -eq 0 ]; then
-	    echo "$I: OK: $D" >& ./devel/test_output/result-$I.txt
+	    echo "$I: OK: $D" >& "./devel/test_output/result-$I.txt"
 	else
-	    echo "$I: KO: $D" >& ./devel/test_output/result-$I.txt
+	    echo "$I: KO: $D" >& "./devel/test_output/result-$I.txt"
 
-	    echo "***********************"      >> ./devel/test_output/result-$I.txt
-	    echo $T                             >> ./devel/test_output/result-$I.txt
-	    cat ./devel/test_output/diff-$I.txt >> ./devel/test_output/result-$I.txt
-	    echo "***********************"      >> ./devel/test_output/result-$I.txt
+	    echo "***********************"      >> "./devel/test_output/result-$I.txt"
+	    echo $T                             >> "./devel/test_output/result-$I.txt"
+	    cat ./devel/test_output/diff-$I.txt >> "./devel/test_output/result-$I.txt"
+	    echo "***********************"      >> "./devel/test_output/result-$I.txt"
 	fi
 
 	# cleanup...
-	rm -fr ./devel/test_output/test-expect-$I.txt ./devel/test_output/test-obtained-$I.txt ./devel/test_output/diff-$I.txt
+	rm -fr "./devel/test_output/test-expect-$I.txt" "./devel/test_output/test-obtained-$I.txt" "./devel/test_output/diff-$I.txt"
 }
 
 test_wepsimnode_ckoutput ()
@@ -122,8 +122,8 @@ test_wepsimnode_ckoutput ()
 	echo ""
         echo "Id: Status: Description"
 	for (( I=0; I<=$(( N -1 )); I++ )); do
-	       cat    ./devel/test_output/result-$I.txt
-	       rm -fr ./devel/test_output/result-$I.txt
+	       cat    "./devel/test_output/result-$I.txt"
+	       rm -fr "./devel/test_output/result-$I.txt"
 	done
 }
 
@@ -162,7 +162,7 @@ test_wepsimnode_detect_ncores ()
              NC=$(sysctl -n hw.ncpu)
         fi
 
-        echo $NC
+        echo "$NC"
 }
 
 
@@ -196,7 +196,7 @@ echo -n "  -> Detecting CPU cores ... "
 NC=$(test_wepsimnode_detect_ncores)
 echo -e " ($NC) Done\n"
 
-test_wepsimnode_load $NC
+test_wepsimnode_load "$NC"
 
 # Do requests
 for arg_i in "$@"
@@ -214,7 +214,7 @@ do
 		test_wepsimnode_mkoutput
 	     ;;
 	     co)
-		test_wepsimnode_ckoutput $NC
+		test_wepsimnode_ckoutput "$NC"
 	     ;;
 	     *)
 		echo "  -> ERROR: unknow command '$arg_i'"
