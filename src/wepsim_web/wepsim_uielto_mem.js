@@ -279,7 +279,6 @@
                 var ri = 0 ;
                 var svalue = '' ;
                 var addrplusn = 0 ;
-
 		for (var n=0; n<cfg_nwords; n++)
 		{
                      addrplusn = index + 4*n ;

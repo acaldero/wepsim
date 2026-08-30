@@ -520,7 +520,7 @@
 		     '            await ws.wepsim_example_load(\'' + item.name + '\');' +
                      '            ws.wepsim_tooltips_hide(\'[data-bs-toggle=tooltip]\');' +
 	             '            ws.wsweb_dialog_open(\'examples\');' +
-		     '	     return false; })() ;"' +
+		     '	          return false; })() ;"' +
 		     '><em class="fas fa-cube d-sm-inline d-xs-none text-secondary me-2"></em>' +
 		     item.name + '</a>\n' ;
 	    }

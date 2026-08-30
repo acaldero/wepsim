@@ -67,16 +67,20 @@
 		return false ;
 	    }
 
-	    // check endpoint
+	    // get api_endpoint
 	    var api_endpoint = rest_info.endpoint ;
             if (typeof Vuex != "undefined")
             {
                 if (api_endpoint instanceof Vuex.Store) {
 	            api_endpoint = get_var(api_endpoint) ;
                 }
+                else if (typeof api_endpoint.value != "undefined") {
+	            api_endpoint = api_endpoint.value ;
+                }
             }
 
-	    if (api_endpoint.trim() === "") {
+	    // check api_endpoint
+	    if ("" == api_endpoint) {
 		return false ;
 	    }
 
