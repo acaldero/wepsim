@@ -663,8 +663,8 @@ def print_content(L_D, C_N):
             f.write("\t\t'" + translation_origin[index] + "':\t\t'" + translation_destination + "',\n") ;
     except Exception as e:
         print("\tERROR: " + str(e))
-        #print("translation list:")
-        #print(translation_list)
+        print("translation list:")
+        print(translation_list)
 
     # + print last lines
     f.write("\t\t'_last_':\t\t'_last_'\n") ;

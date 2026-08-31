@@ -740,7 +740,7 @@
 
 	       // 2.B.- Set mode
 	       var ws_mode = get_cfg('ws_mode');
-	       wsweb_select_main(ws_mode) ;
+	       await wsweb_select_main(ws_mode) ;
 	       if (simhw_active() !== null) {
 	      	   simcore_reset();
 	       }
