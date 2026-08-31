@@ -19,8 +19,8 @@
  */
 
 
-     import { i18n_get_TagFor } from "../../wepsim_i18n/i18n.js";
-     import { base_replaceAll } from "../../sim_core/sim_core_ctrl.js";
+     import { i18n_get_TagFor }  from "../../wepsim_i18n/i18n.js";
+     import { base_replaceAll }  from "../../sim_core/sim_core_ctrl.js";
      import { simhw_sim_signal } from "../../sim_hw/sim_hw_index.js";
      import { frm_resetComments,
               frm_isToken,
@@ -29,7 +29,7 @@
               frm_getToken,
               frm_getTokenType,
               frm_getComments,
-              frm_nextNative } from "./lexical.js";
+              frm_nextNative }   from "./lexical.js";
 
 
 export function firm_mcode_write ( elto, labels_firm )

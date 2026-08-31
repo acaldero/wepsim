@@ -23,5 +23,5 @@
     const HTMLElementBase = (typeof window !== "undefined") ? HTMLElement : class {};
 
     export class wsHTMLElement extends HTMLElementBase {
-    }
+    } ;
 
