@@ -1,11 +1,4 @@
 
-// Global declarations for functions defined in other JS files
-
-declare function cache_memory_access(memory: any, address: number, r_w: string, clock_timestamp: number): void;
-declare function get_screen_content(): string;
-declare function set_screen_content(new_value: string): void;
-declare function get_keyboard_content(): string;
-declare function set_keyboard_content(new_value: string): void;
 
 // Simulator types
 

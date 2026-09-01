@@ -20,8 +20,9 @@
 import { get_cfg } from "../../sim_core/sim_cfg.js";
 import { ws_empty_firmware } from "../../sim_core/sim_adt_core.js";
 import { get_value, set_value, reset_value } from "../../sim_core/sim_core_values.js";
-import { show_asmdbg_pc, show_dbg_ir, show_main_memory, refresh } from "../../sim_core/sim_core_ui.js";
+import { show_asmdbg_pc, show_dbg_ir, show_main_memory, get_keyboard_content, set_keyboard_content, get_screen_content, set_screen_content, refresh } from "../../sim_core/sim_core_ui.js";
 import { get_deco_from_pc, main_memory_getvalue } from "../../sim_core/sim_adt_mainmemory.js";
+import { cache_memory_access } from "../../sim_core/sim_adt_cachememory.js";
 import { compute_behavior } from "../sim_hw_behavior.js";
 import { get_reference, show_verbal, show_value } from "../sim_hw_values.js";
 import { simhw_sim_state_getref, simhw_sim_ctrlStates_get } from "../sim_hw_index.js";

@@ -32,6 +32,10 @@
               float_class,
               show_dbg_ir,
               show_main_memory,
+	      get_keyboard_content,
+	      set_keyboard_content,
+	      get_screen_content,
+	      set_screen_content,
 	      refresh,
               update_draw }                   from "../../sim_core/sim_core_ui.js";
      import { update_cpu_bus_fire,
@@ -40,6 +44,7 @@
      import { get_simware }                   from "../../sim_core/sim_adt_core.js";
      import { get_deco_from_pc,
               main_memory_getvalue }          from "../../sim_core/sim_adt_mainmemory.js";
+     import { cache_memory_access }           from "../../sim_core/sim_adt_cachememory.js";
 
      import { compute_signal_verbals,
               compute_behavior }              from "../sim_hw_behavior.js";
