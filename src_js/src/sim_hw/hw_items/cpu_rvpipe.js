@@ -493,13 +493,13 @@ export function cpu_rvpipe_register(sim_p) {
             "BR." + CSR.stval + ",real",
             "BR." + CSR.sip + ",real",
         ],
-        "ID": [
+        "IF": [
             STATES.REG_PC + ",real",
             STATES.IF_FETCH_PC + ",real",
             STATES.IF_ID_PC + ",real",
             STATES.IF_ID_IR + ",real",
         ],
-        "DECODE": [
+        "IF_ID": [
             STATES.DECODE_DMR + ",real",
             STATES.DECODE_DMW + ",real",
             STATES.DECODE_WBE + ",real",
@@ -520,7 +520,7 @@ export function cpu_rvpipe_register(sim_p) {
             STATES.DECODE_IOR + ",real",
             STATES.DECODE_IOW + ",real",
         ],
-        "EX": [
+        "ID_EX": [
             STATES.ID_EX_RS1 + ",real",
             STATES.ID_EX_RS2 + ",real",
             STATES.ID_EX_RS1_ADDR + ",real",
@@ -542,7 +542,7 @@ export function cpu_rvpipe_register(sim_p) {
             STATES.ID_EX_IOW + ",real",
             STATES.BRANCH_TARGET + ",real",
         ],
-        "MEM": [
+        "EX_MEM": [
             STATES.M1_ALU + ",real",
             STATES.M4_ALU + ",real",
             STATES.ALU_OUT + ",real",
@@ -559,7 +559,7 @@ export function cpu_rvpipe_register(sim_p) {
             STATES.EX_MEM_IOR + ",real",
             STATES.EX_MEM_IOW + ",real",
         ],
-        "WB": [
+        "MEM_WB": [
             STATES.MEM_WB_DATA + ",real",
             STATES.MEM_WB_RD + ",real",
             STATES.MEM_WB_RW + ",real",
@@ -879,12 +879,12 @@ export function cpu_rvpipe_register(sim_p) {
     // Pipeline control states for memory operations (load/store)
     // Decode stage
     sim_p.states[STATES.DECODE_DMR] = {
-        name: "DECODE_DMR", verbal: "Decoded Data Mem Read",
+        name: "IF_ID_DMR", verbal: "Decoded Data Mem Read",
         visible: false, nbits: "1", value: 0, default_value: 0,
         draw_data: []
     };
     sim_p.states[STATES.DECODE_DMW] = {
-        name: "DECODE_DMW", verbal: "Decoded Data Mem Write",
+        name: "IF_ID_DMW", verbal: "Decoded Data Mem Write",
         visible: false, nbits: "1", value: 0, default_value: 0,
         draw_data: []
     };
@@ -918,12 +918,12 @@ export function cpu_rvpipe_register(sim_p) {
     /* PIPE STALL */
     // Decode stage: WBE (byte select) and SE (sign extend for loads)
     sim_p.states[STATES.DECODE_WBE] = {
-        name: "DECODE_WBE", verbal: "Decoded Write Byte Enable",
+        name: "IF_ID_WBE", verbal: "Decoded Write Byte Enable",
         visible: false, nbits: "2", value: 0, default_value: 0,
         draw_data: []
     };
     sim_p.states[STATES.DECODE_SE] = {
-        name: "DECODE_SE", verbal: "Decoded Sign Extend",
+        name: "IF_ID_SE", verbal: "Decoded Sign Extend",
         visible: false, nbits: "1", value: 0, default_value: 0,
         draw_data: []
     };
@@ -1020,37 +1020,37 @@ export function cpu_rvpipe_register(sim_p) {
     };
     /* DECODE STORAGE (survives microcode reset) */
     sim_p.states[STATES.DECODE_RS1_ADDR] = {
-        name: "DECODE_RS1_ADDR", verbal: "Decoded RS1 address",
+        name: "IF_ID_RS1_ADDR", verbal: "Decoded RS1 address",
         visible: false, nbits: "12", value: 0, default_value: 0,
         draw_data: []
     };
     sim_p.states[STATES.DECODE_RS2_ADDR] = {
-        name: "DECODE_RS2_ADDR", verbal: "Decoded RS2 address",
+        name: "IF_ID_RS2_ADDR", verbal: "Decoded RS2 address",
         visible: false, nbits: "12", value: 0, default_value: 0,
         draw_data: []
     };
     sim_p.states[STATES.DECODE_RD_ADDR] = {
-        name: "DECODE_RD_ADDR", verbal: "Decoded RD address",
+        name: "IF_ID_RD_ADDR", verbal: "Decoded RD address",
         visible: false, nbits: "12", value: 0, default_value: 0,
         draw_data: []
     };
     sim_p.states[STATES.DECODE_ALUOP] = {
-        name: "DECODE_ALUOP", verbal: "Decoded ALU operation",
+        name: "IF_ID_ALUOP", verbal: "Decoded ALU operation",
         visible: false, nbits: "5", value: 0, default_value: 0,
         draw_data: []
     };
     sim_p.states[STATES.DECODE_M3] = {
-        name: "DECODE_M3", verbal: "Decoded M3",
+        name: "IF_ID_M3", verbal: "Decoded M3",
         visible: false, nbits: "1", value: 0, default_value: 0,
         draw_data: []
     };
     sim_p.states[STATES.DECODE_M4] = {
-        name: "DECODE_M4", verbal: "Decoded M4",
+        name: "IF_ID_M4", verbal: "Decoded M4",
         visible: false, nbits: "2", value: 0, default_value: 0,
         draw_data: []
     };
     sim_p.states[STATES.DECODE_M5] = {
-        name: "DECODE_M5", verbal: "Decoded M5",
+        name: "IF_ID_M5", verbal: "Decoded M5",
         visible: false, nbits: "1", value: 0, default_value: 0,
         draw_data: []
     };
@@ -1060,42 +1060,42 @@ export function cpu_rvpipe_register(sim_p) {
         draw_data: []
     };
     sim_p.states[STATES.DECODE_BRANCH] = {
-        name: "DECODE_BRANCH", verbal: "Decoded branch type",
+        name: "IF_ID_BRANCH", verbal: "Decoded branch type",
         visible: false, nbits: "2", value: 0, default_value: 0,
         draw_data: []
     };
     sim_p.states[STATES.DECODE_SE_IMM] = {
-        name: "DECODE_SE_IMM", verbal: "Decoded SE_IMM",
+        name: "IF_ID_SE_IMM", verbal: "Decoded SE_IMM",
         visible: false, nbits: "1", value: 0, default_value: 0,
         draw_data: []
     };
     sim_p.states[STATES.DECODE_X2_IMM] = {
-        name: "DECODE_X2_IMM", verbal: "Decoded X2_IMM",
+        name: "IF_ID_X2_IMM", verbal: "Decoded X2_IMM",
         visible: false, nbits: "1", value: 0, default_value: 0,
         draw_data: []
     };
     sim_p.states[STATES.DECODE_OFFSET] = {
-        name: "DECODE_OFFSET", verbal: "Decoded OFFSET",
+        name: "IF_ID_OFFSET", verbal: "Decoded OFFSET",
         visible: false, nbits: "5", value: 0, default_value: 0,
         draw_data: []
     };
     sim_p.states[STATES.DECODE_SIZE] = {
-        name: "DECODE_SIZE", verbal: "Decoded SIZE",
+        name: "IF_ID_SIZE", verbal: "Decoded SIZE",
         visible: false, nbits: "5", value: 0, default_value: 0,
         draw_data: []
     };
     sim_p.states[STATES.DECODE_RW] = {
-        name: "DECODE_RW", verbal: "Decoded RW",
+        name: "IF_ID_RW", verbal: "Decoded RW",
         visible: false, nbits: "1", value: 0, default_value: 0,
         draw_data: []
     };
     sim_p.states[STATES.DECODE_IOR] = {
-        name: "DECODE_IOR", verbal: "Decoded I/O Read",
+        name: "IF_ID_IOR", verbal: "Decoded I/O Read",
         visible: false, nbits: "1", value: 0, default_value: 0,
         draw_data: []
     };
     sim_p.states[STATES.DECODE_IOW] = {
-        name: "DECODE_IOW", verbal: "Decoded I/O Write",
+        name: "IF_ID_IOW", verbal: "Decoded I/O Write",
         visible: false, nbits: "1", value: 0, default_value: 0,
         draw_data: []
     };
