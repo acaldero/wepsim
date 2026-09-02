@@ -2353,18 +2353,20 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.NOP] = {
         nparameters: 1,
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
         },
         verbal: function (s_expr) { return ""; }
     };
     sim_p.behaviors[BEHAVIORS.NOP_ALU] = {
         nparameters: 1,
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             sim_p.internal_states.alu_flags.int = 0;
             sim_p.internal_states.alu_flags.intv = 0;
         },
@@ -2373,9 +2375,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.ECALL_ALU] = {
         nparameters: 1,
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             sim_p.internal_states.alu_flags.int = 1;
             sim_p.internal_states.alu_flags.intv = 2;
         },
@@ -2386,9 +2389,10 @@ export function cpu_rvpipe_register(sim_p) {
         nparameters: 4,
         types: ["X", "E", "I"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             const ref = get_reference(s_expr[1]);
             const br = sim_p.states[s_expr[2]];
             const num = parseInt(s_expr[3]);
@@ -2413,9 +2417,10 @@ export function cpu_rvpipe_register(sim_p) {
         nparameters: 4,
         types: ["E", "I", "X"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             const br = sim_p.states[s_expr[1]];
             const num = parseInt(s_expr[2]);
             const ref = get_reference(s_expr[3]);
@@ -2443,9 +2448,10 @@ export function cpu_rvpipe_register(sim_p) {
         nparameters: 3,
         types: ["X", "X"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var sim_elto_org = get_reference(s_expr[2]);
             var sim_elto_dst = get_reference(s_expr[1]);
             var newval = get_value(sim_elto_org);
@@ -2470,9 +2476,10 @@ export function cpu_rvpipe_register(sim_p) {
         nparameters: 6,
         types: ["X", "X", "X", "X", "X"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var sim_elto_dst = get_reference(s_expr[1]);
             var sim_elto_org = get_reference(s_expr[2]);
             var src_offset = get_value(get_reference(s_expr[3]));
@@ -2511,9 +2518,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.AND] = {
         nparameters: 4, types: ["X", "X", "X"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var result = get_value(get_reference(s_expr[2])) & get_value(get_reference(s_expr[3]));
             set_value(get_reference(s_expr[1]), result >>> 0);
             sim_p.internal_states.alu_flags.int = 0;
@@ -2530,9 +2538,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.AND_NOT] = {
         nparameters: 4, types: ["X", "X", "X"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             const val1 = get_value(get_reference(s_expr[2]));
             const val2 = get_value(get_reference(s_expr[3]));
             var result = val1 & ~val2;
@@ -2553,9 +2562,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.OR] = {
         nparameters: 4, types: ["X", "X", "X"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var result = get_value(get_reference(s_expr[2])) | get_value(get_reference(s_expr[3]));
             set_value(get_reference(s_expr[1]), result >>> 0);
             sim_p.internal_states.alu_flags.int = 0;
@@ -2572,9 +2582,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.XOR] = {
         nparameters: 4, types: ["E", "E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var result = get_value(sim_p.states[s_expr[2]]) ^ get_value(sim_p.states[s_expr[3]]);
             set_value(sim_p.states[s_expr[1]], result >>> 0);
             sim_p.internal_states.alu_flags.int = 0;
@@ -2591,9 +2602,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.NOT] = {
         nparameters: 3, types: ["E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var result = ~(get_value(sim_p.states[s_expr[2]]));
             set_value(sim_p.states[s_expr[1]], result >>> 0);
             sim_p.internal_states.alu_flags.int = 0;
@@ -2634,9 +2646,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.ADD] = {
         nparameters: 4, types: ["E", "E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var a = get_value(sim_p.states[s_expr[2]]) << 0;
             var b = get_value(sim_p.states[s_expr[3]]) << 0;
             var result = a + b;
@@ -2659,9 +2672,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.SUB] = {
         nparameters: 4, types: ["E", "E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var a = get_value(sim_p.states[s_expr[2]]) << 0;
             var b = get_value(sim_p.states[s_expr[3]]) << 0;
             var result = a - b;
@@ -2682,9 +2696,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.ADDU] = {
         nparameters: 4, types: ["E", "E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var a = get_value(sim_p.states[s_expr[2]]) >>> 0;
             var b = get_value(sim_p.states[s_expr[3]]) >>> 0;
             var result = a + b;
@@ -2705,9 +2720,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.LUI] = {
         nparameters: 3, types: ["E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var result = (get_value(sim_p.states[s_expr[2]])) << 16;
             set_value(sim_p.states[s_expr[1]], result);
             sim_p.internal_states.alu_flags.int = 0;
@@ -2724,9 +2740,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.MUL] = {
         nparameters: 4, types: ["X", "X", "X"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var a = get_value(get_reference(s_expr[2])) << 0;
             var b = get_value(get_reference(s_expr[3])) << 0;
             var result = a * b;
@@ -2747,9 +2764,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.DIV] = {
         nparameters: 4, types: ["E", "E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var a = get_value(sim_p.states[s_expr[2]]) << 0;
             var b = get_value(sim_p.states[s_expr[3]]) << 0;
             if (b != 0) {
@@ -2777,9 +2795,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.MOD] = {
         nparameters: 4, types: ["E", "E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var a = get_value(sim_p.states[s_expr[2]]) << 0;
             var b = get_value(sim_p.states[s_expr[3]]) << 0;
             if (b != 0) {
@@ -2807,9 +2826,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.SUBU] = {
         nparameters: 4, types: ["E", "E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var a = get_value(sim_p.states[s_expr[2]]) >>> 0;
             var b = get_value(sim_p.states[s_expr[3]]) >>> 0;
             var result = a - b;
@@ -2830,9 +2850,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.MULU] = {
         nparameters: 4, types: ["E", "E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var a = get_value(sim_p.states[s_expr[2]]) >>> 0;
             var b = get_value(sim_p.states[s_expr[3]]) >>> 0;
             var result = a * b;
@@ -2853,9 +2874,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.DIVU] = {
         nparameters: 4, types: ["E", "E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var a = get_value(sim_p.states[s_expr[2]]) >>> 0;
             var b = get_value(sim_p.states[s_expr[3]]) >>> 0;
             if (b != 0) {
@@ -2883,9 +2905,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.SRL] = {
         nparameters: 4, types: ["E", "E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var shifts = get_value(sim_p.states[s_expr[3]]);
             var result = (get_value(sim_p.states[s_expr[2]])) >>> shifts;
             set_value(sim_p.states[s_expr[1]], result >>> 0);
@@ -2904,9 +2927,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.SRA] = {
         nparameters: 4, types: ["E", "E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var shifts = get_value(sim_p.states[s_expr[3]]);
             var result = (get_value(sim_p.states[s_expr[2]])) >> shifts;
             set_value(sim_p.states[s_expr[1]], result >>> 0);
@@ -2925,9 +2949,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.SL] = {
         nparameters: 4, types: ["E", "E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var shifts = get_value(sim_p.states[s_expr[3]]);
             var result = (get_value(sim_p.states[s_expr[2]])) << shifts;
             set_value(sim_p.states[s_expr[1]], result >>> 0);
@@ -2947,9 +2972,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.RR] = {
         nparameters: 4, types: ["E", "E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var shifts = get_value(sim_p.states[s_expr[3]]);
             var result = (get_value(sim_p.states[s_expr[2]])) >>> shifts;
             var carry = (get_value(sim_p.states[s_expr[2]])) >> (shifts - 1) & 1;
@@ -2972,9 +2998,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.RL] = {
         nparameters: 4, types: ["E", "E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var shifts = get_value(sim_p.states[s_expr[3]]);
             var result = (get_value(sim_p.states[s_expr[2]])) << shifts;
             var carry = (get_value(sim_p.states[s_expr[2]])) >>> (32 - shifts);
@@ -2997,9 +3024,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.SEQ] = {
         nparameters: 4, types: ["X", "X", "X"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var a = get_value(get_reference(s_expr[2])) >>> 0;
             var b = get_value(get_reference(s_expr[3])) >>> 0;
             var result = (a == b) ? 1 : 0;
@@ -3020,9 +3048,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.SNE] = {
         nparameters: 4, types: ["E", "E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var a = get_value(sim_p.states[s_expr[2]]) >>> 0;
             var b = get_value(sim_p.states[s_expr[3]]) >>> 0;
             var result = (a != b) ? 1 : 0;
@@ -3043,9 +3072,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.SLTS] = {
         nparameters: 4, types: ["E", "E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var a = get_value(sim_p.states[s_expr[2]]) << 0;
             var b = get_value(sim_p.states[s_expr[3]]) << 0;
             var result = (a < b) ? 1 : 0;
@@ -3066,9 +3096,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.SGES] = {
         nparameters: 4, types: ["E", "E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var a = get_value(sim_p.states[s_expr[2]]) << 0;
             var b = get_value(sim_p.states[s_expr[3]]) << 0;
             var result = (a >= b) ? 1 : 0;
@@ -3089,9 +3120,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.SLTU] = {
         nparameters: 4, types: ["E", "E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var a = get_value(sim_p.states[s_expr[2]]) >>> 0;
             var b = get_value(sim_p.states[s_expr[3]]) >>> 0;
             var result = (a < b) ? 1 : 0;
@@ -3112,9 +3144,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.SGEU] = {
         nparameters: 4, types: ["E", "E", "E"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var a = get_value(sim_p.states[s_expr[2]]) >>> 0;
             var b = get_value(sim_p.states[s_expr[3]]) >>> 0;
             var result = (a >= b) ? 1 : 0;
@@ -3135,9 +3168,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.READ_IM] = {
         nparameters: 1,
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var address = get_value(sim_p.states[STATES.REG_PC]);
             var clk = get_value(sim_p.states[STATES.CLK]);
             var remain = get_value(sim_p.internal_states.MP_wc);
@@ -3217,9 +3251,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.FIRE] = {
         nparameters: 2, types: ["S"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             fire(s_expr[1]);
         },
         verbal: function (s_expr) { return ""; }
@@ -3227,9 +3262,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.FIRE_IFSET] = {
         nparameters: 3, types: ["S", "I"],
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             if (get_value(sim_p.signals[s_expr[1]]) != parseInt(s_expr[2]))
                 return;
             fire(s_expr[1]);
@@ -3295,9 +3331,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.UPDATE_ALU_INT] = {
         nparameters: 1,
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             if (DEBUG)
                 console.log("UPDATE ALU_INT with:", sim_p.internal_states.alu_flags.int, "and ALU_INTV with:", sim_p.internal_states.alu_flags.intv);
             set_value(sim_p.signals[SIGNALS.ALU_INT], sim_p.internal_states.alu_flags.int);
@@ -3437,9 +3474,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.PIPE_IF] = {
         nparameters: 1,
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var pc_val = get_value(sim_p.states[STATES.IF_FETCH_PC]);
             var next_pc = 0;
             var ins_val = 0;
@@ -3464,9 +3502,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.PIPE_DECO] = {
         nparameters: 1,
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             let ins = get_value(sim_p.states[STATES.IF_ID_IR]);
             const DECODE_STATES = [
                 STATES.DECODE_DMR,
@@ -3572,9 +3611,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.PIPE_WB_WRITE] = {
         nparameters: 1,
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var rw = get_value(sim_p.states[STATES.MEM_WB_RW]);
             var rd = get_value(sim_p.states[STATES.MEM_WB_RD]);
             if (rw && rd != 0) {
@@ -3589,9 +3629,10 @@ export function cpu_rvpipe_register(sim_p) {
     sim_p.behaviors[BEHAVIORS.PIPE_DISPLAY] = {
         nparameters: 1,
         operation: function (s_expr) {
-            var _a, _b;
+            var _a;
+            var _b;
             if (DEBUG)
-                console.log(JSON.stringify(s_expr), (_b = sim_p.behaviors[(_a = s_expr[0]) !== null && _a !== void 0 ? _a : BEHAVIORS.NOP]) === null || _b === void 0 ? void 0 : _b.verbal(s_expr));
+                console.log(JSON.stringify(s_expr), (_a = sim_p.behaviors[(_b = s_expr[0]) !== null && _b !== void 0 ? _b : BEHAVIORS.NOP]) === null || _a === void 0 ? void 0 : _a.verbal(s_expr));
             var if_pc = get_value(sim_p.states[STATES.IF_FETCH_PC]);
             var if_id_pc = get_value(sim_p.states[STATES.IF_ID_PC]);
             var id_ex_pc = get_value(sim_p.states[STATES.ID_EX_PC]);
