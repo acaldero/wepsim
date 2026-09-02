@@ -81,7 +81,8 @@
      import { wepsim_newbie_tour }             from "../wepsim_core/wepsim_tour.js";
      import { wepsim_help_set }                from "../wepsim_core/wepsim_help.js";
      import { wepsim_save_to_file }            from "../wepsim_core/wepsim_url.js";
-     import { get_inputfirm, get_inputasm }    from "../wepsim_web/wepsim_web_simulator.js";
+     import { get_inputfirm,
+	      get_inputasm }                   from "../wepsim_web/wepsim_web_simulator.js";
 
 
     //
@@ -140,11 +141,11 @@
 
 	                                  var inputasm = get_inputasm() ;
 					  if (inputasm.is_refreshed != true) {
-					      inputasm.is_refreshed = true ;
-					      wait_if_uievents(function(){
-	                                                    var inputasm = get_inputasm() ;
-							    inputasm.refresh() ;
-					    	         }, 50) ;
+					      inputasm.is_refreshed  = true ;
+					      wait_if_uievents(function() {
+	                                                          var inputasm_txt = get_inputasm() ;
+							              inputasm_txt.refresh() ;
+					    	               }, 50) ;
 					  }
 	                              }
 		       },
